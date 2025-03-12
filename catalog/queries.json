@@ -1,0 +1,1152 @@
+{
+  "dataType": "Map",
+  "value": [
+    [
+      "/telemetry/data/datarouter/api/v1/public/data",
+      {
+        "type": "object",
+        "properties": {
+          "dataType": "Map",
+          "value": [
+            [
+              "AppEnvironment",
+              {
+                "type": "string",
+                "examples": [
+                  "Production"
+                ]
+              }
+            ],
+            [
+              "AppID",
+              {
+                "type": "string",
+                "examples": [
+                  "EOSSDK.PhaseRelease.ReleaseBuild"
+                ]
+              }
+            ],
+            [
+              "AppVersion",
+              {
+                "type": "string",
+                "examples": [
+                  "1.15.3-21924193%20-%20%2B%2BEOSSDK%2BRelease-1.15.3-CL-21924193"
+                ]
+              }
+            ],
+            [
+              "SessionID",
+              {
+                "type": "string",
+                "examples": [
+                  "%7BDA00F531-4BB4-DF4E-7044-AD9AF65893E5%7D",
+                  "%7B4385D0A7-48B4-A44E-BC0A-D58E4AF8AA8D%7D",
+                  "%7B3295E0E8-4520-8CD5-D566-4B98A24267C2%7D",
+                  "%7B04A2296A-4D89-139D-8F7F-3DB26B788797%7D",
+                  "%7B31D8AE6C-4003-7D77-BE33-5DA480B71BDD%7D",
+                  "%7B69FDDDCD-4770-B837-5F83-F485D25C34A6%7D",
+                  "%7B29655DA7-4765-AFAE-A60D-98AD456E16B2%7D",
+                  "%7B8624E99B-4381-3C08-2AD6-19A380FA6E94%7D"
+                ]
+              }
+            ],
+            [
+              "UploadType",
+              {
+                "type": "string",
+                "examples": [
+                  "sdkevents"
+                ]
+              }
+            ],
+            [
+              "UserID",
+              {
+                "type": "string",
+                "examples": [
+                  ""
+                ]
+              }
+            ]
+          ]
+        },
+        "methodOrCode": "POST"
+      }
+    ],
+    [
+      "/sdk/v1/product/5f8c5b9a91ca4e33b4afe3040b27e45e",
+      {
+        "type": "object",
+        "properties": {
+          "dataType": "Map",
+          "value": [
+            [
+              "deploymentId",
+              {
+                "type": "string",
+                "examples": [
+                  "29da23b21f7f41319c7fa5e86e20dc2b",
+                  "dc943966edb54a6eb9c1334ca8cc1990"
+                ]
+              }
+            ],
+            [
+              "platformId",
+              {
+                "type": "string",
+                "examples": [
+                  "WIN"
+                ]
+              }
+            ]
+          ]
+        },
+        "methodOrCode": "GET"
+      }
+    ],
+    [
+      "/sdk/v1/default",
+      {
+        "type": "object",
+        "properties": {
+          "dataType": "Map",
+          "value": [
+            [
+              "platformId",
+              {
+                "type": "string",
+                "examples": [
+                  "WIN"
+                ]
+              }
+            ]
+          ]
+        },
+        "methodOrCode": "GET"
+      }
+    ],
+    [
+      "/datarouter/api/v1/public/data/clients",
+      {
+        "type": "object",
+        "properties": {
+          "dataType": "Map",
+          "value": [
+            [
+              "AppEnvironment",
+              {
+                "type": "string",
+                "examples": [
+                  "3a212c0da4f1438e840c21565df4b6fe"
+                ]
+              }
+            ],
+            [
+              "AppID",
+              {
+                "type": "string",
+                "examples": [
+                  "5f8c5b9a91ca4e33b4afe3040b27e45e"
+                ]
+              }
+            ],
+            [
+              "AppVersion",
+              {
+                "type": "string",
+                "examples": [
+                  "1.15.3-21924193"
+                ]
+              }
+            ],
+            [
+              "SessionID",
+              {
+                "type": "string",
+                "examples": [
+                  "FB997705429DAE7D0A9C03B99864315E",
+                  "D00761D945DA9DAA2CF97F9366C23861"
+                ]
+              }
+            ],
+            [
+              "UploadType",
+              {
+                "type": "string",
+                "examples": [
+                  "eteventstream"
+                ]
+              }
+            ]
+          ]
+        },
+        "methodOrCode": "POST"
+      }
+    ],
+    [
+      "/sessions/auth/token",
+      {
+        "type": "object",
+        "properties": {
+          "dataType": "Map",
+          "value": [
+            [
+              "null",
+              {
+                "type": "object",
+                "properties": {
+                  "dataType": "Map",
+                  "value": []
+                }
+              }
+            ],
+            [
+              "options",
+              {
+                "type": "string",
+                "examples": [
+                  "sdk"
+                ]
+              }
+            ]
+          ]
+        },
+        "methodOrCode": "POST"
+      }
+    ],
+    [
+      "/friends/me/invitations/incoming",
+      {
+        "type": "object",
+        "properties": {
+          "dataType": "Map",
+          "value": [
+            [
+              "null",
+              {
+                "type": "object",
+                "properties": {
+                  "dataType": "Map",
+                  "value": []
+                }
+              }
+            ],
+            [
+              "page_size",
+              {
+                "type": "string",
+                "examples": [
+                  "1000"
+                ]
+              }
+            ],
+            [
+              "state",
+              {
+                "type": "string",
+                "examples": [
+                  "open"
+                ]
+              }
+            ]
+          ]
+        },
+        "methodOrCode": "GET"
+      }
+    ],
+    [
+      "/friends/me/invitations/outgoing",
+      {
+        "type": "object",
+        "properties": {
+          "dataType": "Map",
+          "value": [
+            [
+              "null",
+              {
+                "type": "object",
+                "properties": {
+                  "dataType": "Map",
+                  "value": []
+                }
+              }
+            ],
+            [
+              "page_size",
+              {
+                "type": "string",
+                "examples": [
+                  "1000"
+                ]
+              }
+            ],
+            [
+              "state",
+              {
+                "type": "string",
+                "examples": [
+                  "open"
+                ]
+              }
+            ]
+          ]
+        },
+        "methodOrCode": "GET"
+      }
+    ],
+    [
+      "/dokken/v1/event",
+      {
+        "type": "object",
+        "properties": {
+          "dataType": "Map",
+          "value": [
+            [
+              "platform",
+              {
+                "type": "string",
+                "examples": [
+                  "steam"
+                ]
+              }
+            ],
+            [
+              "uid",
+              {
+                "type": "string",
+                "examples": [
+                  "B74FC9EF416D964CBD2B92AD01C00582"
+                ]
+              }
+            ]
+          ]
+        },
+        "methodOrCode": "POST"
+      }
+    ],
+    [
+      "/friends/me",
+      {
+        "type": "object",
+        "properties": {
+          "dataType": "Map",
+          "value": [
+            [
+              "null",
+              {
+                "type": "object",
+                "properties": {
+                  "dataType": "Map",
+                  "value": []
+                }
+              }
+            ],
+            [
+              "page_size",
+              {
+                "type": "string",
+                "examples": [
+                  "1000"
+                ]
+              }
+            ]
+          ]
+        },
+        "methodOrCode": "GET"
+      }
+    ],
+    [
+      "/accounts/wb_network/bulk",
+      {
+        "type": "object",
+        "properties": {
+          "dataType": "Map",
+          "value": [
+            [
+              "fields",
+              {
+                "type": "string",
+                "examples": [
+                  "server_data"
+                ]
+              }
+            ],
+            [
+              "partial_response",
+              {
+                "type": "string",
+                "examples": [
+                  "1"
+                ]
+              }
+            ]
+          ]
+        },
+        "methodOrCode": "PUT"
+      }
+    ],
+    [
+      "/profiles/bulk",
+      {
+        "type": "object",
+        "properties": {
+          "dataType": "Map",
+          "value": [
+            [
+              "account_fields",
+              {
+                "type": "string",
+                "examples": [
+                  "presence"
+                ]
+              }
+            ],
+            [
+              "partial_response",
+              {
+                "type": "string",
+                "examples": [
+                  "1"
+                ]
+              }
+            ],
+            [
+              "fields",
+              {
+                "type": "string",
+                "examples": [
+                  "server_data.SeasonalData",
+                  "server_data.SeasonalData.Season:SeasonFive"
+                ]
+              }
+            ]
+          ]
+        },
+        "methodOrCode": "PUT"
+      }
+    ],
+    [
+      "/profiles/:id/inventory",
+      {
+        "type": "object",
+        "properties": {
+          "dataType": "Map",
+          "value": [
+            [
+              "fields",
+              {
+                "type": "string",
+                "examples": [
+                  "show_currency_sources"
+                ]
+              }
+            ],
+            [
+              "partial_response",
+              {
+                "type": "string",
+                "examples": [
+                  "1"
+                ]
+              }
+            ]
+          ]
+        },
+        "methodOrCode": "PUT"
+      }
+    ],
+    [
+      "/layout/dokken-layout-type/personalized/main-variant/:id",
+      {
+        "type": "object",
+        "properties": {
+          "dataType": "Map",
+          "value": [
+            [
+              "calendar_projection_end",
+              {
+                "type": "string",
+                "examples": [
+                  "1741708125",
+                  "1741708611"
+                ]
+              }
+            ],
+            [
+              "calendar_projection_start",
+              {
+                "type": "string",
+                "examples": [
+                  "1741621725",
+                  "1741622211"
+                ]
+              }
+            ]
+          ]
+        },
+        "methodOrCode": "GET"
+      }
+    ],
+    [
+      "/layout/dokken-layout-type/personalized/currency-variant/:id",
+      {
+        "type": "object",
+        "properties": {
+          "dataType": "Map",
+          "value": [
+            [
+              "calendar_projection_end",
+              {
+                "type": "string",
+                "examples": [
+                  "1741708125",
+                  "1741708611"
+                ]
+              }
+            ],
+            [
+              "calendar_projection_start",
+              {
+                "type": "string",
+                "examples": [
+                  "1741621725",
+                  "1741622211"
+                ]
+              }
+            ]
+          ]
+        },
+        "methodOrCode": "GET"
+      }
+    ],
+    [
+      "/layout/dokken-layout-type/personalized/battlepass-variant/:id",
+      {
+        "type": "object",
+        "properties": {
+          "dataType": "Map",
+          "value": [
+            [
+              "calendar_projection_end",
+              {
+                "type": "string",
+                "examples": [
+                  "1741708125",
+                  "1741708611"
+                ]
+              }
+            ],
+            [
+              "calendar_projection_start",
+              {
+                "type": "string",
+                "examples": [
+                  "1741621725",
+                  "1741622211"
+                ]
+              }
+            ]
+          ]
+        },
+        "methodOrCode": "GET"
+      }
+    ],
+    [
+      "/layout/dokken-layout-type/personalized/skin-variant/:id",
+      {
+        "type": "object",
+        "properties": {
+          "dataType": "Map",
+          "value": [
+            [
+              "calendar_projection_end",
+              {
+                "type": "string",
+                "examples": [
+                  "1741708125",
+                  "1741708611"
+                ]
+              }
+            ],
+            [
+              "calendar_projection_start",
+              {
+                "type": "string",
+                "examples": [
+                  "1741621725",
+                  "1741622211"
+                ]
+              }
+            ]
+          ]
+        },
+        "methodOrCode": "GET"
+      }
+    ],
+    [
+      "/layout/dokken-layout-type/personalized/account-cosmetics-variant/:id",
+      {
+        "type": "object",
+        "properties": {
+          "dataType": "Map",
+          "value": [
+            [
+              "calendar_projection_end",
+              {
+                "type": "string",
+                "examples": [
+                  "1741708125",
+                  "1741708611"
+                ]
+              }
+            ],
+            [
+              "calendar_projection_start",
+              {
+                "type": "string",
+                "examples": [
+                  "1741621725",
+                  "1741622211"
+                ]
+              }
+            ]
+          ]
+        },
+        "methodOrCode": "GET"
+      }
+    ],
+    [
+      "/layout/dokken-layout-type/personalized/fighter-road-layout/:id",
+      {
+        "type": "object",
+        "properties": {
+          "dataType": "Map",
+          "value": [
+            [
+              "calendar_projection_end",
+              {
+                "type": "string",
+                "examples": [
+                  "1741708125",
+                  "1741708330",
+                  "1741708529",
+                  "1741708611"
+                ]
+              }
+            ],
+            [
+              "calendar_projection_start",
+              {
+                "type": "string",
+                "examples": [
+                  "1741621725",
+                  "1741621930",
+                  "1741622129",
+                  "1741622211"
+                ]
+              }
+            ]
+          ]
+        },
+        "methodOrCode": "GET"
+      }
+    ],
+    [
+      "/commerce/products",
+      {
+        "type": "object",
+        "properties": {
+          "dataType": "Map",
+          "value": [
+            [
+              "count",
+              {
+                "type": "string",
+                "examples": [
+                  "-1"
+                ]
+              }
+            ],
+            [
+              "fields",
+              {
+                "type": "string",
+                "examples": [
+                  "prices"
+                ]
+              }
+            ],
+            [
+              "partial_response",
+              {
+                "type": "string",
+                "examples": [
+                  "1"
+                ]
+              }
+            ]
+          ]
+        },
+        "methodOrCode": "GET"
+      }
+    ],
+    [
+      "/commerce/purchases/me",
+      {
+        "type": "object",
+        "properties": {
+          "dataType": "Map",
+          "value": [
+            [
+              "count",
+              {
+                "type": "string",
+                "examples": [
+                  "25",
+                  "100"
+                ]
+              }
+            ],
+            [
+              "page",
+              {
+                "type": "string",
+                "examples": [
+                  "1"
+                ]
+              }
+            ],
+            [
+              "state",
+              {
+                "type": "string",
+                "examples": [
+                  "transient_failure",
+                  "open"
+                ]
+              }
+            ]
+          ]
+        },
+        "methodOrCode": "GET"
+      }
+    ],
+    [
+      "/layout/dokken-layout-type/personalized/fighter-variant/:id",
+      {
+        "type": "object",
+        "properties": {
+          "dataType": "Map",
+          "value": [
+            [
+              "calendar_projection_end",
+              {
+                "type": "string",
+                "examples": [
+                  "1741708128",
+                  "1741708611"
+                ]
+              }
+            ],
+            [
+              "calendar_projection_start",
+              {
+                "type": "string",
+                "examples": [
+                  "1741621728",
+                  "1741622211"
+                ]
+              }
+            ]
+          ]
+        },
+        "methodOrCode": "GET"
+      }
+    ],
+    [
+      "/layout/dokken-layout-type/personalized/prestige-variant/:id",
+      {
+        "type": "object",
+        "properties": {
+          "dataType": "Map",
+          "value": [
+            [
+              "calendar_projection_end",
+              {
+                "type": "string",
+                "examples": [
+                  "1741708128",
+                  "1741708611"
+                ]
+              }
+            ],
+            [
+              "calendar_projection_start",
+              {
+                "type": "string",
+                "examples": [
+                  "1741621728",
+                  "1741622211"
+                ]
+              }
+            ]
+          ]
+        },
+        "methodOrCode": "GET"
+      }
+    ],
+    [
+      "/layout/dokken-layout-type/personalized/rift-variant/:id",
+      {
+        "type": "object",
+        "properties": {
+          "dataType": "Map",
+          "value": [
+            [
+              "calendar_projection_end",
+              {
+                "type": "string",
+                "examples": [
+                  "1741708128",
+                  "1741708611"
+                ]
+              }
+            ],
+            [
+              "calendar_projection_start",
+              {
+                "type": "string",
+                "examples": [
+                  "1741621728",
+                  "1741622211"
+                ]
+              }
+            ]
+          ]
+        },
+        "methodOrCode": "GET"
+      }
+    ],
+    [
+      "/profiles/search_queries/get-by-username/run",
+      {
+        "type": "object",
+        "properties": {
+          "dataType": "Map",
+          "value": [
+            [
+              "account_fields",
+              {
+                "type": "string",
+                "examples": [
+                  "data"
+                ]
+              }
+            ],
+            [
+              "limit",
+              {
+                "type": "string",
+                "examples": [
+                  "25"
+                ]
+              }
+            ],
+            [
+              "partial_response",
+              {
+                "type": "string",
+                "examples": [
+                  "1"
+                ]
+              }
+            ],
+            [
+              "username",
+              {
+                "type": "string",
+                "examples": [
+                  "multiversuskoth"
+                ]
+              }
+            ]
+          ]
+        },
+        "methodOrCode": "GET"
+      }
+    ],
+    [
+      "/layout/dokken-layout-type/personalized/fighter-select-layout/:id",
+      {
+        "type": "object",
+        "properties": {
+          "dataType": "Map",
+          "value": [
+            [
+              "calendar_projection_end",
+              {
+                "type": "string",
+                "examples": [
+                  "1741708243",
+                  "1741708611"
+                ]
+              }
+            ],
+            [
+              "calendar_projection_start",
+              {
+                "type": "string",
+                "examples": [
+                  "1741621843",
+                  "1741622211"
+                ]
+              }
+            ]
+          ]
+        },
+        "methodOrCode": "GET"
+      }
+    ],
+    [
+      "/leaderboards/ranked_season5_1v1_all/around/:id",
+      {
+        "type": "object",
+        "properties": {
+          "dataType": "Map",
+          "value": [
+            [
+              "account_fields",
+              {
+                "type": "string",
+                "examples": [
+                  "data.__unused"
+                ]
+              }
+            ],
+            [
+              "count",
+              {
+                "type": "string",
+                "examples": [
+                  "4"
+                ]
+              }
+            ],
+            [
+              "fields",
+              {
+                "type": "string",
+                "examples": [
+                  "server_data.SeasonalData.Season:SeasonFive.Ranked.DataByMode.1v1.BestCharacter.CharacterSlug"
+                ]
+              }
+            ],
+            [
+              "partial_response",
+              {
+                "type": "string",
+                "examples": [
+                  "1"
+                ]
+              }
+            ]
+          ]
+        },
+        "methodOrCode": "GET"
+      }
+    ],
+    [
+      "/leaderboards/ranked_season5_1v1_all/show",
+      {
+        "type": "object",
+        "properties": {
+          "dataType": "Map",
+          "value": [
+            [
+              "account_fields",
+              {
+                "type": "string",
+                "examples": [
+                  "data.__unused"
+                ]
+              }
+            ],
+            [
+              "count",
+              {
+                "type": "string",
+                "examples": [
+                  "100"
+                ]
+              }
+            ],
+            [
+              "fields",
+              {
+                "type": "string",
+                "examples": [
+                  "server_data.SeasonalData.Season:SeasonFive.Ranked.DataByMode.1v1.BestCharacter.CharacterSlug"
+                ]
+              }
+            ],
+            [
+              "partial_response",
+              {
+                "type": "string",
+                "examples": [
+                  "1"
+                ]
+              }
+            ]
+          ]
+        },
+        "methodOrCode": "GET"
+      }
+    ],
+    [
+      "/leaderboards/ranked_season5_2v2_all/show",
+      {
+        "type": "object",
+        "properties": {
+          "dataType": "Map",
+          "value": [
+            [
+              "account_fields",
+              {
+                "type": "string",
+                "examples": [
+                  "data.__unused"
+                ]
+              }
+            ],
+            [
+              "count",
+              {
+                "type": "string",
+                "examples": [
+                  "100"
+                ]
+              }
+            ],
+            [
+              "fields",
+              {
+                "type": "string",
+                "examples": [
+                  "server_data.SeasonalData.Season:SeasonFive.Ranked.DataByMode.2v2.BestCharacter.CharacterSlug"
+                ]
+              }
+            ],
+            [
+              "partial_response",
+              {
+                "type": "string",
+                "examples": [
+                  "1"
+                ]
+              }
+            ]
+          ]
+        },
+        "methodOrCode": "GET"
+      }
+    ],
+    [
+      "/leaderboards/ranked_season5_2v2_character_c036/show",
+      {
+        "type": "object",
+        "properties": {
+          "dataType": "Map",
+          "value": [
+            [
+              "account_fields",
+              {
+                "type": "string",
+                "examples": [
+                  "data.__unused"
+                ]
+              }
+            ],
+            [
+              "count",
+              {
+                "type": "string",
+                "examples": [
+                  "100"
+                ]
+              }
+            ],
+            [
+              "fields",
+              {
+                "type": "string",
+                "examples": [
+                  "data.__unused"
+                ]
+              }
+            ],
+            [
+              "partial_response",
+              {
+                "type": "string",
+                "examples": [
+                  "1"
+                ]
+              }
+            ]
+          ]
+        },
+        "methodOrCode": "GET"
+      }
+    ],
+    [
+      "/matches/all/:id",
+      {
+        "type": "object",
+        "properties": {
+          "dataType": "Map",
+          "value": [
+            [
+              "count",
+              {
+                "type": "string",
+                "examples": [
+                  "10"
+                ]
+              }
+            ],
+            [
+              "fields",
+              {
+                "type": "string",
+                "examples": [
+                  "server_data"
+                ]
+              }
+            ],
+            [
+              "page",
+              {
+                "type": "string",
+                "examples": [
+                  "1"
+                ]
+              }
+            ],
+            [
+              "templates",
+              {
+                "type": "string",
+                "examples": [
+                  "rift_gamelift_two_player"
+                ]
+              }
+            ]
+          ]
+        },
+        "methodOrCode": "GET"
+      }
+    ]
+  ]
+}
