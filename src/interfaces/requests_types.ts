@@ -1,3 +1,4 @@
+//* AUTO GENERATED */
 export namespace MVSRequests {
   export interface Access_REQUEST {
     auth: {

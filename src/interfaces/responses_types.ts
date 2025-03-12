@@ -1,3 +1,4 @@
+//* AUTO GENERATED */
 export namespace MVSResponses {
   export interface Access_RESPONSE {
     account: {

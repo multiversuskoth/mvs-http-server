@@ -1,3 +1,4 @@
+//* AUTO GENERATED */
 export namespace MVSQueries {
   export interface Accounts_wb_network_bulk_QUERY {
     /**
