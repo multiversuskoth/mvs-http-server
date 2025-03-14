@@ -16,6 +16,12 @@ export class Identity {
 
   @prop({ required: true })
   default_username!: boolean;
+
+  // @prop({})
+  // personal_data?: null;
+
+  @prop()
+  alternate!: IdentityAlternate
 }
 
 @modelOptions({ schemaOptions: { _id: false } })
@@ -46,6 +52,10 @@ export class IdentityAlternate {
   xb1?: IdentityAlternateItem;
   @prop()
   ps4?: IdentityAlternateItem;
+}
+
+export class Connection{
+
 }
 
 export class Account implements Base {

@@ -57,9 +57,10 @@ export async function handleAccess(
     return;
   }
 
-  let result: ReturnType<ConfigurationDoc["toJSON"]> & {
+  let result:  & {
+    configuration: ReturnType<ConfigurationDoc["toJSON"]>,
     account: ReturnType<AccountDoc["toJSON"]> | null;
-  } = { ...configuration?.toJSON(), account: account?.toJSON() };
+  } = { configuration: configuration?.toJSON(), account: account?.toJSON() };
 
   res.json(result);
 }
