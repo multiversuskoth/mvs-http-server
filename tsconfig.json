@@ -1,19 +1,29 @@
 {
   "compilerOptions": {
-    "module": "ESNext",
-    "moduleResolution": "Bundler",
-    "target": "ES2022",
-    "jsx": "react",
+    // "module": "ESNext",
+    "module": "CommonJS",
+    // "moduleResolution": "Bundler",
+    // "target": "ES2022",
+    "target": "es2016",          
+    // "jsx": "react",
     "strictNullChecks": true,
     "strictFunctionTypes": true,
     "sourceMap": true,
     "paths": {
       "@/*": ["./src/*"]
     },
-    "rootDir": "./src"
+    "rootDir": "./src",
+    "outDir": "./build",
+    "experimentalDecorators": true,
+    "emitDecoratorMetadata": true,
+    "esModuleInterop": true,
+    "forceConsistentCasingInFileNames": true,
+    "strict": true
   },
-  "exclude": [
-    "node_modules",
-    "**/node_modules/*"
-  ]
+  "exclude": ["node_modules", "**/node_modules/*"],
+  "ts-node": {
+    "compilerOptions": {
+      "module": "commonjs"
+    }
+  }
 }
