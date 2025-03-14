@@ -3,12 +3,18 @@ import express, { Request, Response } from "express";
 import { MVSRequests } from "./interfaces/requests_types";
 import { MVSResponses } from "./interfaces/responses_types";
 import { MVSQueries } from "./interfaces/queries_types";
+import {handleAccounts_wb_network_bulk} from "./handlers/accounts";
+import {handleProfiles_bulk} from "./handlers/profiles";
+import {handleAccess} from "./handlers/access";
 
 interface MVSParams {
   id: string;
 }
 
 const router = express.Router();
+
+router.use(express.json())
+
 router.post(
   "/access",
   (
@@ -20,7 +26,6 @@ router.post(
     >,
     res: Response
   ) => {
-    // @ts-ignore TODO : implementation. Remove comment once implemented
     handleAccess(req, res);
   }
 );
@@ -65,7 +70,6 @@ router.put(
     >,
     res: Response
   ) => {
-    // @ts-ignore TODO : implementation. Remove comment once implemented
     handleAccounts_wb_network_bulk(req, res);
   }
 );
@@ -230,7 +234,6 @@ router.put(
     >,
     res: Response
   ) => {
-    // @ts-ignore TODO : implementation. Remove comment once implemented
     handleProfiles_bulk(req, res);
   }
 );
