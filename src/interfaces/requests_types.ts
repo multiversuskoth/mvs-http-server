@@ -5,7 +5,7 @@ export namespace MVSRequests {
       fail_on_missing: boolean;
       /**
        *
-       * 08021098D0D1EE051800204E2A8001476011E60D3AA73FEBD33192DE6120067B4E7334E54EAC48757660CAAC7A93C5FBC7FD7059A8881E4F76F3545BD94A6E60074DA813B1BFB32E4019B0BA219ABAA22F2DAA83A2C87A593350E3372A0B98FFC0E6C394C4790B08168403E5D7DA21D82F7C738FB0A0122476EB1384DD63507FDEACA5C77F5A297A8505B0E03214B2
+       * 0802109DEF91B1021800204E2A80015AFAA999B9283496D5A7262B8A5A71C94C9D77E7C9DD70A5FCAF0A178A24452B4FDD36A71372AD09173EFF958D65B42715AC027D638D6CBE976D8C743C77727D54F7D2B5490A1BB98C14681EE49618AEA41E7208B7EC0B5AA564E11EBEE4AF19E116C852791F160F5051649DF80D1332050062C324B525558A831C55E2C78ED6
        *
        */
       steam: string;
@@ -18,14 +18,20 @@ export namespace MVSRequests {
        */
       Platform: string;
     };
+    /**
+     *
+     * configuration
+     *
+     */
     options: string[];
   }
 
-  export interface Accounts_me_relationships_id_block_REQUEST {}
-
-  export interface Accounts_me_relationships_id_unblock_REQUEST {}
-
   export interface Accounts_wb_network_bulk_REQUEST {
+    /**
+     *
+     * p3a525c56c9c9491ea11deaa2bdbcd074
+     *
+     */
     ids: string[];
   }
 
@@ -50,6 +56,11 @@ export namespace MVSRequests {
            */
           boolean: string;
           subfilters: any[];
+          /**
+           *
+           * currency
+           *
+           */
           tags: string[];
         };
       };
@@ -67,28 +78,26 @@ export namespace MVSRequests {
        *
        * /profiles/63cef97ced0619f458cfac8f/inventory
        *
-       * /matches/all/62d779c3f666a3c04a8f7a8c?count=20&page=1&fields=server_data&templates=2v2_container&templates=1v1_container&templates=ffa_container&templates=2v2_gamelift&templates=1v1_gamelift&templates=ffa_gamelift&templates=custom_container_one_player&templates=custom_container_two_player&templates=custom_container_three_player&templates=custom_container_four_player&templates=custom_gamelift_two_player&templates=custom_gamelift_three_player&templates=custom_gamelift_four_player&templates=1v1_container_bot&templates=1v3_container_bot&templates=2v2_container_bot&templates=2v2_gamelift_bot&templates=arena_container_parent
-       *
-       * /matches/all/63cef97ced0619f458cfac8f?count=20&page=1&fields=server_data&templates=2v2_container&templates=1v1_container&templates=ffa_container&templates=2v2_gamelift&templates=1v1_gamelift&templates=ffa_gamelift&templates=custom_container_one_player&templates=custom_container_two_player&templates=custom_container_three_player&templates=custom_container_four_player&templates=custom_gamelift_two_player&templates=custom_gamelift_three_player&templates=custom_gamelift_four_player&templates=1v1_container_bot&templates=1v3_container_bot&templates=2v2_container_bot&templates=2v2_gamelift_bot&templates=arena_container_parent
-       *
        */
       url: string;
       /**
        *
        * PUT
        *
-       * GET
-       *
        */
       verb: string;
     }[];
   }
 
+  export interface Commerce_products_REQUEST {}
+
+  export interface Commerce_purchases_me_REQUEST {}
+
+  export interface Commerce_steam_mtx_user_info_me_REQUEST {}
+
   export interface Datarouter_api_v1_public_data_clients_REQUEST {
     Events: {
       /**
-       *
-       * GameStartup
        *
        * GameHeartbeat
        *
@@ -96,9 +105,9 @@ export namespace MVSRequests {
       EventName: string;
       /**
        *
-       * 29da23b21f7f41319c7fa5e86e20dc2b
-       *
        * dc943966edb54a6eb9c1334ca8cc1990
+       *
+       * 29da23b21f7f41319c7fa5e86e20dc2b
        *
        */
       deploymentId: string;
@@ -118,19 +127,66 @@ export namespace MVSRequests {
   }
 
   export interface Drives_multiversus_sync_REQUEST {
+    /**
+     *
+     * multiversus/academiamrt_storebackground-3464663366363666303637346237346635623838653130346564346135616261.png
+     *
+     */
     keys: string[];
   }
 
-  export interface Friends_me_invitations_REQUEST {
-    /**
-     *
-     * p39b6ef94a0ad40e29ed342f99f40e2db
-     *
-     */
-    account_id: string;
-  }
+  export interface File_storage_REQUEST {}
+
+  export interface File_storage_beginnermode_carousel_keyart_REQUEST {}
+
+  export interface File_storage_beginnermode_carousel_thumbnail_REQUEST {}
+
+  export interface File_storage_harley_rift_s5_keyart_REQUEST {}
+
+  export interface File_storage_harley_rift_s5_thumbnail_REQUEST {}
+
+  export interface File_storage_s5_bp_carousel_keyart_REQUEST {}
+
+  export interface File_storage_s5_bp_carousel_thumbnail_REQUEST {}
+
+  export interface File_storage_t_discord_qa_carousel_keyart_REQUEST {}
+
+  export interface File_storage_t_discord_qa_carousel_thumbnail_REQUEST {}
+
+  export interface File_storage_wonderwoman_arena_keyart_REQUEST {}
+
+  export interface File_storage_wonderwoman_arena_thumbnail_REQUEST {}
+
+  export interface Friends_me_REQUEST {}
+
+  export interface Friends_me_invitations_incoming_REQUEST {}
+
+  export interface Friends_me_invitations_outgoing_REQUEST {}
+
+  export interface Layout_dokken_layout_type_personalized_account_cosmetics_variant_id_REQUEST {}
+
+  export interface Layout_dokken_layout_type_personalized_battlepass_variant_id_REQUEST {}
+
+  export interface Layout_dokken_layout_type_personalized_currency_variant_id_REQUEST {}
+
+  export interface Layout_dokken_layout_type_personalized_fighter_road_layout_id_REQUEST {}
+
+  export interface Layout_dokken_layout_type_personalized_fighter_variant_id_REQUEST {}
+
+  export interface Layout_dokken_layout_type_personalized_main_variant_id_REQUEST {}
+
+  export interface Layout_dokken_layout_type_personalized_prestige_variant_id_REQUEST {}
+
+  export interface Layout_dokken_layout_type_personalized_rift_variant_id_REQUEST {}
+
+  export interface Layout_dokken_layout_type_personalized_skin_variant_id_REQUEST {}
 
   export interface Leaderboards_bulk_score_and_rank_id_REQUEST {
+    /**
+     *
+     * ranked_season5_1v1_character_Jason
+     *
+     */
     ids: string[];
   }
 
@@ -140,7 +196,7 @@ export namespace MVSRequests {
         game_server_region_data: {
           /**
            *
-           * 0.04276302456855774
+           * 0.04337269812822342
            *
            */
           latency: number;
@@ -154,6 +210,8 @@ export namespace MVSRequests {
       };
     };
   }
+
+  export interface Matches_all_id_REQUEST {}
 
   export interface Matches_matchmaking_1v1_retail_request_REQUEST {
     data: {
@@ -183,6 +241,11 @@ export namespace MVSRequests {
          */
         MultiplayRegionSearchId: number;
       };
+      /**
+       *
+       * All
+       *
+       */
       crossplay_buckets: string[];
       /**
        *
@@ -209,86 +272,49 @@ export namespace MVSRequests {
     };
     /**
      *
-     * 67cf09dd07f3143f5fe732d1
+     * 67d45cd0b8655ea25ca3a0a9
      *
      */
     match: string;
   }
-
-  export interface Matches_matchmaking_ranked_1v1_retail_request_REQUEST {
-    data: {
-      MultiplayParams: {
-        /**
-         *
-         * ec2-us-east-1-dokken
-         *
-         */
-        MultiplayClusterSlug: string;
-        /**
-         *
-         * 1252922
-         *
-         */
-        MultiplayProfileId: string;
-        /**
-         *
-         * 19c465a7-f21f-11ea-a5e3-0954f48c5682
-         *
-         */
-        MultiplayRegionId: string;
-        /**
-         *
-         * 1
-         *
-         */
-        MultiplayRegionSearchId: number;
-      };
-      crossplay_buckets: string[];
-      /**
-       *
-       * CLIENT:2F322-Retail DATA:4CF442B2 PERKS:1
-       *
-       */
-      version: string;
-    };
-    game_server: {
-      launch_data: {
-        /**
-         *
-         * 1
-         *
-         */
-        id: number;
-        /**
-         *
-         * 1252922
-         *
-         */
-        profile: string;
-      };
-    };
-    /**
-     *
-     * 67cf09dd07f3143f5fe732d1
-     *
-     */
-    match: string;
-  }
-
-  export interface Matches_matchmaking_request_id_cancel_REQUEST {}
 
   export interface Profiles_id_inventory_REQUEST {
+    /**
+     *
+     * gleamium
+     *
+     */
     item_slugs: string[];
+    advanced_filter: {
+      /**
+       *
+       * any
+       *
+       */
+      boolean: string;
+      subfilters: any[];
+      /**
+       *
+       * currency
+       *
+       */
+      tags: string[];
+    };
   }
 
   export interface Profiles_bulk_REQUEST {
+    /**
+     *
+     * 62ef70cecd66b47f1cc1f5ea
+     *
+     */
     ids: string[];
   }
 
   export interface Sessions_auth_token_REQUEST {
     /**
      *
-     * I+MPokHx/JkCFmuHpcEiavYwKjKnp5BukUdWe1OlLqGC3yurVX4PndUzw0YD/zY2V2F2Z4sCT6A+oFHMwDtsic30zdadK5+Dw1YxH/4i9UU=
+     * I+MPokHx/JkCFmuHpcEiaqRG+8IJX/+xaKk2jiZBgAL/w8IIGsREtPP1rE6cBwjdioTLgasxCk4+oFHMwDtsieaJu3H6OI5faBq3SMTVCg4=
      *
      */
     code: string;
@@ -300,204 +326,45 @@ export namespace MVSRequests {
     grant_type: string;
   }
 
-  export interface Social_me_block_p2a3c488f51fb4bb19c8689be86997b8a_REQUEST {}
-
-  export interface Social_me_unblock_p2a3c488f51fb4bb19c8689be86997b8a_REQUEST {}
+  export interface Social_me_blocked_REQUEST {}
 
   export interface Ssc_invoke_attempt_daily_refresh_REQUEST {}
-
-  export interface Ssc_invoke_claim_all_milestone_reward_track_tiers_REQUEST {
-    /**
-     *
-     * mrt_mastery_jason
-     *
-     * mrt_battlepass_season_five
-     *
-     * bp_valentines_dailylogin_milestonerewardtrack1
-     *
-     */
-    TrackSlug: string;
-  }
-
-  export interface Ssc_invoke_claim_milestone_reward_track_tiers_REQUEST {
-    Tiers: number[][];
-    /**
-     *
-     * MRT_FighterRoadV2
-     *
-     * MRT_Bonus_Weekly_Mission
-     *
-     */
-    TrackSlug: string;
-  }
 
   export interface Ssc_invoke_claim_mission_rewards_REQUEST {
     /**
      *
-     * miscon_battlepassweekly_s5
-     *
      * miscon_battlepassdaily_s5
+     *
+     * miscon_battlepassweekly_s5
      *
      */
     ContainerSlug: string;
     MissionsToClaim: {
       /**
        *
-       * misctl_battlepass_weekly_new
+       * misctl_battlepass_daily_hard_new
        *
-       * misctl_battlepass_daily_base_new
+       * misctl_battlepass_weekly_new
        *
        */
       MissionControllerSlug: string;
       /**
        *
-       * 107f0018-8d09-4859-b308-07de2f4d0694
+       * f367cc26-94aa-472e-afb7-f5beca415eeb
        *
-       * a30ca0e3-7eb0-4b49-9f6d-cdcca1c2f77d
-       *
-       * b32be6de-3ad3-43da-9964-c6cf408d1cd8
+       * e2d513a5-227d-439a-a7c5-d95a6fdfd18d
        *
        */
       MissionGuid: string;
       /**
        *
-       * mis_hit_up_attack_air_tank_weekly
+       * mis_stats_total_down_normals_hith
        *
        * mis_ringout_pvp_weekly
-       *
-       * mis_stats_dealalldamage_pvp
        *
        */
       MissionSlug: string;
     }[];
-  }
-
-  export interface Ssc_invoke_create_custom_game_lobby_REQUEST {
-    AllMultiplayParams: {
-      "1": {
-        /**
-         *
-         * ec2-us-east-1-dokken
-         *
-         */
-        MultiplayClusterSlug: string;
-        /**
-         *
-         * 1252499
-         *
-         */
-        MultiplayProfileId: string;
-        /**
-         *
-         *
-         *
-         */
-        MultiplayRegionId: string;
-      };
-      "2": {
-        /**
-         *
-         * ec2-us-east-1-dokken
-         *
-         */
-        MultiplayClusterSlug: string;
-        /**
-         *
-         * 1252922
-         *
-         */
-        MultiplayProfileId: string;
-        /**
-         *
-         * 19c465a7-f21f-11ea-a5e3-0954f48c5682
-         *
-         */
-        MultiplayRegionId: string;
-      };
-      "3": {
-        /**
-         *
-         *
-         *
-         */
-        MultiplayClusterSlug: string;
-        /**
-         *
-         * 1252925
-         *
-         */
-        MultiplayProfileId: string;
-        /**
-         *
-         *
-         *
-         */
-        MultiplayRegionId: string;
-      };
-      "4": {
-        /**
-         *
-         * ec2-us-east-1-dokken
-         *
-         */
-        MultiplayClusterSlug: string;
-        /**
-         *
-         * 1252928
-         *
-         */
-        MultiplayProfileId: string;
-        /**
-         *
-         * 19c465a7-f21f-11ea-a5e3-0954f48c5682
-         *
-         */
-        MultiplayRegionId: string;
-      };
-    };
-    AutoPartyPreference: boolean;
-    /**
-     *
-     * 1
-     *
-     */
-    CrossplayPreference: number;
-    /**
-     *
-     * 544
-     *
-     */
-    GameplayPreferences: number;
-    /**
-     *
-     * 1167552915
-     *
-     */
-    HissCrc: number;
-    /**
-     *
-     * custom_game_lobby
-     *
-     */
-    LobbyTemplate: string;
-    /**
-     *
-     * 0
-     *
-     */
-    LobbyType: number;
-    /**
-     *
-     * PC
-     *
-     */
-    Platform: string;
-    /**
-     *
-     * CLIENT:2F322-Retail DATA:4CF442B2 PERKS:1
-     *
-     */
-    Version: string;
   }
 
   export interface Ssc_invoke_create_party_lobby_REQUEST {
@@ -628,59 +495,6 @@ export namespace MVSRequests {
     Version: string;
   }
 
-  export interface Ssc_invoke_equip_banner_REQUEST {
-    /**
-     *
-     * banner_s1_golden_goliath
-     *
-     * banner_s1_master_master
-     *
-     * banner_foretold_champion_rare
-     *
-     */
-    BannerSlug: string;
-  }
-
-  export interface Ssc_invoke_equip_stat_tracker_REQUEST {
-    /**
-     *
-     * 0
-     *
-     * 1
-     *
-     */
-    StatTrackerSlotIndex: number;
-    /**
-     *
-     * stattracking_ranked_seasonfive_charactersingold_1v1
-     *
-     * stat_tracking_bundle_ranked_season_two_wins_1v1
-     *
-     */
-    StatTrackerSlug: string;
-  }
-
-  export interface Ssc_invoke_equip_taunt_REQUEST {
-    /**
-     *
-     * character_Jason
-     *
-     */
-    CharacterSlug: string;
-    /**
-     *
-     * 1
-     *
-     */
-    TauntSlotIndex: number;
-    /**
-     *
-     * emote_pass_the_salt
-     *
-     */
-    TauntSlug: string;
-  }
-
   export interface Ssc_invoke_game_launch_event_REQUEST {
     /**
      *
@@ -723,266 +537,13 @@ export namespace MVSRequests {
 
   export interface Ssc_invoke_get_or_create_mission_object_REQUEST {}
 
-  export interface Ssc_invoke_invite_to_player_lobby_REQUEST {
-    AutoPartyPreference: boolean;
-    /**
-     *
-     * 1
-     *
-     */
-    CrossplayPreference: number;
-    /**
-     *
-     * 544
-     *
-     */
-    GameplayPreferences: number;
+  export interface Ssc_invoke_hiss_amalgamation_REQUEST {
     /**
      *
      * 1167552915
      *
      */
-    HissCrc: number;
-    /**
-     *
-     * 62e95383b488ee2289aef406
-     *
-     */
-    InviteeAccountID: string;
-    IsSpectator: boolean;
-    /**
-     *
-     * 67cf0da2d0f5dd3b4bed6d4b
-     *
-     */
-    LobbyId: string;
-    /**
-     *
-     * custom_game_lobby
-     *
-     */
-    LobbyTemplate: string;
-    /**
-     *
-     * 67cf0da2d0f5dd3b4bed6d4b
-     *
-     */
-    MatchID: string;
-    /**
-     *
-     * PC
-     *
-     */
-    Platform: string;
-    /**
-     *
-     * CLIENT:2F322-Retail DATA:4CF442B2 PERKS:1
-     *
-     */
-    Version: string;
-  }
-
-  export interface Ssc_invoke_join_custom_game_lobby_REQUEST {
-    AutoPartyPreference: boolean;
-    /**
-     *
-     * 1
-     *
-     */
-    CrossplayPreference: number;
-    /**
-     *
-     * 544
-     *
-     */
-    GameplayPreferences: number;
-    /**
-     *
-     * 1167552915
-     *
-     */
-    HissCrc: number;
-    /**
-     *
-     * 67cf0da2d0f5dd3b4bed6d4b
-     *
-     */
-    HostId: string;
-    IsSpectator: boolean;
-    /**
-     *
-     * custom_game_lobby
-     *
-     */
-    LobbyTemplate: string;
-    /**
-     *
-     * PC
-     *
-     */
-    Platform: string;
-    /**
-     *
-     * CLIENT:2F322-Retail DATA:4CF442B2 PERKS:1
-     *
-     */
-    Version: string;
-  }
-
-  export interface Ssc_invoke_kick_from_lobby_REQUEST {
-    AutoPartyPreference: boolean;
-    /**
-     *
-     * 1
-     *
-     */
-    CrossplayPreference: number;
-    /**
-     *
-     * 544
-     *
-     */
-    GameplayPreferences: number;
-    /**
-     *
-     * 1167552915
-     *
-     */
-    HissCrc: number;
-    /**
-     *
-     * 62e95383b488ee2289aef406
-     *
-     */
-    KickeeAccountID: string;
-    /**
-     *
-     * 67cf0da2d0f5dd3b4bed6d4b
-     *
-     */
-    LobbyId: string;
-    /**
-     *
-     * custom_game_lobby
-     *
-     */
-    LobbyTemplate: string;
-    /**
-     *
-     * 67cf0da2d0f5dd3b4bed6d4b
-     *
-     */
-    MatchID: string;
-    /**
-     *
-     * PC
-     *
-     */
-    Platform: string;
-    /**
-     *
-     * CLIENT:2F322-Retail DATA:4CF442B2 PERKS:1
-     *
-     */
-    Version: string;
-  }
-
-  export interface Ssc_invoke_leave_player_lobby_REQUEST {
-    AutoPartyPreference: boolean;
-    /**
-     *
-     * 1
-     *
-     */
-    CrossplayPreference: number;
-    /**
-     *
-     * 544
-     *
-     */
-    GameplayPreferences: number;
-    /**
-     *
-     * 1167552915
-     *
-     */
-    HissCrc: number;
-    /**
-     *
-     * 67cf0da2d0f5dd3b4bed6d4b
-     *
-     */
-    LobbyId: string;
-    /**
-     *
-     * custom_game_lobby
-     *
-     */
-    LobbyTemplate: string;
-    /**
-     *
-     * 67cf0da2d0f5dd3b4bed6d4b
-     *
-     */
-    MatchID: string;
-    /**
-     *
-     * PC
-     *
-     */
-    Platform: string;
-    /**
-     *
-     * CLIENT:2F322-Retail DATA:4CF442B2 PERKS:1
-     *
-     */
-    Version: string;
-  }
-
-  export interface Ssc_invoke_lobby_code_REQUEST {
-    AutoPartyPreference: boolean;
-    /**
-     *
-     * 1
-     *
-     */
-    CrossplayPreference: number;
-    /**
-     *
-     * 544
-     *
-     */
-    GameplayPreferences: number;
-    /**
-     *
-     * 1167552915
-     *
-     */
-    HissCrc: number;
-    /**
-     *
-     * 67cf0da2d0f5dd3b4bed6d4b
-     *
-     */
-    LobbyId: string;
-    /**
-     *
-     * custom_game_lobby
-     *
-     */
-    LobbyTemplate: string;
-    /**
-     *
-     * PC
-     *
-     */
-    Platform: string;
-    /**
-     *
-     * CLIENT:2F322-Retail DATA:4CF442B2 PERKS:1
-     *
-     */
-    Version: string;
+    Crc: number;
   }
 
   export interface Ssc_invoke_lock_lobby_loadout_REQUEST {
@@ -1008,28 +569,20 @@ export namespace MVSRequests {
     Loadout: {
       /**
        *
-       * character_BananaGuard
-       *
-       * character_Jason
-       *
-       * character_c16
+       * character_wonder_woman
        *
        */
       Character: string;
       /**
        *
-       * skin_bananaguard_default
-       *
-       * skin_c035_s25
-       *
-       * skin_c016_s18
+       * skin_wonder_woman_default
        *
        */
       Skin: string;
     };
     /**
      *
-     * 67cf09dd07f3143f5fe732d1
+     * 67d45cd0b8655ea25ca3a0a9
      *
      */
     LobbyId: string;
@@ -1056,190 +609,16 @@ export namespace MVSRequests {
   export interface Ssc_invoke_perks_lock_REQUEST {
     /**
      *
-     * 67cf0bdd38150fa35c03b5af
-     *
-     * 67cf0c7ec51aaceb6778d2c9
-     *
-     * 67cf0e30410383470e2dd0e1
+     * 67d45cfdda22dc702a4383d7
      *
      */
     ContainerMatchId: string;
+    /**
+     *
+     * perk_gen_well_rounded
+     *
+     */
     Perks: string[];
-  }
-
-  export interface Ssc_invoke_perks_purchase_REQUEST {
-    /**
-     *
-     * character_harleyquinn
-     *
-     */
-    Character: string;
-    Perks: string[];
-  }
-
-  export interface Ssc_invoke_perks_set_character_page_REQUEST {
-    /**
-     *
-     * character_harleyquinn
-     *
-     * character_Jason
-     *
-     */
-    Character: string;
-    /**
-     *
-     *
-     *
-     */
-    Description: string;
-    /**
-     *
-     * Custom Set 1
-     *
-     * Custom Set 3
-     *
-     * Custom Set 2
-     *
-     */
-    DisplayName: string;
-    /**
-     *
-     * 0
-     *
-     * 2
-     *
-     * 1
-     *
-     */
-    PageIndex: number;
-    Perks: string[];
-  }
-
-  export interface Ssc_invoke_promote_to_lobby_leader_REQUEST {
-    AutoPartyPreference: boolean;
-    /**
-     *
-     * 1
-     *
-     */
-    CrossplayPreference: number;
-    /**
-     *
-     * 544
-     *
-     */
-    GameplayPreferences: number;
-    /**
-     *
-     * 1167552915
-     *
-     */
-    HissCrc: number;
-    /**
-     *
-     * 67cf0da2d0f5dd3b4bed6d4b
-     *
-     */
-    LobbyId: string;
-    /**
-     *
-     * custom_game_lobby
-     *
-     */
-    LobbyTemplate: string;
-    /**
-     *
-     * 67cf0da2d0f5dd3b4bed6d4b
-     *
-     */
-    MatchID: string;
-    /**
-     *
-     * PC
-     *
-     */
-    Platform: string;
-    /**
-     *
-     * 62e95383b488ee2289aef406
-     *
-     */
-    PromoteTarget: string;
-    /**
-     *
-     * CLIENT:2F322-Retail DATA:4CF442B2 PERKS:1
-     *
-     */
-    Version: string;
-  }
-
-  export interface Ssc_invoke_rematch_accept_REQUEST {
-    /**
-     *
-     * 67cf0bdd38150fa35c03b5af
-     *
-     */
-    ContainerMatchId: string;
-  }
-
-  export interface Ssc_invoke_send_profile_notification_REQUEST {
-    /**
-     *
-     * 62ea8899706c79b6eca58d2f
-     *
-     * 62ec5254e7de359de7a0f3b7
-     *
-     */
-    AccountId: string;
-    /**
-     *
-     * pafd8d7950aa1484ea791d06662fa75ce
-     *
-     */
-    SenderWBPNAccountID: string;
-    /**
-     *
-     * 67cf0b8f59e56837868f0a0b
-     *
-     */
-    WBPNInvitationID: string;
-    /**
-     *
-     * WBPNFriendRequestReceivedNotification
-     *
-     * WBPNBlockedNotification
-     *
-     * WBPNUnblockedNotification
-     *
-     */
-    template_id: string;
-  }
-
-  export interface Ssc_invoke_set_enabled_maps_for_custom_game_REQUEST {
-    MapSlugs: string[];
-    /**
-     *
-     * 67cf0da2d0f5dd3b4bed6d4b
-     *
-     */
-    MatchID: string;
-  }
-
-  export interface Ssc_invoke_set_game_mode_for_custom_game_REQUEST {
-    /**
-     *
-     * gm_chickensvsicecubes_1v1
-     *
-     * gm_classic_1v1
-     *
-     */
-    GameModeSlug: string;
-    /**
-     *
-     * 67cf0da2d0f5dd3b4bed6d4b
-     *
-     */
-    MatchID: string;
   }
 
   export interface Ssc_invoke_set_lobby_joinable_REQUEST {
@@ -1264,57 +643,7 @@ export namespace MVSRequests {
     HissCrc: number;
     /**
      *
-     * 67cf09dd07f3143f5fe732d1
-     *
-     * 67cf0da2d0f5dd3b4bed6d4b
-     *
-     */
-    LobbyId: string;
-    /**
-     *
-     * party_lobby
-     *
-     * custom_game_lobby
-     *
-     */
-    LobbyTemplate: string;
-    /**
-     *
-     * PC
-     *
-     */
-    Platform: string;
-    /**
-     *
-     * CLIENT:2F322-Retail DATA:4CF442B2 PERKS:1
-     *
-     */
-    Version: string;
-  }
-
-  export interface Ssc_invoke_set_mode_for_lobby_REQUEST {
-    AutoPartyPreference: boolean;
-    /**
-     *
-     * 1
-     *
-     */
-    CrossplayPreference: number;
-    /**
-     *
-     * 544
-     *
-     */
-    GameplayPreferences: number;
-    /**
-     *
-     * 1167552915
-     *
-     */
-    HissCrc: number;
-    /**
-     *
-     * 67cf09dd07f3143f5fe732d1
+     * 67d45cd0b8655ea25ca3a0a9
      *
      */
     LobbyId: string;
@@ -1324,14 +653,6 @@ export namespace MVSRequests {
      *
      */
     LobbyTemplate: string;
-    /**
-     *
-     * 1v1
-     *
-     * ranked-1v1
-     *
-     */
-    ModeString: string;
     /**
      *
      * PC
@@ -1368,7 +689,7 @@ export namespace MVSRequests {
     HissCrc: number;
     /**
      *
-     * 67cf09dd07f3143f5fe732d1
+     * 67d45cd0b8655ea25ca3a0a9
      *
      */
     LobbyId: string;
@@ -1380,7 +701,7 @@ export namespace MVSRequests {
     LobbyTemplate: string;
     /**
      *
-     * 67cf09dd07f3143f5fe732d1
+     * 67d45cd0b8655ea25ca3a0a9
      *
      */
     MatchID: string;
@@ -1399,101 +720,10 @@ export namespace MVSRequests {
     Version: string;
   }
 
-  export interface Ssc_invoke_set_world_buffs_for_custom_game_REQUEST {
-    /**
-     *
-     * 67cf0da2d0f5dd3b4bed6d4b
-     *
-     */
-    MatchID: string;
-    WorldBuffSlugs: string[];
-  }
-
-  export interface Ssc_invoke_start_custom_match_REQUEST {
-    AutoPartyPreference: boolean;
-    BotData: {};
-    /**
-     *
-     * ec2-us-east-1-dokken
-     *
-     */
-    ClusterID: string;
-    /**
-     *
-     * 1
-     *
-     */
-    CrossplayPreference: number;
-    /**
-     *
-     * 544
-     *
-     */
-    GameplayPreferences: number;
-    /**
-     *
-     * 1167552915
-     *
-     */
-    HissCrc: number;
-    /**
-     *
-     * 67cf0da2d0f5dd3b4bed6d4b
-     *
-     */
-    LobbyId: string;
-    /**
-     *
-     * custom_game_lobby
-     *
-     */
-    LobbyTemplate: string;
-    /**
-     *
-     * 67cf0da2d0f5dd3b4bed6d4b
-     *
-     */
-    MatchID: string;
-    /**
-     *
-     * 1252922
-     *
-     */
-    MultiplayProfileID: string;
-    /**
-     *
-     * 19c465a7-f21f-11ea-a5e3-0954f48c5682
-     *
-     */
-    MultiplayRegionID: string;
-    /**
-     *
-     * 1
-     *
-     */
-    MultiplayRegionSearchID: number;
-    /**
-     *
-     * PC
-     *
-     */
-    Platform: string;
-    /**
-     *
-     * CLIENT:2F322-Retail DATA:4CF442B2 PERKS:1
-     *
-     */
-    Version: string;
-  }
-
   export interface Ssc_invoke_submit_end_of_match_stats_REQUEST {
     /**
      *
-     * 67cf0bdd38150fa35c03b5af
-     *
-     * 67cf0c7ec51aaceb6778d2c9
-     *
-     * 67cf0e30410383470e2dd0e1
+     * 67d45cfdda22dc702a4383d7
      *
      */
     ContainerMatchId: string;
@@ -1568,8 +798,6 @@ export namespace MVSRequests {
           "Fighter:IronGiant:RageMission": number;
           /**
            *
-           * 1
-           *
            * 0
            *
            */
@@ -1612,7 +840,7 @@ export namespace MVSRequests {
           "Fighter:Morty:AllySave": number;
           /**
            *
-           * 0
+           * 1
            *
            */
           "Fighter:Morty:SplitNade": number;
@@ -1762,7 +990,7 @@ export namespace MVSRequests {
           "Objective:Match:Enemies:BuffApplied:Frozen": number;
           /**
            *
-           * 0
+           * 8
            *
            */
           "Objective:Match:Enemies:BuffApplied:Ignited": number;
@@ -1966,61 +1194,37 @@ export namespace MVSRequests {
           "Stat:Game:Character:DebuffsCleansed": number;
           /**
            *
-           * 48.13999938964844
-           *
-           * 90.5886459350586
-           *
-           * 0
+           * 123.70502471923828
            *
            */
           "Stat:Game:Character:Stock:DamageTaken": number;
           /**
            *
-           * 10
-           *
-           * 19
-           *
-           * 0
+           * 17
            *
            */
           "Stat:Game:Character:TotalAirAttacksHit": number;
           /**
            *
-           * 30
-           *
-           * 90
-           *
-           * 0
+           * 53
            *
            */
           "Stat:Game:Character:TotalAirAttacksUsed": number;
           /**
            *
-           * 123.27750396728516
-           *
-           * 131.6581268310547
-           *
-           * 0
+           * 64.50927734375
            *
            */
           "Stat:Game:Character:TotalAirDamageDealt": number;
           /**
            *
-           * 9
-           *
-           * 19
-           *
-           * 0
+           * 16
            *
            */
           "Stat:Game:Character:TotalAirNormalsHit": number;
           /**
            *
-           * 18
-           *
-           * 65
-           *
-           * 0
+           * 44
            *
            */
           "Stat:Game:Character:TotalAirNormalsUsed": number;
@@ -2028,39 +1232,27 @@ export namespace MVSRequests {
            *
            * 1
            *
-           * 0
-           *
            */
           "Stat:Game:Character:TotalAirSpecialsHit": number;
           /**
            *
-           * 12
-           *
-           * 25
-           *
-           * 0
+           * 9
            *
            */
           "Stat:Game:Character:TotalAirSpecialsUsed": number;
           /**
            *
-           * 44.099998474121094
-           *
-           * 102.08333587646484
-           *
-           * 4.666666507720947
+           * 69.83333587646484
            *
            */
           "Stat:Game:Character:TotalAirTime": number;
           /**
            *
-           * 0
+           * 1
            *
            */
           "Stat:Game:Character:TotalArmorBreaks": number;
           /**
-           *
-           * 2
            *
            * 0
            *
@@ -2074,31 +1266,19 @@ export namespace MVSRequests {
           "Stat:Game:Character:TotalAssists": number;
           /**
            *
-           * 196.98875427246094
-           *
-           * 297.4160461425781
-           *
-           * 0
+           * 89.55269622802734
            *
            */
           "Stat:Game:Character:TotalAttackDamageDealt": number;
           /**
            *
-           * 5
-           *
-           * 1
-           *
-           * 0
+           * 9
            *
            */
           "Stat:Game:Character:TotalAttacksDodged": number;
           /**
            *
-           * 25
-           *
-           * 58
-           *
-           * 0
+           * 33
            *
            */
           "Stat:Game:Character:TotalAttacksHit": number;
@@ -2110,75 +1290,49 @@ export namespace MVSRequests {
           "Stat:Game:Character:TotalAttacksParried": number;
           /**
            *
-           * 58
-           *
-           * 186
-           *
-           * 0
+           * 95
            *
            */
           "Stat:Game:Character:TotalAttacksUsed": number;
           /**
            *
-           * 0
-           *
-           * 3
+           * 5
            *
            */
           "Stat:Game:Character:TotalChargeAttacksHit": number;
           /**
            *
-           * 6
-           *
-           * 12
-           *
-           * 0
+           * 43
            *
            */
           "Stat:Game:Character:TotalChargeAttacksUsed": number;
           /**
            *
-           * 4
-           *
-           * 6
-           *
-           * 0
+           * 19
            *
            */
           "Stat:Game:Character:TotalCooldownAbilitiesStarted": number;
           /**
            *
-           * 0
+           * 0.30000001192092896
            *
            */
           "Stat:Game:Character:TotalCrouchTime": number;
           /**
            *
-           * 42.04999923706055
-           *
-           * 46.04999923706055
-           *
-           * 0
+           * 14.5
            *
            */
           "Stat:Game:Character:TotalDamageAdded": number;
           /**
            *
-           * 259.46624755859375
-           *
-           * 310.4310607910156
-           *
-           * 0
+           * 133.38719177246094
            *
            */
           "Stat:Game:Character:TotalDamageDealt": number;
           /**
            *
-           * 27.694236755371094
-           *
-           * 9.5
-           *
-           * 0
+           * 58.42000198364258
            *
            */
           "Stat:Game:Character:TotalDamageDodged": number;
@@ -2196,29 +1350,17 @@ export namespace MVSRequests {
           "Stat:Game:Character:TotalDamageParried": number;
           /**
            *
-           * 159.59088134765625
-           *
-           * 243.2251434326172
-           *
-           * 0
+           * 376.3334655761719
            *
            */
           "Stat:Game:Character:TotalDamageTaken": number;
           /**
-           *
-           * 1
-           *
-           * 7
            *
            * 0
            *
            */
           "Stat:Game:Character:TotalDashAttacksHit": number;
           /**
-           *
-           * 3
-           *
-           * 16
            *
            * 0
            *
@@ -2228,49 +1370,29 @@ export namespace MVSRequests {
            *
            * 17
            *
-           * 13
-           *
-           * 3
-           *
            */
           "Stat:Game:Character:TotalDirectionalAirDodgesUsed": number;
           /**
            *
-           * 22
-           *
-           * 23
-           *
-           * 3
+           * 33
            *
            */
           "Stat:Game:Character:TotalDirectionalDodgesUsed": number;
           /**
            *
-           * 5
-           *
-           * 10
-           *
-           * 0
+           * 16
            *
            */
           "Stat:Game:Character:TotalDirectionalGroundDodgesUsed": number;
           /**
            *
-           * 22
-           *
-           * 23
-           *
-           * 3
+           * 33
            *
            */
           "Stat:Game:Character:TotalDodgesUsed": number;
           /**
            *
-           * 6
-           *
-           * 18
-           *
-           * 0
+           * 5
            *
            */
           "Stat:Game:Character:TotalDoubleJumps": number;
@@ -2282,17 +1404,13 @@ export namespace MVSRequests {
           "Stat:Game:Character:TotalDoubleRingouts": number;
           /**
            *
-           * 0
-           *
-           * 2
+           * 5
            *
            */
           "Stat:Game:Character:TotalDownAirNormalHit": number;
           /**
            *
-           * 0
-           *
-           * 9
+           * 11
            *
            */
           "Stat:Game:Character:TotalDownAirNormalUsed": number;
@@ -2304,27 +1422,19 @@ export namespace MVSRequests {
           "Stat:Game:Character:TotalDownAirSpecialsHit": number;
           /**
            *
-           * 3
-           *
-           * 14
-           *
            * 0
            *
            */
           "Stat:Game:Character:TotalDownAirSpecialsUsed": number;
           /**
            *
-           * 0
-           *
-           * 1
+           * 4
            *
            */
           "Stat:Game:Character:TotalDownGroundNormalHit": number;
           /**
            *
-           * 0
-           *
-           * 2
+           * 6
            *
            */
           "Stat:Game:Character:TotalDownGroundNormalUsed": number;
@@ -2338,31 +1448,23 @@ export namespace MVSRequests {
            *
            * 0
            *
-           * 3
-           *
            */
           "Stat:Game:Character:TotalDownGroundSpecialsUsed": number;
           /**
            *
-           * 0
-           *
-           * 3
+           * 9
            *
            */
           "Stat:Game:Character:TotalDownNormalAttacksHit": number;
           /**
            *
-           * 0
-           *
-           * 11
+           * 17
            *
            */
           "Stat:Game:Character:TotalDownNormalAttacksUsed": number;
           /**
            *
            * 0
-           *
-           * 1
            *
            */
           "Stat:Game:Character:TotalDownRingouts": number;
@@ -2373,10 +1475,6 @@ export namespace MVSRequests {
            */
           "Stat:Game:Character:TotalDownSpecialsHit": number;
           /**
-           *
-           * 3
-           *
-           * 17
            *
            * 0
            *
@@ -2402,13 +1500,11 @@ export namespace MVSRequests {
           "Stat:Game:Character:TotalFireAttacksHit": number;
           /**
            *
-           * 0
+           * 2
            *
            */
           "Stat:Game:Character:TotalFullyChargedAttacksHit": number;
           /**
-           *
-           * 50.17774963378906
            *
            * 0
            *
@@ -2416,71 +1512,43 @@ export namespace MVSRequests {
           "Stat:Game:Character:TotalGreyHealthReceived": number;
           /**
            *
-           * 15
-           *
-           * 39
-           *
-           * 0
+           * 16
            *
            */
           "Stat:Game:Character:TotalGroundAttacksHit": number;
           /**
            *
-           * 28
-           *
-           * 96
-           *
-           * 0
+           * 42
            *
            */
           "Stat:Game:Character:TotalGroundAttacksUsed": number;
           /**
            *
-           * 124.13875579833984
-           *
-           * 170.03292846679688
-           *
-           * 0
+           * 51.29191970825195
            *
            */
           "Stat:Game:Character:TotalGroundDamageDealt": number;
           /**
            *
-           * 13
-           *
-           * 38
-           *
-           * 0
+           * 11
            *
            */
           "Stat:Game:Character:TotalGroundNormalsHit": number;
           /**
            *
-           * 19
-           *
-           * 78
-           *
-           * 0
+           * 31
            *
            */
           "Stat:Game:Character:TotalGroundNormalsUsed": number;
           /**
            *
-           * 2
-           *
-           * 1
-           *
-           * 0
+           * 5
            *
            */
           "Stat:Game:Character:TotalGroundSpecialsHit": number;
           /**
            *
-           * 9
-           *
-           * 18
-           *
-           * 0
+           * 11
            *
            */
           "Stat:Game:Character:TotalGroundSpecialsUsed": number;
@@ -2492,11 +1560,7 @@ export namespace MVSRequests {
           "Stat:Game:Character:TotalHealingReceived": number;
           /**
            *
-           * 43
-           *
-           * 51
-           *
-           * 0
+           * 53
            *
            */
           "Stat:Game:Character:TotalHitsTaken": number;
@@ -2508,17 +1572,11 @@ export namespace MVSRequests {
           "Stat:Game:Character:TotalIceAttacksHit": number;
           /**
            *
-           * 18
-           *
-           * 48
-           *
-           * 1
+           * 23
            *
            */
           "Stat:Game:Character:TotalJumps": number;
           /**
-           *
-           * 450
            *
            * 0
            *
@@ -2532,8 +1590,6 @@ export namespace MVSRequests {
           "Stat:Game:Character:TotalKnockbackMitigated": number;
           /**
            *
-           * 2
-           *
            * 0
            *
            */
@@ -2546,25 +1602,17 @@ export namespace MVSRequests {
           "Stat:Game:Character:TotalNeutralAirDodgesUsed": number;
           /**
            *
-           * 7
-           *
-           * 0
+           * 2
            *
            */
           "Stat:Game:Character:TotalNeutralAirNormalHit": number;
           /**
            *
-           * 11
-           *
-           * 15
-           *
-           * 0
+           * 7
            *
            */
           "Stat:Game:Character:TotalNeutralAirNormalUsed": number;
           /**
-           *
-           * 1
            *
            * 0
            *
@@ -2572,11 +1620,7 @@ export namespace MVSRequests {
           "Stat:Game:Character:TotalNeutralAirSpecialsHit": number;
           /**
            *
-           * 3
-           *
-           * 5
-           *
-           * 0
+           * 8
            *
            */
           "Stat:Game:Character:TotalNeutralAirSpecialsUsed": number;
@@ -2594,21 +1638,13 @@ export namespace MVSRequests {
           "Stat:Game:Character:TotalNeutralGroundDodgesUsed": number;
           /**
            *
-           * 1
-           *
-           * 4
-           *
-           * 0
+           * 2
            *
            */
           "Stat:Game:Character:TotalNeutralGroundNormalHit": number;
           /**
            *
-           * 1
-           *
-           * 7
-           *
-           * 0
+           * 9
            *
            */
           "Stat:Game:Character:TotalNeutralGroundNormalUsed": number;
@@ -2616,43 +1652,27 @@ export namespace MVSRequests {
            *
            * 0
            *
-           * 1
-           *
            */
           "Stat:Game:Character:TotalNeutralGroundSpecialsHit": number;
           /**
            *
-           * 6
-           *
-           * 10
-           *
-           * 0
+           * 3
            *
            */
           "Stat:Game:Character:TotalNeutralGroundSpecialsUsed": number;
           /**
            *
-           * 30
-           *
-           * 68
-           *
-           * 0
+           * 31
            *
            */
           "Stat:Game:Character:TotalNeutralNormalAttacksHit": number;
           /**
            *
-           * 12
-           *
-           * 22
-           *
-           * 0
+           * 16
            *
            */
           "Stat:Game:Character:TotalNeutralNormalAttacksUsed": number;
           /**
-           *
-           * 1
            *
            * 0
            *
@@ -2660,31 +1680,19 @@ export namespace MVSRequests {
           "Stat:Game:Character:TotalNeutralSpecialsHit": number;
           /**
            *
-           * 9
-           *
-           * 15
-           *
-           * 0
+           * 11
            *
            */
           "Stat:Game:Character:TotalNeutralSpecialsUsed": number;
           /**
            *
-           * 22
-           *
-           * 57
-           *
-           * 0
+           * 27
            *
            */
           "Stat:Game:Character:TotalNormalAttacksHit": number;
           /**
            *
-           * 37
-           *
-           * 143
-           *
-           * 0
+           * 75
            *
            */
           "Stat:Game:Character:TotalNormalAttacksUsed": number;
@@ -2697,8 +1705,6 @@ export namespace MVSRequests {
           /**
            *
            * 0
-           *
-           * 1
            *
            */
           "Stat:Game:Character:TotalProjectileRingouts": number;
@@ -2716,21 +1722,17 @@ export namespace MVSRequests {
           "Stat:Game:Character:TotalProjectilesReflected": number;
           /**
            *
-           * 0
+           * 1
            *
            */
           "Stat:Game:Character:TotalRightRingouts": number;
           /**
            *
-           * 3
-           *
-           * 0
+           * 1
            *
            */
           "Stat:Game:Character:TotalRingouts": number;
           /**
-           *
-           * 1
            *
            * 0
            *
@@ -2738,25 +1740,17 @@ export namespace MVSRequests {
           "Stat:Game:Character:TotalRingoutsEnemyLowPercent": number;
           /**
            *
-           * 1
-           *
            * 3
            *
            */
           "Stat:Game:Character:TotalRingoutsReceived": number;
           /**
            *
-           * 2
-           *
-           * 3
-           *
-           * 0
+           * 1
            *
            */
           "Stat:Game:Character:TotalRingoutsWithLessDamage": number;
           /**
-           *
-           * 1
            *
            * 0
            *
@@ -2770,21 +1764,13 @@ export namespace MVSRequests {
           "Stat:Game:Character:TotalShieldBreaksFromShieldBreaker": number;
           /**
            *
-           * 3
-           *
-           * 6
-           *
-           * 0
+           * 10
            *
            */
           "Stat:Game:Character:TotalSideAirNormalHit": number;
           /**
            *
-           * 5
-           *
-           * 31
-           *
-           * 0
+           * 23
            *
            */
           "Stat:Game:Character:TotalSideAirNormalUsed": number;
@@ -2796,113 +1782,73 @@ export namespace MVSRequests {
           "Stat:Game:Character:TotalSideAirSpecialsHit": number;
           /**
            *
-           * 4
-           *
            * 0
            *
            */
           "Stat:Game:Character:TotalSideAirSpecialsUsed": number;
           /**
            *
-           * 9
-           *
-           * 33
-           *
-           * 0
+           * 3
            *
            */
           "Stat:Game:Character:TotalSideGroundNormalHit": number;
           /**
            *
-           * 17
-           *
-           * 63
-           *
-           * 0
+           * 14
            *
            */
           "Stat:Game:Character:TotalSideGroundNormalUsed": number;
           /**
            *
-           * 1
-           *
-           * 0
+           * 5
            *
            */
           "Stat:Game:Character:TotalSideGroundSpecialsHit": number;
           /**
            *
-           * 1
-           *
-           * 0
+           * 8
            *
            */
           "Stat:Game:Character:TotalSideGroundSpecialsUsed": number;
           /**
            *
-           * 12
-           *
-           * 39
-           *
-           * 0
+           * 13
            *
            */
           "Stat:Game:Character:TotalSideNormalAttacksHit": number;
           /**
            *
-           * 22
-           *
-           * 94
-           *
-           * 0
+           * 37
            *
            */
           "Stat:Game:Character:TotalSideNormalAttacksUsed": number;
           /**
            *
-           * 1
-           *
-           * 0
+           * 5
            *
            */
           "Stat:Game:Character:TotalSideSpecialsHit": number;
           /**
            *
-           * 5
-           *
-           * 4
-           *
-           * 0
+           * 8
            *
            */
           "Stat:Game:Character:TotalSideSpecialsUsed": number;
           /**
            *
-           * 50.4275016784668
-           *
-           * 4.275000095367432
-           *
-           * 0
+           * 26.24850082397461
            *
            */
           "Stat:Game:Character:TotalSpecialDamageDealt": number;
           /**
            *
-           * 3
-           *
-           * 1
-           *
-           * 0
+           * 6
            *
            */
           "Stat:Game:Character:TotalSpecialsHit": number;
           /**
            *
-           * 21
-           *
-           * 43
-           *
-           * 0
+           * 20
            *
            */
           "Stat:Game:Character:TotalSpecialsUsed": number;
@@ -2922,19 +1868,11 @@ export namespace MVSRequests {
            *
            * 1
            *
-           * 3
-           *
-           * 0
-           *
            */
           "Stat:Game:Character:TotalUpAirNormalHit": number;
           /**
            *
-           * 2
-           *
-           * 10
-           *
-           * 0
+           * 5
            *
            */
           "Stat:Game:Character:TotalUpAirNormalUsed": number;
@@ -2942,31 +1880,21 @@ export namespace MVSRequests {
            *
            * 1
            *
-           * 0
-           *
            */
           "Stat:Game:Character:TotalUpAirSpecialsHit": number;
           /**
            *
-           * 2
-           *
-           * 0
+           * 1
            *
            */
           "Stat:Game:Character:TotalUpAirSpecialsUsed": number;
           /**
-           *
-           * 1
            *
            * 0
            *
            */
           "Stat:Game:Character:TotalUpGroundNormalHit": number;
           /**
-           *
-           * 1
-           *
-           * 6
            *
            * 0
            *
@@ -2980,39 +1908,23 @@ export namespace MVSRequests {
           "Stat:Game:Character:TotalUpGroundSpecialsHit": number;
           /**
            *
-           * 2
-           *
-           * 5
-           *
            * 0
            *
            */
           "Stat:Game:Character:TotalUpGroundSpecialsUsed": number;
           /**
            *
-           * 2
-           *
-           * 4
-           *
-           * 0
+           * 1
            *
            */
           "Stat:Game:Character:TotalUpNormalAttacksHit": number;
           /**
            *
-           * 3
-           *
-           * 16
-           *
-           * 0
+           * 5
            *
            */
           "Stat:Game:Character:TotalUpNormalAttacksUsed": number;
           /**
-           *
-           * 1
-           *
-           * 2
            *
            * 0
            *
@@ -3022,57 +1934,35 @@ export namespace MVSRequests {
            *
            * 1
            *
-           * 0
-           *
            */
           "Stat:Game:Character:TotalUpSpecialsHit": number;
           /**
            *
-           * 4
-           *
-           * 7
-           *
-           * 0
+           * 1
            *
            */
           "Stat:Game:Character:TotalUpSpecialsUsed": number;
           /**
            *
-           * 1.7999999523162842
-           *
-           * 4.9666666984558105
-           *
-           * 0.8999999761581421
+           * 5.7833333015441895
            *
            */
           "Stat:Game:Character:TotalWalkLeftTime": number;
           /**
            *
-           * 1.7000000476837158
-           *
-           * 4.616666793823242
-           *
-           * 0
+           * 4.449999809265137
            *
            */
           "Stat:Game:Character:TotalWalkRightTime": number;
           /**
            *
-           * 3.5
-           *
-           * 9.583333015441895
-           *
-           * 0.8999999761581421
+           * 10.233333587646484
            *
            */
           "Stat:Game:Character:TotalWalkTime": number;
           /**
            *
-           * 0.9166666865348816
-           *
-           * 0.6499999761581421
-           *
-           * 0
+           * 1.2166666984558105
            *
            */
           "Stat:Game:Character:TotalWallHangTime": number;
@@ -3081,61 +1971,37 @@ export namespace MVSRequests {
       PlayerNetworkStats: {
         /**
          *
-         * 20.458072662353516
-         *
-         * 22.474082946777344
-         *
-         * 18.69588279724121
+         * 22.971542358398438
          *
          */
         BytesRecvPerFrame: number;
         /**
          *
-         * 25.650310516357422
-         *
-         * 26.993146896362305
-         *
-         * 24.614572525024414
+         * 27.309011459350586
          *
          */
         BytesSendPerFrame: number;
         /**
          *
-         * 0.44518834352493286
-         *
-         * 0.4438442587852478
-         *
-         * 0.3922589421272278
+         * 0.4445424973964691
          *
          */
         CompressionRecvRatio: number;
         /**
          *
-         * 126790
-         *
-         * 349337
-         *
-         * 27431
+         * 236025
          *
          */
         CompressionRecvReduction: number;
         /**
          *
-         * 0.6187708973884583
-         *
-         * 0.6134199500083923
-         *
-         * 0.574874222278595
+         * 0.6133713722229004
          *
          */
         CompressionSendRatio: number;
         /**
          *
-         * 78590
-         *
-         * 211024
-         *
-         * 17238
+         * 141549
          *
          */
         CompressionSendReduction: number;
@@ -3165,17 +2031,11 @@ export namespace MVSRequests {
         InputDelayMin: number;
         /**
          *
-         * 0.034882303327322006
-         *
-         * 0.03517819941043854
-         *
          * 0
          *
          */
         LargeDeltaTickAverage: number;
         /**
-         *
-         * 1
          *
          * 0
          *
@@ -3183,19 +2043,11 @@ export namespace MVSRequests {
         LargeDeltaTickCount: number;
         /**
          *
-         * 0.034882303327322006
-         *
-         * 0.03517819941043854
-         *
          * 0
          *
          */
         LargeDeltaTickMax: number;
         /**
-         *
-         * 0.034882303327322006
-         *
-         * 0.03517819941043854
          *
          * 0
          *
@@ -3263,51 +2115,31 @@ export namespace MVSRequests {
         PacketLossMax: number;
         /**
          *
-         * 16.684289932250977
-         *
-         * 28.427947998046875
-         *
-         * 17.772010803222656
+         * 31.13129997253418
          *
          */
         PingAverage: number;
         /**
          *
-         * 16
-         *
-         * 28
-         *
-         * 17
+         * 30
          *
          */
         PingFinal: number;
         /**
          *
-         * 22
-         *
-         * 36
-         *
-         * 21
+         * 38
          *
          */
         PingMax: number;
         /**
          *
-         * 15
-         *
-         * 26
-         *
-         * 16
+         * 29
          *
          */
         PingMin: number;
         /**
          *
-         * 0.007665901444852352
-         *
-         * 0.005257213953882456
-         *
-         * 0.29798516631126404
+         * 0.010494167916476727
          *
          */
         RiftAverage: number;
@@ -3319,11 +2151,7 @@ export namespace MVSRequests {
         RiftFinal: number;
         /**
          *
-         * 3
-         *
          * 5
-         *
-         * 14
          *
          */
         RiftMax: number;
@@ -3335,29 +2163,19 @@ export namespace MVSRequests {
         RiftMin: number;
         /**
          *
-         * 1.0294123888015747
-         *
-         * 1.565183401107788
-         *
-         * 0
+         * 3.20731782913208
          *
          */
         RollbackFramesAverage: number;
         /**
          *
-         * 1
-         *
-         * 0
+         * 2
          *
          */
         RollbackFramesFinal: number;
         /**
          *
-         * 2
-         *
-         * 4
-         *
-         * 0
+         * 10
          *
          */
         RollbackFramesMax: number;
@@ -3365,35 +2183,23 @@ export namespace MVSRequests {
          *
          * 1
          *
-         * 0
-         *
          */
         RollbackFramesMin: number;
         /**
          *
-         * 1.0294123888015747
-         *
-         * 1.565183401107788
-         *
-         * 0
+         * 3.20731782913208
          *
          */
         RollbackFreqAverage: number;
         /**
          *
-         * 1
-         *
-         * 0
+         * 2
          *
          */
         RollbackFreqFinal: number;
         /**
          *
-         * 383
-         *
-         * 401
-         *
-         * 0
+         * 4390
          *
          */
         RollbackFreqMax: number;
@@ -3401,15 +2207,16 @@ export namespace MVSRequests {
          *
          * 1
          *
-         * 0
-         *
          */
         RollbackFreqMin: number;
       };
-      Score: number[];
       /**
        *
-       * 1
+       * 3
+       *
+       */
+      Score: number[];
+      /**
        *
        * 0
        *
@@ -3418,85 +2225,24 @@ export namespace MVSRequests {
     };
     /**
      *
-     * 76
-     *
-     * 200
-     *
-     * 9
+     * 131
      *
      */
     MatchLength: number;
   }
 
-  export interface Ssc_invoke_switch_custom_game_lobby_team_REQUEST {
-    /**
-     *
-     * 67cf0da2d0f5dd3b4bed6d4b
-     *
-     */
-    MatchID: string;
-    /**
-     *
-     * 4
-     *
-     */
-    TeamIndex: number;
-  }
-
   export interface Ssc_invoke_toast_player_REQUEST {
     /**
      *
-     * 67cf0e30410383470e2dd0e1
+     * 67d45cfdda22dc702a4383d7
      *
      */
     ContainerMatchId: string;
     /**
      *
-     * 62e95383b488ee2289aef406
+     * 665a7f968ec47506466fbd2d
      *
      */
     ToasteeId: string;
   }
-
-  export interface Ssc_invoke_update_int_setting_for_custom_game_REQUEST {
-    /**
-     *
-     * 67cf0da2d0f5dd3b4bed6d4b
-     *
-     */
-    MatchID: string;
-    /**
-     *
-     * NumRingoutsForWin
-     *
-     * MatchDuration
-     *
-     */
-    SettingKey: string;
-    /**
-     *
-     * 2
-     *
-     * 300
-     *
-     */
-    SettingValue: number;
-  }
-
-  export interface Ssc_invoke_update_team_style_for_custom_game_REQUEST {
-    /**
-     *
-     * 67cf0da2d0f5dd3b4bed6d4b
-     *
-     */
-    MatchID: string;
-    /**
-     *
-     * Solos
-     *
-     */
-    TeamStyle: string;
-  }
-
-  export interface Virtual_commerce_purchases_id_toasts_gleamium_REQUEST {}
 }

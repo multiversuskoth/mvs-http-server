@@ -12,7 +12,7 @@ export class Identity {
   username!: string;
 
   @prop({ required: true })
-  avatar!: string;
+  avatar!: string | null;
 
   @prop({ required: true })
   default_username!: boolean;
@@ -21,7 +21,7 @@ export class Identity {
   // personal_data?: null;
 
   @prop()
-  alternate!: IdentityAlternate
+  alternate!: IdentityAlternate;
 }
 
 @modelOptions({ schemaOptions: { _id: false } })
@@ -30,6 +30,8 @@ export class WbAccount {
   completed!: boolean;
   @prop()
   email_verified?: boolean;
+  @prop()
+  age_category?: string;
 }
 
 @modelOptions({ schemaOptions: { _id: false } })
@@ -39,7 +41,9 @@ export class IdentityAlternateItem {
   @prop({ required: true })
   username!: string;
   @prop()
-  avatar?: string;
+  avatar!: string | null;
+  @prop()
+  email?: string | null;
 }
 
 @modelOptions({ schemaOptions: { _id: false } })
@@ -52,11 +56,11 @@ export class IdentityAlternate {
   xb1?: IdentityAlternateItem;
   @prop()
   ps4?: IdentityAlternateItem;
+  @prop()
+  steam?: IdentityAlternateItem;
 }
 
-export class Connection{
-
-}
+export class Connection {}
 
 export class Account implements Base {
   _id!: mongoose.Types.ObjectId;
@@ -64,10 +68,10 @@ export class Account implements Base {
   id!: string;
 
   @prop({ required: true })
-  updated_at!: number;
+  updated_at!: Date;
 
   @prop({ required: true })
-  created_at!: number;
+  created_at!: Date;
 
   @prop({ required: true })
   deleted!: boolean;
@@ -90,8 +94,8 @@ export class Account implements Base {
   @prop({ required: true })
   wb_account!: WbAccount;
 
-  @prop({ default: null })
-  points!: number | null;
+  @prop({ default: 0 })
+  points!: number;
 
   @prop({ required: true })
   state!: string;
