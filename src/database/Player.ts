@@ -23,13 +23,13 @@ export class Player {
   account?: Account | (mongoose.Document & Account);
 
   @prop({ required: true })
-  updated_at!: number;
+  updated_at!: Date;
   @prop({ required: true, ref: () => Account })
   account_id!: mongoose.Types.ObjectId;
   @prop({ required: true })
-  created_at!: number;
+  created_at!: Date;
   @prop({ required: true })
-  last_login!: number;
+  last_login!: Date;
   @prop({ default: null })
   points!: number | null;
 

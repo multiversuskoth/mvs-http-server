@@ -5,3 +5,7 @@ export function MVSTime(date: Date) {
 export type ObjectWithDateStrings<T> = {
   [K in keyof T]: T[K] extends Date ? string : T[K];
 };
+
+export type ObjectWithUnix<T> = {
+  [K in keyof T]: T[K] extends Date ? number : ObjectWithUnix<T[K]>;
+};
