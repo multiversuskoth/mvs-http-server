@@ -8,9 +8,6 @@ export async function handleAccounts_wb_network_bulk(
   req: Request<{}, MVSResponses.Accounts_wb_network_bulk_RESPONSE, MVSRequests.Profiles_bulk_REQUEST, MVSQueries.Accounts_wb_network_bulk_QUERY>,
   res: Response
 ) {
-  res.appendHeader("X-Hydra-Server-Time", (Date.now() / 1000).toString());
-  res.appendHeader("Content-Type", "application/x-ag-binary");
-
   let responseObject: Array<any> = [];
   let requestBody = req.body;
 

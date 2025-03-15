@@ -4,9 +4,8 @@ import { HydraDecoder, HydraEncoder } from "mvs-dump";
 
 const HYDRA_CONTENT_TYPE = "application/x-ag-binary";
 
-// Create a middleware function for custom response handling
 export const hydraDecoderMiddleware = <T>(req: Request, res: Response, next: NextFunction) => {
-  if (req.headers["content-type"] === HYDRA_CONTENT_TYPE) {
+  if (req.headers["Content-Type"] === HYDRA_CONTENT_TYPE) {
     const dataChunks: Buffer[] = [];
 
     // Listen for data chunks
@@ -30,9 +29,16 @@ export const hydraDecoderMiddleware = <T>(req: Request, res: Response, next: Nex
     });
 
     res.json = (data: T) => {
-      res.setHeader("content-type", HYDRA_CONTENT_TYPE);
+      res.setHeader("Content-Type", HYDRA_CONTENT_TYPE);
+      res.setHeader("X-Hydra-Server-Time", (Date.now() / 1000).toString());
+      res.setHeader("X-Hydra-Info", "mvs-infinite");
+
+      const start = performance.now();
       const encoder = new HydraEncoder();
       encoder.encodeValue(data as any);
+      const end = performance.now();
+      res.setHeader("X-Hydra-Processing-Time", start - end);
+
       res.send(encoder.returnValue());
       return res;
     };
