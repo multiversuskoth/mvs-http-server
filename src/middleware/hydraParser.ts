@@ -42,5 +42,7 @@ export const hydraDecoderMiddleware = <T>(req: Request, res: Response, next: Nex
       res.send(encoder.returnValue());
       return res;
     };
+  } else {
+    next();
   }
 };
