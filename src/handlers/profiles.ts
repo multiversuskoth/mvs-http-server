@@ -17,6 +17,7 @@ export async function handleProfiles_bulk(
   req: Request<{}, MVSResponses.Profiles_bulk_RESPONSE, MVSRequests.Profiles_bulk_REQUEST, {}>,
   res: Response
 ) {
+  console.log("gg");
   let includeAccount = false;
 
   let responseObject: Array<any> = [];

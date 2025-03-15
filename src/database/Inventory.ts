@@ -7,8 +7,8 @@ import { MVSTime } from "../utils/date";
 export class InventoryItem {
   @prop({ required: true })
   count!: number;
-  @prop()
-  created_at!: Date | null;
+  @prop({ default: null })
+  created_at?: Date;
 
   public static flatten(inventoryItem: InventoryItem, prefix: string, result: Record<any, any> = {}): Record<any, any> {
     result[prefix + ".count"] = inventoryItem.count;

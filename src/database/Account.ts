@@ -1,4 +1,4 @@
-import { getModelForClass, modelOptions, prop } from "@typegoose/typegoose";
+import { getModelForClass, modelOptions, prop, Severity } from "@typegoose/typegoose";
 
 import mongoose, { SchemaTypeOptions } from "mongoose";
 import toJSONVirtualId from "../utils/toJSONVirtualId";
@@ -12,10 +12,10 @@ export class IdentityAlternateItem {
   id?: string;
   @prop({ required: true })
   username!: string;
-  @prop()
-  avatar!: string | null;
-  @prop()
-  email?: string | null;
+  @prop({ default: null })
+  avatar?: string;
+  @prop({ default: null })
+  email?: string;
 }
 
 @modelOptions({ schemaOptions: { _id: false } })
@@ -37,8 +37,8 @@ export class Identity {
   @prop({ required: true })
   username!: string;
 
-  @prop({ required: true })
-  avatar!: string | null;
+  @prop({ default: null })
+  avatar?: string;
 
   @prop({ required: true })
   default_username!: boolean;
@@ -97,7 +97,7 @@ export class AccountAuthWbNetwork {
 
 @modelOptions({ schemaOptions: { _id: false } })
 export class AccountAuth {
-  @prop({ required: true, default: [] })
+  @prop({ type: AccountAuthWbNetwork, required: true, default: [] })
   wb_network!: AccountAuthWbNetwork[];
 }
 
@@ -184,7 +184,7 @@ export class Account {
   orphaned!: boolean;
 
   @prop({ default: null })
-  orphaned_reason!: string | null;
+  orphaned_reason?: string;
 
   @prop({ required: true })
   public_id!: string;
@@ -241,7 +241,7 @@ export class Account {
   // @prop({ required: true })
   // wbplay_identity!: null;
 
-  @prop({ required: true })
+  @prop({ type: Connection, required: true })
   connections!: Connection[];
 
   public static addMeaninglessFields<T>(account: T): T & {

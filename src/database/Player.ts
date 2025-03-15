@@ -1,6 +1,6 @@
 import mongoose, { Schema } from "mongoose";
 import { Inventory } from "./Inventory";
-import { getModelForClass, modelOptions, prop, Ref, ReturnModelType } from "@typegoose/typegoose";
+import { getModelForClass, modelOptions, prop, Ref, ReturnModelType, Severity } from "@typegoose/typegoose";
 import { ServerData } from "./ServerData";
 import { Entries } from "type-fest";
 import { Matches } from "./Matches";
@@ -8,7 +8,6 @@ import UserSegment from "../enums/user_segment";
 import { Account } from "./Account";
 import toJSONVirtualId from "../utils/toJSONVirtualId";
 
-// @modelOptions({ schemaOptions: { minimize: false } })
 export class Player {
   _id!: mongoose.Types.ObjectId;
 
@@ -31,7 +30,7 @@ export class Player {
   @prop({ required: true })
   last_login!: Date;
   @prop({ default: null })
-  points!: number | null;
+  points?: number;
 
   @prop({ required: true })
   random_distribution!: number;
