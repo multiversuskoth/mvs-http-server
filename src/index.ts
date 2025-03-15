@@ -1,10 +1,13 @@
 import express from "express";
 import router from "./router";
 import { connect } from "./database/client";
+import { hydraDecoderMiddleware as hydraMiddleware } from "./middleware/hydraParser";
 
 const app = express();
 const port = "3000";
 
+app.use(express.json());
+app.use(hydraMiddleware);
 app.use(router);
 
 async function start() {

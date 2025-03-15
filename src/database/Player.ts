@@ -1,26 +1,15 @@
 import mongoose, { Schema } from "mongoose";
 import { Inventory } from "./Inventory";
-import {
-  getModelForClass,
-  modelOptions,
-  prop,
-  Ref,
-  ReturnModelType,
-} from "@typegoose/typegoose";
-import { Base } from "@typegoose/typegoose/lib/defaultClasses";
+import { getModelForClass, modelOptions, prop, Ref, ReturnModelType } from "@typegoose/typegoose";
 import { ServerData } from "./ServerData";
 import { Entries } from "type-fest";
 import { Matches } from "./Matches";
 import UserSegment from "../enums/user_segment";
 import { Account } from "./Account";
 import toJSONVirtualId from "../utils/toJSONVirtualId";
-import {
-  BeAnObject,
-  IObjectWithTypegooseFunction,
-} from "@typegoose/typegoose/lib/types";
 
 // @modelOptions({ schemaOptions: { minimize: false } })
-export class Player implements Base {
+export class Player {
   _id!: mongoose.Types.ObjectId;
 
   id!: string;
@@ -63,10 +52,7 @@ export class Player implements Base {
   @prop({ required: true })
   matches!: Matches;
 
-  public static flatten(
-    player: Player,
-    result: Record<any, any> = {}
-  ): Record<any, any> {
+  public static flatten(player: Player, result: Record<any, any> = {}): Record<any, any> {
     for (let [key, value] of Object.entries(player) as Entries<Player>) {
       if (!["inventory", "server_data", "matches"].includes(key)) {
         result[key] = value;

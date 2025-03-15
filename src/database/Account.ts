@@ -1,10 +1,35 @@
 import { getModelForClass, modelOptions, prop } from "@typegoose/typegoose";
-import { Base } from "@typegoose/typegoose/lib/defaultClasses";
+
 import mongoose from "mongoose";
 import toJSONVirtualId from "../utils/toJSONVirtualId";
 import { Entries } from "type-fest";
 import { dotify } from "../utils/dotify";
-import { Configuration } from "./Configuration";
+
+@modelOptions({ schemaOptions: { _id: false } })
+export class IdentityAlternateItem {
+  @prop()
+  id?: string;
+  @prop({ required: true })
+  username!: string;
+  @prop()
+  avatar!: string | null;
+  @prop()
+  email?: string | null;
+}
+
+@modelOptions({ schemaOptions: { _id: false } })
+export class IdentityAlternate {
+  @prop()
+  wb_network?: IdentityAlternateItem;
+  @prop()
+  twitch?: IdentityAlternateItem;
+  @prop()
+  xb1?: IdentityAlternateItem;
+  @prop()
+  ps4?: IdentityAlternateItem;
+  @prop()
+  steam?: IdentityAlternateItem;
+}
 
 @modelOptions({ schemaOptions: { _id: false } })
 export class Identity {
@@ -34,35 +59,9 @@ export class WbAccount {
   age_category?: string;
 }
 
-@modelOptions({ schemaOptions: { _id: false } })
-export class IdentityAlternateItem {
-  @prop()
-  id?: string;
-  @prop({ required: true })
-  username!: string;
-  @prop()
-  avatar!: string | null;
-  @prop()
-  email?: string | null;
-}
-
-@modelOptions({ schemaOptions: { _id: false } })
-export class IdentityAlternate {
-  @prop()
-  wb_network?: IdentityAlternateItem;
-  @prop()
-  twitch?: IdentityAlternateItem;
-  @prop()
-  xb1?: IdentityAlternateItem;
-  @prop()
-  ps4?: IdentityAlternateItem;
-  @prop()
-  steam?: IdentityAlternateItem;
-}
-
 export class Connection {}
 
-export class Account implements Base {
+export class Account {
   _id!: mongoose.Types.ObjectId;
 
   id!: string;

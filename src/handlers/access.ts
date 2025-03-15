@@ -1,10 +1,9 @@
 import { StatusCodes } from "http-status-codes";
-import { Account, accountModel } from "@/database/Account";
-import { Configuration, configurationModel } from "@/database/Configuration";
-import { MVSRequests } from "@/interfaces/requests_types";
-import { MVSResponses } from "@/interfaces/responses_types";
+import { Account, accountModel } from "../database/Account";
+import { MVSRequests } from "../interfaces/requests_types";
+import { MVSResponses } from "../interfaces/responses_types";
 import { Request, Response } from "express";
-import { MVSTime, ObjectWithDateStrings } from "@/utils/date";
+import { MVSTime, ObjectWithDateStrings } from "../utils/date";
 
 type AccountDoc = Omit<ObjectWithDateStrings<Account>, "_id">;
 
@@ -12,15 +11,7 @@ export async function handleAccess(
   req: Request<{}, MVSResponses.Access_RESPONSE, MVSRequests.Access_REQUEST, {}>,
   res: Response<MVSResponses.Access_RESPONSE>
 ) {
-  const query = [accountModel.findOne().exec(), configurationModel.findById("configuration").exec()] as const;
-
-  let [account, configuration] = await Promise.all(query);
-
-  if (configuration == undefined) {
-    // We should verify we can do this as it could crash the client
-    res.sendStatus(StatusCodes.INTERNAL_SERVER_ERROR);
-    return;
-  }
+  const account = await accountModel.findOne().exec();
 
   if (!account) {
     // We should verify we can do this as it could crash the client

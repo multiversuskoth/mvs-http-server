@@ -1,15 +1,8 @@
-import Router from "express";
-import UserSegment from "../enums/user_segment";
-import BattlePassScoreTypeClass from "../enums/battle_pass_score_type_class";
-import mongoose from "mongoose";
-import { Player, playerModel } from "../database/Player";
-import { infer, z } from "zod";
-import { StatusCodes } from "http-status-codes";
 import { Account, accountModel } from "../database/Account";
-import { MVSRequests } from "@/interfaces/requests_types";
-import { MVSResponses } from "@/interfaces/responses_types";
+import { MVSRequests } from "../interfaces/requests_types";
+import { MVSResponses } from "../interfaces/responses_types";
 import { Request, Response } from "express";
-import { MVSQueries } from "@/interfaces/queries_types";
+import { MVSQueries } from "../interfaces/queries_types";
 
 export async function handleAccounts_wb_network_bulk(
   req: Request<{}, MVSResponses.Accounts_wb_network_bulk_RESPONSE, MVSRequests.Profiles_bulk_REQUEST, MVSQueries.Accounts_wb_network_bulk_QUERY>,
