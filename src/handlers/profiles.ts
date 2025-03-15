@@ -1,13 +1,9 @@
-import Router from "express";
-import UserSegment from "../enums/user_segment";
-import BattlePassScoreTypeClass from "../enums/battle_pass_score_type_class";
-import mongoose from "mongoose";
 import { Player, playerModel } from "../database/Player";
 import { infer, z } from "zod";
 import { StatusCodes } from "http-status-codes";
 import { Request, Response } from "express";
-import { MVSResponses } from "@/interfaces/responses_types";
-import { MVSRequests } from "@/interfaces/requests_types";
+import { MVSResponses } from "../interfaces/responses_types";
+import { MVSRequests } from "../interfaces/requests_types";
 
 const PutProfilesRequest = z.object({
   ids: z.array(z.string()),
@@ -18,12 +14,7 @@ const PutProfilesQueryParams = z.object({
 });
 
 export async function handleProfiles_bulk(
-  req: Request<
-    {},
-    MVSResponses.Profiles_bulk_RESPONSE,
-    MVSRequests.Profiles_bulk_REQUEST,
-    {}
-  >,
+  req: Request<{}, MVSResponses.Profiles_bulk_RESPONSE, MVSRequests.Profiles_bulk_REQUEST, {}>,
   res: Response
 ) {
   res.appendHeader("X-Hydra-Server-Time", (Date.now() / 1000).toString());
@@ -82,10 +73,7 @@ export async function handleProfiles_bulk(
     }
   }
 
-  let playersQuery = playerModel
-    .find({}, selectSettings)
-    .where("account_id")
-    .in(requestBody.ids);
+  let playersQuery = playerModel.find({}, selectSettings).where("account_id").in(requestBody.ids);
 
   if (includeAccount) {
     playersQuery = playersQuery.populate("account");

@@ -2,70 +2,6 @@
   "dataType": "Map",
   "value": [
     [
-      "/datarouter/api/v1/public/data/clients",
-      {
-        "type": "object",
-        "properties": {
-          "dataType": "Map",
-          "value": [
-            [
-              "Events",
-              {
-                "type": "array",
-                "inner": {
-                  "type": "object",
-                  "properties": {
-                    "dataType": "Map",
-                    "value": [
-                      [
-                        "EventName",
-                        {
-                          "type": "string",
-                          "examples": [
-                            "GameStartup",
-                            "GameHeartbeat"
-                          ]
-                        }
-                      ],
-                      [
-                        "deploymentId",
-                        {
-                          "type": "string",
-                          "examples": [
-                            "29da23b21f7f41319c7fa5e86e20dc2b",
-                            "dc943966edb54a6eb9c1334ca8cc1990"
-                          ]
-                        }
-                      ],
-                      [
-                        "platform",
-                        {
-                          "type": "string",
-                          "examples": [
-                            "Windows 10 (Release 2009) 10.0.19045.1.768.64bit"
-                          ]
-                        }
-                      ],
-                      [
-                        "source",
-                        {
-                          "type": "string",
-                          "examples": [
-                            "client"
-                          ]
-                        }
-                      ]
-                    ]
-                  }
-                }
-              }
-            ]
-          ]
-        },
-        "methodOrCode": "POST"
-      }
-    ],
-    [
       "/access",
       {
         "type": "object",
@@ -90,7 +26,7 @@
                       {
                         "type": "string",
                         "examples": [
-                          "08021098D0D1EE051800204E2A8001476011E60D3AA73FEBD33192DE6120067B4E7334E54EAC48757660CAAC7A93C5FBC7FD7059A8881E4F76F3545BD94A6E60074DA813B1BFB32E4019B0BA219ABAA22F2DAA83A2C87A593350E3372A0B98FFC0E6C394C4790B08168403E5D7DA21D82F7C738FB0A0122476EB1384DD63507FDEACA5C77F5A297A8505B0E03214B2"
+                          "0802109DEF91B1021800204E2A80015AFAA999B9283496D5A7262B8A5A71C94C9D77E7C9DD70A5FCAF0A178A24452B4FDD36A71372AD09173EFF958D65B42715AC027D638D6CBE976D8C743C77727D54F7D2B5490A1BB98C14681EE49618AEA41E7208B7EC0B5AA564E11EBEE4AF19E116C852791F160F5051649DF80D1332050062C324B525558A831C55E2C78ED6"
                         ]
                       }
                     ]
@@ -147,7 +83,7 @@
               {
                 "type": "string",
                 "examples": [
-                  "I+MPokHx/JkCFmuHpcEiavYwKjKnp5BukUdWe1OlLqGC3yurVX4PndUzw0YD/zY2V2F2Z4sCT6A+oFHMwDtsic30zdadK5+Dw1YxH/4i9UU="
+                  "I+MPokHx/JkCFmuHpcEiaqRG+8IJX/+xaKk2jiZBgAL/w8IIGsREtPP1rE6cBwjdioTLgasxCk4+oFHMwDtsieaJu3H6OI5faBq3SMTVCg4="
                 ]
               }
             ],
@@ -163,6 +99,28 @@
           ]
         },
         "methodOrCode": "POST"
+      }
+    ],
+    [
+      "/commerce/products",
+      {
+        "type": "object",
+        "properties": {
+          "dataType": "Map",
+          "value": []
+        },
+        "methodOrCode": "GET"
+      }
+    ],
+    [
+      "/friends/me/invitations/incoming",
+      {
+        "type": "object",
+        "properties": {
+          "dataType": "Map",
+          "value": []
+        },
+        "methodOrCode": "GET"
       }
     ],
     [
@@ -302,9 +260,7 @@
                           "type": "string",
                           "examples": [
                             "/ssc/invoke/hiss_amalgamation",
-                            "/profiles/63cef97ced0619f458cfac8f/inventory",
-                            "/matches/all/62d779c3f666a3c04a8f7a8c?count=20&page=1&fields=server_data&templates=2v2_container&templates=1v1_container&templates=ffa_container&templates=2v2_gamelift&templates=1v1_gamelift&templates=ffa_gamelift&templates=custom_container_one_player&templates=custom_container_two_player&templates=custom_container_three_player&templates=custom_container_four_player&templates=custom_gamelift_two_player&templates=custom_gamelift_three_player&templates=custom_gamelift_four_player&templates=1v1_container_bot&templates=1v3_container_bot&templates=2v2_container_bot&templates=2v2_gamelift_bot&templates=arena_container_parent",
-                            "/matches/all/63cef97ced0619f458cfac8f?count=20&page=1&fields=server_data&templates=2v2_container&templates=1v1_container&templates=ffa_container&templates=2v2_gamelift&templates=1v1_gamelift&templates=ffa_gamelift&templates=custom_container_one_player&templates=custom_container_two_player&templates=custom_container_three_player&templates=custom_container_four_player&templates=custom_gamelift_two_player&templates=custom_gamelift_three_player&templates=custom_gamelift_four_player&templates=1v1_container_bot&templates=1v3_container_bot&templates=2v2_container_bot&templates=2v2_gamelift_bot&templates=arena_container_parent"
+                            "/profiles/63cef97ced0619f458cfac8f/inventory"
                           ]
                         }
                       ],
@@ -313,8 +269,7 @@
                         {
                           "type": "string",
                           "examples": [
-                            "PUT",
-                            "GET"
+                            "PUT"
                           ]
                         }
                       ]
@@ -401,6 +356,39 @@
       }
     ],
     [
+      "/friends/me/invitations/outgoing",
+      {
+        "type": "object",
+        "properties": {
+          "dataType": "Map",
+          "value": []
+        },
+        "methodOrCode": "GET"
+      }
+    ],
+    [
+      "/friends/me",
+      {
+        "type": "object",
+        "properties": {
+          "dataType": "Map",
+          "value": []
+        },
+        "methodOrCode": "GET"
+      }
+    ],
+    [
+      "/social/me/blocked",
+      {
+        "type": "object",
+        "properties": {
+          "dataType": "Map",
+          "value": []
+        },
+        "methodOrCode": "GET"
+      }
+    ],
+    [
       "/accounts/wb_network/bulk",
       {
         "type": "object",
@@ -414,9 +402,30 @@
                 "inner": {
                   "type": "string",
                   "examples": [
-                    "p27f58a6c649741d1bfe8efd3a8d9d47c"
+                    "p3a525c56c9c9491ea11deaa2bdbcd074"
                   ]
                 }
+              }
+            ]
+          ]
+        },
+        "methodOrCode": "PUT"
+      }
+    ],
+    [
+      "/ssc/invoke/hiss_amalgamation",
+      {
+        "type": "object",
+        "properties": {
+          "dataType": "Map",
+          "value": [
+            [
+              "Crc",
+              {
+                "type": "number",
+                "examples": [
+                  1167552915
+                ]
               }
             ]
           ]
@@ -438,7 +447,7 @@
                 "inner": {
                   "type": "string",
                   "examples": [
-                    "62ea8899706c79b6eca58d2f"
+                    "62ef70cecd66b47f1cc1f5ea"
                   ]
                 }
               }
@@ -477,10 +486,62 @@
                   ]
                 }
               }
+            ],
+            [
+              "advanced_filter",
+              {
+                "type": "object",
+                "properties": {
+                  "dataType": "Map",
+                  "value": [
+                    [
+                      "boolean",
+                      {
+                        "type": "string",
+                        "examples": [
+                          "any"
+                        ]
+                      }
+                    ],
+                    [
+                      "subfilters",
+                      {
+                        "type": "array",
+                        "inner": {
+                          "type": "any"
+                        }
+                      }
+                    ],
+                    [
+                      "tags",
+                      {
+                        "type": "array",
+                        "inner": {
+                          "type": "string",
+                          "examples": [
+                            "currency"
+                          ]
+                        }
+                      }
+                    ]
+                  ]
+                }
+              }
             ]
           ]
         },
         "methodOrCode": "PUT"
+      }
+    ],
+    [
+      "/file_storage",
+      {
+        "type": "object",
+        "properties": {
+          "dataType": "Map",
+          "value": []
+        },
+        "methodOrCode": "GET"
       }
     ],
     [
@@ -505,6 +566,116 @@
           ]
         },
         "methodOrCode": "PUT"
+      }
+    ],
+    [
+      "/file_storage/t-discord-qa-carousel-thumbnail",
+      {
+        "type": "object",
+        "properties": {
+          "dataType": "Map",
+          "value": []
+        },
+        "methodOrCode": "GET"
+      }
+    ],
+    [
+      "/file_storage/t-discord-qa-carousel-keyart",
+      {
+        "type": "object",
+        "properties": {
+          "dataType": "Map",
+          "value": []
+        },
+        "methodOrCode": "GET"
+      }
+    ],
+    [
+      "/file_storage/beginnermode-carousel-thumbnail",
+      {
+        "type": "object",
+        "properties": {
+          "dataType": "Map",
+          "value": []
+        },
+        "methodOrCode": "GET"
+      }
+    ],
+    [
+      "/file_storage/beginnermode-carousel-keyart",
+      {
+        "type": "object",
+        "properties": {
+          "dataType": "Map",
+          "value": []
+        },
+        "methodOrCode": "GET"
+      }
+    ],
+    [
+      "/file_storage/s5-bp-carousel-thumbnail",
+      {
+        "type": "object",
+        "properties": {
+          "dataType": "Map",
+          "value": []
+        },
+        "methodOrCode": "GET"
+      }
+    ],
+    [
+      "/file_storage/s5-bp-carousel-keyart",
+      {
+        "type": "object",
+        "properties": {
+          "dataType": "Map",
+          "value": []
+        },
+        "methodOrCode": "GET"
+      }
+    ],
+    [
+      "/file_storage/harley-rift-s5-thumbnail",
+      {
+        "type": "object",
+        "properties": {
+          "dataType": "Map",
+          "value": []
+        },
+        "methodOrCode": "GET"
+      }
+    ],
+    [
+      "/file_storage/harley-rift-s5-keyart",
+      {
+        "type": "object",
+        "properties": {
+          "dataType": "Map",
+          "value": []
+        },
+        "methodOrCode": "GET"
+      }
+    ],
+    [
+      "/file_storage/wonderwoman-arena-thumbnail",
+      {
+        "type": "object",
+        "properties": {
+          "dataType": "Map",
+          "value": []
+        },
+        "methodOrCode": "GET"
+      }
+    ],
+    [
+      "/file_storage/wonderwoman-arena-keyart",
+      {
+        "type": "object",
+        "properties": {
+          "dataType": "Map",
+          "value": []
+        },
+        "methodOrCode": "GET"
       }
     ],
     [
@@ -786,7 +957,7 @@
                                         {
                                           "type": "number",
                                           "examples": [
-                                            0.04276302456855774
+                                            0.04337269812822342
                                           ]
                                         }
                                       ],
@@ -818,679 +989,124 @@
       }
     ],
     [
-      "/leaderboards/bulk/score-and-rank/:id",
-      {
-        "type": "object",
-        "properties": {
-          "dataType": "Map",
-          "value": [
-            [
-              "ids",
-              {
-                "type": "array",
-                "inner": {
-                  "type": "string",
-                  "examples": [
-                    "ranked_season5_1v1_character_Jason"
-                  ]
-                }
-              }
-            ]
-          ]
-        },
-        "methodOrCode": "PUT"
-      }
-    ],
-    [
-      "/ssc/invoke/lock_lobby_loadout",
-      {
-        "type": "object",
-        "properties": {
-          "dataType": "Map",
-          "value": [
-            [
-              "AutoPartyPreference",
-              {
-                "type": "boolean"
-              }
-            ],
-            [
-              "CrossplayPreference",
-              {
-                "type": "number",
-                "examples": [
-                  1
-                ]
-              }
-            ],
-            [
-              "GameplayPreferences",
-              {
-                "type": "number",
-                "examples": [
-                  544
-                ]
-              }
-            ],
-            [
-              "HissCrc",
-              {
-                "type": "number",
-                "examples": [
-                  1167552915
-                ]
-              }
-            ],
-            [
-              "Loadout",
-              {
-                "type": "object",
-                "properties": {
-                  "dataType": "Map",
-                  "value": [
-                    [
-                      "Character",
-                      {
-                        "type": "string",
-                        "examples": [
-                          "character_BananaGuard",
-                          "character_Jason",
-                          "character_c16"
-                        ]
-                      }
-                    ],
-                    [
-                      "Skin",
-                      {
-                        "type": "string",
-                        "examples": [
-                          "skin_bananaguard_default",
-                          "skin_c035_s25",
-                          "skin_c016_s18"
-                        ]
-                      }
-                    ]
-                  ]
-                }
-              }
-            ],
-            [
-              "LobbyId",
-              {
-                "type": "string",
-                "examples": [
-                  "67cf09dd07f3143f5fe732d1"
-                ]
-              }
-            ],
-            [
-              "LobbyTemplate",
-              {
-                "type": "string",
-                "examples": [
-                  "party_lobby"
-                ]
-              }
-            ],
-            [
-              "Platform",
-              {
-                "type": "string",
-                "examples": [
-                  "PC"
-                ]
-              }
-            ],
-            [
-              "Version",
-              {
-                "type": "string",
-                "examples": [
-                  "CLIENT:2F322-Retail DATA:4CF442B2 PERKS:1"
-                ]
-              }
-            ]
-          ]
-        },
-        "methodOrCode": "PUT"
-      }
-    ],
-    [
-      "/ssc/invoke/equip_banner",
-      {
-        "type": "object",
-        "properties": {
-          "dataType": "Map",
-          "value": [
-            [
-              "BannerSlug",
-              {
-                "type": "string",
-                "examples": [
-                  "banner_s1_golden_goliath",
-                  "banner_s1_master_master",
-                  "banner_foretold_champion_rare"
-                ]
-              }
-            ]
-          ]
-        },
-        "methodOrCode": "PUT"
-      }
-    ],
-    [
-      "/ssc/invoke/perks_purchase",
-      {
-        "type": "object",
-        "properties": {
-          "dataType": "Map",
-          "value": [
-            [
-              "Character",
-              {
-                "type": "string",
-                "examples": [
-                  "character_harleyquinn"
-                ]
-              }
-            ],
-            [
-              "Perks",
-              {
-                "type": "array",
-                "inner": {
-                  "type": "string",
-                  "examples": [
-                    "perk_C008_smoothmoves"
-                  ]
-                }
-              }
-            ]
-          ]
-        },
-        "methodOrCode": "PUT"
-      }
-    ],
-    [
-      "/ssc/invoke/perks_set_character_page",
-      {
-        "type": "object",
-        "properties": {
-          "dataType": "Map",
-          "value": [
-            [
-              "Character",
-              {
-                "type": "string",
-                "examples": [
-                  "character_harleyquinn",
-                  "character_Jason"
-                ]
-              }
-            ],
-            [
-              "Description",
-              {
-                "type": "string",
-                "examples": [
-                  ""
-                ]
-              }
-            ],
-            [
-              "DisplayName",
-              {
-                "type": "string",
-                "examples": [
-                  "Custom Set 1",
-                  "Custom Set 3",
-                  "Custom Set 2"
-                ]
-              }
-            ],
-            [
-              "PageIndex",
-              {
-                "type": "number",
-                "examples": [
-                  0,
-                  2,
-                  1
-                ]
-              }
-            ],
-            [
-              "Perks",
-              {
-                "type": "array",
-                "inner": {
-                  "type": "string",
-                  "examples": [
-                    "perk_gen_boxer"
-                  ]
-                }
-              }
-            ]
-          ]
-        },
-        "methodOrCode": "PUT"
-      }
-    ],
-    [
-      "/ssc/invoke/equip_taunt",
-      {
-        "type": "object",
-        "properties": {
-          "dataType": "Map",
-          "value": [
-            [
-              "CharacterSlug",
-              {
-                "type": "string",
-                "examples": [
-                  "character_Jason"
-                ]
-              }
-            ],
-            [
-              "TauntSlotIndex",
-              {
-                "type": "number",
-                "examples": [
-                  1
-                ]
-              }
-            ],
-            [
-              "TauntSlug",
-              {
-                "type": "string",
-                "examples": [
-                  "emote_pass_the_salt"
-                ]
-              }
-            ]
-          ]
-        },
-        "methodOrCode": "PUT"
-      }
-    ],
-    [
-      "/ssc/invoke/claim_all_milestone_reward_track_tiers",
-      {
-        "type": "object",
-        "properties": {
-          "dataType": "Map",
-          "value": [
-            [
-              "TrackSlug",
-              {
-                "type": "string",
-                "examples": [
-                  "mrt_mastery_jason",
-                  "mrt_battlepass_season_five",
-                  "bp_valentines_dailylogin_milestonerewardtrack1"
-                ]
-              }
-            ]
-          ]
-        },
-        "methodOrCode": "PUT"
-      }
-    ],
-    [
-      "/ssc/invoke/equip_stat_tracker",
-      {
-        "type": "object",
-        "properties": {
-          "dataType": "Map",
-          "value": [
-            [
-              "StatTrackerSlotIndex",
-              {
-                "type": "number",
-                "examples": [
-                  0,
-                  1
-                ]
-              }
-            ],
-            [
-              "StatTrackerSlug",
-              {
-                "type": "string",
-                "examples": [
-                  "stattracking_ranked_seasonfive_charactersingold_1v1",
-                  "stat_tracking_bundle_ranked_season_two_wins_1v1"
-                ]
-              }
-            ]
-          ]
-        },
-        "methodOrCode": "PUT"
-      }
-    ],
-    [
-      "/ssc/invoke/claim_milestone_reward_track_tiers",
-      {
-        "type": "object",
-        "properties": {
-          "dataType": "Map",
-          "value": [
-            [
-              "Tiers",
-              {
-                "type": "array",
-                "inner": {
-                  "type": "array",
-                  "inner": {
-                    "type": "number",
-                    "examples": [
-                      13
-                    ]
-                  }
-                }
-              }
-            ],
-            [
-              "TrackSlug",
-              {
-                "type": "string",
-                "examples": [
-                  "MRT_FighterRoadV2",
-                  "MRT_Bonus_Weekly_Mission"
-                ]
-              }
-            ]
-          ]
-        },
-        "methodOrCode": "PUT"
-      }
-    ],
-    [
-      "/ssc/invoke/claim_mission_rewards",
-      {
-        "type": "object",
-        "properties": {
-          "dataType": "Map",
-          "value": [
-            [
-              "ContainerSlug",
-              {
-                "type": "string",
-                "examples": [
-                  "miscon_battlepassweekly_s5",
-                  "miscon_battlepassdaily_s5"
-                ]
-              }
-            ],
-            [
-              "MissionsToClaim",
-              {
-                "type": "array",
-                "inner": {
-                  "type": "object",
-                  "properties": {
-                    "dataType": "Map",
-                    "value": [
-                      [
-                        "MissionControllerSlug",
-                        {
-                          "type": "string",
-                          "examples": [
-                            "misctl_battlepass_weekly_new",
-                            "misctl_battlepass_daily_base_new"
-                          ]
-                        }
-                      ],
-                      [
-                        "MissionGuid",
-                        {
-                          "type": "string",
-                          "examples": [
-                            "107f0018-8d09-4859-b308-07de2f4d0694",
-                            "a30ca0e3-7eb0-4b49-9f6d-cdcca1c2f77d",
-                            "b32be6de-3ad3-43da-9964-c6cf408d1cd8"
-                          ]
-                        }
-                      ],
-                      [
-                        "MissionSlug",
-                        {
-                          "type": "string",
-                          "examples": [
-                            "mis_hit_up_attack_air_tank_weekly",
-                            "mis_ringout_pvp_weekly",
-                            "mis_stats_dealalldamage_pvp"
-                          ]
-                        }
-                      ]
-                    ]
-                  }
-                }
-              }
-            ]
-          ]
-        },
-        "methodOrCode": "POST"
-      }
-    ],
-    [
-      "/friends/me/invitations",
-      {
-        "type": "object",
-        "properties": {
-          "dataType": "Map",
-          "value": [
-            [
-              "account_id",
-              {
-                "type": "string",
-                "examples": [
-                  "p39b6ef94a0ad40e29ed342f99f40e2db"
-                ]
-              }
-            ]
-          ]
-        },
-        "methodOrCode": "POST"
-      }
-    ],
-    [
-      "/ssc/invoke/send_profile_notification",
-      {
-        "type": "object",
-        "properties": {
-          "dataType": "Map",
-          "value": [
-            [
-              "AccountId",
-              {
-                "type": "string",
-                "examples": [
-                  "62ea8899706c79b6eca58d2f",
-                  "62ec5254e7de359de7a0f3b7"
-                ]
-              }
-            ],
-            [
-              "SenderWBPNAccountID",
-              {
-                "type": "string",
-                "examples": [
-                  "pafd8d7950aa1484ea791d06662fa75ce"
-                ]
-              }
-            ],
-            [
-              "WBPNInvitationID",
-              {
-                "type": "string",
-                "examples": [
-                  "67cf0b8f59e56837868f0a0b"
-                ]
-              }
-            ],
-            [
-              "template_id",
-              {
-                "type": "string",
-                "examples": [
-                  "WBPNFriendRequestReceivedNotification",
-                  "WBPNBlockedNotification",
-                  "WBPNUnblockedNotification"
-                ]
-              }
-            ]
-          ]
-        },
-        "methodOrCode": "PUT"
-      }
-    ],
-    [
-      "/social/me/block/p2a3c488f51fb4bb19c8689be86997b8a",
+      "/layout/dokken-layout-type/personalized/main-variant/:id",
       {
         "type": "object",
         "properties": {
           "dataType": "Map",
           "value": []
         },
-        "methodOrCode": "PUT"
+        "methodOrCode": "GET"
       }
     ],
     [
-      "/accounts/me/relationships/:id/block",
+      "/layout/dokken-layout-type/personalized/currency-variant/:id",
       {
         "type": "object",
         "properties": {
           "dataType": "Map",
           "value": []
         },
-        "methodOrCode": "PUT"
+        "methodOrCode": "GET"
       }
     ],
     [
-      "/social/me/unblock/p2a3c488f51fb4bb19c8689be86997b8a",
+      "/layout/dokken-layout-type/personalized/battlepass-variant/:id",
       {
         "type": "object",
         "properties": {
           "dataType": "Map",
           "value": []
         },
-        "methodOrCode": "PUT"
+        "methodOrCode": "GET"
       }
     ],
     [
-      "/accounts/me/relationships/:id/unblock",
+      "/layout/dokken-layout-type/personalized/skin-variant/:id",
       {
         "type": "object",
         "properties": {
           "dataType": "Map",
           "value": []
         },
-        "methodOrCode": "PUT"
+        "methodOrCode": "GET"
       }
     ],
     [
-      "/virtual_commerce/purchases/:id/toasts_gleamium",
+      "/layout/dokken-layout-type/personalized/account-cosmetics-variant/:id",
       {
         "type": "object",
         "properties": {
           "dataType": "Map",
           "value": []
         },
-        "methodOrCode": "POST"
+        "methodOrCode": "GET"
       }
     ],
     [
-      "/ssc/invoke/set_mode_for_lobby",
+      "/layout/dokken-layout-type/personalized/fighter-road-layout/:id",
       {
         "type": "object",
         "properties": {
           "dataType": "Map",
-          "value": [
-            [
-              "AutoPartyPreference",
-              {
-                "type": "boolean"
-              }
-            ],
-            [
-              "CrossplayPreference",
-              {
-                "type": "number",
-                "examples": [
-                  1
-                ]
-              }
-            ],
-            [
-              "GameplayPreferences",
-              {
-                "type": "number",
-                "examples": [
-                  544
-                ]
-              }
-            ],
-            [
-              "HissCrc",
-              {
-                "type": "number",
-                "examples": [
-                  1167552915
-                ]
-              }
-            ],
-            [
-              "LobbyId",
-              {
-                "type": "string",
-                "examples": [
-                  "67cf09dd07f3143f5fe732d1"
-                ]
-              }
-            ],
-            [
-              "LobbyTemplate",
-              {
-                "type": "string",
-                "examples": [
-                  "party_lobby"
-                ]
-              }
-            ],
-            [
-              "ModeString",
-              {
-                "type": "string",
-                "examples": [
-                  "1v1",
-                  "ranked-1v1"
-                ]
-              }
-            ],
-            [
-              "Platform",
-              {
-                "type": "string",
-                "examples": [
-                  "PC"
-                ]
-              }
-            ],
-            [
-              "Version",
-              {
-                "type": "string",
-                "examples": [
-                  "CLIENT:2F322-Retail DATA:4CF442B2 PERKS:1"
-                ]
-              }
-            ]
-          ]
+          "value": []
         },
-        "methodOrCode": "PUT"
+        "methodOrCode": "GET"
+      }
+    ],
+    [
+      "/commerce/steam/mtx_user_info/me",
+      {
+        "type": "object",
+        "properties": {
+          "dataType": "Map",
+          "value": []
+        },
+        "methodOrCode": "GET"
+      }
+    ],
+    [
+      "/commerce/purchases/me",
+      {
+        "type": "object",
+        "properties": {
+          "dataType": "Map",
+          "value": []
+        },
+        "methodOrCode": "GET"
+      }
+    ],
+    [
+      "/layout/dokken-layout-type/personalized/fighter-variant/:id",
+      {
+        "type": "object",
+        "properties": {
+          "dataType": "Map",
+          "value": []
+        },
+        "methodOrCode": "GET"
+      }
+    ],
+    [
+      "/layout/dokken-layout-type/personalized/prestige-variant/:id",
+      {
+        "type": "object",
+        "properties": {
+          "dataType": "Map",
+          "value": []
+        },
+        "methodOrCode": "GET"
+      }
+    ],
+    [
+      "/layout/dokken-layout-type/personalized/rift-variant/:id",
+      {
+        "type": "object",
+        "properties": {
+          "dataType": "Map",
+          "value": []
+        },
+        "methodOrCode": "GET"
       }
     ],
     [
@@ -1538,7 +1154,7 @@
               {
                 "type": "string",
                 "examples": [
-                  "67cf09dd07f3143f5fe732d1"
+                  "67d45cd0b8655ea25ca3a0a9"
                 ]
               }
             ],
@@ -1556,7 +1172,7 @@
               {
                 "type": "string",
                 "examples": [
-                  "67cf09dd07f3143f5fe732d1"
+                  "67d45cd0b8655ea25ca3a0a9"
                 ]
               }
             ],
@@ -1720,7 +1336,7 @@
               {
                 "type": "string",
                 "examples": [
-                  "67cf09dd07f3143f5fe732d1"
+                  "67d45cd0b8655ea25ca3a0a9"
                 ]
               }
             ]
@@ -1741,9 +1357,7 @@
               {
                 "type": "string",
                 "examples": [
-                  "67cf0bdd38150fa35c03b5af",
-                  "67cf0c7ec51aaceb6778d2c9",
-                  "67cf0e30410383470e2dd0e1"
+                  "67d45cfdda22dc702a4383d7"
                 ]
               }
             ],
@@ -1754,7 +1368,7 @@
                 "inner": {
                   "type": "string",
                   "examples": [
-                    "perk_jason_monstrous_side_step"
+                    "perk_gen_well_rounded"
                   ]
                 }
               }
@@ -1762,6 +1376,69 @@
           ]
         },
         "methodOrCode": "PUT"
+      }
+    ],
+    [
+      "/datarouter/api/v1/public/data/clients",
+      {
+        "type": "object",
+        "properties": {
+          "dataType": "Map",
+          "value": [
+            [
+              "Events",
+              {
+                "type": "array",
+                "inner": {
+                  "type": "object",
+                  "properties": {
+                    "dataType": "Map",
+                    "value": [
+                      [
+                        "EventName",
+                        {
+                          "type": "string",
+                          "examples": [
+                            "GameHeartbeat"
+                          ]
+                        }
+                      ],
+                      [
+                        "deploymentId",
+                        {
+                          "type": "string",
+                          "examples": [
+                            "dc943966edb54a6eb9c1334ca8cc1990",
+                            "29da23b21f7f41319c7fa5e86e20dc2b"
+                          ]
+                        }
+                      ],
+                      [
+                        "platform",
+                        {
+                          "type": "string",
+                          "examples": [
+                            "Windows 10 (Release 2009) 10.0.19045.1.768.64bit"
+                          ]
+                        }
+                      ],
+                      [
+                        "source",
+                        {
+                          "type": "string",
+                          "examples": [
+                            "client"
+                          ]
+                        }
+                      ]
+                    ]
+                  }
+                }
+              }
+            ]
+          ]
+        },
+        "methodOrCode": "POST"
       }
     ],
     [
@@ -1776,9 +1453,7 @@
               {
                 "type": "string",
                 "examples": [
-                  "67cf0bdd38150fa35c03b5af",
-                  "67cf0c7ec51aaceb6778d2c9",
-                  "67cf0e30410383470e2dd0e1"
+                  "67d45cfdda22dc702a4383d7"
                 ]
               }
             ],
@@ -1907,7 +1582,6 @@
                                       {
                                         "type": "number",
                                         "examples": [
-                                          1,
                                           0
                                         ]
                                       }
@@ -1971,7 +1645,7 @@
                                       {
                                         "type": "number",
                                         "examples": [
-                                          0
+                                          1
                                         ]
                                       }
                                     ],
@@ -2196,7 +1870,7 @@
                                       {
                                         "type": "number",
                                         "examples": [
-                                          0
+                                          8
                                         ]
                                       }
                                     ],
@@ -2502,9 +2176,7 @@
                                       {
                                         "type": "number",
                                         "examples": [
-                                          48.13999938964844,
-                                          90.5886459350586,
-                                          0
+                                          123.70502471923828
                                         ]
                                       }
                                     ],
@@ -2513,9 +2185,7 @@
                                       {
                                         "type": "number",
                                         "examples": [
-                                          10,
-                                          19,
-                                          0
+                                          17
                                         ]
                                       }
                                     ],
@@ -2524,9 +2194,7 @@
                                       {
                                         "type": "number",
                                         "examples": [
-                                          30,
-                                          90,
-                                          0
+                                          53
                                         ]
                                       }
                                     ],
@@ -2535,9 +2203,7 @@
                                       {
                                         "type": "number",
                                         "examples": [
-                                          123.27750396728516,
-                                          131.6581268310547,
-                                          0
+                                          64.50927734375
                                         ]
                                       }
                                     ],
@@ -2546,9 +2212,7 @@
                                       {
                                         "type": "number",
                                         "examples": [
-                                          9,
-                                          19,
-                                          0
+                                          16
                                         ]
                                       }
                                     ],
@@ -2557,9 +2221,7 @@
                                       {
                                         "type": "number",
                                         "examples": [
-                                          18,
-                                          65,
-                                          0
+                                          44
                                         ]
                                       }
                                     ],
@@ -2568,8 +2230,7 @@
                                       {
                                         "type": "number",
                                         "examples": [
-                                          1,
-                                          0
+                                          1
                                         ]
                                       }
                                     ],
@@ -2578,9 +2239,7 @@
                                       {
                                         "type": "number",
                                         "examples": [
-                                          12,
-                                          25,
-                                          0
+                                          9
                                         ]
                                       }
                                     ],
@@ -2589,9 +2248,7 @@
                                       {
                                         "type": "number",
                                         "examples": [
-                                          44.099998474121094,
-                                          102.08333587646484,
-                                          4.666666507720947
+                                          69.83333587646484
                                         ]
                                       }
                                     ],
@@ -2600,7 +2257,7 @@
                                       {
                                         "type": "number",
                                         "examples": [
-                                          0
+                                          1
                                         ]
                                       }
                                     ],
@@ -2609,7 +2266,6 @@
                                       {
                                         "type": "number",
                                         "examples": [
-                                          2,
                                           0
                                         ]
                                       }
@@ -2628,9 +2284,7 @@
                                       {
                                         "type": "number",
                                         "examples": [
-                                          196.98875427246094,
-                                          297.4160461425781,
-                                          0
+                                          89.55269622802734
                                         ]
                                       }
                                     ],
@@ -2639,9 +2293,7 @@
                                       {
                                         "type": "number",
                                         "examples": [
-                                          5,
-                                          1,
-                                          0
+                                          9
                                         ]
                                       }
                                     ],
@@ -2650,9 +2302,7 @@
                                       {
                                         "type": "number",
                                         "examples": [
-                                          25,
-                                          58,
-                                          0
+                                          33
                                         ]
                                       }
                                     ],
@@ -2670,9 +2320,7 @@
                                       {
                                         "type": "number",
                                         "examples": [
-                                          58,
-                                          186,
-                                          0
+                                          95
                                         ]
                                       }
                                     ],
@@ -2681,8 +2329,7 @@
                                       {
                                         "type": "number",
                                         "examples": [
-                                          0,
-                                          3
+                                          5
                                         ]
                                       }
                                     ],
@@ -2691,9 +2338,7 @@
                                       {
                                         "type": "number",
                                         "examples": [
-                                          6,
-                                          12,
-                                          0
+                                          43
                                         ]
                                       }
                                     ],
@@ -2702,9 +2347,7 @@
                                       {
                                         "type": "number",
                                         "examples": [
-                                          4,
-                                          6,
-                                          0
+                                          19
                                         ]
                                       }
                                     ],
@@ -2713,7 +2356,7 @@
                                       {
                                         "type": "number",
                                         "examples": [
-                                          0
+                                          0.30000001192092896
                                         ]
                                       }
                                     ],
@@ -2722,9 +2365,7 @@
                                       {
                                         "type": "number",
                                         "examples": [
-                                          42.04999923706055,
-                                          46.04999923706055,
-                                          0
+                                          14.5
                                         ]
                                       }
                                     ],
@@ -2733,9 +2374,7 @@
                                       {
                                         "type": "number",
                                         "examples": [
-                                          259.46624755859375,
-                                          310.4310607910156,
-                                          0
+                                          133.38719177246094
                                         ]
                                       }
                                     ],
@@ -2744,9 +2383,7 @@
                                       {
                                         "type": "number",
                                         "examples": [
-                                          27.694236755371094,
-                                          9.5,
-                                          0
+                                          58.42000198364258
                                         ]
                                       }
                                     ],
@@ -2773,9 +2410,7 @@
                                       {
                                         "type": "number",
                                         "examples": [
-                                          159.59088134765625,
-                                          243.2251434326172,
-                                          0
+                                          376.3334655761719
                                         ]
                                       }
                                     ],
@@ -2784,8 +2419,6 @@
                                       {
                                         "type": "number",
                                         "examples": [
-                                          1,
-                                          7,
                                           0
                                         ]
                                       }
@@ -2795,8 +2428,6 @@
                                       {
                                         "type": "number",
                                         "examples": [
-                                          3,
-                                          16,
                                           0
                                         ]
                                       }
@@ -2806,9 +2437,7 @@
                                       {
                                         "type": "number",
                                         "examples": [
-                                          17,
-                                          13,
-                                          3
+                                          17
                                         ]
                                       }
                                     ],
@@ -2817,9 +2446,7 @@
                                       {
                                         "type": "number",
                                         "examples": [
-                                          22,
-                                          23,
-                                          3
+                                          33
                                         ]
                                       }
                                     ],
@@ -2828,9 +2455,7 @@
                                       {
                                         "type": "number",
                                         "examples": [
-                                          5,
-                                          10,
-                                          0
+                                          16
                                         ]
                                       }
                                     ],
@@ -2839,9 +2464,7 @@
                                       {
                                         "type": "number",
                                         "examples": [
-                                          22,
-                                          23,
-                                          3
+                                          33
                                         ]
                                       }
                                     ],
@@ -2850,9 +2473,7 @@
                                       {
                                         "type": "number",
                                         "examples": [
-                                          6,
-                                          18,
-                                          0
+                                          5
                                         ]
                                       }
                                     ],
@@ -2870,8 +2491,7 @@
                                       {
                                         "type": "number",
                                         "examples": [
-                                          0,
-                                          2
+                                          5
                                         ]
                                       }
                                     ],
@@ -2880,8 +2500,7 @@
                                       {
                                         "type": "number",
                                         "examples": [
-                                          0,
-                                          9
+                                          11
                                         ]
                                       }
                                     ],
@@ -2899,8 +2518,6 @@
                                       {
                                         "type": "number",
                                         "examples": [
-                                          3,
-                                          14,
                                           0
                                         ]
                                       }
@@ -2910,8 +2527,7 @@
                                       {
                                         "type": "number",
                                         "examples": [
-                                          0,
-                                          1
+                                          4
                                         ]
                                       }
                                     ],
@@ -2920,8 +2536,7 @@
                                       {
                                         "type": "number",
                                         "examples": [
-                                          0,
-                                          2
+                                          6
                                         ]
                                       }
                                     ],
@@ -2939,8 +2554,7 @@
                                       {
                                         "type": "number",
                                         "examples": [
-                                          0,
-                                          3
+                                          0
                                         ]
                                       }
                                     ],
@@ -2949,8 +2563,7 @@
                                       {
                                         "type": "number",
                                         "examples": [
-                                          0,
-                                          3
+                                          9
                                         ]
                                       }
                                     ],
@@ -2959,8 +2572,7 @@
                                       {
                                         "type": "number",
                                         "examples": [
-                                          0,
-                                          11
+                                          17
                                         ]
                                       }
                                     ],
@@ -2969,8 +2581,7 @@
                                       {
                                         "type": "number",
                                         "examples": [
-                                          0,
-                                          1
+                                          0
                                         ]
                                       }
                                     ],
@@ -2988,8 +2599,6 @@
                                       {
                                         "type": "number",
                                         "examples": [
-                                          3,
-                                          17,
                                           0
                                         ]
                                       }
@@ -3026,7 +2635,7 @@
                                       {
                                         "type": "number",
                                         "examples": [
-                                          0
+                                          2
                                         ]
                                       }
                                     ],
@@ -3035,7 +2644,6 @@
                                       {
                                         "type": "number",
                                         "examples": [
-                                          50.17774963378906,
                                           0
                                         ]
                                       }
@@ -3045,9 +2653,7 @@
                                       {
                                         "type": "number",
                                         "examples": [
-                                          15,
-                                          39,
-                                          0
+                                          16
                                         ]
                                       }
                                     ],
@@ -3056,9 +2662,7 @@
                                       {
                                         "type": "number",
                                         "examples": [
-                                          28,
-                                          96,
-                                          0
+                                          42
                                         ]
                                       }
                                     ],
@@ -3067,9 +2671,7 @@
                                       {
                                         "type": "number",
                                         "examples": [
-                                          124.13875579833984,
-                                          170.03292846679688,
-                                          0
+                                          51.29191970825195
                                         ]
                                       }
                                     ],
@@ -3078,9 +2680,7 @@
                                       {
                                         "type": "number",
                                         "examples": [
-                                          13,
-                                          38,
-                                          0
+                                          11
                                         ]
                                       }
                                     ],
@@ -3089,9 +2689,7 @@
                                       {
                                         "type": "number",
                                         "examples": [
-                                          19,
-                                          78,
-                                          0
+                                          31
                                         ]
                                       }
                                     ],
@@ -3100,9 +2698,7 @@
                                       {
                                         "type": "number",
                                         "examples": [
-                                          2,
-                                          1,
-                                          0
+                                          5
                                         ]
                                       }
                                     ],
@@ -3111,9 +2707,7 @@
                                       {
                                         "type": "number",
                                         "examples": [
-                                          9,
-                                          18,
-                                          0
+                                          11
                                         ]
                                       }
                                     ],
@@ -3131,9 +2725,7 @@
                                       {
                                         "type": "number",
                                         "examples": [
-                                          43,
-                                          51,
-                                          0
+                                          53
                                         ]
                                       }
                                     ],
@@ -3151,9 +2743,7 @@
                                       {
                                         "type": "number",
                                         "examples": [
-                                          18,
-                                          48,
-                                          1
+                                          23
                                         ]
                                       }
                                     ],
@@ -3162,7 +2752,6 @@
                                       {
                                         "type": "number",
                                         "examples": [
-                                          450,
                                           0
                                         ]
                                       }
@@ -3181,7 +2770,6 @@
                                       {
                                         "type": "number",
                                         "examples": [
-                                          2,
                                           0
                                         ]
                                       }
@@ -3200,8 +2788,7 @@
                                       {
                                         "type": "number",
                                         "examples": [
-                                          7,
-                                          0
+                                          2
                                         ]
                                       }
                                     ],
@@ -3210,9 +2797,7 @@
                                       {
                                         "type": "number",
                                         "examples": [
-                                          11,
-                                          15,
-                                          0
+                                          7
                                         ]
                                       }
                                     ],
@@ -3221,7 +2806,6 @@
                                       {
                                         "type": "number",
                                         "examples": [
-                                          1,
                                           0
                                         ]
                                       }
@@ -3231,9 +2815,7 @@
                                       {
                                         "type": "number",
                                         "examples": [
-                                          3,
-                                          5,
-                                          0
+                                          8
                                         ]
                                       }
                                     ],
@@ -3260,9 +2842,7 @@
                                       {
                                         "type": "number",
                                         "examples": [
-                                          1,
-                                          4,
-                                          0
+                                          2
                                         ]
                                       }
                                     ],
@@ -3271,9 +2851,7 @@
                                       {
                                         "type": "number",
                                         "examples": [
-                                          1,
-                                          7,
-                                          0
+                                          9
                                         ]
                                       }
                                     ],
@@ -3282,8 +2860,7 @@
                                       {
                                         "type": "number",
                                         "examples": [
-                                          0,
-                                          1
+                                          0
                                         ]
                                       }
                                     ],
@@ -3292,9 +2869,7 @@
                                       {
                                         "type": "number",
                                         "examples": [
-                                          6,
-                                          10,
-                                          0
+                                          3
                                         ]
                                       }
                                     ],
@@ -3303,9 +2878,7 @@
                                       {
                                         "type": "number",
                                         "examples": [
-                                          30,
-                                          68,
-                                          0
+                                          31
                                         ]
                                       }
                                     ],
@@ -3314,9 +2887,7 @@
                                       {
                                         "type": "number",
                                         "examples": [
-                                          12,
-                                          22,
-                                          0
+                                          16
                                         ]
                                       }
                                     ],
@@ -3325,7 +2896,6 @@
                                       {
                                         "type": "number",
                                         "examples": [
-                                          1,
                                           0
                                         ]
                                       }
@@ -3335,9 +2905,7 @@
                                       {
                                         "type": "number",
                                         "examples": [
-                                          9,
-                                          15,
-                                          0
+                                          11
                                         ]
                                       }
                                     ],
@@ -3346,9 +2914,7 @@
                                       {
                                         "type": "number",
                                         "examples": [
-                                          22,
-                                          57,
-                                          0
+                                          27
                                         ]
                                       }
                                     ],
@@ -3357,9 +2923,7 @@
                                       {
                                         "type": "number",
                                         "examples": [
-                                          37,
-                                          143,
-                                          0
+                                          75
                                         ]
                                       }
                                     ],
@@ -3377,8 +2941,7 @@
                                       {
                                         "type": "number",
                                         "examples": [
-                                          0,
-                                          1
+                                          0
                                         ]
                                       }
                                     ],
@@ -3405,7 +2968,7 @@
                                       {
                                         "type": "number",
                                         "examples": [
-                                          0
+                                          1
                                         ]
                                       }
                                     ],
@@ -3414,8 +2977,7 @@
                                       {
                                         "type": "number",
                                         "examples": [
-                                          3,
-                                          0
+                                          1
                                         ]
                                       }
                                     ],
@@ -3424,7 +2986,6 @@
                                       {
                                         "type": "number",
                                         "examples": [
-                                          1,
                                           0
                                         ]
                                       }
@@ -3434,7 +2995,6 @@
                                       {
                                         "type": "number",
                                         "examples": [
-                                          1,
                                           3
                                         ]
                                       }
@@ -3444,9 +3004,7 @@
                                       {
                                         "type": "number",
                                         "examples": [
-                                          2,
-                                          3,
-                                          0
+                                          1
                                         ]
                                       }
                                     ],
@@ -3455,7 +3013,6 @@
                                       {
                                         "type": "number",
                                         "examples": [
-                                          1,
                                           0
                                         ]
                                       }
@@ -3474,9 +3031,7 @@
                                       {
                                         "type": "number",
                                         "examples": [
-                                          3,
-                                          6,
-                                          0
+                                          10
                                         ]
                                       }
                                     ],
@@ -3485,9 +3040,7 @@
                                       {
                                         "type": "number",
                                         "examples": [
-                                          5,
-                                          31,
-                                          0
+                                          23
                                         ]
                                       }
                                     ],
@@ -3505,7 +3058,6 @@
                                       {
                                         "type": "number",
                                         "examples": [
-                                          4,
                                           0
                                         ]
                                       }
@@ -3515,9 +3067,7 @@
                                       {
                                         "type": "number",
                                         "examples": [
-                                          9,
-                                          33,
-                                          0
+                                          3
                                         ]
                                       }
                                     ],
@@ -3526,9 +3076,7 @@
                                       {
                                         "type": "number",
                                         "examples": [
-                                          17,
-                                          63,
-                                          0
+                                          14
                                         ]
                                       }
                                     ],
@@ -3537,8 +3085,7 @@
                                       {
                                         "type": "number",
                                         "examples": [
-                                          1,
-                                          0
+                                          5
                                         ]
                                       }
                                     ],
@@ -3547,8 +3094,7 @@
                                       {
                                         "type": "number",
                                         "examples": [
-                                          1,
-                                          0
+                                          8
                                         ]
                                       }
                                     ],
@@ -3557,9 +3103,7 @@
                                       {
                                         "type": "number",
                                         "examples": [
-                                          12,
-                                          39,
-                                          0
+                                          13
                                         ]
                                       }
                                     ],
@@ -3568,9 +3112,7 @@
                                       {
                                         "type": "number",
                                         "examples": [
-                                          22,
-                                          94,
-                                          0
+                                          37
                                         ]
                                       }
                                     ],
@@ -3579,8 +3121,7 @@
                                       {
                                         "type": "number",
                                         "examples": [
-                                          1,
-                                          0
+                                          5
                                         ]
                                       }
                                     ],
@@ -3589,9 +3130,7 @@
                                       {
                                         "type": "number",
                                         "examples": [
-                                          5,
-                                          4,
-                                          0
+                                          8
                                         ]
                                       }
                                     ],
@@ -3600,9 +3139,7 @@
                                       {
                                         "type": "number",
                                         "examples": [
-                                          50.4275016784668,
-                                          4.275000095367432,
-                                          0
+                                          26.24850082397461
                                         ]
                                       }
                                     ],
@@ -3611,9 +3148,7 @@
                                       {
                                         "type": "number",
                                         "examples": [
-                                          3,
-                                          1,
-                                          0
+                                          6
                                         ]
                                       }
                                     ],
@@ -3622,9 +3157,7 @@
                                       {
                                         "type": "number",
                                         "examples": [
-                                          21,
-                                          43,
-                                          0
+                                          20
                                         ]
                                       }
                                     ],
@@ -3651,9 +3184,7 @@
                                       {
                                         "type": "number",
                                         "examples": [
-                                          1,
-                                          3,
-                                          0
+                                          1
                                         ]
                                       }
                                     ],
@@ -3662,9 +3193,7 @@
                                       {
                                         "type": "number",
                                         "examples": [
-                                          2,
-                                          10,
-                                          0
+                                          5
                                         ]
                                       }
                                     ],
@@ -3673,8 +3202,7 @@
                                       {
                                         "type": "number",
                                         "examples": [
-                                          1,
-                                          0
+                                          1
                                         ]
                                       }
                                     ],
@@ -3683,8 +3211,7 @@
                                       {
                                         "type": "number",
                                         "examples": [
-                                          2,
-                                          0
+                                          1
                                         ]
                                       }
                                     ],
@@ -3693,7 +3220,6 @@
                                       {
                                         "type": "number",
                                         "examples": [
-                                          1,
                                           0
                                         ]
                                       }
@@ -3703,8 +3229,6 @@
                                       {
                                         "type": "number",
                                         "examples": [
-                                          1,
-                                          6,
                                           0
                                         ]
                                       }
@@ -3723,8 +3247,6 @@
                                       {
                                         "type": "number",
                                         "examples": [
-                                          2,
-                                          5,
                                           0
                                         ]
                                       }
@@ -3734,9 +3256,7 @@
                                       {
                                         "type": "number",
                                         "examples": [
-                                          2,
-                                          4,
-                                          0
+                                          1
                                         ]
                                       }
                                     ],
@@ -3745,9 +3265,7 @@
                                       {
                                         "type": "number",
                                         "examples": [
-                                          3,
-                                          16,
-                                          0
+                                          5
                                         ]
                                       }
                                     ],
@@ -3756,8 +3274,6 @@
                                       {
                                         "type": "number",
                                         "examples": [
-                                          1,
-                                          2,
                                           0
                                         ]
                                       }
@@ -3767,8 +3283,7 @@
                                       {
                                         "type": "number",
                                         "examples": [
-                                          1,
-                                          0
+                                          1
                                         ]
                                       }
                                     ],
@@ -3777,9 +3292,7 @@
                                       {
                                         "type": "number",
                                         "examples": [
-                                          4,
-                                          7,
-                                          0
+                                          1
                                         ]
                                       }
                                     ],
@@ -3788,9 +3301,7 @@
                                       {
                                         "type": "number",
                                         "examples": [
-                                          1.7999999523162842,
-                                          4.9666666984558105,
-                                          0.8999999761581421
+                                          5.7833333015441895
                                         ]
                                       }
                                     ],
@@ -3799,9 +3310,7 @@
                                       {
                                         "type": "number",
                                         "examples": [
-                                          1.7000000476837158,
-                                          4.616666793823242,
-                                          0
+                                          4.449999809265137
                                         ]
                                       }
                                     ],
@@ -3810,9 +3319,7 @@
                                       {
                                         "type": "number",
                                         "examples": [
-                                          3.5,
-                                          9.583333015441895,
-                                          0.8999999761581421
+                                          10.233333587646484
                                         ]
                                       }
                                     ],
@@ -3821,9 +3328,7 @@
                                       {
                                         "type": "number",
                                         "examples": [
-                                          0.9166666865348816,
-                                          0.6499999761581421,
-                                          0
+                                          1.2166666984558105
                                         ]
                                       }
                                     ]
@@ -3847,9 +3352,7 @@
                               {
                                 "type": "number",
                                 "examples": [
-                                  20.458072662353516,
-                                  22.474082946777344,
-                                  18.69588279724121
+                                  22.971542358398438
                                 ]
                               }
                             ],
@@ -3858,9 +3361,7 @@
                               {
                                 "type": "number",
                                 "examples": [
-                                  25.650310516357422,
-                                  26.993146896362305,
-                                  24.614572525024414
+                                  27.309011459350586
                                 ]
                               }
                             ],
@@ -3869,9 +3370,7 @@
                               {
                                 "type": "number",
                                 "examples": [
-                                  0.44518834352493286,
-                                  0.4438442587852478,
-                                  0.3922589421272278
+                                  0.4445424973964691
                                 ]
                               }
                             ],
@@ -3880,9 +3379,7 @@
                               {
                                 "type": "number",
                                 "examples": [
-                                  126790,
-                                  349337,
-                                  27431
+                                  236025
                                 ]
                               }
                             ],
@@ -3891,9 +3388,7 @@
                               {
                                 "type": "number",
                                 "examples": [
-                                  0.6187708973884583,
-                                  0.6134199500083923,
-                                  0.574874222278595
+                                  0.6133713722229004
                                 ]
                               }
                             ],
@@ -3902,9 +3397,7 @@
                               {
                                 "type": "number",
                                 "examples": [
-                                  78590,
-                                  211024,
-                                  17238
+                                  141549
                                 ]
                               }
                             ],
@@ -3949,8 +3442,6 @@
                               {
                                 "type": "number",
                                 "examples": [
-                                  0.034882303327322006,
-                                  0.03517819941043854,
                                   0
                                 ]
                               }
@@ -3960,7 +3451,6 @@
                               {
                                 "type": "number",
                                 "examples": [
-                                  1,
                                   0
                                 ]
                               }
@@ -3970,8 +3460,6 @@
                               {
                                 "type": "number",
                                 "examples": [
-                                  0.034882303327322006,
-                                  0.03517819941043854,
                                   0
                                 ]
                               }
@@ -3981,8 +3469,6 @@
                               {
                                 "type": "number",
                                 "examples": [
-                                  0.034882303327322006,
-                                  0.03517819941043854,
                                   0
                                 ]
                               }
@@ -4082,9 +3568,7 @@
                               {
                                 "type": "number",
                                 "examples": [
-                                  16.684289932250977,
-                                  28.427947998046875,
-                                  17.772010803222656
+                                  31.13129997253418
                                 ]
                               }
                             ],
@@ -4093,9 +3577,7 @@
                               {
                                 "type": "number",
                                 "examples": [
-                                  16,
-                                  28,
-                                  17
+                                  30
                                 ]
                               }
                             ],
@@ -4104,9 +3586,7 @@
                               {
                                 "type": "number",
                                 "examples": [
-                                  22,
-                                  36,
-                                  21
+                                  38
                                 ]
                               }
                             ],
@@ -4115,9 +3595,7 @@
                               {
                                 "type": "number",
                                 "examples": [
-                                  15,
-                                  26,
-                                  16
+                                  29
                                 ]
                               }
                             ],
@@ -4126,9 +3604,7 @@
                               {
                                 "type": "number",
                                 "examples": [
-                                  0.007665901444852352,
-                                  0.005257213953882456,
-                                  0.29798516631126404
+                                  0.010494167916476727
                                 ]
                               }
                             ],
@@ -4146,9 +3622,7 @@
                               {
                                 "type": "number",
                                 "examples": [
-                                  3,
-                                  5,
-                                  14
+                                  5
                                 ]
                               }
                             ],
@@ -4166,9 +3640,7 @@
                               {
                                 "type": "number",
                                 "examples": [
-                                  1.0294123888015747,
-                                  1.565183401107788,
-                                  0
+                                  3.20731782913208
                                 ]
                               }
                             ],
@@ -4177,8 +3649,7 @@
                               {
                                 "type": "number",
                                 "examples": [
-                                  1,
-                                  0
+                                  2
                                 ]
                               }
                             ],
@@ -4187,9 +3658,7 @@
                               {
                                 "type": "number",
                                 "examples": [
-                                  2,
-                                  4,
-                                  0
+                                  10
                                 ]
                               }
                             ],
@@ -4198,8 +3667,7 @@
                               {
                                 "type": "number",
                                 "examples": [
-                                  1,
-                                  0
+                                  1
                                 ]
                               }
                             ],
@@ -4208,9 +3676,7 @@
                               {
                                 "type": "number",
                                 "examples": [
-                                  1.0294123888015747,
-                                  1.565183401107788,
-                                  0
+                                  3.20731782913208
                                 ]
                               }
                             ],
@@ -4219,8 +3685,7 @@
                               {
                                 "type": "number",
                                 "examples": [
-                                  1,
-                                  0
+                                  2
                                 ]
                               }
                             ],
@@ -4229,9 +3694,7 @@
                               {
                                 "type": "number",
                                 "examples": [
-                                  383,
-                                  401,
-                                  0
+                                  4390
                                 ]
                               }
                             ],
@@ -4240,8 +3703,7 @@
                               {
                                 "type": "number",
                                 "examples": [
-                                  1,
-                                  0
+                                  1
                                 ]
                               }
                             ]
@@ -4256,7 +3718,7 @@
                         "inner": {
                           "type": "number",
                           "examples": [
-                            1
+                            3
                           ]
                         }
                       }
@@ -4266,7 +3728,6 @@
                       {
                         "type": "number",
                         "examples": [
-                          1,
                           0
                         ]
                       }
@@ -4280,9 +3741,7 @@
               {
                 "type": "number",
                 "examples": [
-                  76,
-                  200,
-                  9
+                  131
                 ]
               }
             ]
@@ -4292,7 +3751,84 @@
       }
     ],
     [
-      "/ssc/invoke/rematch_accept",
+      "/matches/all/:id",
+      {
+        "type": "object",
+        "properties": {
+          "dataType": "Map",
+          "value": []
+        },
+        "methodOrCode": "GET"
+      }
+    ],
+    [
+      "/ssc/invoke/claim_mission_rewards",
+      {
+        "type": "object",
+        "properties": {
+          "dataType": "Map",
+          "value": [
+            [
+              "ContainerSlug",
+              {
+                "type": "string",
+                "examples": [
+                  "miscon_battlepassdaily_s5",
+                  "miscon_battlepassweekly_s5"
+                ]
+              }
+            ],
+            [
+              "MissionsToClaim",
+              {
+                "type": "array",
+                "inner": {
+                  "type": "object",
+                  "properties": {
+                    "dataType": "Map",
+                    "value": [
+                      [
+                        "MissionControllerSlug",
+                        {
+                          "type": "string",
+                          "examples": [
+                            "misctl_battlepass_daily_hard_new",
+                            "misctl_battlepass_weekly_new"
+                          ]
+                        }
+                      ],
+                      [
+                        "MissionGuid",
+                        {
+                          "type": "string",
+                          "examples": [
+                            "f367cc26-94aa-472e-afb7-f5beca415eeb",
+                            "e2d513a5-227d-439a-a7c5-d95a6fdfd18d"
+                          ]
+                        }
+                      ],
+                      [
+                        "MissionSlug",
+                        {
+                          "type": "string",
+                          "examples": [
+                            "mis_stats_total_down_normals_hith",
+                            "mis_ringout_pvp_weekly"
+                          ]
+                        }
+                      ]
+                    ]
+                  }
+                }
+              }
+            ]
+          ]
+        },
+        "methodOrCode": "POST"
+      }
+    ],
+    [
+      "/ssc/invoke/toast_player",
       {
         "type": "object",
         "properties": {
@@ -4303,7 +3839,16 @@
               {
                 "type": "string",
                 "examples": [
-                  "67cf0bdd38150fa35c03b5af"
+                  "67d45cfdda22dc702a4383d7"
+                ]
+              }
+            ],
+            [
+              "ToasteeId",
+              {
+                "type": "string",
+                "examples": [
+                  "665a7f968ec47506466fbd2d"
                 ]
               }
             ]
@@ -4357,8 +3902,7 @@
               {
                 "type": "string",
                 "examples": [
-                  "67cf09dd07f3143f5fe732d1",
-                  "67cf0da2d0f5dd3b4bed6d4b"
+                  "67d45cd0b8655ea25ca3a0a9"
                 ]
               }
             ],
@@ -4367,8 +3911,7 @@
               {
                 "type": "string",
                 "examples": [
-                  "party_lobby",
-                  "custom_game_lobby"
+                  "party_lobby"
                 ]
               }
             ],
@@ -4396,84 +3939,91 @@
       }
     ],
     [
-      "/matches/matchmaking/ranked-1v1-retail/request",
+      "/leaderboards/bulk/score-and-rank/:id",
       {
         "type": "object",
         "properties": {
           "dataType": "Map",
           "value": [
             [
-              "data",
+              "ids",
+              {
+                "type": "array",
+                "inner": {
+                  "type": "string",
+                  "examples": [
+                    "ranked_season5_1v1_character_Jason"
+                  ]
+                }
+              }
+            ]
+          ]
+        },
+        "methodOrCode": "PUT"
+      }
+    ],
+    [
+      "/ssc/invoke/lock_lobby_loadout",
+      {
+        "type": "object",
+        "properties": {
+          "dataType": "Map",
+          "value": [
+            [
+              "AutoPartyPreference",
+              {
+                "type": "boolean"
+              }
+            ],
+            [
+              "CrossplayPreference",
+              {
+                "type": "number",
+                "examples": [
+                  1
+                ]
+              }
+            ],
+            [
+              "GameplayPreferences",
+              {
+                "type": "number",
+                "examples": [
+                  544
+                ]
+              }
+            ],
+            [
+              "HissCrc",
+              {
+                "type": "number",
+                "examples": [
+                  1167552915
+                ]
+              }
+            ],
+            [
+              "Loadout",
               {
                 "type": "object",
                 "properties": {
                   "dataType": "Map",
                   "value": [
                     [
-                      "MultiplayParams",
-                      {
-                        "type": "object",
-                        "properties": {
-                          "dataType": "Map",
-                          "value": [
-                            [
-                              "MultiplayClusterSlug",
-                              {
-                                "type": "string",
-                                "examples": [
-                                  "ec2-us-east-1-dokken"
-                                ]
-                              }
-                            ],
-                            [
-                              "MultiplayProfileId",
-                              {
-                                "type": "string",
-                                "examples": [
-                                  "1252922"
-                                ]
-                              }
-                            ],
-                            [
-                              "MultiplayRegionId",
-                              {
-                                "type": "string",
-                                "examples": [
-                                  "19c465a7-f21f-11ea-a5e3-0954f48c5682"
-                                ]
-                              }
-                            ],
-                            [
-                              "MultiplayRegionSearchId",
-                              {
-                                "type": "number",
-                                "examples": [
-                                  1
-                                ]
-                              }
-                            ]
-                          ]
-                        }
-                      }
-                    ],
-                    [
-                      "crossplay_buckets",
-                      {
-                        "type": "array",
-                        "inner": {
-                          "type": "string",
-                          "examples": [
-                            "All"
-                          ]
-                        }
-                      }
-                    ],
-                    [
-                      "version",
+                      "Character",
                       {
                         "type": "string",
                         "examples": [
-                          "CLIENT:2F322-Retail DATA:4CF442B2 PERKS:1"
+                          "character_wonder_woman"
+                        ]
+                      }
+                    ],
+                    [
+                      "Skin",
+                      {
+                        "type": "string",
+                        "examples": [
+                          "skin_wonder_woman_default"
                         ]
                       }
                     ]
@@ -4482,375 +4032,11 @@
               }
             ],
             [
-              "game_server",
-              {
-                "type": "object",
-                "properties": {
-                  "dataType": "Map",
-                  "value": [
-                    [
-                      "launch_data",
-                      {
-                        "type": "object",
-                        "properties": {
-                          "dataType": "Map",
-                          "value": [
-                            [
-                              "id",
-                              {
-                                "type": "number",
-                                "examples": [
-                                  1
-                                ]
-                              }
-                            ],
-                            [
-                              "profile",
-                              {
-                                "type": "string",
-                                "examples": [
-                                  "1252922"
-                                ]
-                              }
-                            ]
-                          ]
-                        }
-                      }
-                    ]
-                  ]
-                }
-              }
-            ],
-            [
-              "match",
-              {
-                "type": "string",
-                "examples": [
-                  "67cf09dd07f3143f5fe732d1"
-                ]
-              }
-            ]
-          ]
-        },
-        "methodOrCode": "POST"
-      }
-    ],
-    [
-      "/matches/matchmaking/request/:id/cancel",
-      {
-        "type": "object",
-        "properties": {
-          "dataType": "Map",
-          "value": []
-        },
-        "methodOrCode": "POST"
-      }
-    ],
-    [
-      "/ssc/invoke/create_custom_game_lobby",
-      {
-        "type": "object",
-        "properties": {
-          "dataType": "Map",
-          "value": [
-            [
-              "AllMultiplayParams",
-              {
-                "type": "object",
-                "properties": {
-                  "dataType": "Map",
-                  "value": [
-                    [
-                      "1",
-                      {
-                        "type": "object",
-                        "properties": {
-                          "dataType": "Map",
-                          "value": [
-                            [
-                              "MultiplayClusterSlug",
-                              {
-                                "type": "string",
-                                "examples": [
-                                  "ec2-us-east-1-dokken"
-                                ]
-                              }
-                            ],
-                            [
-                              "MultiplayProfileId",
-                              {
-                                "type": "string",
-                                "examples": [
-                                  "1252499"
-                                ]
-                              }
-                            ],
-                            [
-                              "MultiplayRegionId",
-                              {
-                                "type": "string",
-                                "examples": [
-                                  ""
-                                ]
-                              }
-                            ]
-                          ]
-                        }
-                      }
-                    ],
-                    [
-                      "2",
-                      {
-                        "type": "object",
-                        "properties": {
-                          "dataType": "Map",
-                          "value": [
-                            [
-                              "MultiplayClusterSlug",
-                              {
-                                "type": "string",
-                                "examples": [
-                                  "ec2-us-east-1-dokken"
-                                ]
-                              }
-                            ],
-                            [
-                              "MultiplayProfileId",
-                              {
-                                "type": "string",
-                                "examples": [
-                                  "1252922"
-                                ]
-                              }
-                            ],
-                            [
-                              "MultiplayRegionId",
-                              {
-                                "type": "string",
-                                "examples": [
-                                  "19c465a7-f21f-11ea-a5e3-0954f48c5682"
-                                ]
-                              }
-                            ]
-                          ]
-                        }
-                      }
-                    ],
-                    [
-                      "3",
-                      {
-                        "type": "object",
-                        "properties": {
-                          "dataType": "Map",
-                          "value": [
-                            [
-                              "MultiplayClusterSlug",
-                              {
-                                "type": "string",
-                                "examples": [
-                                  ""
-                                ]
-                              }
-                            ],
-                            [
-                              "MultiplayProfileId",
-                              {
-                                "type": "string",
-                                "examples": [
-                                  "1252925"
-                                ]
-                              }
-                            ],
-                            [
-                              "MultiplayRegionId",
-                              {
-                                "type": "string",
-                                "examples": [
-                                  ""
-                                ]
-                              }
-                            ]
-                          ]
-                        }
-                      }
-                    ],
-                    [
-                      "4",
-                      {
-                        "type": "object",
-                        "properties": {
-                          "dataType": "Map",
-                          "value": [
-                            [
-                              "MultiplayClusterSlug",
-                              {
-                                "type": "string",
-                                "examples": [
-                                  "ec2-us-east-1-dokken"
-                                ]
-                              }
-                            ],
-                            [
-                              "MultiplayProfileId",
-                              {
-                                "type": "string",
-                                "examples": [
-                                  "1252928"
-                                ]
-                              }
-                            ],
-                            [
-                              "MultiplayRegionId",
-                              {
-                                "type": "string",
-                                "examples": [
-                                  "19c465a7-f21f-11ea-a5e3-0954f48c5682"
-                                ]
-                              }
-                            ]
-                          ]
-                        }
-                      }
-                    ]
-                  ]
-                }
-              }
-            ],
-            [
-              "AutoPartyPreference",
-              {
-                "type": "boolean"
-              }
-            ],
-            [
-              "CrossplayPreference",
-              {
-                "type": "number",
-                "examples": [
-                  1
-                ]
-              }
-            ],
-            [
-              "GameplayPreferences",
-              {
-                "type": "number",
-                "examples": [
-                  544
-                ]
-              }
-            ],
-            [
-              "HissCrc",
-              {
-                "type": "number",
-                "examples": [
-                  1167552915
-                ]
-              }
-            ],
-            [
-              "LobbyTemplate",
-              {
-                "type": "string",
-                "examples": [
-                  "custom_game_lobby"
-                ]
-              }
-            ],
-            [
-              "LobbyType",
-              {
-                "type": "number",
-                "examples": [
-                  0
-                ]
-              }
-            ],
-            [
-              "Platform",
-              {
-                "type": "string",
-                "examples": [
-                  "PC"
-                ]
-              }
-            ],
-            [
-              "Version",
-              {
-                "type": "string",
-                "examples": [
-                  "CLIENT:2F322-Retail DATA:4CF442B2 PERKS:1"
-                ]
-              }
-            ]
-          ]
-        },
-        "methodOrCode": "PUT"
-      }
-    ],
-    [
-      "/ssc/invoke/invite_to_player_lobby",
-      {
-        "type": "object",
-        "properties": {
-          "dataType": "Map",
-          "value": [
-            [
-              "AutoPartyPreference",
-              {
-                "type": "boolean"
-              }
-            ],
-            [
-              "CrossplayPreference",
-              {
-                "type": "number",
-                "examples": [
-                  1
-                ]
-              }
-            ],
-            [
-              "GameplayPreferences",
-              {
-                "type": "number",
-                "examples": [
-                  544
-                ]
-              }
-            ],
-            [
-              "HissCrc",
-              {
-                "type": "number",
-                "examples": [
-                  1167552915
-                ]
-              }
-            ],
-            [
-              "InviteeAccountID",
-              {
-                "type": "string",
-                "examples": [
-                  "62e95383b488ee2289aef406"
-                ]
-              }
-            ],
-            [
-              "IsSpectator",
-              {
-                "type": "boolean"
-              }
-            ],
-            [
               "LobbyId",
               {
                 "type": "string",
                 "examples": [
-                  "67cf0da2d0f5dd3b4bed6d4b"
+                  "67d45cd0b8655ea25ca3a0a9"
                 ]
               }
             ],
@@ -4859,16 +4045,7 @@
               {
                 "type": "string",
                 "examples": [
-                  "custom_game_lobby"
-                ]
-              }
-            ],
-            [
-              "MatchID",
-              {
-                "type": "string",
-                "examples": [
-                  "67cf0da2d0f5dd3b4bed6d4b"
+                  "party_lobby"
                 ]
               }
             ],
@@ -4887,826 +4064,6 @@
                 "type": "string",
                 "examples": [
                   "CLIENT:2F322-Retail DATA:4CF442B2 PERKS:1"
-                ]
-              }
-            ]
-          ]
-        },
-        "methodOrCode": "PUT"
-      }
-    ],
-    [
-      "/ssc/invoke/update_team_style_for_custom_game",
-      {
-        "type": "object",
-        "properties": {
-          "dataType": "Map",
-          "value": [
-            [
-              "MatchID",
-              {
-                "type": "string",
-                "examples": [
-                  "67cf0da2d0f5dd3b4bed6d4b"
-                ]
-              }
-            ],
-            [
-              "TeamStyle",
-              {
-                "type": "string",
-                "examples": [
-                  "Solos"
-                ]
-              }
-            ]
-          ]
-        },
-        "methodOrCode": "PUT"
-      }
-    ],
-    [
-      "/ssc/invoke/update_int_setting_for_custom_game",
-      {
-        "type": "object",
-        "properties": {
-          "dataType": "Map",
-          "value": [
-            [
-              "MatchID",
-              {
-                "type": "string",
-                "examples": [
-                  "67cf0da2d0f5dd3b4bed6d4b"
-                ]
-              }
-            ],
-            [
-              "SettingKey",
-              {
-                "type": "string",
-                "examples": [
-                  "NumRingoutsForWin",
-                  "MatchDuration"
-                ]
-              }
-            ],
-            [
-              "SettingValue",
-              {
-                "type": "number",
-                "examples": [
-                  2,
-                  300
-                ]
-              }
-            ]
-          ]
-        },
-        "methodOrCode": "PUT"
-      }
-    ],
-    [
-      "/ssc/invoke/set_game_mode_for_custom_game",
-      {
-        "type": "object",
-        "properties": {
-          "dataType": "Map",
-          "value": [
-            [
-              "GameModeSlug",
-              {
-                "type": "string",
-                "examples": [
-                  "gm_chickensvsicecubes_1v1",
-                  "gm_classic_1v1"
-                ]
-              }
-            ],
-            [
-              "MatchID",
-              {
-                "type": "string",
-                "examples": [
-                  "67cf0da2d0f5dd3b4bed6d4b"
-                ]
-              }
-            ]
-          ]
-        },
-        "methodOrCode": "PUT"
-      }
-    ],
-    [
-      "/ssc/invoke/set_enabled_maps_for_custom_game",
-      {
-        "type": "object",
-        "properties": {
-          "dataType": "Map",
-          "value": [
-            [
-              "MapSlugs",
-              {
-                "type": "array",
-                "inner": {
-                  "type": "string",
-                  "examples": [
-                    "M000_V2_NEW"
-                  ]
-                }
-              }
-            ],
-            [
-              "MatchID",
-              {
-                "type": "string",
-                "examples": [
-                  "67cf0da2d0f5dd3b4bed6d4b"
-                ]
-              }
-            ]
-          ]
-        },
-        "methodOrCode": "PUT"
-      }
-    ],
-    [
-      "/ssc/invoke/set_world_buffs_for_custom_game",
-      {
-        "type": "object",
-        "properties": {
-          "dataType": "Map",
-          "value": [
-            [
-              "MatchID",
-              {
-                "type": "string",
-                "examples": [
-                  "67cf0da2d0f5dd3b4bed6d4b"
-                ]
-              }
-            ],
-            [
-              "WorldBuffSlugs",
-              {
-                "type": "array",
-                "inner": {
-                  "type": "string",
-                  "examples": [
-                    "buff_hotpotato"
-                  ]
-                }
-              }
-            ]
-          ]
-        },
-        "methodOrCode": "PUT"
-      }
-    ],
-    [
-      "/ssc/invoke/lobby_code",
-      {
-        "type": "object",
-        "properties": {
-          "dataType": "Map",
-          "value": [
-            [
-              "AutoPartyPreference",
-              {
-                "type": "boolean"
-              }
-            ],
-            [
-              "CrossplayPreference",
-              {
-                "type": "number",
-                "examples": [
-                  1
-                ]
-              }
-            ],
-            [
-              "GameplayPreferences",
-              {
-                "type": "number",
-                "examples": [
-                  544
-                ]
-              }
-            ],
-            [
-              "HissCrc",
-              {
-                "type": "number",
-                "examples": [
-                  1167552915
-                ]
-              }
-            ],
-            [
-              "LobbyId",
-              {
-                "type": "string",
-                "examples": [
-                  "67cf0da2d0f5dd3b4bed6d4b"
-                ]
-              }
-            ],
-            [
-              "LobbyTemplate",
-              {
-                "type": "string",
-                "examples": [
-                  "custom_game_lobby"
-                ]
-              }
-            ],
-            [
-              "Platform",
-              {
-                "type": "string",
-                "examples": [
-                  "PC"
-                ]
-              }
-            ],
-            [
-              "Version",
-              {
-                "type": "string",
-                "examples": [
-                  "CLIENT:2F322-Retail DATA:4CF442B2 PERKS:1"
-                ]
-              }
-            ]
-          ]
-        },
-        "methodOrCode": "PUT"
-      }
-    ],
-    [
-      "/ssc/invoke/switch_custom_game_lobby_team",
-      {
-        "type": "object",
-        "properties": {
-          "dataType": "Map",
-          "value": [
-            [
-              "MatchID",
-              {
-                "type": "string",
-                "examples": [
-                  "67cf0da2d0f5dd3b4bed6d4b"
-                ]
-              }
-            ],
-            [
-              "TeamIndex",
-              {
-                "type": "number",
-                "examples": [
-                  4
-                ]
-              }
-            ]
-          ]
-        },
-        "methodOrCode": "PUT"
-      }
-    ],
-    [
-      "/ssc/invoke/promote_to_lobby_leader",
-      {
-        "type": "object",
-        "properties": {
-          "dataType": "Map",
-          "value": [
-            [
-              "AutoPartyPreference",
-              {
-                "type": "boolean"
-              }
-            ],
-            [
-              "CrossplayPreference",
-              {
-                "type": "number",
-                "examples": [
-                  1
-                ]
-              }
-            ],
-            [
-              "GameplayPreferences",
-              {
-                "type": "number",
-                "examples": [
-                  544
-                ]
-              }
-            ],
-            [
-              "HissCrc",
-              {
-                "type": "number",
-                "examples": [
-                  1167552915
-                ]
-              }
-            ],
-            [
-              "LobbyId",
-              {
-                "type": "string",
-                "examples": [
-                  "67cf0da2d0f5dd3b4bed6d4b"
-                ]
-              }
-            ],
-            [
-              "LobbyTemplate",
-              {
-                "type": "string",
-                "examples": [
-                  "custom_game_lobby"
-                ]
-              }
-            ],
-            [
-              "MatchID",
-              {
-                "type": "string",
-                "examples": [
-                  "67cf0da2d0f5dd3b4bed6d4b"
-                ]
-              }
-            ],
-            [
-              "Platform",
-              {
-                "type": "string",
-                "examples": [
-                  "PC"
-                ]
-              }
-            ],
-            [
-              "PromoteTarget",
-              {
-                "type": "string",
-                "examples": [
-                  "62e95383b488ee2289aef406"
-                ]
-              }
-            ],
-            [
-              "Version",
-              {
-                "type": "string",
-                "examples": [
-                  "CLIENT:2F322-Retail DATA:4CF442B2 PERKS:1"
-                ]
-              }
-            ]
-          ]
-        },
-        "methodOrCode": "PUT"
-      }
-    ],
-    [
-      "/ssc/invoke/leave_player_lobby",
-      {
-        "type": "object",
-        "properties": {
-          "dataType": "Map",
-          "value": [
-            [
-              "AutoPartyPreference",
-              {
-                "type": "boolean"
-              }
-            ],
-            [
-              "CrossplayPreference",
-              {
-                "type": "number",
-                "examples": [
-                  1
-                ]
-              }
-            ],
-            [
-              "GameplayPreferences",
-              {
-                "type": "number",
-                "examples": [
-                  544
-                ]
-              }
-            ],
-            [
-              "HissCrc",
-              {
-                "type": "number",
-                "examples": [
-                  1167552915
-                ]
-              }
-            ],
-            [
-              "LobbyId",
-              {
-                "type": "string",
-                "examples": [
-                  "67cf0da2d0f5dd3b4bed6d4b"
-                ]
-              }
-            ],
-            [
-              "LobbyTemplate",
-              {
-                "type": "string",
-                "examples": [
-                  "custom_game_lobby"
-                ]
-              }
-            ],
-            [
-              "MatchID",
-              {
-                "type": "string",
-                "examples": [
-                  "67cf0da2d0f5dd3b4bed6d4b"
-                ]
-              }
-            ],
-            [
-              "Platform",
-              {
-                "type": "string",
-                "examples": [
-                  "PC"
-                ]
-              }
-            ],
-            [
-              "Version",
-              {
-                "type": "string",
-                "examples": [
-                  "CLIENT:2F322-Retail DATA:4CF442B2 PERKS:1"
-                ]
-              }
-            ]
-          ]
-        },
-        "methodOrCode": "PUT"
-      }
-    ],
-    [
-      "/ssc/invoke/join_custom_game_lobby",
-      {
-        "type": "object",
-        "properties": {
-          "dataType": "Map",
-          "value": [
-            [
-              "AutoPartyPreference",
-              {
-                "type": "boolean"
-              }
-            ],
-            [
-              "CrossplayPreference",
-              {
-                "type": "number",
-                "examples": [
-                  1
-                ]
-              }
-            ],
-            [
-              "GameplayPreferences",
-              {
-                "type": "number",
-                "examples": [
-                  544
-                ]
-              }
-            ],
-            [
-              "HissCrc",
-              {
-                "type": "number",
-                "examples": [
-                  1167552915
-                ]
-              }
-            ],
-            [
-              "HostId",
-              {
-                "type": "string",
-                "examples": [
-                  "67cf0da2d0f5dd3b4bed6d4b"
-                ]
-              }
-            ],
-            [
-              "IsSpectator",
-              {
-                "type": "boolean"
-              }
-            ],
-            [
-              "LobbyTemplate",
-              {
-                "type": "string",
-                "examples": [
-                  "custom_game_lobby"
-                ]
-              }
-            ],
-            [
-              "Platform",
-              {
-                "type": "string",
-                "examples": [
-                  "PC"
-                ]
-              }
-            ],
-            [
-              "Version",
-              {
-                "type": "string",
-                "examples": [
-                  "CLIENT:2F322-Retail DATA:4CF442B2 PERKS:1"
-                ]
-              }
-            ]
-          ]
-        },
-        "methodOrCode": "PUT"
-      }
-    ],
-    [
-      "/ssc/invoke/kick_from_lobby",
-      {
-        "type": "object",
-        "properties": {
-          "dataType": "Map",
-          "value": [
-            [
-              "AutoPartyPreference",
-              {
-                "type": "boolean"
-              }
-            ],
-            [
-              "CrossplayPreference",
-              {
-                "type": "number",
-                "examples": [
-                  1
-                ]
-              }
-            ],
-            [
-              "GameplayPreferences",
-              {
-                "type": "number",
-                "examples": [
-                  544
-                ]
-              }
-            ],
-            [
-              "HissCrc",
-              {
-                "type": "number",
-                "examples": [
-                  1167552915
-                ]
-              }
-            ],
-            [
-              "KickeeAccountID",
-              {
-                "type": "string",
-                "examples": [
-                  "62e95383b488ee2289aef406"
-                ]
-              }
-            ],
-            [
-              "LobbyId",
-              {
-                "type": "string",
-                "examples": [
-                  "67cf0da2d0f5dd3b4bed6d4b"
-                ]
-              }
-            ],
-            [
-              "LobbyTemplate",
-              {
-                "type": "string",
-                "examples": [
-                  "custom_game_lobby"
-                ]
-              }
-            ],
-            [
-              "MatchID",
-              {
-                "type": "string",
-                "examples": [
-                  "67cf0da2d0f5dd3b4bed6d4b"
-                ]
-              }
-            ],
-            [
-              "Platform",
-              {
-                "type": "string",
-                "examples": [
-                  "PC"
-                ]
-              }
-            ],
-            [
-              "Version",
-              {
-                "type": "string",
-                "examples": [
-                  "CLIENT:2F322-Retail DATA:4CF442B2 PERKS:1"
-                ]
-              }
-            ]
-          ]
-        },
-        "methodOrCode": "PUT"
-      }
-    ],
-    [
-      "/ssc/invoke/start_custom_match",
-      {
-        "type": "object",
-        "properties": {
-          "dataType": "Map",
-          "value": [
-            [
-              "AutoPartyPreference",
-              {
-                "type": "boolean"
-              }
-            ],
-            [
-              "BotData",
-              {
-                "type": "object",
-                "properties": {
-                  "dataType": "Map",
-                  "value": []
-                }
-              }
-            ],
-            [
-              "ClusterID",
-              {
-                "type": "string",
-                "examples": [
-                  "ec2-us-east-1-dokken"
-                ]
-              }
-            ],
-            [
-              "CrossplayPreference",
-              {
-                "type": "number",
-                "examples": [
-                  1
-                ]
-              }
-            ],
-            [
-              "GameplayPreferences",
-              {
-                "type": "number",
-                "examples": [
-                  544
-                ]
-              }
-            ],
-            [
-              "HissCrc",
-              {
-                "type": "number",
-                "examples": [
-                  1167552915
-                ]
-              }
-            ],
-            [
-              "LobbyId",
-              {
-                "type": "string",
-                "examples": [
-                  "67cf0da2d0f5dd3b4bed6d4b"
-                ]
-              }
-            ],
-            [
-              "LobbyTemplate",
-              {
-                "type": "string",
-                "examples": [
-                  "custom_game_lobby"
-                ]
-              }
-            ],
-            [
-              "MatchID",
-              {
-                "type": "string",
-                "examples": [
-                  "67cf0da2d0f5dd3b4bed6d4b"
-                ]
-              }
-            ],
-            [
-              "MultiplayProfileID",
-              {
-                "type": "string",
-                "examples": [
-                  "1252922"
-                ]
-              }
-            ],
-            [
-              "MultiplayRegionID",
-              {
-                "type": "string",
-                "examples": [
-                  "19c465a7-f21f-11ea-a5e3-0954f48c5682"
-                ]
-              }
-            ],
-            [
-              "MultiplayRegionSearchID",
-              {
-                "type": "number",
-                "examples": [
-                  1
-                ]
-              }
-            ],
-            [
-              "Platform",
-              {
-                "type": "string",
-                "examples": [
-                  "PC"
-                ]
-              }
-            ],
-            [
-              "Version",
-              {
-                "type": "string",
-                "examples": [
-                  "CLIENT:2F322-Retail DATA:4CF442B2 PERKS:1"
-                ]
-              }
-            ]
-          ]
-        },
-        "methodOrCode": "PUT"
-      }
-    ],
-    [
-      "/ssc/invoke/toast_player",
-      {
-        "type": "object",
-        "properties": {
-          "dataType": "Map",
-          "value": [
-            [
-              "ContainerMatchId",
-              {
-                "type": "string",
-                "examples": [
-                  "67cf0e30410383470e2dd0e1"
-                ]
-              }
-            ],
-            [
-              "ToasteeId",
-              {
-                "type": "string",
-                "examples": [
-                  "62e95383b488ee2289aef406"
                 ]
               }
             ]

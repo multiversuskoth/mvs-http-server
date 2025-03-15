@@ -1,7 +1,7 @@
 import { modelOptions, prop } from "@typegoose/typegoose";
 import { dot } from "dot-object";
 import { Schema } from "mongoose";
-import {dotify} from "../utils/dotify";
+import { dotify } from "../utils/dotify";
 
 @modelOptions({ schemaOptions: { _id: false } })
 class RatingsStat {
@@ -74,16 +74,14 @@ export class ServerData {
   SeasonalData?: SeasonalDatas;
   // CasualQueue: ;
 
-  public static flatten<
-  P extends string
->(
+  public static flatten<P extends string>(
     serverData: ServerData,
     prefix: P,
     result: Record<any, any> = {}
   ): {
-    [K in keyof ServerData as `${P}.${K}`]: ServerData[K]
+    [K in keyof ServerData as `${P}.${K}`]: ServerData[K];
   } {
-    dotify(serverData,prefix, result,false);
-    return result as any
+    dotify(serverData, prefix, result, false);
+    return result as any;
   }
 }

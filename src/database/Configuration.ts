@@ -1,6 +1,4 @@
 import { getModelForClass, modelOptions, prop } from "@typegoose/typegoose";
-import { Base } from "@typegoose/typegoose/lib/defaultClasses";
-import mongoose from "mongoose";
 
 @modelOptions({ schemaOptions: { _id: false } })
 export class ConfigurationGcm {
@@ -60,13 +58,13 @@ export class ConfigurationRealTime {
   @prop({ required: true })
   "default-cluster"!: string;
 
-  @prop({ type: () => Map<string,ConfigurationCluster>, required: true })
-  servers!: Map<string, Map<string,ConfigurationCluster>>;
+  @prop({ type: () => Map<string, ConfigurationCluster>, required: true })
+  servers!: Map<string, Map<string, ConfigurationCluster>>;
 }
 
 export class Configuration {
-  @prop({required: true})
-  public _id!: string
+  @prop({ required: true })
+  public _id!: string;
 
   @prop({ required: true })
   gcm!: ConfigurationGcm;

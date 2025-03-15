@@ -1,36 +1,9 @@
 import { getModelForClass, modelOptions, prop } from "@typegoose/typegoose";
-import { Base } from "@typegoose/typegoose/lib/defaultClasses";
+
 import mongoose from "mongoose";
 import toJSONVirtualId from "../utils/toJSONVirtualId";
 import { Entries } from "type-fest";
 import { dotify } from "../utils/dotify";
-import { Configuration } from "./Configuration";
-
-@modelOptions({ schemaOptions: { _id: false } })
-export class Identity {
-  @prop({ required: true })
-  username!: string;
-
-  @prop({ required: true })
-  avatar!: string;
-
-  @prop({ required: true })
-  default_username!: boolean;
-
-  // @prop({})
-  // personal_data?: null;
-
-  @prop()
-  alternate!: IdentityAlternate
-}
-
-@modelOptions({ schemaOptions: { _id: false } })
-export class WbAccount {
-  @prop({ required: true })
-  completed!: boolean;
-  @prop()
-  email_verified?: boolean;
-}
 
 @modelOptions({ schemaOptions: { _id: false } })
 export class IdentityAlternateItem {
@@ -39,7 +12,9 @@ export class IdentityAlternateItem {
   @prop({ required: true })
   username!: string;
   @prop()
-  avatar?: string;
+  avatar!: string | null;
+  @prop()
+  email?: string | null;
 }
 
 @modelOptions({ schemaOptions: { _id: false } })
@@ -52,22 +27,50 @@ export class IdentityAlternate {
   xb1?: IdentityAlternateItem;
   @prop()
   ps4?: IdentityAlternateItem;
+  @prop()
+  steam?: IdentityAlternateItem;
 }
 
-export class Connection{
+@modelOptions({ schemaOptions: { _id: false } })
+export class Identity {
+  @prop({ required: true })
+  username!: string;
 
+  @prop({ required: true })
+  avatar!: string | null;
+
+  @prop({ required: true })
+  default_username!: boolean;
+
+  // @prop({})
+  // personal_data?: null;
+
+  @prop()
+  alternate!: IdentityAlternate;
 }
 
-export class Account implements Base {
+@modelOptions({ schemaOptions: { _id: false } })
+export class WbAccount {
+  @prop({ required: true })
+  completed!: boolean;
+  @prop()
+  email_verified?: boolean;
+  @prop()
+  age_category?: string;
+}
+
+export class Connection {}
+
+export class Account {
   _id!: mongoose.Types.ObjectId;
 
   id!: string;
 
   @prop({ required: true })
-  updated_at!: number;
+  updated_at!: Date;
 
   @prop({ required: true })
-  created_at!: number;
+  created_at!: Date;
 
   @prop({ required: true })
   deleted!: boolean;
@@ -90,8 +93,8 @@ export class Account implements Base {
   @prop({ required: true })
   wb_account!: WbAccount;
 
-  @prop({ default: null })
-  points!: number | null;
+  @prop({ default: 0 })
+  points!: number;
 
   @prop({ required: true })
   state!: string;
