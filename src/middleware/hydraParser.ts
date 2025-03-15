@@ -11,13 +11,14 @@ export const hydraDecoderMiddleware = <T>(req: Request, res: Response, next: Nex
 
     // Listen for data chunks
     req.on("data", (chunk) => {
+      // TODO : Can we start parsing in smaller chunks?
       dataChunks.push(chunk);
     });
 
     // When all data is received
     req.on("end", () => {
       try {
-        // Attempt to parse the data (e.g., as JSON or other format)
+        // Attempt to parse hydra encoding
         const binaryData = Buffer.concat(dataChunks);
         const decodedBody = new HydraDecoder(binaryData).readValue();
         req.body = decodedBody;
@@ -36,5 +37,4 @@ export const hydraDecoderMiddleware = <T>(req: Request, res: Response, next: Nex
       return res;
     };
   }
-  next();
 };

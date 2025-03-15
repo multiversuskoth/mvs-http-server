@@ -1,7 +1,7 @@
 {
   "name": "mvs-http-server",
   "scripts": {
-    "start": "ts-node ./src/index.ts",
+    "start": "node -r @swc-node/register ./src/index.ts",
     "build": "tsc --project ./",
     "start:prod": "node ./build/index.js"
   },
@@ -19,6 +19,7 @@
     "zod": "^3.24.2"
   },
   "devDependencies": {
+    "@swc-node/register": "^1.10.10",
     "@tsconfig/node22": "^22.0.0",
     "@types/dot-object": "^2.1.6",
     "@types/express": "^5.0.0",

@@ -1,4 +1,4 @@
-import { Player, playerModel } from "../database/Player.js";
+import { Player, playerModel } from "../database/Player";
 import { infer, z } from "zod";
 import { StatusCodes } from "http-status-codes";
 import { Request, Response } from "express";
