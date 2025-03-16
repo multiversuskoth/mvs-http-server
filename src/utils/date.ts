@@ -1,4 +1,7 @@
-export function MVSTime(date: Date): number {
+export function dateToMVSTime(date: Date | null): number | null {
+  if (date == null) {
+    return null;
+  }
   return Math.floor(date.getTime() / 1000);
 }
 

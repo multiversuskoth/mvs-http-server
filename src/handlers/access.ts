@@ -70,12 +70,19 @@ export async function handleAccess(
     return;
   }
 
+  const player = await playerModel.findOne({ account_id: updatedAccount._id });
+
+  if (player == null) {
+    res.sendStatus(StatusCodes.INTERNAL_SERVER_ERROR);
+    return;
+  }
+
   const responseJson: MVSResponses.Access_RESPONSE = {
     token: jwtToken,
     in_queue: false,
     configuration: serverConfiguration,
-    account: updatedAccount,
-    profile: await playerModel.findOne({ account_id: updatedAccount._id }),
+    account: updatedAccount.toJSON(),
+    profile: player.toJSON(),
     wb_network: {
       network_token: "gg",
     },

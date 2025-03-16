@@ -4,6 +4,7 @@ import mongoose from "mongoose";
 import toJSONVirtualId from "../utils/toJSONVirtualId";
 import { Entries } from "type-fest";
 import { dotify } from "../utils/dotify";
+import { dateToMVSTime } from "../utils/date";
 
 @modelOptions({ schemaOptions: { _id: false } })
 export class IdentityAlternateItem {
@@ -73,9 +74,9 @@ export class ConnectionStatus {
 export class Connection {
   @prop({ required: true })
   id!: string;
-  @prop({ type: Number, required: true })
+  @prop({ required: true, get: dateToMVSTime })
   start_time!: Date;
-  @prop({ type: Number, required: true })
+  @prop({ required: true, get: dateToMVSTime })
   last_used!: Date;
   @prop({ required: true })
   metadata!: string;
@@ -90,7 +91,7 @@ export class Connection {
 export class AccountAuthWbNetwork {
   id!: mongoose.Types.ObjectId;
 
-  @prop({ type: Number, required: true })
+  @prop({ required: true, get: dateToMVSTime })
   created_at!: Date;
 }
 
@@ -102,7 +103,7 @@ export class AccountAuth {
 
 @modelOptions({ schemaOptions: { _id: false } })
 export class AccountData {
-  @prop({ type: Number, required: true })
+  @prop({ required: true, get: dateToMVSTime })
   EULAAcceptTimestamp!: Date;
   @prop({ required: true })
   EULAAcceptVersion!: number;
@@ -165,22 +166,23 @@ export class AccountPrivacyLevel {
 @modelOptions({
   schemaOptions: {
     _id: false,
-    toJSON: toJSONVirtualId,
   },
 })
 export class AccountServerData {}
 
+@modelOptions({
+  schemaOptions: {
+    toJSON: { ...toJSONVirtualId, getters: true },
+  },
+})
 export class Account {
   _id!: mongoose.Types.ObjectId;
 
   id!: string;
 
-  @prop({ type: Number, required: true })
+  @prop({ required: true, get: dateToMVSTime })
   updated_at!: Date;
-  @prop({
-    type: Number,
-    required: true,
-  })
+  @prop({ required: true, get: dateToMVSTime })
   created_at!: Date;
 
   @prop({ required: true })
@@ -267,5 +269,3 @@ export class Account {
 }
 
 export const accountModel = getModelForClass(Account);
-
-// accountModel.schema.set("toJSON", toJSONVirtualId);

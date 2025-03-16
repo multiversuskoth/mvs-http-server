@@ -1,18 +1,18 @@
 import { modelOptions, prop } from "@typegoose/typegoose";
 import { Entries } from "type-fest";
-import { MVSTime } from "../utils/date";
+import { dateToMVSTime } from "../utils/date";
 
 @modelOptions({ schemaOptions: { _id: false } })
 export class InventoryItem {
   @prop({ required: true })
   count!: number;
-  @prop({ default: null })
+  @prop({ default: true, get: dateToMVSTime })
   created_at?: Date;
 
   public static flatten(inventoryItem: InventoryItem, prefix: string, result: Record<any, any> = {}): Record<any, any> {
     result[prefix + ".count"] = inventoryItem.count;
     if (inventoryItem.created_at != null) {
-      result[prefix + ".created_at"] = MVSTime(inventoryItem.created_at);
+      result[prefix + ".created_at"] = dateToMVSTime(inventoryItem.created_at);
     }
     return result;
   }

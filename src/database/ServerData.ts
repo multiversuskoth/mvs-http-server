@@ -1,6 +1,6 @@
 import { modelOptions, prop } from "@typegoose/typegoose";
 import { Entries } from "type-fest";
-import { MVSTime } from "../utils/date";
+import { dateToMVSTime } from "../utils/date";
 
 @modelOptions({ schemaOptions: { _id: false } })
 class RatingsStat {
@@ -12,7 +12,7 @@ class RatingsStat {
   confidence!: number;
   @prop({ required: true })
   streak!: number;
-  @prop({ required: true })
+  @prop({ required: true, get: dateToMVSTime })
   lastUpdateTimestamp!: Date;
 
   public static flatten<P extends string>(
@@ -27,7 +27,7 @@ class RatingsStat {
         result[prefix + "." + key] = value;
       }
     }
-    result[prefix + ".lastUpdateTimestamp"] = MVSTime(ratingsStat.lastUpdateTimestamp);
+    result[prefix + ".lastUpdateTimestamp"] = dateToMVSTime(ratingsStat.lastUpdateTimestamp);
     return result as any;
   }
 }
@@ -76,7 +76,7 @@ class Ratings {
 
 @modelOptions({ schemaOptions: { _id: false } })
 class SeasonalDataItem {
-  @prop({ required: true })
+  @prop({ required: true, get: dateToMVSTime })
   LastLoginDay!: Date;
   @prop({ required: true })
   NumDaysLoggedIn!: number;
@@ -95,7 +95,7 @@ class SeasonalDataItem {
         result[prefix + "." + key] = value;
       }
     }
-    result[prefix + ".LastLoginDay"] = MVSTime(seasonalDataItem.LastLoginDay);
+    result[prefix + ".LastLoginDay"] = dateToMVSTime(seasonalDataItem.LastLoginDay);
     return result as any;
   }
 }

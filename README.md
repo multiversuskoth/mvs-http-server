@@ -25,3 +25,39 @@ Common hydra headers are also appended to all requests
 ## Schema
 
 Databse schema are contained inside the database folder and use typegoose models
+
+### Date
+
+For date that is used as number -> set dateToMVSTime as getter
+
+```
+@prop({ required: true, get: dateToMVSTime })
+updated_at!: Date;
+```
+
+And add `toJSON:{getters: true}` to top-level model, or model that calls toJSON, for example
+
+```
+@modelOptions({
+  schemaOptions: {
+    toJSON: { ...toJSONVirtualId, getters: true },
+  },
+})
+export class Account {
+```
+
+### Nullable
+
+Use
+
+```
+@prop({default:null})
+garnet?: InventoryCharacter;
+```
+
+Avoid using union type if possible, so don't do the following
+
+```
+@prop({})
+garnet!: InventoryCharacter | null;
+```
