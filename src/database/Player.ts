@@ -1,6 +1,6 @@
-import mongoose, { Schema } from "mongoose";
+import mongoose from "mongoose";
 import { Inventory } from "./Inventory";
-import { getModelForClass, modelOptions, prop, Ref, ReturnModelType, Severity } from "@typegoose/typegoose";
+import { getModelForClass, prop } from "@typegoose/typegoose";
 import { ServerData } from "./ServerData";
 import { Entries } from "type-fest";
 import { Matches } from "./Matches";
@@ -52,7 +52,7 @@ export class Player {
   matches!: Matches;
 
   public static flatten(player: Player, result: Record<any, any> = {}): Record<any, any> {
-    for (let [key, value] of Object.entries(player) as Entries<Player>) {
+    for (const [key, value] of Object.entries(player) as Entries<Player>) {
       if (!["inventory", "server_data", "matches"].includes(key)) {
         result[key] = value;
       }

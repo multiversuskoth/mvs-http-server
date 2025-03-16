@@ -12,12 +12,9 @@ class MatchesStat {
   @prop({ required: true })
   longest_win_streak!: number;
 
-  public static flatten(
-    matchesStat: MatchesStat,
-    prefix: string
-  ): Record<any, any> {
-    let result: Record<any, any> = [];
-    for (let [key, value] of Object.entries(matchesStat) as Entries<Matches>) {
+  public static flatten(matchesStat: MatchesStat, prefix: string): Record<any, any> {
+    const result: Record<any, any> = [];
+    for (const [key, value] of Object.entries(matchesStat) as Entries<Matches>) {
       result[prefix + "." + key] = value;
     }
     return result;
@@ -39,14 +36,10 @@ export class Matches {
   @prop()
   rift_container_two_player?: MatchesStat;
 
-  public static flatten(matches: Matches, prefix: string,
-    result: Record<any,any> = {}): Record<any, any> {
-    for (let [key, value] of Object.entries(matches) as Entries<Matches>) {
+  public static flatten(matches: Matches, prefix: string, result: Record<any, any> = {}): Record<any, any> {
+    for (const [key, value] of Object.entries(matches) as Entries<Matches>) {
       if (value != undefined) {
-        result = Object.assign(
-          result,
-          MatchesStat.flatten(value, prefix + "." + key)
-        );
+        result = Object.assign(result, MatchesStat.flatten(value, prefix + "." + key));
       }
     }
     return result;

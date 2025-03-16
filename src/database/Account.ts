@@ -255,7 +255,7 @@ export class Account {
   connections!: Connection[];
 
   public static flatten(account: Account, result: Record<any, any> = {}) {
-    for (let [key, value] of Object.entries(account) as Entries<Account>) {
+    for (const [key, value] of Object.entries(account) as Entries<Account>) {
       if (!["wb_account", "identity"].includes(key)) {
         result[key] = value;
       } else {

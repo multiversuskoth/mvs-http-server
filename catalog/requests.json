@@ -45,9 +45,7 @@
                       "Platform",
                       {
                         "type": "string",
-                        "examples": [
-                          "PC"
-                        ]
+                        "examples": ["PC"]
                       }
                     ]
                   ]
@@ -60,9 +58,7 @@
                 "type": "array",
                 "inner": {
                   "type": "string",
-                  "examples": [
-                    "configuration"
-                  ]
+                  "examples": ["configuration"]
                 }
               }
             ]
@@ -82,18 +78,14 @@
               "code",
               {
                 "type": "string",
-                "examples": [
-                  "I+MPokHx/JkCFmuHpcEiaqRG+8IJX/+xaKk2jiZBgAL/w8IIGsREtPP1rE6cBwjdioTLgasxCk4+oFHMwDtsieaJu3H6OI5faBq3SMTVCg4="
-                ]
+                "examples": ["I+MPokHx/JkCFmuHpcEiaqRG+8IJX/+xaKk2jiZBgAL/w8IIGsREtPP1rE6cBwjdioTLgasxCk4+oFHMwDtsieaJu3H6OI5faBq3SMTVCg4="]
               }
             ],
             [
               "grant_type",
               {
                 "type": "string",
-                "examples": [
-                  "authorization_code"
-                ]
+                "examples": ["authorization_code"]
               }
             ]
           ]
@@ -184,9 +176,7 @@
                                 "Crc",
                                 {
                                   "type": "number",
-                                  "examples": [
-                                    1167552915
-                                  ]
+                                  "examples": [1167552915]
                                 }
                               ],
                               [
@@ -200,9 +190,7 @@
                                         "boolean",
                                         {
                                           "type": "string",
-                                          "examples": [
-                                            "any"
-                                          ]
+                                          "examples": ["any"]
                                         }
                                       ],
                                       [
@@ -220,9 +208,7 @@
                                           "type": "array",
                                           "inner": {
                                             "type": "string",
-                                            "examples": [
-                                              "currency"
-                                            ]
+                                            "examples": ["currency"]
                                           }
                                         }
                                       ]
@@ -245,9 +231,7 @@
                                 "x-hydra-http-method",
                                 {
                                   "type": "string",
-                                  "examples": [
-                                    "GET"
-                                  ]
+                                  "examples": ["GET"]
                                 }
                               ]
                             ]
@@ -258,19 +242,14 @@
                         "url",
                         {
                           "type": "string",
-                          "examples": [
-                            "/ssc/invoke/hiss_amalgamation",
-                            "/profiles/63cef97ced0619f458cfac8f/inventory"
-                          ]
+                          "examples": ["/ssc/invoke/hiss_amalgamation", "/profiles/63cef97ced0619f458cfac8f/inventory"]
                         }
                       ],
                       [
                         "verb",
                         {
                           "type": "string",
-                          "examples": [
-                            "PUT"
-                          ]
+                          "examples": ["PUT"]
                         }
                       ]
                     ]
@@ -294,18 +273,14 @@
               "account_platform_id",
               {
                 "type": "string",
-                "examples": [
-                  "76561199472918169"
-                ]
+                "examples": ["76561199472918169"]
               }
             ],
             [
               "hydra_public_id",
               {
                 "type": "string",
-                "examples": [
-                  "paee40f62bd814a53bf9f4d21e43ea2c1"
-                ]
+                "examples": ["paee40f62bd814a53bf9f4d21e43ea2c1"]
               }
             ],
             [
@@ -318,36 +293,28 @@
               "os",
               {
                 "type": "string",
-                "examples": [
-                  "GenericOSVersionLabel GenericOSSubVersionLabel"
-                ]
+                "examples": ["GenericOSVersionLabel GenericOSSubVersionLabel"]
               }
             ],
             [
               "platform_name",
               {
                 "type": "string",
-                "examples": [
-                  "steam"
-                ]
+                "examples": ["steam"]
               }
             ],
             [
               "resolution",
               {
                 "type": "string",
-                "examples": [
-                  "2560x1440"
-                ]
+                "examples": ["2560x1440"]
               }
             ],
             [
               "user_name",
               {
                 "type": "string",
-                "examples": [
-                  "MultiVersusKOTH"
-                ]
+                "examples": ["MultiVersusKOTH"]
               }
             ]
           ]
@@ -401,9 +368,7 @@
                 "type": "array",
                 "inner": {
                   "type": "string",
-                  "examples": [
-                    "p3a525c56c9c9491ea11deaa2bdbcd074"
-                  ]
+                  "examples": ["p3a525c56c9c9491ea11deaa2bdbcd074"]
                 }
               }
             ]
@@ -423,9 +388,7 @@
               "Crc",
               {
                 "type": "number",
-                "examples": [
-                  1167552915
-                ]
+                "examples": [1167552915]
               }
             ]
           ]
@@ -446,9 +409,7 @@
                 "type": "array",
                 "inner": {
                   "type": "string",
-                  "examples": [
-                    "62ef70cecd66b47f1cc1f5ea"
-                  ]
+                  "examples": ["62ef70cecd66b47f1cc1f5ea"]
                 }
               }
             ]
@@ -481,9 +442,7 @@
                 "type": "array",
                 "inner": {
                   "type": "string",
-                  "examples": [
-                    "gleamium"
-                  ]
+                  "examples": ["gleamium"]
                 }
               }
             ],
@@ -498,9 +457,7 @@
                       "boolean",
                       {
                         "type": "string",
-                        "examples": [
-                          "any"
-                        ]
+                        "examples": ["any"]
                       }
                     ],
                     [
@@ -518,9 +475,7 @@
                         "type": "array",
                         "inner": {
                           "type": "string",
-                          "examples": [
-                            "currency"
-                          ]
+                          "examples": ["currency"]
                         }
                       }
                     ]
@@ -557,9 +512,7 @@
                 "type": "array",
                 "inner": {
                   "type": "string",
-                  "examples": [
-                    "multiversus/academiamrt_storebackground-3464663366363666303637346237346635623838653130346564346135616261.png"
-                  ]
+                  "examples": ["multiversus/academiamrt_storebackground-3464663366363666303637346237346635623838653130346564346135616261.png"]
                 }
               }
             ]
@@ -703,27 +656,21 @@
                               "MultiplayClusterSlug",
                               {
                                 "type": "string",
-                                "examples": [
-                                  "ec2-us-east-1-dokken"
-                                ]
+                                "examples": ["ec2-us-east-1-dokken"]
                               }
                             ],
                             [
                               "MultiplayProfileId",
                               {
                                 "type": "string",
-                                "examples": [
-                                  "1252499"
-                                ]
+                                "examples": ["1252499"]
                               }
                             ],
                             [
                               "MultiplayRegionId",
                               {
                                 "type": "string",
-                                "examples": [
-                                  ""
-                                ]
+                                "examples": [""]
                               }
                             ]
                           ]
@@ -741,27 +688,21 @@
                               "MultiplayClusterSlug",
                               {
                                 "type": "string",
-                                "examples": [
-                                  "ec2-us-east-1-dokken"
-                                ]
+                                "examples": ["ec2-us-east-1-dokken"]
                               }
                             ],
                             [
                               "MultiplayProfileId",
                               {
                                 "type": "string",
-                                "examples": [
-                                  "1252922"
-                                ]
+                                "examples": ["1252922"]
                               }
                             ],
                             [
                               "MultiplayRegionId",
                               {
                                 "type": "string",
-                                "examples": [
-                                  "19c465a7-f21f-11ea-a5e3-0954f48c5682"
-                                ]
+                                "examples": ["19c465a7-f21f-11ea-a5e3-0954f48c5682"]
                               }
                             ]
                           ]
@@ -779,27 +720,21 @@
                               "MultiplayClusterSlug",
                               {
                                 "type": "string",
-                                "examples": [
-                                  ""
-                                ]
+                                "examples": [""]
                               }
                             ],
                             [
                               "MultiplayProfileId",
                               {
                                 "type": "string",
-                                "examples": [
-                                  "1252925"
-                                ]
+                                "examples": ["1252925"]
                               }
                             ],
                             [
                               "MultiplayRegionId",
                               {
                                 "type": "string",
-                                "examples": [
-                                  ""
-                                ]
+                                "examples": [""]
                               }
                             ]
                           ]
@@ -817,27 +752,21 @@
                               "MultiplayClusterSlug",
                               {
                                 "type": "string",
-                                "examples": [
-                                  "ec2-us-east-1-dokken"
-                                ]
+                                "examples": ["ec2-us-east-1-dokken"]
                               }
                             ],
                             [
                               "MultiplayProfileId",
                               {
                                 "type": "string",
-                                "examples": [
-                                  "1252928"
-                                ]
+                                "examples": ["1252928"]
                               }
                             ],
                             [
                               "MultiplayRegionId",
                               {
                                 "type": "string",
-                                "examples": [
-                                  "19c465a7-f21f-11ea-a5e3-0954f48c5682"
-                                ]
+                                "examples": ["19c465a7-f21f-11ea-a5e3-0954f48c5682"]
                               }
                             ]
                           ]
@@ -858,63 +787,49 @@
               "CrossplayPreference",
               {
                 "type": "number",
-                "examples": [
-                  1
-                ]
+                "examples": [1]
               }
             ],
             [
               "GameplayPreferences",
               {
                 "type": "number",
-                "examples": [
-                  544
-                ]
+                "examples": [544]
               }
             ],
             [
               "HissCrc",
               {
                 "type": "number",
-                "examples": [
-                  1167552915
-                ]
+                "examples": [1167552915]
               }
             ],
             [
               "LobbyTemplate",
               {
                 "type": "string",
-                "examples": [
-                  "party_lobby"
-                ]
+                "examples": ["party_lobby"]
               }
             ],
             [
               "LobbyType",
               {
                 "type": "number",
-                "examples": [
-                  0
-                ]
+                "examples": [0]
               }
             ],
             [
               "Platform",
               {
                 "type": "string",
-                "examples": [
-                  "PC"
-                ]
+                "examples": ["PC"]
               }
             ],
             [
               "Version",
               {
                 "type": "string",
-                "examples": [
-                  "CLIENT:2F322-Retail DATA:4CF442B2 PERKS:1"
-                ]
+                "examples": ["CLIENT:2F322-Retail DATA:4CF442B2 PERKS:1"]
               }
             ]
           ]
@@ -956,18 +871,14 @@
                                         "latency",
                                         {
                                           "type": "number",
-                                          "examples": [
-                                            0.04337269812822342
-                                          ]
+                                          "examples": [0.04337269812822342]
                                         }
                                       ],
                                       [
                                         "region_id",
                                         {
                                           "type": "string",
-                                          "examples": [
-                                            "19c465a7-f21f-11ea-a5e3-0954f48c5682"
-                                          ]
+                                          "examples": ["19c465a7-f21f-11ea-a5e3-0954f48c5682"]
                                         }
                                       ]
                                     ]
@@ -1126,63 +1037,49 @@
               "CrossplayPreference",
               {
                 "type": "number",
-                "examples": [
-                  1
-                ]
+                "examples": [1]
               }
             ],
             [
               "GameplayPreferences",
               {
                 "type": "number",
-                "examples": [
-                  544
-                ]
+                "examples": [544]
               }
             ],
             [
               "HissCrc",
               {
                 "type": "number",
-                "examples": [
-                  1167552915
-                ]
+                "examples": [1167552915]
               }
             ],
             [
               "LobbyId",
               {
                 "type": "string",
-                "examples": [
-                  "67d45cd0b8655ea25ca3a0a9"
-                ]
+                "examples": ["67d45cd0b8655ea25ca3a0a9"]
               }
             ],
             [
               "LobbyTemplate",
               {
                 "type": "string",
-                "examples": [
-                  "party_lobby"
-                ]
+                "examples": ["party_lobby"]
               }
             ],
             [
               "MatchID",
               {
                 "type": "string",
-                "examples": [
-                  "67d45cd0b8655ea25ca3a0a9"
-                ]
+                "examples": ["67d45cd0b8655ea25ca3a0a9"]
               }
             ],
             [
               "Platform",
               {
                 "type": "string",
-                "examples": [
-                  "PC"
-                ]
+                "examples": ["PC"]
               }
             ],
             [
@@ -1195,9 +1092,7 @@
               "Version",
               {
                 "type": "string",
-                "examples": [
-                  "CLIENT:2F322-Retail DATA:4CF442B2 PERKS:1"
-                ]
+                "examples": ["CLIENT:2F322-Retail DATA:4CF442B2 PERKS:1"]
               }
             ]
           ]
@@ -1230,36 +1125,28 @@
                               "MultiplayClusterSlug",
                               {
                                 "type": "string",
-                                "examples": [
-                                  "ec2-us-east-1-dokken"
-                                ]
+                                "examples": ["ec2-us-east-1-dokken"]
                               }
                             ],
                             [
                               "MultiplayProfileId",
                               {
                                 "type": "string",
-                                "examples": [
-                                  "1252922"
-                                ]
+                                "examples": ["1252922"]
                               }
                             ],
                             [
                               "MultiplayRegionId",
                               {
                                 "type": "string",
-                                "examples": [
-                                  "19c465a7-f21f-11ea-a5e3-0954f48c5682"
-                                ]
+                                "examples": ["19c465a7-f21f-11ea-a5e3-0954f48c5682"]
                               }
                             ],
                             [
                               "MultiplayRegionSearchId",
                               {
                                 "type": "number",
-                                "examples": [
-                                  1
-                                ]
+                                "examples": [1]
                               }
                             ]
                           ]
@@ -1272,9 +1159,7 @@
                         "type": "array",
                         "inner": {
                           "type": "string",
-                          "examples": [
-                            "All"
-                          ]
+                          "examples": ["All"]
                         }
                       }
                     ],
@@ -1282,9 +1167,7 @@
                       "version",
                       {
                         "type": "string",
-                        "examples": [
-                          "CLIENT:2F322-Retail DATA:4CF442B2 PERKS:1"
-                        ]
+                        "examples": ["CLIENT:2F322-Retail DATA:4CF442B2 PERKS:1"]
                       }
                     ]
                   ]
@@ -1309,18 +1192,14 @@
                               "id",
                               {
                                 "type": "number",
-                                "examples": [
-                                  1
-                                ]
+                                "examples": [1]
                               }
                             ],
                             [
                               "profile",
                               {
                                 "type": "string",
-                                "examples": [
-                                  "1252922"
-                                ]
+                                "examples": ["1252922"]
                               }
                             ]
                           ]
@@ -1335,9 +1214,7 @@
               "match",
               {
                 "type": "string",
-                "examples": [
-                  "67d45cd0b8655ea25ca3a0a9"
-                ]
+                "examples": ["67d45cd0b8655ea25ca3a0a9"]
               }
             ]
           ]
@@ -1356,9 +1233,7 @@
               "ContainerMatchId",
               {
                 "type": "string",
-                "examples": [
-                  "67d45cfdda22dc702a4383d7"
-                ]
+                "examples": ["67d45cfdda22dc702a4383d7"]
               }
             ],
             [
@@ -1367,9 +1242,7 @@
                 "type": "array",
                 "inner": {
                   "type": "string",
-                  "examples": [
-                    "perk_gen_well_rounded"
-                  ]
+                  "examples": ["perk_gen_well_rounded"]
                 }
               }
             ]
@@ -1398,37 +1271,28 @@
                         "EventName",
                         {
                           "type": "string",
-                          "examples": [
-                            "GameHeartbeat"
-                          ]
+                          "examples": ["GameHeartbeat"]
                         }
                       ],
                       [
                         "deploymentId",
                         {
                           "type": "string",
-                          "examples": [
-                            "dc943966edb54a6eb9c1334ca8cc1990",
-                            "29da23b21f7f41319c7fa5e86e20dc2b"
-                          ]
+                          "examples": ["dc943966edb54a6eb9c1334ca8cc1990", "29da23b21f7f41319c7fa5e86e20dc2b"]
                         }
                       ],
                       [
                         "platform",
                         {
                           "type": "string",
-                          "examples": [
-                            "Windows 10 (Release 2009) 10.0.19045.1.768.64bit"
-                          ]
+                          "examples": ["Windows 10 (Release 2009) 10.0.19045.1.768.64bit"]
                         }
                       ],
                       [
                         "source",
                         {
                           "type": "string",
-                          "examples": [
-                            "client"
-                          ]
+                          "examples": ["client"]
                         }
                       ]
                     ]
@@ -1452,9 +1316,7 @@
               "ContainerMatchId",
               {
                 "type": "string",
-                "examples": [
-                  "67d45cfdda22dc702a4383d7"
-                ]
+                "examples": ["67d45cfdda22dc702a4383d7"]
               }
             ],
             [
@@ -1482,1854 +1344,1442 @@
                                       "Fighter:AgentSmith:Silence",
                                       {
                                         "type": "number",
-                                        "examples": [
-                                          0
-                                        ]
+                                        "examples": [0]
                                       }
                                     ],
                                     [
                                       "Fighter:AgentSmith:TeleAlly",
                                       {
                                         "type": "number",
-                                        "examples": [
-                                          0
-                                        ]
+                                        "examples": [0]
                                       }
                                     ],
                                     [
                                       "Fighter:BananaGuard:Buff",
                                       {
                                         "type": "number",
-                                        "examples": [
-                                          0
-                                        ]
+                                        "examples": [0]
                                       }
                                     ],
                                     [
                                       "Fighter:BananaGuard:Facebox",
                                       {
                                         "type": "number",
-                                        "examples": [
-                                          0
-                                        ]
+                                        "examples": [0]
                                       }
                                     ],
                                     [
                                       "Fighter:Batman:GrappleAlly",
                                       {
                                         "type": "number",
-                                        "examples": [
-                                          0
-                                        ]
+                                        "examples": [0]
                                       }
                                     ],
                                     [
                                       "Fighter:C025:lenoregrab",
                                       {
                                         "type": "number",
-                                        "examples": [
-                                          0
-                                        ]
+                                        "examples": [0]
                                       }
                                     ],
                                     [
                                       "Fighter:Finn:AirPojectileDestroy",
                                       {
                                         "type": "number",
-                                        "examples": [
-                                          0
-                                        ]
+                                        "examples": [0]
                                       }
                                     ],
                                     [
                                       "Fighter:Finn:BuyBmo",
                                       {
                                         "type": "number",
-                                        "examples": [
-                                          0
-                                        ]
+                                        "examples": [0]
                                       }
                                     ],
                                     [
                                       "Fighter:Garnet:FullBuff",
                                       {
                                         "type": "number",
-                                        "examples": [
-                                          0
-                                        ]
+                                        "examples": [0]
                                       }
                                     ],
                                     [
                                       "Fighter:Harley:BombSave",
                                       {
                                         "type": "number",
-                                        "examples": [
-                                          0
-                                        ]
+                                        "examples": [0]
                                       }
                                     ],
                                     [
                                       "Fighter:IronGiant:RageMission",
                                       {
                                         "type": "number",
-                                        "examples": [
-                                          0
-                                        ]
+                                        "examples": [0]
                                       }
                                     ],
                                     [
                                       "Fighter:Jason:RageHit",
                                       {
                                         "type": "number",
-                                        "examples": [
-                                          0
-                                        ]
+                                        "examples": [0]
                                       }
                                     ],
                                     [
                                       "Fighter:Jerry:AllyAttach",
                                       {
                                         "type": "number",
-                                        "examples": [
-                                          0
-                                        ]
+                                        "examples": [0]
                                       }
                                     ],
                                     [
                                       "Fighter:Lebron:Defense",
                                       {
                                         "type": "number",
-                                        "examples": [
-                                          0
-                                        ]
+                                        "examples": [0]
                                       }
                                     ],
                                     [
                                       "Fighter:Lebron:Pass",
                                       {
                                         "type": "number",
-                                        "examples": [
-                                          0
-                                        ]
+                                        "examples": [0]
                                       }
                                     ],
                                     [
                                       "Fighter:Marvin:ReverseProjectile",
                                       {
                                         "type": "number",
-                                        "examples": [
-                                          0
-                                        ]
+                                        "examples": [0]
                                       }
                                     ],
                                     [
                                       "Fighter:Marvin:bubble",
                                       {
                                         "type": "number",
-                                        "examples": [
-                                          0
-                                        ]
+                                        "examples": [0]
                                       }
                                     ],
                                     [
                                       "Fighter:Morty:AllySave",
                                       {
                                         "type": "number",
-                                        "examples": [
-                                          0
-                                        ]
+                                        "examples": [0]
                                       }
                                     ],
                                     [
                                       "Fighter:Morty:SplitNade",
                                       {
                                         "type": "number",
-                                        "examples": [
-                                          1
-                                        ]
+                                        "examples": [1]
                                       }
                                     ],
                                     [
                                       "Fighter:Reindog:IceCleanse",
                                       {
                                         "type": "number",
-                                        "examples": [
-                                          0
-                                        ]
+                                        "examples": [0]
                                       }
                                     ],
                                     [
                                       "Fighter:Reindog:LoveLeashAlly",
                                       {
                                         "type": "number",
-                                        "examples": [
-                                          0
-                                        ]
+                                        "examples": [0]
                                       }
                                     ],
                                     [
                                       "Fighter:Rick:AllySeed",
                                       {
                                         "type": "number",
-                                        "examples": [
-                                          0
-                                        ]
+                                        "examples": [0]
                                       }
                                     ],
                                     [
                                       "Fighter:Rick:PortalKB",
                                       {
                                         "type": "number",
-                                        "examples": [
-                                          0
-                                        ]
+                                        "examples": [0]
                                       }
                                     ],
                                     [
                                       "Fighter:Shaggy:EnragedAttackUsed",
                                       {
                                         "type": "number",
-                                        "examples": [
-                                          0
-                                        ]
+                                        "examples": [0]
                                       }
                                     ],
                                     [
                                       "Fighter:Shaggy:FinishedCombo",
                                       {
                                         "type": "number",
-                                        "examples": [
-                                          0
-                                        ]
+                                        "examples": [0]
                                       }
                                     ],
                                     [
                                       "Fighter:Shaggy:RageBuildComplete",
                                       {
                                         "type": "number",
-                                        "examples": [
-                                          0
-                                        ]
+                                        "examples": [0]
                                       }
                                     ],
                                     [
                                       "Fighter:Shaggy:SandwichHeal",
                                       {
                                         "type": "number",
-                                        "examples": [
-                                          0
-                                        ]
+                                        "examples": [0]
                                       }
                                     ],
                                     [
                                       "Fighter:Steven:Bubblestack",
                                       {
                                         "type": "number",
-                                        "examples": [
-                                          0
-                                        ]
+                                        "examples": [0]
                                       }
                                     ],
                                     [
                                       "Fighter:Steven:EnemyBubble",
                                       {
                                         "type": "number",
-                                        "examples": [
-                                          0
-                                        ]
+                                        "examples": [0]
                                       }
                                     ],
                                     [
                                       "Fighter:Taz:Chicken",
                                       {
                                         "type": "number",
-                                        "examples": [
-                                          0
-                                        ]
+                                        "examples": [0]
                                       }
                                     ],
                                     [
                                       "Fighter:Taz:Eat",
                                       {
                                         "type": "number",
-                                        "examples": [
-                                          0
-                                        ]
+                                        "examples": [0]
                                       }
                                     ],
                                     [
                                       "Hitbox:Stripe:Kickflip",
                                       {
                                         "type": "number",
-                                        "examples": [
-                                          0
-                                        ]
+                                        "examples": [0]
                                       }
                                     ],
                                     [
                                       "Hitbox:Velma:GrabAlly",
                                       {
                                         "type": "number",
-                                        "examples": [
-                                          0
-                                        ]
+                                        "examples": [0]
                                       }
                                     ],
                                     [
                                       "Hitbox:Velma:Van",
                                       {
                                         "type": "number",
-                                        "examples": [
-                                          0
-                                        ]
+                                        "examples": [0]
                                       }
                                     ],
                                     [
                                       "Marceline:Powerslide",
                                       {
                                         "type": "number",
-                                        "examples": [
-                                          0
-                                        ]
+                                        "examples": [0]
                                       }
                                     ],
                                     [
                                       "Objective:Match:Boss:M015:Defeated",
                                       {
                                         "type": "number",
-                                        "examples": [
-                                          0
-                                        ]
+                                        "examples": [0]
                                       }
                                     ],
                                     [
                                       "Objective:Match:Character:BugsBunny:HealSandwich",
                                       {
                                         "type": "number",
-                                        "examples": [
-                                          0
-                                        ]
+                                        "examples": [0]
                                       }
                                     ],
                                     [
                                       "Objective:Match:Character:Stripe:Gun",
                                       {
                                         "type": "number",
-                                        "examples": [
-                                          0
-                                        ]
+                                        "examples": [0]
                                       }
                                     ],
                                     [
                                       "Objective:Match:Character:WonderWoman:AllyLasso",
                                       {
                                         "type": "number",
-                                        "examples": [
-                                          0
-                                        ]
+                                        "examples": [0]
                                       }
                                     ],
                                     [
                                       "Objective:Match:Character:WonderWoman:FullChargeBubble",
                                       {
                                         "type": "number",
-                                        "examples": [
-                                          0
-                                        ]
+                                        "examples": [0]
                                       }
                                     ],
                                     [
                                       "Objective:Match:Enemies:AcmeSkyDronesDestroyed",
                                       {
                                         "type": "number",
-                                        "examples": [
-                                          0
-                                        ]
+                                        "examples": [0]
                                       }
                                     ],
                                     [
                                       "Objective:Match:Enemies:BuffApplied:Chicken",
                                       {
                                         "type": "number",
-                                        "examples": [
-                                          0
-                                        ]
+                                        "examples": [0]
                                       }
                                     ],
                                     [
                                       "Objective:Match:Enemies:BuffApplied:Frozen",
                                       {
                                         "type": "number",
-                                        "examples": [
-                                          0
-                                        ]
+                                        "examples": [0]
                                       }
                                     ],
                                     [
                                       "Objective:Match:Enemies:BuffApplied:Ignited",
                                       {
                                         "type": "number",
-                                        "examples": [
-                                          8
-                                        ]
+                                        "examples": [8]
                                       }
                                     ],
                                     [
                                       "Objective:Match:Enemies:BuffApplied:Shocked",
                                       {
                                         "type": "number",
-                                        "examples": [
-                                          0
-                                        ]
+                                        "examples": [0]
                                       }
                                     ],
                                     [
                                       "Objective:Match:Enemies:BuffApplied:Silence",
                                       {
                                         "type": "number",
-                                        "examples": [
-                                          0
-                                        ]
+                                        "examples": [0]
                                       }
                                     ],
                                     [
                                       "Objective:Match:Enemies:BuffApplied:Weakened",
                                       {
                                         "type": "number",
-                                        "examples": [
-                                          0
-                                        ]
+                                        "examples": [0]
                                       }
                                     ],
                                     [
                                       "Objective:Match:Hazards:SafetySpotlightAttacksDodged",
                                       {
                                         "type": "number",
-                                        "examples": [
-                                          0
-                                        ]
+                                        "examples": [0]
                                       }
                                     ],
                                     [
                                       "Objective:Match:Hazards:SafetySpotlightAttacksTaken",
                                       {
                                         "type": "number",
-                                        "examples": [
-                                          0
-                                        ]
+                                        "examples": [0]
                                       }
                                     ],
                                     [
                                       "Objective:Match:Hazards:SafetySpotlightHitsOutsideSpotlight",
                                       {
                                         "type": "number",
-                                        "examples": [
-                                          0
-                                        ]
+                                        "examples": [0]
                                       }
                                     ],
                                     [
                                       "Objective:Match:Hazards:TravelTube:HitOpponentsInto",
                                       {
                                         "type": "number",
-                                        "examples": [
-                                          0
-                                        ]
+                                        "examples": [0]
                                       }
                                     ],
                                     [
                                       "Objective:Match:Map:M007:EmblemOpened",
                                       {
                                         "type": "number",
-                                        "examples": [
-                                          0
-                                        ]
+                                        "examples": [0]
                                       }
                                     ],
                                     [
                                       "Objective:Match:PlayCoOp",
                                       {
                                         "type": "number",
-                                        "examples": [
-                                          0
-                                        ]
+                                        "examples": [0]
                                       }
                                     ],
                                     [
                                       "Objective:Match:PopAllyBubble",
                                       {
                                         "type": "number",
-                                        "examples": [
-                                          0
-                                        ]
+                                        "examples": [0]
                                       }
                                     ],
                                     [
                                       "Objective:Match:Rifts:LazarusPit:BuffedRingouts",
                                       {
                                         "type": "number",
-                                        "examples": [
-                                          0
-                                        ]
+                                        "examples": [0]
                                       }
                                     ],
                                     [
                                       "Objective:Match:Rifts:LazarusPit:FellIn",
                                       {
                                         "type": "number",
-                                        "examples": [
-                                          0
-                                        ]
+                                        "examples": [0]
                                       }
                                     ],
                                     [
                                       "Objective:Match:Rifts:LazarusPit:TempHealth",
                                       {
                                         "type": "number",
-                                        "examples": [
-                                          0
-                                        ]
+                                        "examples": [0]
                                       }
                                     ],
                                     [
                                       "Objective:Match:Special:DefenseHealth",
                                       {
                                         "type": "number",
-                                        "examples": [
-                                          0
-                                        ]
+                                        "examples": [0]
                                       }
                                     ],
                                     [
                                       "Objective:Match:Special:DefenseHealth:CollectEvidence",
                                       {
                                         "type": "number",
-                                        "examples": [
-                                          0
-                                        ]
+                                        "examples": [0]
                                       }
                                     ],
                                     [
                                       "Objective:Match:Special:DoorPortalEnemy",
                                       {
                                         "type": "number",
-                                        "examples": [
-                                          0
-                                        ]
+                                        "examples": [0]
                                       }
                                     ],
                                     [
                                       "Objective:Match:Special:DoorPortalProjectile",
                                       {
                                         "type": "number",
-                                        "examples": [
-                                          0
-                                        ]
+                                        "examples": [0]
                                       }
                                     ],
                                     [
                                       "Objective:Match:Special:GalleryBalloonsDestroyed",
                                       {
                                         "type": "number",
-                                        "examples": [
-                                          0
-                                        ]
+                                        "examples": [0]
                                       }
                                     ],
                                     [
                                       "Objective:Match:Special:GalleryTargetsDestroyed",
                                       {
                                         "type": "number",
-                                        "examples": [
-                                          0
-                                        ]
+                                        "examples": [0]
                                       }
                                     ],
                                     [
                                       "Objective:Match:Special:GhostHitOpponent",
                                       {
                                         "type": "number",
-                                        "examples": [
-                                          0
-                                        ]
+                                        "examples": [0]
                                       }
                                     ],
                                     [
                                       "Objective:Match:Special:GhostHitSelf",
                                       {
                                         "type": "number",
-                                        "examples": [
-                                          0
-                                        ]
+                                        "examples": [0]
                                       }
                                     ],
                                     [
                                       "Objective:Match:Special:GoblinTreasureCollected",
                                       {
                                         "type": "number",
-                                        "examples": [
-                                          0
-                                        ]
+                                        "examples": [0]
                                       }
                                     ],
                                     [
                                       "Objective:Match:Special:GoblinTreasureCollected:Rare",
                                       {
                                         "type": "number",
-                                        "examples": [
-                                          0
-                                        ]
+                                        "examples": [0]
                                       }
                                     ],
                                     [
                                       "Objective:Match:Special:GolfCount",
                                       {
                                         "type": "number",
-                                        "examples": [
-                                          0
-                                        ]
+                                        "examples": [0]
                                       }
                                     ],
                                     [
                                       "Objective:Match:Special:GolfHolesCompleted",
                                       {
                                         "type": "number",
-                                        "examples": [
-                                          0
-                                        ]
+                                        "examples": [0]
                                       }
                                     ],
                                     [
                                       "Objective:Match:Special:JumpRopeJumps",
                                       {
                                         "type": "number",
-                                        "examples": [
-                                          0
-                                        ]
+                                        "examples": [0]
                                       }
                                     ],
                                     [
                                       "Objective:Match:Special:RacePlacement",
                                       {
                                         "type": "number",
-                                        "examples": [
-                                          0
-                                        ]
+                                        "examples": [0]
                                       }
                                     ],
                                     [
                                       "Objective:Match:Special:ShmupEnemyDestroyed",
                                       {
                                         "type": "number",
-                                        "examples": [
-                                          0
-                                        ]
+                                        "examples": [0]
                                       }
                                     ],
                                     [
                                       "Objective:Match:Special:ShootingGalleryScore",
                                       {
                                         "type": "number",
-                                        "examples": [
-                                          0
-                                        ]
+                                        "examples": [0]
                                       }
                                     ],
                                     [
                                       "Objective:Match:Special:TargetsDestroyed",
                                       {
                                         "type": "number",
-                                        "examples": [
-                                          0
-                                        ]
+                                        "examples": [0]
                                       }
                                     ],
                                     [
                                       "Objective:Match:Special:TreasureCollected",
                                       {
                                         "type": "number",
-                                        "examples": [
-                                          0
-                                        ]
+                                        "examples": [0]
                                       }
                                     ],
                                     [
                                       "Objective:Match:Special:VolleyballShutout",
                                       {
                                         "type": "number",
-                                        "examples": [
-                                          0
-                                        ]
+                                        "examples": [0]
                                       }
                                     ],
                                     [
                                       "Stat:Game:Character:DebuffsCleansed",
                                       {
                                         "type": "number",
-                                        "examples": [
-                                          0
-                                        ]
+                                        "examples": [0]
                                       }
                                     ],
                                     [
                                       "Stat:Game:Character:Stock:DamageTaken",
                                       {
                                         "type": "number",
-                                        "examples": [
-                                          123.70502471923828
-                                        ]
+                                        "examples": [123.70502471923828]
                                       }
                                     ],
                                     [
                                       "Stat:Game:Character:TotalAirAttacksHit",
                                       {
                                         "type": "number",
-                                        "examples": [
-                                          17
-                                        ]
+                                        "examples": [17]
                                       }
                                     ],
                                     [
                                       "Stat:Game:Character:TotalAirAttacksUsed",
                                       {
                                         "type": "number",
-                                        "examples": [
-                                          53
-                                        ]
+                                        "examples": [53]
                                       }
                                     ],
                                     [
                                       "Stat:Game:Character:TotalAirDamageDealt",
                                       {
                                         "type": "number",
-                                        "examples": [
-                                          64.50927734375
-                                        ]
+                                        "examples": [64.50927734375]
                                       }
                                     ],
                                     [
                                       "Stat:Game:Character:TotalAirNormalsHit",
                                       {
                                         "type": "number",
-                                        "examples": [
-                                          16
-                                        ]
+                                        "examples": [16]
                                       }
                                     ],
                                     [
                                       "Stat:Game:Character:TotalAirNormalsUsed",
                                       {
                                         "type": "number",
-                                        "examples": [
-                                          44
-                                        ]
+                                        "examples": [44]
                                       }
                                     ],
                                     [
                                       "Stat:Game:Character:TotalAirSpecialsHit",
                                       {
                                         "type": "number",
-                                        "examples": [
-                                          1
-                                        ]
+                                        "examples": [1]
                                       }
                                     ],
                                     [
                                       "Stat:Game:Character:TotalAirSpecialsUsed",
                                       {
                                         "type": "number",
-                                        "examples": [
-                                          9
-                                        ]
+                                        "examples": [9]
                                       }
                                     ],
                                     [
                                       "Stat:Game:Character:TotalAirTime",
                                       {
                                         "type": "number",
-                                        "examples": [
-                                          69.83333587646484
-                                        ]
+                                        "examples": [69.83333587646484]
                                       }
                                     ],
                                     [
                                       "Stat:Game:Character:TotalArmorBreaks",
                                       {
                                         "type": "number",
-                                        "examples": [
-                                          1
-                                        ]
+                                        "examples": [1]
                                       }
                                     ],
                                     [
                                       "Stat:Game:Character:TotalArmorHitsTaken",
                                       {
                                         "type": "number",
-                                        "examples": [
-                                          0
-                                        ]
+                                        "examples": [0]
                                       }
                                     ],
                                     [
                                       "Stat:Game:Character:TotalAssists",
                                       {
                                         "type": "number",
-                                        "examples": [
-                                          0
-                                        ]
+                                        "examples": [0]
                                       }
                                     ],
                                     [
                                       "Stat:Game:Character:TotalAttackDamageDealt",
                                       {
                                         "type": "number",
-                                        "examples": [
-                                          89.55269622802734
-                                        ]
+                                        "examples": [89.55269622802734]
                                       }
                                     ],
                                     [
                                       "Stat:Game:Character:TotalAttacksDodged",
                                       {
                                         "type": "number",
-                                        "examples": [
-                                          9
-                                        ]
+                                        "examples": [9]
                                       }
                                     ],
                                     [
                                       "Stat:Game:Character:TotalAttacksHit",
                                       {
                                         "type": "number",
-                                        "examples": [
-                                          33
-                                        ]
+                                        "examples": [33]
                                       }
                                     ],
                                     [
                                       "Stat:Game:Character:TotalAttacksParried",
                                       {
                                         "type": "number",
-                                        "examples": [
-                                          0
-                                        ]
+                                        "examples": [0]
                                       }
                                     ],
                                     [
                                       "Stat:Game:Character:TotalAttacksUsed",
                                       {
                                         "type": "number",
-                                        "examples": [
-                                          95
-                                        ]
+                                        "examples": [95]
                                       }
                                     ],
                                     [
                                       "Stat:Game:Character:TotalChargeAttacksHit",
                                       {
                                         "type": "number",
-                                        "examples": [
-                                          5
-                                        ]
+                                        "examples": [5]
                                       }
                                     ],
                                     [
                                       "Stat:Game:Character:TotalChargeAttacksUsed",
                                       {
                                         "type": "number",
-                                        "examples": [
-                                          43
-                                        ]
+                                        "examples": [43]
                                       }
                                     ],
                                     [
                                       "Stat:Game:Character:TotalCooldownAbilitiesStarted",
                                       {
                                         "type": "number",
-                                        "examples": [
-                                          19
-                                        ]
+                                        "examples": [19]
                                       }
                                     ],
                                     [
                                       "Stat:Game:Character:TotalCrouchTime",
                                       {
                                         "type": "number",
-                                        "examples": [
-                                          0.30000001192092896
-                                        ]
+                                        "examples": [0.30000001192092896]
                                       }
                                     ],
                                     [
                                       "Stat:Game:Character:TotalDamageAdded",
                                       {
                                         "type": "number",
-                                        "examples": [
-                                          14.5
-                                        ]
+                                        "examples": [14.5]
                                       }
                                     ],
                                     [
                                       "Stat:Game:Character:TotalDamageDealt",
                                       {
                                         "type": "number",
-                                        "examples": [
-                                          133.38719177246094
-                                        ]
+                                        "examples": [133.38719177246094]
                                       }
                                     ],
                                     [
                                       "Stat:Game:Character:TotalDamageDodged",
                                       {
                                         "type": "number",
-                                        "examples": [
-                                          58.42000198364258
-                                        ]
+                                        "examples": [58.42000198364258]
                                       }
                                     ],
                                     [
                                       "Stat:Game:Character:TotalDamageMitigated",
                                       {
                                         "type": "number",
-                                        "examples": [
-                                          0
-                                        ]
+                                        "examples": [0]
                                       }
                                     ],
                                     [
                                       "Stat:Game:Character:TotalDamageParried",
                                       {
                                         "type": "number",
-                                        "examples": [
-                                          0
-                                        ]
+                                        "examples": [0]
                                       }
                                     ],
                                     [
                                       "Stat:Game:Character:TotalDamageTaken",
                                       {
                                         "type": "number",
-                                        "examples": [
-                                          376.3334655761719
-                                        ]
+                                        "examples": [376.3334655761719]
                                       }
                                     ],
                                     [
                                       "Stat:Game:Character:TotalDashAttacksHit",
                                       {
                                         "type": "number",
-                                        "examples": [
-                                          0
-                                        ]
+                                        "examples": [0]
                                       }
                                     ],
                                     [
                                       "Stat:Game:Character:TotalDashAttacksUsed",
                                       {
                                         "type": "number",
-                                        "examples": [
-                                          0
-                                        ]
+                                        "examples": [0]
                                       }
                                     ],
                                     [
                                       "Stat:Game:Character:TotalDirectionalAirDodgesUsed",
                                       {
                                         "type": "number",
-                                        "examples": [
-                                          17
-                                        ]
+                                        "examples": [17]
                                       }
                                     ],
                                     [
                                       "Stat:Game:Character:TotalDirectionalDodgesUsed",
                                       {
                                         "type": "number",
-                                        "examples": [
-                                          33
-                                        ]
+                                        "examples": [33]
                                       }
                                     ],
                                     [
                                       "Stat:Game:Character:TotalDirectionalGroundDodgesUsed",
                                       {
                                         "type": "number",
-                                        "examples": [
-                                          16
-                                        ]
+                                        "examples": [16]
                                       }
                                     ],
                                     [
                                       "Stat:Game:Character:TotalDodgesUsed",
                                       {
                                         "type": "number",
-                                        "examples": [
-                                          33
-                                        ]
+                                        "examples": [33]
                                       }
                                     ],
                                     [
                                       "Stat:Game:Character:TotalDoubleJumps",
                                       {
                                         "type": "number",
-                                        "examples": [
-                                          5
-                                        ]
+                                        "examples": [5]
                                       }
                                     ],
                                     [
                                       "Stat:Game:Character:TotalDoubleRingouts",
                                       {
                                         "type": "number",
-                                        "examples": [
-                                          0
-                                        ]
+                                        "examples": [0]
                                       }
                                     ],
                                     [
                                       "Stat:Game:Character:TotalDownAirNormalHit",
                                       {
                                         "type": "number",
-                                        "examples": [
-                                          5
-                                        ]
+                                        "examples": [5]
                                       }
                                     ],
                                     [
                                       "Stat:Game:Character:TotalDownAirNormalUsed",
                                       {
                                         "type": "number",
-                                        "examples": [
-                                          11
-                                        ]
+                                        "examples": [11]
                                       }
                                     ],
                                     [
                                       "Stat:Game:Character:TotalDownAirSpecialsHit",
                                       {
                                         "type": "number",
-                                        "examples": [
-                                          0
-                                        ]
+                                        "examples": [0]
                                       }
                                     ],
                                     [
                                       "Stat:Game:Character:TotalDownAirSpecialsUsed",
                                       {
                                         "type": "number",
-                                        "examples": [
-                                          0
-                                        ]
+                                        "examples": [0]
                                       }
                                     ],
                                     [
                                       "Stat:Game:Character:TotalDownGroundNormalHit",
                                       {
                                         "type": "number",
-                                        "examples": [
-                                          4
-                                        ]
+                                        "examples": [4]
                                       }
                                     ],
                                     [
                                       "Stat:Game:Character:TotalDownGroundNormalUsed",
                                       {
                                         "type": "number",
-                                        "examples": [
-                                          6
-                                        ]
+                                        "examples": [6]
                                       }
                                     ],
                                     [
                                       "Stat:Game:Character:TotalDownGroundSpecialsHit",
                                       {
                                         "type": "number",
-                                        "examples": [
-                                          0
-                                        ]
+                                        "examples": [0]
                                       }
                                     ],
                                     [
                                       "Stat:Game:Character:TotalDownGroundSpecialsUsed",
                                       {
                                         "type": "number",
-                                        "examples": [
-                                          0
-                                        ]
+                                        "examples": [0]
                                       }
                                     ],
                                     [
                                       "Stat:Game:Character:TotalDownNormalAttacksHit",
                                       {
                                         "type": "number",
-                                        "examples": [
-                                          9
-                                        ]
+                                        "examples": [9]
                                       }
                                     ],
                                     [
                                       "Stat:Game:Character:TotalDownNormalAttacksUsed",
                                       {
                                         "type": "number",
-                                        "examples": [
-                                          17
-                                        ]
+                                        "examples": [17]
                                       }
                                     ],
                                     [
                                       "Stat:Game:Character:TotalDownRingouts",
                                       {
                                         "type": "number",
-                                        "examples": [
-                                          0
-                                        ]
+                                        "examples": [0]
                                       }
                                     ],
                                     [
                                       "Stat:Game:Character:TotalDownSpecialsHit",
                                       {
                                         "type": "number",
-                                        "examples": [
-                                          0
-                                        ]
+                                        "examples": [0]
                                       }
                                     ],
                                     [
                                       "Stat:Game:Character:TotalDownSpecialsUsed",
                                       {
                                         "type": "number",
-                                        "examples": [
-                                          0
-                                        ]
+                                        "examples": [0]
                                       }
                                     ],
                                     [
                                       "Stat:Game:Character:TotalDownspikeRingouts",
                                       {
                                         "type": "number",
-                                        "examples": [
-                                          0
-                                        ]
+                                        "examples": [0]
                                       }
                                     ],
                                     [
                                       "Stat:Game:Character:TotalElectricAttacksHit",
                                       {
                                         "type": "number",
-                                        "examples": [
-                                          0
-                                        ]
+                                        "examples": [0]
                                       }
                                     ],
                                     [
                                       "Stat:Game:Character:TotalFireAttacksHit",
                                       {
                                         "type": "number",
-                                        "examples": [
-                                          0
-                                        ]
+                                        "examples": [0]
                                       }
                                     ],
                                     [
                                       "Stat:Game:Character:TotalFullyChargedAttacksHit",
                                       {
                                         "type": "number",
-                                        "examples": [
-                                          2
-                                        ]
+                                        "examples": [2]
                                       }
                                     ],
                                     [
                                       "Stat:Game:Character:TotalGreyHealthReceived",
                                       {
                                         "type": "number",
-                                        "examples": [
-                                          0
-                                        ]
+                                        "examples": [0]
                                       }
                                     ],
                                     [
                                       "Stat:Game:Character:TotalGroundAttacksHit",
                                       {
                                         "type": "number",
-                                        "examples": [
-                                          16
-                                        ]
+                                        "examples": [16]
                                       }
                                     ],
                                     [
                                       "Stat:Game:Character:TotalGroundAttacksUsed",
                                       {
                                         "type": "number",
-                                        "examples": [
-                                          42
-                                        ]
+                                        "examples": [42]
                                       }
                                     ],
                                     [
                                       "Stat:Game:Character:TotalGroundDamageDealt",
                                       {
                                         "type": "number",
-                                        "examples": [
-                                          51.29191970825195
-                                        ]
+                                        "examples": [51.29191970825195]
                                       }
                                     ],
                                     [
                                       "Stat:Game:Character:TotalGroundNormalsHit",
                                       {
                                         "type": "number",
-                                        "examples": [
-                                          11
-                                        ]
+                                        "examples": [11]
                                       }
                                     ],
                                     [
                                       "Stat:Game:Character:TotalGroundNormalsUsed",
                                       {
                                         "type": "number",
-                                        "examples": [
-                                          31
-                                        ]
+                                        "examples": [31]
                                       }
                                     ],
                                     [
                                       "Stat:Game:Character:TotalGroundSpecialsHit",
                                       {
                                         "type": "number",
-                                        "examples": [
-                                          5
-                                        ]
+                                        "examples": [5]
                                       }
                                     ],
                                     [
                                       "Stat:Game:Character:TotalGroundSpecialsUsed",
                                       {
                                         "type": "number",
-                                        "examples": [
-                                          11
-                                        ]
+                                        "examples": [11]
                                       }
                                     ],
                                     [
                                       "Stat:Game:Character:TotalHealingReceived",
                                       {
                                         "type": "number",
-                                        "examples": [
-                                          0
-                                        ]
+                                        "examples": [0]
                                       }
                                     ],
                                     [
                                       "Stat:Game:Character:TotalHitsTaken",
                                       {
                                         "type": "number",
-                                        "examples": [
-                                          53
-                                        ]
+                                        "examples": [53]
                                       }
                                     ],
                                     [
                                       "Stat:Game:Character:TotalIceAttacksHit",
                                       {
                                         "type": "number",
-                                        "examples": [
-                                          0
-                                        ]
+                                        "examples": [0]
                                       }
                                     ],
                                     [
                                       "Stat:Game:Character:TotalJumps",
                                       {
                                         "type": "number",
-                                        "examples": [
-                                          23
-                                        ]
+                                        "examples": [23]
                                       }
                                     ],
                                     [
                                       "Stat:Game:Character:TotalKnockbackAdded",
                                       {
                                         "type": "number",
-                                        "examples": [
-                                          0
-                                        ]
+                                        "examples": [0]
                                       }
                                     ],
                                     [
                                       "Stat:Game:Character:TotalKnockbackMitigated",
                                       {
                                         "type": "number",
-                                        "examples": [
-                                          0
-                                        ]
+                                        "examples": [0]
                                       }
                                     ],
                                     [
                                       "Stat:Game:Character:TotalLeftRingouts",
                                       {
                                         "type": "number",
-                                        "examples": [
-                                          0
-                                        ]
+                                        "examples": [0]
                                       }
                                     ],
                                     [
                                       "Stat:Game:Character:TotalNeutralAirDodgesUsed",
                                       {
                                         "type": "number",
-                                        "examples": [
-                                          0
-                                        ]
+                                        "examples": [0]
                                       }
                                     ],
                                     [
                                       "Stat:Game:Character:TotalNeutralAirNormalHit",
                                       {
                                         "type": "number",
-                                        "examples": [
-                                          2
-                                        ]
+                                        "examples": [2]
                                       }
                                     ],
                                     [
                                       "Stat:Game:Character:TotalNeutralAirNormalUsed",
                                       {
                                         "type": "number",
-                                        "examples": [
-                                          7
-                                        ]
+                                        "examples": [7]
                                       }
                                     ],
                                     [
                                       "Stat:Game:Character:TotalNeutralAirSpecialsHit",
                                       {
                                         "type": "number",
-                                        "examples": [
-                                          0
-                                        ]
+                                        "examples": [0]
                                       }
                                     ],
                                     [
                                       "Stat:Game:Character:TotalNeutralAirSpecialsUsed",
                                       {
                                         "type": "number",
-                                        "examples": [
-                                          8
-                                        ]
+                                        "examples": [8]
                                       }
                                     ],
                                     [
                                       "Stat:Game:Character:TotalNeutralDodgesUsed",
                                       {
                                         "type": "number",
-                                        "examples": [
-                                          0
-                                        ]
+                                        "examples": [0]
                                       }
                                     ],
                                     [
                                       "Stat:Game:Character:TotalNeutralGroundDodgesUsed",
                                       {
                                         "type": "number",
-                                        "examples": [
-                                          0
-                                        ]
+                                        "examples": [0]
                                       }
                                     ],
                                     [
                                       "Stat:Game:Character:TotalNeutralGroundNormalHit",
                                       {
                                         "type": "number",
-                                        "examples": [
-                                          2
-                                        ]
+                                        "examples": [2]
                                       }
                                     ],
                                     [
                                       "Stat:Game:Character:TotalNeutralGroundNormalUsed",
                                       {
                                         "type": "number",
-                                        "examples": [
-                                          9
-                                        ]
+                                        "examples": [9]
                                       }
                                     ],
                                     [
                                       "Stat:Game:Character:TotalNeutralGroundSpecialsHit",
                                       {
                                         "type": "number",
-                                        "examples": [
-                                          0
-                                        ]
+                                        "examples": [0]
                                       }
                                     ],
                                     [
                                       "Stat:Game:Character:TotalNeutralGroundSpecialsUsed",
                                       {
                                         "type": "number",
-                                        "examples": [
-                                          3
-                                        ]
+                                        "examples": [3]
                                       }
                                     ],
                                     [
                                       "Stat:Game:Character:TotalNeutralNormalAttacksHit",
                                       {
                                         "type": "number",
-                                        "examples": [
-                                          31
-                                        ]
+                                        "examples": [31]
                                       }
                                     ],
                                     [
                                       "Stat:Game:Character:TotalNeutralNormalAttacksUsed",
                                       {
                                         "type": "number",
-                                        "examples": [
-                                          16
-                                        ]
+                                        "examples": [16]
                                       }
                                     ],
                                     [
                                       "Stat:Game:Character:TotalNeutralSpecialsHit",
                                       {
                                         "type": "number",
-                                        "examples": [
-                                          0
-                                        ]
+                                        "examples": [0]
                                       }
                                     ],
                                     [
                                       "Stat:Game:Character:TotalNeutralSpecialsUsed",
                                       {
                                         "type": "number",
-                                        "examples": [
-                                          11
-                                        ]
+                                        "examples": [11]
                                       }
                                     ],
                                     [
                                       "Stat:Game:Character:TotalNormalAttacksHit",
                                       {
                                         "type": "number",
-                                        "examples": [
-                                          27
-                                        ]
+                                        "examples": [27]
                                       }
                                     ],
                                     [
                                       "Stat:Game:Character:TotalNormalAttacksUsed",
                                       {
                                         "type": "number",
-                                        "examples": [
-                                          75
-                                        ]
+                                        "examples": [75]
                                       }
                                     ],
                                     [
                                       "Stat:Game:Character:TotalPlatformDropThroughs",
                                       {
                                         "type": "number",
-                                        "examples": [
-                                          0
-                                        ]
+                                        "examples": [0]
                                       }
                                     ],
                                     [
                                       "Stat:Game:Character:TotalProjectileRingouts",
                                       {
                                         "type": "number",
-                                        "examples": [
-                                          0
-                                        ]
+                                        "examples": [0]
                                       }
                                     ],
                                     [
                                       "Stat:Game:Character:TotalProjectilesBlocked",
                                       {
                                         "type": "number",
-                                        "examples": [
-                                          0
-                                        ]
+                                        "examples": [0]
                                       }
                                     ],
                                     [
                                       "Stat:Game:Character:TotalProjectilesReflected",
                                       {
                                         "type": "number",
-                                        "examples": [
-                                          0
-                                        ]
+                                        "examples": [0]
                                       }
                                     ],
                                     [
                                       "Stat:Game:Character:TotalRightRingouts",
                                       {
                                         "type": "number",
-                                        "examples": [
-                                          1
-                                        ]
+                                        "examples": [1]
                                       }
                                     ],
                                     [
                                       "Stat:Game:Character:TotalRingouts",
                                       {
                                         "type": "number",
-                                        "examples": [
-                                          1
-                                        ]
+                                        "examples": [1]
                                       }
                                     ],
                                     [
                                       "Stat:Game:Character:TotalRingoutsEnemyLowPercent",
                                       {
                                         "type": "number",
-                                        "examples": [
-                                          0
-                                        ]
+                                        "examples": [0]
                                       }
                                     ],
                                     [
                                       "Stat:Game:Character:TotalRingoutsReceived",
                                       {
                                         "type": "number",
-                                        "examples": [
-                                          3
-                                        ]
+                                        "examples": [3]
                                       }
                                     ],
                                     [
                                       "Stat:Game:Character:TotalRingoutsWithLessDamage",
                                       {
                                         "type": "number",
-                                        "examples": [
-                                          1
-                                        ]
+                                        "examples": [1]
                                       }
                                     ],
                                     [
                                       "Stat:Game:Character:TotalRingoutsWithMoreDamage",
                                       {
                                         "type": "number",
-                                        "examples": [
-                                          0
-                                        ]
+                                        "examples": [0]
                                       }
                                     ],
                                     [
                                       "Stat:Game:Character:TotalShieldBreaksFromShieldBreaker",
                                       {
                                         "type": "number",
-                                        "examples": [
-                                          0
-                                        ]
+                                        "examples": [0]
                                       }
                                     ],
                                     [
                                       "Stat:Game:Character:TotalSideAirNormalHit",
                                       {
                                         "type": "number",
-                                        "examples": [
-                                          10
-                                        ]
+                                        "examples": [10]
                                       }
                                     ],
                                     [
                                       "Stat:Game:Character:TotalSideAirNormalUsed",
                                       {
                                         "type": "number",
-                                        "examples": [
-                                          23
-                                        ]
+                                        "examples": [23]
                                       }
                                     ],
                                     [
                                       "Stat:Game:Character:TotalSideAirSpecialsHit",
                                       {
                                         "type": "number",
-                                        "examples": [
-                                          0
-                                        ]
+                                        "examples": [0]
                                       }
                                     ],
                                     [
                                       "Stat:Game:Character:TotalSideAirSpecialsUsed",
                                       {
                                         "type": "number",
-                                        "examples": [
-                                          0
-                                        ]
+                                        "examples": [0]
                                       }
                                     ],
                                     [
                                       "Stat:Game:Character:TotalSideGroundNormalHit",
                                       {
                                         "type": "number",
-                                        "examples": [
-                                          3
-                                        ]
+                                        "examples": [3]
                                       }
                                     ],
                                     [
                                       "Stat:Game:Character:TotalSideGroundNormalUsed",
                                       {
                                         "type": "number",
-                                        "examples": [
-                                          14
-                                        ]
+                                        "examples": [14]
                                       }
                                     ],
                                     [
                                       "Stat:Game:Character:TotalSideGroundSpecialsHit",
                                       {
                                         "type": "number",
-                                        "examples": [
-                                          5
-                                        ]
+                                        "examples": [5]
                                       }
                                     ],
                                     [
                                       "Stat:Game:Character:TotalSideGroundSpecialsUsed",
                                       {
                                         "type": "number",
-                                        "examples": [
-                                          8
-                                        ]
+                                        "examples": [8]
                                       }
                                     ],
                                     [
                                       "Stat:Game:Character:TotalSideNormalAttacksHit",
                                       {
                                         "type": "number",
-                                        "examples": [
-                                          13
-                                        ]
+                                        "examples": [13]
                                       }
                                     ],
                                     [
                                       "Stat:Game:Character:TotalSideNormalAttacksUsed",
                                       {
                                         "type": "number",
-                                        "examples": [
-                                          37
-                                        ]
+                                        "examples": [37]
                                       }
                                     ],
                                     [
                                       "Stat:Game:Character:TotalSideSpecialsHit",
                                       {
                                         "type": "number",
-                                        "examples": [
-                                          5
-                                        ]
+                                        "examples": [5]
                                       }
                                     ],
                                     [
                                       "Stat:Game:Character:TotalSideSpecialsUsed",
                                       {
                                         "type": "number",
-                                        "examples": [
-                                          8
-                                        ]
+                                        "examples": [8]
                                       }
                                     ],
                                     [
                                       "Stat:Game:Character:TotalSpecialDamageDealt",
                                       {
                                         "type": "number",
-                                        "examples": [
-                                          26.24850082397461
-                                        ]
+                                        "examples": [26.24850082397461]
                                       }
                                     ],
                                     [
                                       "Stat:Game:Character:TotalSpecialsHit",
                                       {
                                         "type": "number",
-                                        "examples": [
-                                          6
-                                        ]
+                                        "examples": [6]
                                       }
                                     ],
                                     [
                                       "Stat:Game:Character:TotalSpecialsUsed",
                                       {
                                         "type": "number",
-                                        "examples": [
-                                          20
-                                        ]
+                                        "examples": [20]
                                       }
                                     ],
                                     [
                                       "Stat:Game:Character:TotalSweetSpotsHit",
                                       {
                                         "type": "number",
-                                        "examples": [
-                                          0
-                                        ]
+                                        "examples": [0]
                                       }
                                     ],
                                     [
                                       "Stat:Game:Character:TotalTauntsUsed",
                                       {
                                         "type": "number",
-                                        "examples": [
-                                          0
-                                        ]
+                                        "examples": [0]
                                       }
                                     ],
                                     [
                                       "Stat:Game:Character:TotalUpAirNormalHit",
                                       {
                                         "type": "number",
-                                        "examples": [
-                                          1
-                                        ]
+                                        "examples": [1]
                                       }
                                     ],
                                     [
                                       "Stat:Game:Character:TotalUpAirNormalUsed",
                                       {
                                         "type": "number",
-                                        "examples": [
-                                          5
-                                        ]
+                                        "examples": [5]
                                       }
                                     ],
                                     [
                                       "Stat:Game:Character:TotalUpAirSpecialsHit",
                                       {
                                         "type": "number",
-                                        "examples": [
-                                          1
-                                        ]
+                                        "examples": [1]
                                       }
                                     ],
                                     [
                                       "Stat:Game:Character:TotalUpAirSpecialsUsed",
                                       {
                                         "type": "number",
-                                        "examples": [
-                                          1
-                                        ]
+                                        "examples": [1]
                                       }
                                     ],
                                     [
                                       "Stat:Game:Character:TotalUpGroundNormalHit",
                                       {
                                         "type": "number",
-                                        "examples": [
-                                          0
-                                        ]
+                                        "examples": [0]
                                       }
                                     ],
                                     [
                                       "Stat:Game:Character:TotalUpGroundNormalUsed",
                                       {
                                         "type": "number",
-                                        "examples": [
-                                          0
-                                        ]
+                                        "examples": [0]
                                       }
                                     ],
                                     [
                                       "Stat:Game:Character:TotalUpGroundSpecialsHit",
                                       {
                                         "type": "number",
-                                        "examples": [
-                                          0
-                                        ]
+                                        "examples": [0]
                                       }
                                     ],
                                     [
                                       "Stat:Game:Character:TotalUpGroundSpecialsUsed",
                                       {
                                         "type": "number",
-                                        "examples": [
-                                          0
-                                        ]
+                                        "examples": [0]
                                       }
                                     ],
                                     [
                                       "Stat:Game:Character:TotalUpNormalAttacksHit",
                                       {
                                         "type": "number",
-                                        "examples": [
-                                          1
-                                        ]
+                                        "examples": [1]
                                       }
                                     ],
                                     [
                                       "Stat:Game:Character:TotalUpNormalAttacksUsed",
                                       {
                                         "type": "number",
-                                        "examples": [
-                                          5
-                                        ]
+                                        "examples": [5]
                                       }
                                     ],
                                     [
                                       "Stat:Game:Character:TotalUpRingouts",
                                       {
                                         "type": "number",
-                                        "examples": [
-                                          0
-                                        ]
+                                        "examples": [0]
                                       }
                                     ],
                                     [
                                       "Stat:Game:Character:TotalUpSpecialsHit",
                                       {
                                         "type": "number",
-                                        "examples": [
-                                          1
-                                        ]
+                                        "examples": [1]
                                       }
                                     ],
                                     [
                                       "Stat:Game:Character:TotalUpSpecialsUsed",
                                       {
                                         "type": "number",
-                                        "examples": [
-                                          1
-                                        ]
+                                        "examples": [1]
                                       }
                                     ],
                                     [
                                       "Stat:Game:Character:TotalWalkLeftTime",
                                       {
                                         "type": "number",
-                                        "examples": [
-                                          5.7833333015441895
-                                        ]
+                                        "examples": [5.7833333015441895]
                                       }
                                     ],
                                     [
                                       "Stat:Game:Character:TotalWalkRightTime",
                                       {
                                         "type": "number",
-                                        "examples": [
-                                          4.449999809265137
-                                        ]
+                                        "examples": [4.449999809265137]
                                       }
                                     ],
                                     [
                                       "Stat:Game:Character:TotalWalkTime",
                                       {
                                         "type": "number",
-                                        "examples": [
-                                          10.233333587646484
-                                        ]
+                                        "examples": [10.233333587646484]
                                       }
                                     ],
                                     [
                                       "Stat:Game:Character:TotalWallHangTime",
                                       {
                                         "type": "number",
-                                        "examples": [
-                                          1.2166666984558105
-                                        ]
+                                        "examples": [1.2166666984558105]
                                       }
                                     ]
                                   ]
@@ -3351,360 +2801,280 @@
                               "BytesRecvPerFrame",
                               {
                                 "type": "number",
-                                "examples": [
-                                  22.971542358398438
-                                ]
+                                "examples": [22.971542358398438]
                               }
                             ],
                             [
                               "BytesSendPerFrame",
                               {
                                 "type": "number",
-                                "examples": [
-                                  27.309011459350586
-                                ]
+                                "examples": [27.309011459350586]
                               }
                             ],
                             [
                               "CompressionRecvRatio",
                               {
                                 "type": "number",
-                                "examples": [
-                                  0.4445424973964691
-                                ]
+                                "examples": [0.4445424973964691]
                               }
                             ],
                             [
                               "CompressionRecvReduction",
                               {
                                 "type": "number",
-                                "examples": [
-                                  236025
-                                ]
+                                "examples": [236025]
                               }
                             ],
                             [
                               "CompressionSendRatio",
                               {
                                 "type": "number",
-                                "examples": [
-                                  0.6133713722229004
-                                ]
+                                "examples": [0.6133713722229004]
                               }
                             ],
                             [
                               "CompressionSendReduction",
                               {
                                 "type": "number",
-                                "examples": [
-                                  141549
-                                ]
+                                "examples": [141549]
                               }
                             ],
                             [
                               "InputDelayAverage",
                               {
                                 "type": "number",
-                                "examples": [
-                                  2
-                                ]
+                                "examples": [2]
                               }
                             ],
                             [
                               "InputDelayFinal",
                               {
                                 "type": "number",
-                                "examples": [
-                                  2
-                                ]
+                                "examples": [2]
                               }
                             ],
                             [
                               "InputDelayMax",
                               {
                                 "type": "number",
-                                "examples": [
-                                  2
-                                ]
+                                "examples": [2]
                               }
                             ],
                             [
                               "InputDelayMin",
                               {
                                 "type": "number",
-                                "examples": [
-                                  2
-                                ]
+                                "examples": [2]
                               }
                             ],
                             [
                               "LargeDeltaTickAverage",
                               {
                                 "type": "number",
-                                "examples": [
-                                  0
-                                ]
+                                "examples": [0]
                               }
                             ],
                             [
                               "LargeDeltaTickCount",
                               {
                                 "type": "number",
-                                "examples": [
-                                  0
-                                ]
+                                "examples": [0]
                               }
                             ],
                             [
                               "LargeDeltaTickMax",
                               {
                                 "type": "number",
-                                "examples": [
-                                  0
-                                ]
+                                "examples": [0]
                               }
                             ],
                             [
                               "LargeDeltaTickMin",
                               {
                                 "type": "number",
-                                "examples": [
-                                  0
-                                ]
+                                "examples": [0]
                               }
                             ],
                             [
                               "MessageRecvStallCount",
                               {
                                 "type": "number",
-                                "examples": [
-                                  0
-                                ]
+                                "examples": [0]
                               }
                             ],
                             [
                               "OverridePredictedPercentAverage",
                               {
                                 "type": "number",
-                                "examples": [
-                                  0
-                                ]
+                                "examples": [0]
                               }
                             ],
                             [
                               "OverridePredictedPercentFinal",
                               {
                                 "type": "number",
-                                "examples": [
-                                  0
-                                ]
+                                "examples": [0]
                               }
                             ],
                             [
                               "OverridePredictedPercentMax",
                               {
                                 "type": "number",
-                                "examples": [
-                                  0
-                                ]
+                                "examples": [0]
                               }
                             ],
                             [
                               "OverrideZeroedPercentAverage",
                               {
                                 "type": "number",
-                                "examples": [
-                                  0
-                                ]
+                                "examples": [0]
                               }
                             ],
                             [
                               "OverrideZeroedPercentFinal",
                               {
                                 "type": "number",
-                                "examples": [
-                                  0
-                                ]
+                                "examples": [0]
                               }
                             ],
                             [
                               "OverrideZeroedPercentMax",
                               {
                                 "type": "number",
-                                "examples": [
-                                  0
-                                ]
+                                "examples": [0]
                               }
                             ],
                             [
                               "PacketLossAverage",
                               {
                                 "type": "number",
-                                "examples": [
-                                  0
-                                ]
+                                "examples": [0]
                               }
                             ],
                             [
                               "PacketLossFinal",
                               {
                                 "type": "number",
-                                "examples": [
-                                  0
-                                ]
+                                "examples": [0]
                               }
                             ],
                             [
                               "PacketLossMax",
                               {
                                 "type": "number",
-                                "examples": [
-                                  0
-                                ]
+                                "examples": [0]
                               }
                             ],
                             [
                               "PingAverage",
                               {
                                 "type": "number",
-                                "examples": [
-                                  31.13129997253418
-                                ]
+                                "examples": [31.13129997253418]
                               }
                             ],
                             [
                               "PingFinal",
                               {
                                 "type": "number",
-                                "examples": [
-                                  30
-                                ]
+                                "examples": [30]
                               }
                             ],
                             [
                               "PingMax",
                               {
                                 "type": "number",
-                                "examples": [
-                                  38
-                                ]
+                                "examples": [38]
                               }
                             ],
                             [
                               "PingMin",
                               {
                                 "type": "number",
-                                "examples": [
-                                  29
-                                ]
+                                "examples": [29]
                               }
                             ],
                             [
                               "RiftAverage",
                               {
                                 "type": "number",
-                                "examples": [
-                                  0.010494167916476727
-                                ]
+                                "examples": [0.010494167916476727]
                               }
                             ],
                             [
                               "RiftFinal",
                               {
                                 "type": "number",
-                                "examples": [
-                                  0
-                                ]
+                                "examples": [0]
                               }
                             ],
                             [
                               "RiftMax",
                               {
                                 "type": "number",
-                                "examples": [
-                                  5
-                                ]
+                                "examples": [5]
                               }
                             ],
                             [
                               "RiftMin",
                               {
                                 "type": "number",
-                                "examples": [
-                                  -1
-                                ]
+                                "examples": [-1]
                               }
                             ],
                             [
                               "RollbackFramesAverage",
                               {
                                 "type": "number",
-                                "examples": [
-                                  3.20731782913208
-                                ]
+                                "examples": [3.20731782913208]
                               }
                             ],
                             [
                               "RollbackFramesFinal",
                               {
                                 "type": "number",
-                                "examples": [
-                                  2
-                                ]
+                                "examples": [2]
                               }
                             ],
                             [
                               "RollbackFramesMax",
                               {
                                 "type": "number",
-                                "examples": [
-                                  10
-                                ]
+                                "examples": [10]
                               }
                             ],
                             [
                               "RollbackFramesMin",
                               {
                                 "type": "number",
-                                "examples": [
-                                  1
-                                ]
+                                "examples": [1]
                               }
                             ],
                             [
                               "RollbackFreqAverage",
                               {
                                 "type": "number",
-                                "examples": [
-                                  3.20731782913208
-                                ]
+                                "examples": [3.20731782913208]
                               }
                             ],
                             [
                               "RollbackFreqFinal",
                               {
                                 "type": "number",
-                                "examples": [
-                                  2
-                                ]
+                                "examples": [2]
                               }
                             ],
                             [
                               "RollbackFreqMax",
                               {
                                 "type": "number",
-                                "examples": [
-                                  4390
-                                ]
+                                "examples": [4390]
                               }
                             ],
                             [
                               "RollbackFreqMin",
                               {
                                 "type": "number",
-                                "examples": [
-                                  1
-                                ]
+                                "examples": [1]
                               }
                             ]
                           ]
@@ -3717,9 +3087,7 @@
                         "type": "array",
                         "inner": {
                           "type": "number",
-                          "examples": [
-                            3
-                          ]
+                          "examples": [3]
                         }
                       }
                     ],
@@ -3727,9 +3095,7 @@
                       "WinningTeamIndex",
                       {
                         "type": "number",
-                        "examples": [
-                          0
-                        ]
+                        "examples": [0]
                       }
                     ]
                   ]
@@ -3740,9 +3106,7 @@
               "MatchLength",
               {
                 "type": "number",
-                "examples": [
-                  131
-                ]
+                "examples": [131]
               }
             ]
           ]
@@ -3772,10 +3136,7 @@
               "ContainerSlug",
               {
                 "type": "string",
-                "examples": [
-                  "miscon_battlepassdaily_s5",
-                  "miscon_battlepassweekly_s5"
-                ]
+                "examples": ["miscon_battlepassdaily_s5", "miscon_battlepassweekly_s5"]
               }
             ],
             [
@@ -3791,30 +3152,21 @@
                         "MissionControllerSlug",
                         {
                           "type": "string",
-                          "examples": [
-                            "misctl_battlepass_daily_hard_new",
-                            "misctl_battlepass_weekly_new"
-                          ]
+                          "examples": ["misctl_battlepass_daily_hard_new", "misctl_battlepass_weekly_new"]
                         }
                       ],
                       [
                         "MissionGuid",
                         {
                           "type": "string",
-                          "examples": [
-                            "f367cc26-94aa-472e-afb7-f5beca415eeb",
-                            "e2d513a5-227d-439a-a7c5-d95a6fdfd18d"
-                          ]
+                          "examples": ["f367cc26-94aa-472e-afb7-f5beca415eeb", "e2d513a5-227d-439a-a7c5-d95a6fdfd18d"]
                         }
                       ],
                       [
                         "MissionSlug",
                         {
                           "type": "string",
-                          "examples": [
-                            "mis_stats_total_down_normals_hith",
-                            "mis_ringout_pvp_weekly"
-                          ]
+                          "examples": ["mis_stats_total_down_normals_hith", "mis_ringout_pvp_weekly"]
                         }
                       ]
                     ]
@@ -3838,18 +3190,14 @@
               "ContainerMatchId",
               {
                 "type": "string",
-                "examples": [
-                  "67d45cfdda22dc702a4383d7"
-                ]
+                "examples": ["67d45cfdda22dc702a4383d7"]
               }
             ],
             [
               "ToasteeId",
               {
                 "type": "string",
-                "examples": [
-                  "665a7f968ec47506466fbd2d"
-                ]
+                "examples": ["665a7f968ec47506466fbd2d"]
               }
             ]
           ]
@@ -3874,63 +3222,49 @@
               "CrossplayPreference",
               {
                 "type": "number",
-                "examples": [
-                  1
-                ]
+                "examples": [1]
               }
             ],
             [
               "GameplayPreferences",
               {
                 "type": "number",
-                "examples": [
-                  544
-                ]
+                "examples": [544]
               }
             ],
             [
               "HissCrc",
               {
                 "type": "number",
-                "examples": [
-                  1167552915
-                ]
+                "examples": [1167552915]
               }
             ],
             [
               "LobbyId",
               {
                 "type": "string",
-                "examples": [
-                  "67d45cd0b8655ea25ca3a0a9"
-                ]
+                "examples": ["67d45cd0b8655ea25ca3a0a9"]
               }
             ],
             [
               "LobbyTemplate",
               {
                 "type": "string",
-                "examples": [
-                  "party_lobby"
-                ]
+                "examples": ["party_lobby"]
               }
             ],
             [
               "Platform",
               {
                 "type": "string",
-                "examples": [
-                  "PC"
-                ]
+                "examples": ["PC"]
               }
             ],
             [
               "Version",
               {
                 "type": "string",
-                "examples": [
-                  "CLIENT:2F322-Retail DATA:4CF442B2 PERKS:1"
-                ]
+                "examples": ["CLIENT:2F322-Retail DATA:4CF442B2 PERKS:1"]
               }
             ]
           ]
@@ -3951,9 +3285,7 @@
                 "type": "array",
                 "inner": {
                   "type": "string",
-                  "examples": [
-                    "ranked_season5_1v1_character_Jason"
-                  ]
+                  "examples": ["ranked_season5_1v1_character_Jason"]
                 }
               }
             ]
@@ -3979,27 +3311,21 @@
               "CrossplayPreference",
               {
                 "type": "number",
-                "examples": [
-                  1
-                ]
+                "examples": [1]
               }
             ],
             [
               "GameplayPreferences",
               {
                 "type": "number",
-                "examples": [
-                  544
-                ]
+                "examples": [544]
               }
             ],
             [
               "HissCrc",
               {
                 "type": "number",
-                "examples": [
-                  1167552915
-                ]
+                "examples": [1167552915]
               }
             ],
             [
@@ -4013,18 +3339,14 @@
                       "Character",
                       {
                         "type": "string",
-                        "examples": [
-                          "character_wonder_woman"
-                        ]
+                        "examples": ["character_wonder_woman"]
                       }
                     ],
                     [
                       "Skin",
                       {
                         "type": "string",
-                        "examples": [
-                          "skin_wonder_woman_default"
-                        ]
+                        "examples": ["skin_wonder_woman_default"]
                       }
                     ]
                   ]
@@ -4035,36 +3357,28 @@
               "LobbyId",
               {
                 "type": "string",
-                "examples": [
-                  "67d45cd0b8655ea25ca3a0a9"
-                ]
+                "examples": ["67d45cd0b8655ea25ca3a0a9"]
               }
             ],
             [
               "LobbyTemplate",
               {
                 "type": "string",
-                "examples": [
-                  "party_lobby"
-                ]
+                "examples": ["party_lobby"]
               }
             ],
             [
               "Platform",
               {
                 "type": "string",
-                "examples": [
-                  "PC"
-                ]
+                "examples": ["PC"]
               }
             ],
             [
               "Version",
               {
                 "type": "string",
-                "examples": [
-                  "CLIENT:2F322-Retail DATA:4CF442B2 PERKS:1"
-                ]
+                "examples": ["CLIENT:2F322-Retail DATA:4CF442B2 PERKS:1"]
               }
             ]
           ]

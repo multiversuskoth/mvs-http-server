@@ -1,7 +1,4 @@
 import { modelOptions, prop } from "@typegoose/typegoose";
-import { dot } from "dot-object";
-import { Schema } from "mongoose";
-import { dotify } from "../utils/dotify";
 import { Entries } from "type-fest";
 import { MVSTime } from "../utils/date";
 
@@ -21,11 +18,11 @@ class RatingsStat {
   public static flatten<P extends string>(
     ratingsStat: RatingsStat,
     prefix: P,
-    result: Record<any, any> = {}
+    result: Record<any, any> = {},
   ): {
     [K in keyof RatingsStat as `${P}.${K}`]: RatingsStat[K];
   } {
-    for (let [key, value] of Object.entries(ratingsStat) as Entries<RatingsStat>) {
+    for (const [key, value] of Object.entries(ratingsStat) as Entries<RatingsStat>) {
       if (!["lastUpdateTimestamp"].includes(key)) {
         result[prefix + "." + key] = value;
       }
@@ -43,11 +40,11 @@ class RatingsCharacters {
   public static flatten<P extends string>(
     ratingsCharacters: RatingsCharacters,
     prefix: P,
-    result: Record<any, any> = {}
+    result: Record<any, any> = {},
   ): {
     [K in keyof RatingsCharacters as `${P}.${K}`]: RatingsCharacters[K];
   } {
-    for (let [key, value] of Object.entries(ratingsCharacters) as Entries<RatingsCharacters>) {
+    for (const [key, value] of Object.entries(ratingsCharacters) as Entries<RatingsCharacters>) {
       if (value != null) {
         RatingsStat.flatten(value, prefix + "." + key, result);
       }
@@ -64,11 +61,11 @@ class Ratings {
   public static flatten<P extends string>(
     ratings: Ratings,
     prefix: P,
-    result: Record<any, any> = {}
+    result: Record<any, any> = {},
   ): {
     [K in keyof Ratings as `${P}.${K}`]: Ratings[K];
   } {
-    for (let [key, value] of Object.entries(ratings) as Entries<Ratings>) {
+    for (const [key, value] of Object.entries(ratings) as Entries<Ratings>) {
       if (value != null) {
         RatingsCharacters.flatten(value, prefix + "." + key, result);
       }
@@ -89,11 +86,11 @@ class SeasonalDataItem {
   public static flatten<P extends string>(
     seasonalDataItem: SeasonalDataItem,
     prefix: P,
-    result: Record<any, any> = {}
+    result: Record<any, any> = {},
   ): {
     [K in keyof SeasonalDataItem as `${P}.${K}`]: SeasonalDataItem[K];
   } {
-    for (let [key, value] of Object.entries(seasonalDataItem) as Entries<SeasonalDataItem>) {
+    for (const [key, value] of Object.entries(seasonalDataItem) as Entries<SeasonalDataItem>) {
       if (!["LastLoginDay"].includes(key)) {
         result[prefix + "." + key] = value;
       }
@@ -119,11 +116,11 @@ class SeasonalDatas {
   public static flatten<P extends string>(
     seasonalDatas: SeasonalDatas,
     prefix: P,
-    result: Record<any, any> = {}
+    result: Record<any, any> = {},
   ): {
     [K in keyof SeasonalDatas as `${P}.${K}`]: SeasonalDatas[K];
   } {
-    for (let [key, value] of Object.entries(seasonalDatas) as Entries<SeasonalDatas>) {
+    for (const [key, value] of Object.entries(seasonalDatas) as Entries<SeasonalDatas>) {
       if (value != null) {
         SeasonalDataItem.flatten(value, prefix + "." + key, result);
       }
@@ -158,11 +155,11 @@ export class ServerData {
   public static flatten<P extends string>(
     serverData: ServerData,
     prefix: P,
-    result: Record<any, any> = {}
+    result: Record<any, any> = {},
   ): {
     [K in keyof ServerData as `${P}.${K}`]: ServerData[K];
   } {
-    for (let [key, value] of Object.entries(serverData) as Entries<ServerData>) {
+    for (const [key, value] of Object.entries(serverData) as Entries<ServerData>) {
       if (!["SeasonalData"].includes(key)) {
         result[prefix + "." + key] = value;
       }

@@ -4,7 +4,9 @@
     "start": "node -r @swc-node/register ./src/index.ts",
     "build": "tsc --project ./",
     "start:prod": "node ./build/index.js",
-    "prettify": "prettier . --write"
+    "prettify": "prettier . --write",
+    "check-style": "prettier . --check && eslint",
+    "lint": "eslint --fix"
   },
   "dependencies": {
     "@kishor82/jsonflat": "^0.1.0-beta.1",
@@ -13,6 +15,7 @@
     "@types/jsonwebtoken": "^9.0.9",
     "dotenv": "^16.4.7",
     "envalid": "^8.0.0",
+    "eslint-plugin-unused-imports": "^4.1.4",
     "express": "^4.21.2",
     "http-status-codes": "^2.3.0",
     "jsonwebtoken": "^9.0.2",
@@ -22,13 +25,16 @@
     "zod": "^3.24.2"
   },
   "devDependencies": {
+    "@eslint/js": "^9.22.0",
     "@swc-node/register": "^1.10.10",
     "@tsconfig/node22": "^22.0.0",
     "@types/dot-object": "^2.1.6",
     "@types/express": "^5.0.0",
     "@types/node": "^22.13.10",
+    "eslint": "^9.22.0",
     "prettier": "^3.5.3",
     "type-fest": "^4.35.0",
-    "typescript": "^5.8.2"
+    "typescript": "^5.8.2",
+    "typescript-eslint": "^8.26.1"
   }
 }

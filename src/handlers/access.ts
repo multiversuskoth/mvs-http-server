@@ -3,12 +3,9 @@ import { Account, accountModel } from "../database/Account";
 import { MVSRequests } from "../interfaces/requests_types";
 import { MVSResponses } from "../interfaces/responses_types";
 import { Request, Response } from "express";
-import { MVSTime, ObjectWithDateStrings } from "../utils/date";
-import { parseAppTicket } from "steam-appticket";
 import serverConfiguration from "../config/serverConfiguration";
 import * as jwt from "jsonwebtoken";
 import env from "../env/env";
-import util from "util";
 import { playerModel } from "../database/Player";
 
 type AccountDoc = Omit<Account, "_id">;
@@ -27,18 +24,18 @@ export async function handleAccess(
   //   return;
   // }
 
-  let appSteamTicket = { steamID: "123" };
+  const appSteamTicket = { steamID: "123" };
 
-  let now = new Date();
+  const now = new Date();
 
-  let jwtToken = jwt.sign(
+  const jwtToken = jwt.sign(
     {
       steam: appSteamTicket.steamID,
     },
     env.JWT_SECRET,
   );
 
-  let updatedAccount = await accountModel.findOneAndUpdate(
+  const updatedAccount = await accountModel.findOneAndUpdate(
     {
       "identity.alternate.steam.id": appSteamTicket.steamID,
     },
@@ -73,7 +70,7 @@ export async function handleAccess(
     return;
   }
 
-  let responseJson: MVSResponses.Access_RESPONSE = {
+  const responseJson: MVSResponses.Access_RESPONSE = {
     token: jwtToken,
     in_queue: false,
     configuration: serverConfiguration,

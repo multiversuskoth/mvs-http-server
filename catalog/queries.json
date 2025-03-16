@@ -12,19 +12,14 @@
               "deploymentId",
               {
                 "type": "string",
-                "examples": [
-                  "29da23b21f7f41319c7fa5e86e20dc2b",
-                  "dc943966edb54a6eb9c1334ca8cc1990"
-                ]
+                "examples": ["29da23b21f7f41319c7fa5e86e20dc2b", "dc943966edb54a6eb9c1334ca8cc1990"]
               }
             ],
             [
               "platformId",
               {
                 "type": "string",
-                "examples": [
-                  "WIN"
-                ]
+                "examples": ["WIN"]
               }
             ]
           ]
@@ -45,9 +40,7 @@
                 "type": "array",
                 "inner": {
                   "type": "string",
-                  "examples": [
-                    "account"
-                  ]
+                  "examples": ["account"]
                 }
               }
             ]
@@ -67,18 +60,14 @@
               "page_size",
               {
                 "type": "string",
-                "examples": [
-                  "1000"
-                ]
+                "examples": ["1000"]
               }
             ],
             [
               "state",
               {
                 "type": "string",
-                "examples": [
-                  "open"
-                ]
+                "examples": ["open"]
               }
             ]
           ]
@@ -97,18 +86,14 @@
               "page_size",
               {
                 "type": "string",
-                "examples": [
-                  "1000"
-                ]
+                "examples": ["1000"]
               }
             ],
             [
               "state",
               {
                 "type": "string",
-                "examples": [
-                  "open"
-                ]
+                "examples": ["open"]
               }
             ]
           ]
@@ -127,18 +112,14 @@
               "platform",
               {
                 "type": "string",
-                "examples": [
-                  "steam"
-                ]
+                "examples": ["steam"]
               }
             ],
             [
               "uid",
               {
                 "type": "string",
-                "examples": [
-                  "C38E9943442CBA5BEF501598D3A8358B"
-                ]
+                "examples": ["C38E9943442CBA5BEF501598D3A8358B"]
               }
             ]
           ]
@@ -157,9 +138,7 @@
               "page_size",
               {
                 "type": "string",
-                "examples": [
-                  "1000"
-                ]
+                "examples": ["1000"]
               }
             ]
           ]
@@ -180,9 +159,7 @@
                 "type": "array",
                 "inner": {
                   "type": "string",
-                  "examples": [
-                    "identity"
-                  ]
+                  "examples": ["identity"]
                 }
               }
             ],
@@ -190,9 +167,7 @@
               "partial_response",
               {
                 "type": "string",
-                "examples": [
-                  "1"
-                ]
+                "examples": ["1"]
               }
             ]
           ]
@@ -211,27 +186,21 @@
               "count",
               {
                 "type": "string",
-                "examples": [
-                  "1000"
-                ]
+                "examples": ["1000"]
               }
             ],
             [
               "page",
               {
                 "type": "string",
-                "examples": [
-                  "1"
-                ]
+                "examples": ["1"]
               }
             ],
             [
               "partial_response",
               {
                 "type": "string",
-                "examples": [
-                  "1"
-                ]
+                "examples": ["1"]
               }
             ]
           ]
@@ -250,27 +219,21 @@
               "count",
               {
                 "type": "string",
-                "examples": [
-                  "1000"
-                ]
+                "examples": ["1000"]
               }
             ],
             [
               "page",
               {
                 "type": "string",
-                "examples": [
-                  "1"
-                ]
+                "examples": ["1"]
               }
             ],
             [
               "partial_response",
               {
                 "type": "string",
-                "examples": [
-                  "1"
-                ]
+                "examples": ["1"]
               }
             ]
           ]
@@ -289,27 +252,21 @@
               "count",
               {
                 "type": "string",
-                "examples": [
-                  "10"
-                ]
+                "examples": ["10"]
               }
             ],
             [
               "fields",
               {
                 "type": "string",
-                "examples": [
-                  "server_data"
-                ]
+                "examples": ["server_data"]
               }
             ],
             [
               "page",
               {
                 "type": "string",
-                "examples": [
-                  "1"
-                ]
+                "examples": ["1"]
               }
             ],
             [
@@ -318,9 +275,7 @@
                 "type": "array",
                 "inner": {
                   "type": "string",
-                  "examples": [
-                    "2v2_container"
-                  ]
+                  "examples": ["2v2_container"]
                 }
               }
             ]
@@ -342,9 +297,7 @@
                 "type": "array",
                 "inner": {
                   "type": "string",
-                  "examples": [
-                    "data"
-                  ]
+                  "examples": ["data"]
                 }
               }
             ],
@@ -352,19 +305,14 @@
               "partial_response",
               {
                 "type": "string",
-                "examples": [
-                  "1"
-                ]
+                "examples": ["1"]
               }
             ],
             [
               "fields",
               {
                 "type": "string",
-                "examples": [
-                  "server_data.SeasonalData",
-                  "server_data.SeasonalData.Season:SeasonFive"
-                ]
+                "examples": ["server_data.SeasonalData", "server_data.SeasonalData.Season:SeasonFive"]
               }
             ]
           ]
@@ -383,18 +331,14 @@
               "fields",
               {
                 "type": "string",
-                "examples": [
-                  "show_currency_sources"
-                ]
+                "examples": ["show_currency_sources"]
               }
             ],
             [
               "partial_response",
               {
                 "type": "string",
-                "examples": [
-                  "1"
-                ]
+                "examples": ["1"]
               }
             ]
           ]
@@ -413,18 +357,14 @@
               "calendar_projection_end",
               {
                 "type": "string",
-                "examples": [
-                  "1742057040"
-                ]
+                "examples": ["1742057040"]
               }
             ],
             [
               "calendar_projection_start",
               {
                 "type": "string",
-                "examples": [
-                  "1741970640"
-                ]
+                "examples": ["1741970640"]
               }
             ]
           ]
@@ -443,18 +383,14 @@
               "calendar_projection_end",
               {
                 "type": "string",
-                "examples": [
-                  "1742057040"
-                ]
+                "examples": ["1742057040"]
               }
             ],
             [
               "calendar_projection_start",
               {
                 "type": "string",
-                "examples": [
-                  "1741970640"
-                ]
+                "examples": ["1741970640"]
               }
             ]
           ]
@@ -473,18 +409,14 @@
               "calendar_projection_end",
               {
                 "type": "string",
-                "examples": [
-                  "1742057040"
-                ]
+                "examples": ["1742057040"]
               }
             ],
             [
               "calendar_projection_start",
               {
                 "type": "string",
-                "examples": [
-                  "1741970640"
-                ]
+                "examples": ["1741970640"]
               }
             ]
           ]
@@ -503,18 +435,14 @@
               "calendar_projection_end",
               {
                 "type": "string",
-                "examples": [
-                  "1742057040"
-                ]
+                "examples": ["1742057040"]
               }
             ],
             [
               "calendar_projection_start",
               {
                 "type": "string",
-                "examples": [
-                  "1741970640"
-                ]
+                "examples": ["1741970640"]
               }
             ]
           ]
@@ -533,18 +461,14 @@
               "calendar_projection_end",
               {
                 "type": "string",
-                "examples": [
-                  "1742057040"
-                ]
+                "examples": ["1742057040"]
               }
             ],
             [
               "calendar_projection_start",
               {
                 "type": "string",
-                "examples": [
-                  "1741970640"
-                ]
+                "examples": ["1741970640"]
               }
             ]
           ]
@@ -563,18 +487,14 @@
               "calendar_projection_end",
               {
                 "type": "string",
-                "examples": [
-                  "1742057040"
-                ]
+                "examples": ["1742057040"]
               }
             ],
             [
               "calendar_projection_start",
               {
                 "type": "string",
-                "examples": [
-                  "1741970640"
-                ]
+                "examples": ["1741970640"]
               }
             ]
           ]
@@ -593,9 +513,7 @@
               "count",
               {
                 "type": "string",
-                "examples": [
-                  "-1"
-                ]
+                "examples": ["-1"]
               }
             ],
             [
@@ -604,9 +522,7 @@
                 "type": "array",
                 "inner": {
                   "type": "string",
-                  "examples": [
-                    "slug"
-                  ]
+                  "examples": ["slug"]
                 }
               }
             ],
@@ -614,9 +530,7 @@
               "partial_response",
               {
                 "type": "string",
-                "examples": [
-                  "1"
-                ]
+                "examples": ["1"]
               }
             ]
           ]
@@ -635,29 +549,21 @@
               "count",
               {
                 "type": "string",
-                "examples": [
-                  "25",
-                  "100"
-                ]
+                "examples": ["25", "100"]
               }
             ],
             [
               "page",
               {
                 "type": "string",
-                "examples": [
-                  "1"
-                ]
+                "examples": ["1"]
               }
             ],
             [
               "state",
               {
                 "type": "string",
-                "examples": [
-                  "transient_failure",
-                  "open"
-                ]
+                "examples": ["transient_failure", "open"]
               }
             ]
           ]
@@ -676,27 +582,21 @@
               "AppEnvironment",
               {
                 "type": "string",
-                "examples": [
-                  "Production"
-                ]
+                "examples": ["Production"]
               }
             ],
             [
               "AppID",
               {
                 "type": "string",
-                "examples": [
-                  "EOSSDK.PhaseRelease.ReleaseBuild"
-                ]
+                "examples": ["EOSSDK.PhaseRelease.ReleaseBuild"]
               }
             ],
             [
               "AppVersion",
               {
                 "type": "string",
-                "examples": [
-                  "1.15.3-21924193 - ++EOSSDK+Release-1.15.3-CL-21924193"
-                ]
+                "examples": ["1.15.3-21924193 - ++EOSSDK+Release-1.15.3-CL-21924193"]
               }
             ],
             [
@@ -714,18 +614,14 @@
               "UploadType",
               {
                 "type": "string",
-                "examples": [
-                  "sdkevents"
-                ]
+                "examples": ["sdkevents"]
               }
             ],
             [
               "UserID",
               {
                 "type": "string",
-                "examples": [
-                  ""
-                ]
+                "examples": [""]
               }
             ]
           ]
@@ -744,18 +640,14 @@
               "calendar_projection_end",
               {
                 "type": "string",
-                "examples": [
-                  "1742057043"
-                ]
+                "examples": ["1742057043"]
               }
             ],
             [
               "calendar_projection_start",
               {
                 "type": "string",
-                "examples": [
-                  "1741970643"
-                ]
+                "examples": ["1741970643"]
               }
             ]
           ]
@@ -774,18 +666,14 @@
               "calendar_projection_end",
               {
                 "type": "string",
-                "examples": [
-                  "1742057043"
-                ]
+                "examples": ["1742057043"]
               }
             ],
             [
               "calendar_projection_start",
               {
                 "type": "string",
-                "examples": [
-                  "1741970643"
-                ]
+                "examples": ["1741970643"]
               }
             ]
           ]
@@ -804,18 +692,14 @@
               "calendar_projection_end",
               {
                 "type": "string",
-                "examples": [
-                  "1742057043"
-                ]
+                "examples": ["1742057043"]
               }
             ],
             [
               "calendar_projection_start",
               {
                 "type": "string",
-                "examples": [
-                  "1741970643"
-                ]
+                "examples": ["1741970643"]
               }
             ]
           ]
@@ -834,46 +718,35 @@
               "AppEnvironment",
               {
                 "type": "string",
-                "examples": [
-                  "3a212c0da4f1438e840c21565df4b6fe"
-                ]
+                "examples": ["3a212c0da4f1438e840c21565df4b6fe"]
               }
             ],
             [
               "AppID",
               {
                 "type": "string",
-                "examples": [
-                  "5f8c5b9a91ca4e33b4afe3040b27e45e"
-                ]
+                "examples": ["5f8c5b9a91ca4e33b4afe3040b27e45e"]
               }
             ],
             [
               "AppVersion",
               {
                 "type": "string",
-                "examples": [
-                  "1.15.3-21924193"
-                ]
+                "examples": ["1.15.3-21924193"]
               }
             ],
             [
               "SessionID",
               {
                 "type": "string",
-                "examples": [
-                  "8D6B85964A3F029F55D1B8B85E76CE2B",
-                  "1E979DC84EBC6543A4AE2BB24F23BC80"
-                ]
+                "examples": ["8D6B85964A3F029F55D1B8B85E76CE2B", "1E979DC84EBC6543A4AE2BB24F23BC80"]
               }
             ],
             [
               "UploadType",
               {
                 "type": "string",
-                "examples": [
-                  "eteventstream"
-                ]
+                "examples": ["eteventstream"]
               }
             ]
           ]

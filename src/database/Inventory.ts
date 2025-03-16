@@ -1,5 +1,4 @@
 import { modelOptions, prop } from "@typegoose/typegoose";
-import { Schema } from "mongoose";
 import { Entries } from "type-fest";
 import { MVSTime } from "../utils/date";
 
@@ -79,7 +78,7 @@ export class InventoryCharacters {
   C027?: InventoryItem;
 
   public static flatten(inventoryCharacters: InventoryCharacters, prefix: string, result: Record<any, any> = {}): Record<any, any> {
-    for (let [key, value] of Object.entries(inventoryCharacters) as Entries<InventoryCharacters>) {
+    for (const [key, value] of Object.entries(inventoryCharacters) as Entries<InventoryCharacters>) {
       if (value != undefined) {
         InventoryItem.flatten(value, prefix + "_" + key, result);
       }
@@ -98,7 +97,7 @@ export class InventoryBattlepass {
   "season-3"?: InventoryItem;
 
   public static flatten(inventoryBattlepass: InventoryBattlepass, prefix: string, result: Record<any, any> = {}) {
-    for (let [key, value] of Object.entries(inventoryBattlepass) as Entries<InventoryBattlepass>) {
+    for (const [key, value] of Object.entries(inventoryBattlepass) as Entries<InventoryBattlepass>) {
       if (value != undefined) {
         result = Object.assign(result, InventoryItem.flatten(value, prefix + "-" + key));
       }
@@ -113,7 +112,7 @@ export class InventorySkins {
   c034_s01?: InventoryItem;
 
   public static flatten(inventorySkins: InventorySkins, prefix: string, result: Record<any, any> = {}) {
-    for (let [key, value] of Object.entries(inventorySkins) as Entries<InventorySkins>) {
+    for (const [key, value] of Object.entries(inventorySkins) as Entries<InventorySkins>) {
       if (value != undefined) {
         result = Object.assign(result, InventoryItem.flatten(value, prefix + "-" + key));
       }

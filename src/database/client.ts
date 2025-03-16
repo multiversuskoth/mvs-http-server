@@ -1,9 +1,5 @@
-import mongoose, { Schema } from "mongoose";
+import mongoose from "mongoose";
 import env from "../env/env";
-import { Player, playerModel } from "./Player";
-import UserSegment from "../enums/user_segment";
-import { accountModel } from "./Account";
-import { configurationModel } from "./Configuration";
 
 // connect().then(async () => {
 //   console.log("try insert");
