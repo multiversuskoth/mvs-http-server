@@ -1,10 +1,9 @@
-import { getModelForClass, modelOptions, prop, Severity } from "@typegoose/typegoose";
+import { getModelForClass, modelOptions, prop } from "@typegoose/typegoose";
 
-import mongoose, { SchemaTypeOptions } from "mongoose";
+import mongoose from "mongoose";
 import toJSONVirtualId from "../utils/toJSONVirtualId";
 import { Entries } from "type-fest";
 import { dotify } from "../utils/dotify";
-import { MVSTime, ObjectWithDateStrings, ObjectWithUnix } from "../utils/date";
 
 @modelOptions({ schemaOptions: { _id: false } })
 export class IdentityAlternateItem {
@@ -46,7 +45,7 @@ export class Identity {
   // @prop({})
   // personal_data?: null;
 
-  @prop()
+  @prop({ required: true })
   alternate!: IdentityAlternate;
 }
 
@@ -74,9 +73,9 @@ export class ConnectionStatus {
 export class Connection {
   @prop({ required: true })
   id!: string;
-  @prop({ required: true })
+  @prop({ type: Number, required: true })
   start_time!: Date;
-  @prop({ required: true })
+  @prop({ type: Number, required: true })
   last_used!: Date;
   @prop({ required: true })
   metadata!: string;
@@ -91,7 +90,7 @@ export class Connection {
 export class AccountAuthWbNetwork {
   id!: mongoose.Types.ObjectId;
 
-  @prop({ required: true })
+  @prop({ type: Number, required: true })
   created_at!: Date;
 }
 
@@ -103,8 +102,8 @@ export class AccountAuth {
 
 @modelOptions({ schemaOptions: { _id: false } })
 export class AccountData {
-  @prop({ required: true })
-  EULAAcceptTimestamp!: number;
+  @prop({ type: Number, required: true })
+  EULAAcceptTimestamp!: Date;
   @prop({ required: true })
   EULAAcceptVersion!: number;
   @prop({ required: true })
@@ -163,7 +162,12 @@ export class AccountPrivacyLevel {
   relationship!: AccountPrivacyLevelRelationship;
 }
 
-@modelOptions({ schemaOptions: { _id: false } })
+@modelOptions({
+  schemaOptions: {
+    _id: false,
+    toJSON: toJSONVirtualId,
+  },
+})
 export class AccountServerData {}
 
 export class Account {
@@ -171,10 +175,12 @@ export class Account {
 
   id!: string;
 
-  @prop({ required: true })
+  @prop({ type: Number, required: true })
   updated_at!: Date;
-
-  @prop({ required: true })
+  @prop({
+    type: Number,
+    required: true,
+  })
   created_at!: Date;
 
   @prop({ required: true })
@@ -237,40 +243,16 @@ export class Account {
   @prop({ required: true })
   server_data!: AccountServerData;
 
+  server_owner_data = {};
+  state_data = {};
+  wbplay_identity = null;
+
   // it might always be null
   // @prop({ required: true })
   // wbplay_identity!: null;
 
   @prop({ type: Connection, required: true })
   connections!: Connection[];
-
-  public static addMeaninglessFields<T>(account: T): T & {
-    server_owner_data: {};
-    state_data: {};
-    wbplay_identity: null;
-  } {
-    return { ...account, server_owner_data: {}, state_data: {}, wbplay_identity: null };
-  }
-
-  public static toMVSTime(account: Omit<Account, "_id">): ObjectWithUnix<Omit<Account, "_id">> {
-    return {
-      ...account,
-      created_at: MVSTime(account.created_at),
-      updated_at: MVSTime(account.updated_at),
-      connections: account.connections.map((connection: Connection) => ({
-        ...connection,
-        last_used: MVSTime(connection.last_used),
-        start_time: MVSTime(connection.start_time),
-      })),
-      auth: {
-        ...account.auth,
-        wb_network: account.auth.wb_network.map((wb_network) => ({
-          ...wb_network,
-          created_at: MVSTime(wb_network.created_at),
-        })),
-      },
-    };
-  }
 
   public static flatten(account: Account, result: Record<any, any> = {}) {
     for (let [key, value] of Object.entries(account) as Entries<Account>) {
@@ -286,4 +268,4 @@ export class Account {
 
 export const accountModel = getModelForClass(Account);
 
-accountModel.schema.set("toJSON", toJSONVirtualId);
+// accountModel.schema.set("toJSON", toJSONVirtualId);

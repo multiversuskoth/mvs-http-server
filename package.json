@@ -3,7 +3,8 @@
   "scripts": {
     "start": "node -r @swc-node/register ./src/index.ts",
     "build": "tsc --project ./",
-    "start:prod": "node ./build/index.js"
+    "start:prod": "node ./build/index.js",
+    "prettify": "prettier . --write"
   },
   "dependencies": {
     "@kishor82/jsonflat": "^0.1.0-beta.1",
@@ -26,6 +27,7 @@
     "@types/dot-object": "^2.1.6",
     "@types/express": "^5.0.0",
     "@types/node": "^22.13.10",
+    "prettier": "^3.5.3",
     "type-fest": "^4.35.0",
     "typescript": "^5.8.2"
   }

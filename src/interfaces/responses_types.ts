@@ -9,7 +9,7 @@ export namespace MVSResponses {
            * 2023-01-23T21:17:48.000Z
            *
            */
-          created_at: string;
+          created_at: number;
           /**
            *
            * pafd8d7950aa1484ea791d06662fa75ce

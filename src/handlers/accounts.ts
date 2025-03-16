@@ -6,7 +6,7 @@ import { MVSQueries } from "../interfaces/queries_types";
 
 export async function handleAccounts_wb_network_bulk(
   req: Request<{}, MVSResponses.Accounts_wb_network_bulk_RESPONSE, MVSRequests.Profiles_bulk_REQUEST, MVSQueries.Accounts_wb_network_bulk_QUERY>,
-  res: Response
+  res: Response,
 ) {
   let responseObject: Array<any> = [];
   let requestBody = req.body;
