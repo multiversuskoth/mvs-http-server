@@ -46,3 +46,5 @@ export const hydraDecoderMiddleware = <T>(req: Request, res: Response, next: Nex
     next();
   }
 };
+
+export function HydraDecode() {}

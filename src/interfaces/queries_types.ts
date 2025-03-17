@@ -82,9 +82,9 @@ export namespace MVSQueries {
     AppVersion: string;
     /**
      *
-     * 8D6B85964A3F029F55D1B8B85E76CE2B
+     * 288DB7BB451287FB0EB77082104ED488
      *
-     * 1E979DC84EBC6543A4AE2BB24F23BC80
+     * FE723BDD42D7172B258EBA8F991C2CC3
      *
      */
     SessionID: string;
@@ -105,7 +105,7 @@ export namespace MVSQueries {
     platform: string;
     /**
      *
-     * C38E9943442CBA5BEF501598D3A8358B
+     * 7815489B4C877F1B2F909DB8F7D1A473
      *
      */
     uid: string;
@@ -195,13 +195,13 @@ export namespace MVSQueries {
   export interface Layout_dokken_layout_type_personalized_account_cosmetics_variant_id_QUERY {
     /**
      *
-     * 1742057040
+     * 1742175002
      *
      */
     calendar_projection_end: string;
     /**
      *
-     * 1741970640
+     * 1742088602
      *
      */
     calendar_projection_start: string;
@@ -210,13 +210,13 @@ export namespace MVSQueries {
   export interface Layout_dokken_layout_type_personalized_battlepass_variant_id_QUERY {
     /**
      *
-     * 1742057040
+     * 1742175002
      *
      */
     calendar_projection_end: string;
     /**
      *
-     * 1741970640
+     * 1742088602
      *
      */
     calendar_projection_start: string;
@@ -225,13 +225,13 @@ export namespace MVSQueries {
   export interface Layout_dokken_layout_type_personalized_currency_variant_id_QUERY {
     /**
      *
-     * 1742057040
+     * 1742175002
      *
      */
     calendar_projection_end: string;
     /**
      *
-     * 1741970640
+     * 1742088602
      *
      */
     calendar_projection_start: string;
@@ -240,13 +240,13 @@ export namespace MVSQueries {
   export interface Layout_dokken_layout_type_personalized_fighter_road_layout_id_QUERY {
     /**
      *
-     * 1742057040
+     * 1742175002
      *
      */
     calendar_projection_end: string;
     /**
      *
-     * 1741970640
+     * 1742088602
      *
      */
     calendar_projection_start: string;
@@ -255,13 +255,13 @@ export namespace MVSQueries {
   export interface Layout_dokken_layout_type_personalized_fighter_variant_id_QUERY {
     /**
      *
-     * 1742057043
+     * 1742175005
      *
      */
     calendar_projection_end: string;
     /**
      *
-     * 1741970643
+     * 1742088605
      *
      */
     calendar_projection_start: string;
@@ -270,13 +270,13 @@ export namespace MVSQueries {
   export interface Layout_dokken_layout_type_personalized_main_variant_id_QUERY {
     /**
      *
-     * 1742057040
+     * 1742175002
      *
      */
     calendar_projection_end: string;
     /**
      *
-     * 1741970640
+     * 1742088602
      *
      */
     calendar_projection_start: string;
@@ -285,13 +285,13 @@ export namespace MVSQueries {
   export interface Layout_dokken_layout_type_personalized_prestige_variant_id_QUERY {
     /**
      *
-     * 1742057043
+     * 1742175005
      *
      */
     calendar_projection_end: string;
     /**
      *
-     * 1741970643
+     * 1742088605
      *
      */
     calendar_projection_start: string;
@@ -300,13 +300,13 @@ export namespace MVSQueries {
   export interface Layout_dokken_layout_type_personalized_rift_variant_id_QUERY {
     /**
      *
-     * 1742057043
+     * 1742175005
      *
      */
     calendar_projection_end: string;
     /**
      *
-     * 1741970643
+     * 1742088605
      *
      */
     calendar_projection_start: string;
@@ -315,13 +315,13 @@ export namespace MVSQueries {
   export interface Layout_dokken_layout_type_personalized_skin_variant_id_QUERY {
     /**
      *
-     * 1742057040
+     * 1742175002
      *
      */
     calendar_projection_end: string;
     /**
      *
-     * 1741970640
+     * 1742088602
      *
      */
     calendar_projection_start: string;
@@ -382,14 +382,15 @@ export namespace MVSQueries {
      *
      */
     partial_response: string;
+  }
+
+  export interface Sdk_v1_default_QUERY {
     /**
      *
-     * server_data.SeasonalData
-     *
-     * server_data.SeasonalData.Season:SeasonFive
+     * WIN
      *
      */
-    fields: string;
+    platformId: string;
   }
 
   export interface Sdk_v1_product_5f8c5b9a91ca4e33b4afe3040b27e45e_QUERY {
@@ -416,48 +417,5 @@ export namespace MVSQueries {
      *
      */
     options: string[];
-  }
-
-  export interface Telemetry_data_datarouter_api_v1_public_data_QUERY {
-    /**
-     *
-     * Production
-     *
-     */
-    AppEnvironment: string;
-    /**
-     *
-     * EOSSDK.PhaseRelease.ReleaseBuild
-     *
-     */
-    AppID: string;
-    /**
-     *
-     * 1.15.3-21924193 - ++EOSSDK+Release-1.15.3-CL-21924193
-     *
-     */
-    AppVersion: string;
-    /**
-     *
-     * {53E2CA1D-4BE5-E0D2-C4F0-A6AAFA330F26}
-     *
-     * {BAE6D68A-4577-B452-469F-EE8B1582B5B0}
-     *
-     * {76595833-4805-1D18-E0ED-F5970356C7D7}
-     *
-     */
-    SessionID: string;
-    /**
-     *
-     * sdkevents
-     *
-     */
-    UploadType: string;
-    /**
-     *
-     *
-     *
-     */
-    UserID: string;
   }
 }
