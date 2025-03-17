@@ -5,9 +5,17 @@ import { HydraDecoder, HydraEncoder } from "mvs-dump";
 const HYDRA_CONTENT_TYPE = "application/x-ag-binary";
 
 export const hydraDecoderMiddleware = <T>(req: Request, res: Response, next: NextFunction) => {
-  if (req.headers["Content-Type"] === HYDRA_CONTENT_TYPE) {
-    const dataChunks: Buffer[] = [];
+  //@ts-ignore
+  if (req.batch) {
+    //console.log("BATCHED_URL:", req.url);
+    next();
+    return;
+  } else {
+    //console.log("URL:", req.url);
+  }
 
+  if (req.headers["content-type"] === HYDRA_CONTENT_TYPE) {
+    const dataChunks: Buffer[] = [];
     // Listen for data chunks
     req.on("data", (chunk) => {
       // TODO : Can we start parsing in smaller chunks?
@@ -38,7 +46,7 @@ export const hydraDecoderMiddleware = <T>(req: Request, res: Response, next: Nex
       encoder.encodeValue(data as any);
       const end = performance.now();
       res.setHeader("X-Hydra-Processing-Time", start - end);
-
+      console.log("SENDING HYDRA");
       res.send(encoder.returnValue());
       return res;
     };

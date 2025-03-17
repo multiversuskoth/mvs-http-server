@@ -12,7 +12,7 @@ export async function handleCommerce_products(req: Request<{}, {}, {}, MVSQuerie
         available_for_purchase: true,
         purchase_once: true,
         allow_free_purchase: false,
-        tags: ["founderpacck"],
+        tags: ["founderpack"],
         reward_actions: [
           {
             action: "profile-update",
@@ -53,8 +53,12 @@ export async function handleCommerce_products(req: Request<{}, {}, {}, MVSQuerie
             proxy_quantity: false,
           },
         ],
-        created_at: 1651556640,
-        updated_at: 1714587810,
+        created_at: {
+          _hydra_unix_date: 1651556640,
+        },
+        updated_at: {
+          _hydra_unix_date: 1714587810,
+        },
         prices: [
           {
             xbox_service: "collections",
@@ -119,8 +123,12 @@ export async function handleCommerce_products(req: Request<{}, {}, {}, MVSQuerie
             proxy_quantity: false,
           },
         ],
-        created_at: 1651556640,
-        updated_at: 1714587810,
+        created_at: {
+          _hydra_unix_date: 1651556640,
+        },
+        updated_at: {
+          _hydra_unix_date: 1714587810,
+        },
         prices: [
           {
             item_id: "FNDPK1",
@@ -244,8 +252,12 @@ export async function handleCommerce_products(req: Request<{}, {}, {}, MVSQuerie
             proxy_quantity: false,
           },
         ],
-        created_at: 1651556640,
-        updated_at: 1715212180,
+        created_at: {
+          _hydra_unix_date: 1651556640,
+        },
+        updated_at: {
+          _hydra_unix_date: 1715212180,
+        },
         prices: [
           {
             xbox_service: "collections",
@@ -347,8 +359,12 @@ export async function handleCommerce_products(req: Request<{}, {}, {}, MVSQuerie
             proxy_quantity: false,
           },
         ],
-        created_at: 1651556640,
-        updated_at: 1715212180,
+        created_at: {
+          _hydra_unix_date: 1651556640,
+        },
+        updated_at: {
+          _hydra_unix_date: 1715212180,
+        },
         prices: [
           {
             xbox_service: "collections",
@@ -430,8 +446,12 @@ export async function handleCommerce_products(req: Request<{}, {}, {}, MVSQuerie
             proxy_quantity: false,
           },
         ],
-        created_at: 1651556640,
-        updated_at: 1715212180,
+        created_at: {
+          _hydra_unix_date: 1651556640,
+        },
+        updated_at: {
+          _hydra_unix_date: 1715212180,
+        },
         prices: [
           {
             item_id: "FNDPK2",
@@ -575,8 +595,12 @@ export async function handleCommerce_products(req: Request<{}, {}, {}, MVSQuerie
             proxy_quantity: false,
           },
         ],
-        created_at: 1651556640,
-        updated_at: 1715212180,
+        created_at: {
+          _hydra_unix_date: 1651556640,
+        },
+        updated_at: {
+          _hydra_unix_date: 1715212180,
+        },
         prices: [
           {
             item_id: "FNDPK3",
@@ -662,8 +686,12 @@ export async function handleCommerce_products(req: Request<{}, {}, {}, MVSQuerie
             proxy_quantity: false,
           },
         ],
-        created_at: 1657745616,
-        updated_at: 1715212180,
+        created_at: {
+          _hydra_unix_date: 1657745616,
+        },
+        updated_at: {
+          _hydra_unix_date: 1715212180,
+        },
         prices: [
           {
             item_id: "PSPPK1",
@@ -780,8 +808,12 @@ export async function handleCommerce_products(req: Request<{}, {}, {}, MVSQuerie
             proxy_quantity: false,
           },
         ],
-        created_at: 1657745616,
-        updated_at: 1714587810,
+        created_at: {
+          _hydra_unix_date: 1657745616,
+        },
+        updated_at: {
+          _hydra_unix_date: 1714587810,
+        },
         prices: [
           {
             item_id: 2015370,
@@ -869,8 +901,12 @@ export async function handleCommerce_products(req: Request<{}, {}, {}, MVSQuerie
             proxy_quantity: false,
           },
         ],
-        created_at: 1657745616,
-        updated_at: 1715212180,
+        created_at: {
+          _hydra_unix_date: 1657745616,
+        },
+        updated_at: {
+          _hydra_unix_date: 1715212180,
+        },
         prices: [
           {
             item_id: 2015371,
@@ -978,8 +1014,12 @@ export async function handleCommerce_products(req: Request<{}, {}, {}, MVSQuerie
             proxy_quantity: false,
           },
         ],
-        created_at: 1657745616,
-        updated_at: 1715212180,
+        created_at: {
+          _hydra_unix_date: 1657745616,
+        },
+        updated_at: {
+          _hydra_unix_date: 1715212180,
+        },
         prices: [
           {
             item_id: 2015372,
@@ -1040,8 +1080,12 @@ export async function handleCommerce_products(req: Request<{}, {}, {}, MVSQuerie
             proxy_quantity: false,
           },
         ],
-        created_at: 1658851306,
-        updated_at: 1714587810,
+        created_at: {
+          _hydra_unix_date: 1658851306,
+        },
+        updated_at: {
+          _hydra_unix_date: 1714587810,
+        },
         prices: [
           {
             item_id: "99a72ace1e274a3c8ffb0e756491abed",
@@ -1122,8 +1166,12 @@ export async function handleCommerce_products(req: Request<{}, {}, {}, MVSQuerie
             proxy_quantity: false,
           },
         ],
-        created_at: 1658851306,
-        updated_at: 1715212180,
+        created_at: {
+          _hydra_unix_date: 1658851306,
+        },
+        updated_at: {
+          _hydra_unix_date: 1715212180,
+        },
         prices: [
           {
             item_id: "390ac103267843acabc687b98c8bbae2",
@@ -1224,8 +1272,12 @@ export async function handleCommerce_products(req: Request<{}, {}, {}, MVSQuerie
             proxy_quantity: false,
           },
         ],
-        created_at: 1658851306,
-        updated_at: 1715212180,
+        created_at: {
+          _hydra_unix_date: 1658851306,
+        },
+        updated_at: {
+          _hydra_unix_date: 1715212180,
+        },
         prices: [
           {
             item_id: "558770bf98194384a75dca20a3078b15",
@@ -1267,8 +1319,12 @@ export async function handleCommerce_products(req: Request<{}, {}, {}, MVSQuerie
             proxy_quantity: false,
           },
         ],
-        created_at: 1660582920,
-        updated_at: 1714587810,
+        created_at: {
+          _hydra_unix_date: 1660582920,
+        },
+        updated_at: {
+          _hydra_unix_date: 1714587810,
+        },
         prices: [
           {
             xbox_service: "collections",
@@ -1301,8 +1357,12 @@ export async function handleCommerce_products(req: Request<{}, {}, {}, MVSQuerie
             proxy_quantity: false,
           },
         ],
-        created_at: 1666644180,
-        updated_at: 1667232117,
+        created_at: {
+          _hydra_unix_date: 1666644180,
+        },
+        updated_at: {
+          _hydra_unix_date: 1667232117,
+        },
         prices: [
           {
             item_id: "twitch_reward_scoobtober2022_tier_1",
@@ -1331,8 +1391,12 @@ export async function handleCommerce_products(req: Request<{}, {}, {}, MVSQuerie
             proxy_quantity: false,
           },
         ],
-        created_at: 1666644325,
-        updated_at: 1666644325,
+        created_at: {
+          _hydra_unix_date: 1666644325,
+        },
+        updated_at: {
+          _hydra_unix_date: 1666644325,
+        },
         prices: [
           {
             item_id: "twitch_reward_scoobtober2022_tier_2",
@@ -1361,8 +1425,12 @@ export async function handleCommerce_products(req: Request<{}, {}, {}, MVSQuerie
             proxy_quantity: false,
           },
         ],
-        created_at: 1666644440,
-        updated_at: 1666644440,
+        created_at: {
+          _hydra_unix_date: 1666644440,
+        },
+        updated_at: {
+          _hydra_unix_date: 1666644440,
+        },
         prices: [
           {
             item_id: "twitch_reward_scoobtober2022_tier_3",
@@ -1391,8 +1459,12 @@ export async function handleCommerce_products(req: Request<{}, {}, {}, MVSQuerie
             proxy_quantity: false,
           },
         ],
-        created_at: 1666644497,
-        updated_at: 1666644497,
+        created_at: {
+          _hydra_unix_date: 1666644497,
+        },
+        updated_at: {
+          _hydra_unix_date: 1666644497,
+        },
         prices: [
           {
             item_id: "twitch_reward_scoobtober2022_tier_4",
@@ -1432,8 +1504,12 @@ export async function handleCommerce_products(req: Request<{}, {}, {}, MVSQuerie
             proxy_quantity: false,
           },
         ],
-        created_at: 1668531771,
-        updated_at: 1715212180,
+        created_at: {
+          _hydra_unix_date: 1668531771,
+        },
+        updated_at: {
+          _hydra_unix_date: 1715212180,
+        },
         prices: [
           {
             item_id: "PSPPK2",
@@ -1518,8 +1594,12 @@ export async function handleCommerce_products(req: Request<{}, {}, {}, MVSQuerie
             proxy_quantity: false,
           },
         ],
-        created_at: 1668531771,
-        updated_at: 1714587810,
+        created_at: {
+          _hydra_unix_date: 1668531771,
+        },
+        updated_at: {
+          _hydra_unix_date: 1714587810,
+        },
         prices: [
           {
             xbox_service: "collections",
@@ -1562,8 +1642,12 @@ export async function handleCommerce_products(req: Request<{}, {}, {}, MVSQuerie
             proxy_quantity: false,
           },
         ],
-        created_at: 1675098153,
-        updated_at: 1714587810,
+        created_at: {
+          _hydra_unix_date: 1675098153,
+        },
+        updated_at: {
+          _hydra_unix_date: 1714587810,
+        },
         prices: [
           {
             xbox_service: "collections",
@@ -1607,8 +1691,12 @@ export async function handleCommerce_products(req: Request<{}, {}, {}, MVSQuerie
             proxy_quantity: false,
           },
         ],
-        created_at: 1675098153,
-        updated_at: 1715212180,
+        created_at: {
+          _hydra_unix_date: 1675098153,
+        },
+        updated_at: {
+          _hydra_unix_date: 1715212180,
+        },
         prices: [
           {
             item_id: "PSPPK3",
@@ -1725,8 +1813,12 @@ export async function handleCommerce_products(req: Request<{}, {}, {}, MVSQuerie
             proxy_quantity: false,
           },
         ],
-        created_at: 1675098153,
-        updated_at: 1714587810,
+        created_at: {
+          _hydra_unix_date: 1675098153,
+        },
+        updated_at: {
+          _hydra_unix_date: 1714587810,
+        },
         prices: [
           {
             item_id: 1,
@@ -1797,8 +1889,12 @@ export async function handleCommerce_products(req: Request<{}, {}, {}, MVSQuerie
             proxy_quantity: false,
           },
         ],
-        created_at: 1675098153,
-        updated_at: 1714587810,
+        created_at: {
+          _hydra_unix_date: 1675098153,
+        },
+        updated_at: {
+          _hydra_unix_date: 1714587810,
+        },
         prices: [
           {
             item_id: 1,
@@ -1880,8 +1976,12 @@ export async function handleCommerce_products(req: Request<{}, {}, {}, MVSQuerie
             proxy_quantity: false,
           },
         ],
-        created_at: 1675098153,
-        updated_at: 1715212180,
+        created_at: {
+          _hydra_unix_date: 1675098153,
+        },
+        updated_at: {
+          _hydra_unix_date: 1715212180,
+        },
         prices: [
           {
             item_id: 1,
@@ -1908,8 +2008,12 @@ export async function handleCommerce_products(req: Request<{}, {}, {}, MVSQuerie
         tags: ["gleamiumpack"],
         reward_actions: [],
         items: [],
-        created_at: 1714587810,
-        updated_at: 1734456692,
+        created_at: {
+          _hydra_unix_date: 1714587810,
+        },
+        updated_at: {
+          _hydra_unix_date: 1734456692,
+        },
         prices: [
           {
             item_id: "SEPC00",
@@ -2048,8 +2152,12 @@ export async function handleCommerce_products(req: Request<{}, {}, {}, MVSQuerie
         tags: ["gleamiumpack"],
         reward_actions: [],
         items: [],
-        created_at: 1714587810,
-        updated_at: 1734456692,
+        created_at: {
+          _hydra_unix_date: 1714587810,
+        },
+        updated_at: {
+          _hydra_unix_date: 1734456692,
+        },
         prices: [
           {
             item_id: 1,
@@ -2188,8 +2296,12 @@ export async function handleCommerce_products(req: Request<{}, {}, {}, MVSQuerie
         tags: ["gleamiumpack"],
         reward_actions: [],
         items: [],
-        created_at: 1714587810,
-        updated_at: 1734456692,
+        created_at: {
+          _hydra_unix_date: 1714587810,
+        },
+        updated_at: {
+          _hydra_unix_date: 1734456692,
+        },
         prices: [
           {
             item_id: 2,
@@ -2328,8 +2440,12 @@ export async function handleCommerce_products(req: Request<{}, {}, {}, MVSQuerie
         tags: ["gleamiumpack"],
         reward_actions: [],
         items: [],
-        created_at: 1714587810,
-        updated_at: 1734456692,
+        created_at: {
+          _hydra_unix_date: 1714587810,
+        },
+        updated_at: {
+          _hydra_unix_date: 1734456692,
+        },
         prices: [
           {
             item_id: 3,
@@ -2468,8 +2584,12 @@ export async function handleCommerce_products(req: Request<{}, {}, {}, MVSQuerie
         tags: ["character-special", "season-1", "steam", "xbox", "playstation", "egs"],
         reward_actions: [],
         items: [],
-        created_at: 1714587810,
-        updated_at: 1734456694,
+        created_at: {
+          _hydra_unix_date: 1714587810,
+        },
+        updated_at: {
+          _hydra_unix_date: 1734456694,
+        },
         prices: [
           {
             item_id: "SONYCHARBUNDLE20",
@@ -2608,8 +2728,12 @@ export async function handleCommerce_products(req: Request<{}, {}, {}, MVSQuerie
         tags: ["playstation", "starterpack", "xbox"],
         reward_actions: [],
         items: [],
-        created_at: 1714587810,
-        updated_at: 1734456694,
+        created_at: {
+          _hydra_unix_date: 1714587810,
+        },
+        updated_at: {
+          _hydra_unix_date: 1734456694,
+        },
         prices: [
           {
             item_id: "SNYSTARTBUNDLE10",
@@ -2748,8 +2872,12 @@ export async function handleCommerce_products(req: Request<{}, {}, {}, MVSQuerie
         tags: ["starterpack", "playstation", "xbox"],
         reward_actions: [],
         items: [],
-        created_at: 1714587810,
-        updated_at: 1734456694,
+        created_at: {
+          _hydra_unix_date: 1714587810,
+        },
+        updated_at: {
+          _hydra_unix_date: 1734456694,
+        },
         prices: [
           {
             item_id: "SNYSTARTBUNDLE20",
@@ -2888,8 +3016,12 @@ export async function handleCommerce_products(req: Request<{}, {}, {}, MVSQuerie
         tags: ["starterpack", "playstation", "xbox"],
         reward_actions: [],
         items: [],
-        created_at: 1714587810,
-        updated_at: 1734456694,
+        created_at: {
+          _hydra_unix_date: 1714587810,
+        },
+        updated_at: {
+          _hydra_unix_date: 1734456694,
+        },
         prices: [
           {
             item_id: "SNYSTARTBUNDLE05",
@@ -3024,8 +3156,12 @@ export async function handleCommerce_products(req: Request<{}, {}, {}, MVSQuerie
         tags: ["bundle", "xbox"],
         reward_actions: [],
         items: [],
-        created_at: 1714587810,
-        updated_at: 1714587810,
+        created_at: {
+          _hydra_unix_date: 1714587810,
+        },
+        updated_at: {
+          _hydra_unix_date: 1714587810,
+        },
         prices: [
           {
             xbox_service: "collections",
@@ -3052,8 +3188,12 @@ export async function handleCommerce_products(req: Request<{}, {}, {}, MVSQuerie
         tags: ["bundle", "playstation", "mvp-pack", "season-1"],
         reward_actions: [],
         items: [],
-        created_at: 1714587810,
-        updated_at: 1721750495,
+        created_at: {
+          _hydra_unix_date: 1714587810,
+        },
+        updated_at: {
+          _hydra_unix_date: 1721750495,
+        },
         prices: [
           {
             item_id: "MVSPSPLUSPAK00S1",
@@ -3126,8 +3266,12 @@ export async function handleCommerce_products(req: Request<{}, {}, {}, MVSQuerie
         tags: ["gleamiumpack"],
         reward_actions: [],
         items: [],
-        created_at: 1714587810,
-        updated_at: 1734456692,
+        created_at: {
+          _hydra_unix_date: 1714587810,
+        },
+        updated_at: {
+          _hydra_unix_date: 1734456692,
+        },
         prices: [
           {
             item_id: "SPS5CURR10000XXX",
@@ -3268,8 +3412,12 @@ export async function handleCommerce_products(req: Request<{}, {}, {}, MVSQuerie
             proxy_quantity: false,
           },
         ],
-        created_at: 1716492786,
-        updated_at: 1716492786,
+        created_at: {
+          _hydra_unix_date: 1716492786,
+        },
+        updated_at: {
+          _hydra_unix_date: 1716492786,
+        },
         prices: [
           {
             item_id: "banner_presently_shocked_epic",
@@ -3298,8 +3446,12 @@ export async function handleCommerce_products(req: Request<{}, {}, {}, MVSQuerie
             proxy_quantity: false,
           },
         ],
-        created_at: 1716492825,
-        updated_at: 1716492825,
+        created_at: {
+          _hydra_unix_date: 1716492825,
+        },
+        updated_at: {
+          _hydra_unix_date: 1716492825,
+        },
         prices: [
           {
             item_id: "skin_c012_s07",
@@ -3329,8 +3481,12 @@ export async function handleCommerce_products(req: Request<{}, {}, {}, MVSQuerie
             proxy_quantity: false,
           },
         ],
-        created_at: 1716493008,
-        updated_at: 1716493008,
+        created_at: {
+          _hydra_unix_date: 1716493008,
+        },
+        updated_at: {
+          _hydra_unix_date: 1716493008,
+        },
         prices: [
           {
             item_id: "reward_gleamium_100",
@@ -3360,8 +3516,12 @@ export async function handleCommerce_products(req: Request<{}, {}, {}, MVSQuerie
             proxy_quantity: false,
           },
         ],
-        created_at: 1717179653,
-        updated_at: 1717179653,
+        created_at: {
+          _hydra_unix_date: 1717179653,
+        },
+        updated_at: {
+          _hydra_unix_date: 1717179653,
+        },
         prices: [
           {
             item_id: 11,
@@ -3432,8 +3592,12 @@ export async function handleCommerce_products(req: Request<{}, {}, {}, MVSQuerie
             proxy_quantity: false,
           },
         ],
-        created_at: 1717179653,
-        updated_at: 1721750495,
+        created_at: {
+          _hydra_unix_date: 1717179653,
+        },
+        updated_at: {
+          _hydra_unix_date: 1721750495,
+        },
         prices: [
           {
             item_id: 12,
@@ -3504,8 +3668,12 @@ export async function handleCommerce_products(req: Request<{}, {}, {}, MVSQuerie
             proxy_quantity: false,
           },
         ],
-        created_at: 1717179653,
-        updated_at: 1717179653,
+        created_at: {
+          _hydra_unix_date: 1717179653,
+        },
+        updated_at: {
+          _hydra_unix_date: 1717179653,
+        },
         prices: [
           {
             item_id: 13,
@@ -3576,8 +3744,12 @@ export async function handleCommerce_products(req: Request<{}, {}, {}, MVSQuerie
             proxy_quantity: false,
           },
         ],
-        created_at: 1717179653,
-        updated_at: 1717179653,
+        created_at: {
+          _hydra_unix_date: 1717179653,
+        },
+        updated_at: {
+          _hydra_unix_date: 1717179653,
+        },
         prices: [
           {
             item_id: 14,
@@ -3647,8 +3819,12 @@ export async function handleCommerce_products(req: Request<{}, {}, {}, MVSQuerie
             proxy_quantity: false,
           },
         ],
-        created_at: 1719336348,
-        updated_at: 1721750495,
+        created_at: {
+          _hydra_unix_date: 1719336348,
+        },
+        updated_at: {
+          _hydra_unix_date: 1721750495,
+        },
         prices: [
           {
             item_id: "ring_out_vfx_love_splosion",
@@ -3677,8 +3853,12 @@ export async function handleCommerce_products(req: Request<{}, {}, {}, MVSQuerie
             proxy_quantity: false,
           },
         ],
-        created_at: 1719336395,
-        updated_at: 1721750495,
+        created_at: {
+          _hydra_unix_date: 1719336395,
+        },
+        updated_at: {
+          _hydra_unix_date: 1721750495,
+        },
         prices: [
           {
             item_id: "emote_gg_spray",
@@ -3708,8 +3888,12 @@ export async function handleCommerce_products(req: Request<{}, {}, {}, MVSQuerie
             proxy_quantity: false,
           },
         ],
-        created_at: 1719336443,
-        updated_at: 1721750495,
+        created_at: {
+          _hydra_unix_date: 1719336443,
+        },
+        updated_at: {
+          _hydra_unix_date: 1721750495,
+        },
         prices: [
           {
             item_id: "reward_gleamium_100_drop_2",
@@ -3736,8 +3920,12 @@ export async function handleCommerce_products(req: Request<{}, {}, {}, MVSQuerie
         tags: ["starterpack", "season-2", "steam", "xbox", "playstation", "egs"],
         reward_actions: [],
         items: [],
-        created_at: 1721750495,
-        updated_at: 1734456694,
+        created_at: {
+          _hydra_unix_date: 1721750495,
+        },
+        updated_at: {
+          _hydra_unix_date: 1734456694,
+        },
         prices: [
           {
             item_id: "S2ST01",
@@ -3876,8 +4064,12 @@ export async function handleCommerce_products(req: Request<{}, {}, {}, MVSQuerie
         tags: ["bundle", "season-2", "steam", "xbox", "playstation", "egs"],
         reward_actions: [],
         items: [],
-        created_at: 1721750495,
-        updated_at: 1734456694,
+        created_at: {
+          _hydra_unix_date: 1721750495,
+        },
+        updated_at: {
+          _hydra_unix_date: 1734456694,
+        },
         prices: [
           {
             item_id: "S2BE01",
@@ -4016,8 +4208,12 @@ export async function handleCommerce_products(req: Request<{}, {}, {}, MVSQuerie
         tags: ["starterpack", "season-2", "steam", "xbox", "playstation", "egs"],
         reward_actions: [],
         items: [],
-        created_at: 1721750495,
-        updated_at: 1734456694,
+        created_at: {
+          _hydra_unix_date: 1721750495,
+        },
+        updated_at: {
+          _hydra_unix_date: 1734456694,
+        },
         prices: [
           {
             item_id: "S2ST02",
@@ -4156,8 +4352,12 @@ export async function handleCommerce_products(req: Request<{}, {}, {}, MVSQuerie
         tags: ["bundle", "season-2", "steam", "xbox", "playstation", "egs"],
         reward_actions: [],
         items: [],
-        created_at: 1721750495,
-        updated_at: 1734456694,
+        created_at: {
+          _hydra_unix_date: 1721750495,
+        },
+        updated_at: {
+          _hydra_unix_date: 1734456694,
+        },
         prices: [
           {
             item_id: "S2BE02",
@@ -4296,8 +4496,12 @@ export async function handleCommerce_products(req: Request<{}, {}, {}, MVSQuerie
         tags: ["starterpack", "season-2", "steam", "xbox", "playstation", "egs"],
         reward_actions: [],
         items: [],
-        created_at: 1721750495,
-        updated_at: 1734456694,
+        created_at: {
+          _hydra_unix_date: 1721750495,
+        },
+        updated_at: {
+          _hydra_unix_date: 1734456694,
+        },
         prices: [
           {
             item_id: "S2ST03",
@@ -4436,8 +4640,12 @@ export async function handleCommerce_products(req: Request<{}, {}, {}, MVSQuerie
         tags: ["bundle", "season-2", "steam", "xbox", "playstation", "egs"],
         reward_actions: [],
         items: [],
-        created_at: 1721750495,
-        updated_at: 1734456694,
+        created_at: {
+          _hydra_unix_date: 1721750495,
+        },
+        updated_at: {
+          _hydra_unix_date: 1734456694,
+        },
         prices: [
           {
             item_id: "S2BE03",
@@ -4576,8 +4784,12 @@ export async function handleCommerce_products(req: Request<{}, {}, {}, MVSQuerie
         tags: ["starterpack", "season-2", "steam", "xbox", "playstation", "egs"],
         reward_actions: [],
         items: [],
-        created_at: 1721750495,
-        updated_at: 1734456694,
+        created_at: {
+          _hydra_unix_date: 1721750495,
+        },
+        updated_at: {
+          _hydra_unix_date: 1734456694,
+        },
         prices: [
           {
             item_id: "S2ST04",
@@ -4716,8 +4928,12 @@ export async function handleCommerce_products(req: Request<{}, {}, {}, MVSQuerie
         tags: ["bundle", "season-2", "steam", "xbox", "playstation", "egs"],
         reward_actions: [],
         items: [],
-        created_at: 1721750495,
-        updated_at: 1734456694,
+        created_at: {
+          _hydra_unix_date: 1721750495,
+        },
+        updated_at: {
+          _hydra_unix_date: 1734456694,
+        },
         prices: [
           {
             item_id: "S2BE04",
@@ -4856,8 +5072,12 @@ export async function handleCommerce_products(req: Request<{}, {}, {}, MVSQuerie
         tags: ["starterpack", "season-2", "steam", "xbox", "playstation", "egs"],
         reward_actions: [],
         items: [],
-        created_at: 1721750495,
-        updated_at: 1734456694,
+        created_at: {
+          _hydra_unix_date: 1721750495,
+        },
+        updated_at: {
+          _hydra_unix_date: 1734456694,
+        },
         prices: [
           {
             item_id: "S2ST05",
@@ -4996,8 +5216,12 @@ export async function handleCommerce_products(req: Request<{}, {}, {}, MVSQuerie
         tags: ["bundle", "season-2", "steam", "xbox", "playstation", "egs"],
         reward_actions: [],
         items: [],
-        created_at: 1721750495,
-        updated_at: 1734456694,
+        created_at: {
+          _hydra_unix_date: 1721750495,
+        },
+        updated_at: {
+          _hydra_unix_date: 1734456694,
+        },
         prices: [
           {
             item_id: "S2BE05",
@@ -5136,8 +5360,12 @@ export async function handleCommerce_products(req: Request<{}, {}, {}, MVSQuerie
         tags: ["starterpack", "season-2", "steam", "xbox", "playstation", "egs"],
         reward_actions: [],
         items: [],
-        created_at: 1721750495,
-        updated_at: 1734456694,
+        created_at: {
+          _hydra_unix_date: 1721750495,
+        },
+        updated_at: {
+          _hydra_unix_date: 1734456694,
+        },
         prices: [
           {
             item_id: "S2ST06",
@@ -5276,8 +5504,12 @@ export async function handleCommerce_products(req: Request<{}, {}, {}, MVSQuerie
         tags: ["bundle", "season-2", "steam", "xbox", "playstation", "egs"],
         reward_actions: [],
         items: [],
-        created_at: 1721750495,
-        updated_at: 1734456694,
+        created_at: {
+          _hydra_unix_date: 1721750495,
+        },
+        updated_at: {
+          _hydra_unix_date: 1734456694,
+        },
         prices: [
           {
             item_id: "S2BE06",
@@ -5416,8 +5648,12 @@ export async function handleCommerce_products(req: Request<{}, {}, {}, MVSQuerie
         tags: ["starterpack", "season-2", "steam", "xbox", "playstation", "egs"],
         reward_actions: [],
         items: [],
-        created_at: 1721750495,
-        updated_at: 1734456694,
+        created_at: {
+          _hydra_unix_date: 1721750495,
+        },
+        updated_at: {
+          _hydra_unix_date: 1734456694,
+        },
         prices: [
           {
             item_id: "S2ST07",
@@ -5556,8 +5792,12 @@ export async function handleCommerce_products(req: Request<{}, {}, {}, MVSQuerie
         tags: ["bundle", "season-2", "steam", "xbox", "playstation", "egs"],
         reward_actions: [],
         items: [],
-        created_at: 1721750495,
-        updated_at: 1734456694,
+        created_at: {
+          _hydra_unix_date: 1721750495,
+        },
+        updated_at: {
+          _hydra_unix_date: 1734456694,
+        },
         prices: [
           {
             item_id: "S2BE07",
@@ -5696,8 +5936,12 @@ export async function handleCommerce_products(req: Request<{}, {}, {}, MVSQuerie
         tags: ["character-special", "season-2", "steam", "xbox", "playstation", "egs"],
         reward_actions: [],
         items: [],
-        created_at: 1721750495,
-        updated_at: 1734456694,
+        created_at: {
+          _hydra_unix_date: 1721750495,
+        },
+        updated_at: {
+          _hydra_unix_date: 1734456694,
+        },
         prices: [
           {
             item_id: "SNYCHARBUNDLES02",
@@ -5836,8 +6080,12 @@ export async function handleCommerce_products(req: Request<{}, {}, {}, MVSQuerie
         tags: ["gleamiumpack"],
         reward_actions: [],
         items: [],
-        created_at: 1721750495,
-        updated_at: 1737062593,
+        created_at: {
+          _hydra_unix_date: 1721750495,
+        },
+        updated_at: {
+          _hydra_unix_date: 1737062593,
+        },
         prices: [
           {
             item_id: "GSPC01",
@@ -5982,8 +6230,12 @@ export async function handleCommerce_products(req: Request<{}, {}, {}, MVSQuerie
         tags: ["bundle", "playstation", "season-2", "mvp-pack", "xbox"],
         reward_actions: [],
         items: [],
-        created_at: 1721750495,
-        updated_at: 1721750495,
+        created_at: {
+          _hydra_unix_date: 1721750495,
+        },
+        updated_at: {
+          _hydra_unix_date: 1721750495,
+        },
         prices: [
           {
             xbox_service: "collections",
@@ -6010,8 +6262,12 @@ export async function handleCommerce_products(req: Request<{}, {}, {}, MVSQuerie
         tags: ["bundle", "playstation", "season-2", "mvp-pack", "xbox"],
         reward_actions: [],
         items: [],
-        created_at: 1721750495,
-        updated_at: 1721750495,
+        created_at: {
+          _hydra_unix_date: 1721750495,
+        },
+        updated_at: {
+          _hydra_unix_date: 1721750495,
+        },
         prices: [
           {
             item_id: "MVSPSPLUSPAK00S2",
@@ -6086,8 +6342,12 @@ export async function handleCommerce_products(req: Request<{}, {}, {}, MVSQuerie
             proxy_quantity: false,
           },
         ],
-        created_at: 1721750495,
-        updated_at: 1721750495,
+        created_at: {
+          _hydra_unix_date: 1721750495,
+        },
+        updated_at: {
+          _hydra_unix_date: 1721750495,
+        },
         prices: [
           {
             item_id: "twitch_icon_eyes_of_a_warrior",
@@ -6116,8 +6376,12 @@ export async function handleCommerce_products(req: Request<{}, {}, {}, MVSQuerie
             proxy_quantity: false,
           },
         ],
-        created_at: 1721750495,
-        updated_at: 1721750495,
+        created_at: {
+          _hydra_unix_date: 1721750495,
+        },
+        updated_at: {
+          _hydra_unix_date: 1721750495,
+        },
         prices: [
           {
             item_id: "twitch_emote_snack_of_champs",
@@ -6146,8 +6410,12 @@ export async function handleCommerce_products(req: Request<{}, {}, {}, MVSQuerie
             proxy_quantity: false,
           },
         ],
-        created_at: 1721750495,
-        updated_at: 1721750495,
+        created_at: {
+          _hydra_unix_date: 1721750495,
+        },
+        updated_at: {
+          _hydra_unix_date: 1721750495,
+        },
         prices: [
           {
             item_id: "twitch_ring_out_olympics_running",
@@ -6178,8 +6446,12 @@ export async function handleCommerce_products(req: Request<{}, {}, {}, MVSQuerie
         tags: [],
         reward_actions: [],
         items: [],
-        created_at: 1724169750,
-        updated_at: 1734456694,
+        created_at: {
+          _hydra_unix_date: 1724169750,
+        },
+        updated_at: {
+          _hydra_unix_date: 1734456694,
+        },
         prices: [
           {
             item_id: 31,
@@ -6314,8 +6586,12 @@ export async function handleCommerce_products(req: Request<{}, {}, {}, MVSQuerie
         tags: [],
         reward_actions: [],
         items: [],
-        created_at: 1724169750,
-        updated_at: 1724169750,
+        created_at: {
+          _hydra_unix_date: 1724169750,
+        },
+        updated_at: {
+          _hydra_unix_date: 1724169750,
+        },
         prices: [
           {
             item_id: 32,
@@ -6456,8 +6732,12 @@ export async function handleCommerce_products(req: Request<{}, {}, {}, MVSQuerie
             proxy_quantity: false,
           },
         ],
-        created_at: 1726498342,
-        updated_at: 1726498342,
+        created_at: {
+          _hydra_unix_date: 1726498342,
+        },
+        updated_at: {
+          _hydra_unix_date: 1726498342,
+        },
         prices: [
           {
             item_id: "twitch_emote_beckon",
@@ -6486,8 +6766,12 @@ export async function handleCommerce_products(req: Request<{}, {}, {}, MVSQuerie
             proxy_quantity: false,
           },
         ],
-        created_at: 1726498342,
-        updated_at: 1726498342,
+        created_at: {
+          _hydra_unix_date: 1726498342,
+        },
+        updated_at: {
+          _hydra_unix_date: 1726498342,
+        },
         prices: [
           {
             item_id: "twitch_icon_blossom",
@@ -6517,8 +6801,12 @@ export async function handleCommerce_products(req: Request<{}, {}, {}, MVSQuerie
             proxy_quantity: false,
           },
         ],
-        created_at: 1726498342,
-        updated_at: 1726498342,
+        created_at: {
+          _hydra_unix_date: 1726498342,
+        },
+        updated_at: {
+          _hydra_unix_date: 1726498342,
+        },
         prices: [
           {
             item_id: "twitch_gleamium_100_drop_3",
@@ -6552,8 +6840,12 @@ export async function handleCommerce_products(req: Request<{}, {}, {}, MVSQuerie
             proxy_quantity: false,
           },
         ],
-        created_at: 1726589224,
-        updated_at: 1726595041,
+        created_at: {
+          _hydra_unix_date: 1726589224,
+        },
+        updated_at: {
+          _hydra_unix_date: 1726595041,
+        },
         prices: [
           {
             xbox_service: "collections",
@@ -6591,8 +6883,12 @@ export async function handleCommerce_products(req: Request<{}, {}, {}, MVSQuerie
             proxy_quantity: false,
           },
         ],
-        created_at: 1726589224,
-        updated_at: 1726594992,
+        created_at: {
+          _hydra_unix_date: 1726589224,
+        },
+        updated_at: {
+          _hydra_unix_date: 1726594992,
+        },
         prices: [
           {
             item_id: "PSPS03",
@@ -6665,8 +6961,12 @@ export async function handleCommerce_products(req: Request<{}, {}, {}, MVSQuerie
         tags: ["bundle", "steam", "xbox", "playstation", "season-3", "egs"],
         reward_actions: [],
         items: [],
-        created_at: 1729003963,
-        updated_at: 1734456694,
+        created_at: {
+          _hydra_unix_date: 1729003963,
+        },
+        updated_at: {
+          _hydra_unix_date: 1734456694,
+        },
         prices: [
           {
             item_id: "SNYCHARBUNDLES05",
@@ -6805,8 +7105,12 @@ export async function handleCommerce_products(req: Request<{}, {}, {}, MVSQuerie
         tags: ["playstation", "xbox", "steam", "egs", "season-3"],
         reward_actions: [],
         items: [],
-        created_at: 1729003963,
-        updated_at: 1734456694,
+        created_at: {
+          _hydra_unix_date: 1729003963,
+        },
+        updated_at: {
+          _hydra_unix_date: 1734456694,
+        },
         prices: [
           {
             item_id: "SNYCHARBUNDLES06",
@@ -6947,8 +7251,12 @@ export async function handleCommerce_products(req: Request<{}, {}, {}, MVSQuerie
             proxy_quantity: false,
           },
         ],
-        created_at: 1729169810,
-        updated_at: 1729169810,
+        created_at: {
+          _hydra_unix_date: 1729169810,
+        },
+        updated_at: {
+          _hydra_unix_date: 1729169810,
+        },
         prices: [
           {
             item_id: "twitch_icon_three_bathrooms",
@@ -6977,8 +7285,12 @@ export async function handleCommerce_products(req: Request<{}, {}, {}, MVSQuerie
             proxy_quantity: false,
           },
         ],
-        created_at: 1729169810,
-        updated_at: 1729169810,
+        created_at: {
+          _hydra_unix_date: 1729169810,
+        },
+        updated_at: {
+          _hydra_unix_date: 1729169810,
+        },
         prices: [
           {
             item_id: "twitch_skin_mystery_inc_shaggy",
@@ -7008,8 +7320,12 @@ export async function handleCommerce_products(req: Request<{}, {}, {}, MVSQuerie
             proxy_quantity: false,
           },
         ],
-        created_at: 1729169810,
-        updated_at: 1729169810,
+        created_at: {
+          _hydra_unix_date: 1729169810,
+        },
+        updated_at: {
+          _hydra_unix_date: 1729169810,
+        },
         prices: [
           {
             item_id: "twitch_gleamium_100_drop_4",
@@ -7026,7 +7342,7 @@ export async function handleCommerce_products(req: Request<{}, {}, {}, MVSQuerie
         name: "White Raven: Trigon's Heir",
         description: {
           localizations: {
-            "store_product-white-raven-trigons-heir-name": "White Raven: Trigonâs Heir",
+            "store_product-white-raven-trigons-heir-name": "White Raven: Trigon’s Heir",
           },
         },
         visible: false,
@@ -7036,8 +7352,12 @@ export async function handleCommerce_products(req: Request<{}, {}, {}, MVSQuerie
         tags: ["season-4", "playstation", "xbox", "steam", "egs", "bundle"],
         reward_actions: [],
         items: [],
-        created_at: 1731433281,
-        updated_at: 1734456694,
+        created_at: {
+          _hydra_unix_date: 1731433281,
+        },
+        updated_at: {
+          _hydra_unix_date: 1734456694,
+        },
         prices: [
           {
             item_id: 41,
@@ -7172,8 +7492,12 @@ export async function handleCommerce_products(req: Request<{}, {}, {}, MVSQuerie
         tags: ["season-4", "steam", "egs", "playstation", "xbox", "bundle"],
         reward_actions: [],
         items: [],
-        created_at: 1731433281,
-        updated_at: 1731433281,
+        created_at: {
+          _hydra_unix_date: 1731433281,
+        },
+        updated_at: {
+          _hydra_unix_date: 1731433281,
+        },
         prices: [
           {
             item_id: 42,
@@ -7312,8 +7636,12 @@ export async function handleCommerce_products(req: Request<{}, {}, {}, MVSQuerie
         tags: ["season-4", "playstation", "xbox", "steam", "egs", "bundle"],
         reward_actions: [],
         items: [],
-        created_at: 1731433281,
-        updated_at: 1731434368,
+        created_at: {
+          _hydra_unix_date: 1731433281,
+        },
+        updated_at: {
+          _hydra_unix_date: 1731434368,
+        },
         prices: [
           {
             item_id: 43,
@@ -7464,8 +7792,12 @@ export async function handleCommerce_products(req: Request<{}, {}, {}, MVSQuerie
             proxy_quantity: false,
           },
         ],
-        created_at: 1731507716,
-        updated_at: 1731507716,
+        created_at: {
+          _hydra_unix_date: 1731507716,
+        },
+        updated_at: {
+          _hydra_unix_date: 1731507716,
+        },
         prices: [
           {
             xbox_service: "collections",
@@ -7550,8 +7882,12 @@ export async function handleCommerce_products(req: Request<{}, {}, {}, MVSQuerie
             proxy_quantity: false,
           },
         ],
-        created_at: 1733508659,
-        updated_at: 1733508659,
+        created_at: {
+          _hydra_unix_date: 1733508659,
+        },
+        updated_at: {
+          _hydra_unix_date: 1733508659,
+        },
         prices: [
           {
             item_id: "twitch_skin_platfight_garnet",
@@ -7580,8 +7916,12 @@ export async function handleCommerce_products(req: Request<{}, {}, {}, MVSQuerie
             proxy_quantity: false,
           },
         ],
-        created_at: 1733508659,
-        updated_at: 1733508659,
+        created_at: {
+          _hydra_unix_date: 1733508659,
+        },
+        updated_at: {
+          _hydra_unix_date: 1733508659,
+        },
         prices: [
           {
             item_id: "twitch_skin_platfight_harley",
@@ -7610,8 +7950,12 @@ export async function handleCommerce_products(req: Request<{}, {}, {}, MVSQuerie
             proxy_quantity: false,
           },
         ],
-        created_at: 1733508659,
-        updated_at: 1733508659,
+        created_at: {
+          _hydra_unix_date: 1733508659,
+        },
+        updated_at: {
+          _hydra_unix_date: 1733508659,
+        },
         prices: [
           {
             item_id: "twitch_skin_platfight_batman",
@@ -7634,8 +7978,12 @@ export async function handleCommerce_products(req: Request<{}, {}, {}, MVSQuerie
         tags: [],
         reward_actions: [],
         items: [],
-        created_at: 1733850548,
-        updated_at: 1734542448,
+        created_at: {
+          _hydra_unix_date: 1733850548,
+        },
+        updated_at: {
+          _hydra_unix_date: 1734542448,
+        },
         prices: [
           {
             item_id: "SNYCHARBUNDLES13",
@@ -7770,8 +8118,12 @@ export async function handleCommerce_products(req: Request<{}, {}, {}, MVSQuerie
         tags: [],
         reward_actions: [],
         items: [],
-        created_at: 1733850548,
-        updated_at: 1734455256,
+        created_at: {
+          _hydra_unix_date: 1733850548,
+        },
+        updated_at: {
+          _hydra_unix_date: 1734455256,
+        },
         prices: [
           {
             item_id: "SNYCHARBUNDLES12",
@@ -7897,8 +8249,8 @@ export async function handleCommerce_products(req: Request<{}, {}, {}, MVSQuerie
       },
       {
         slug: "vampire-vibes-marceline-s-sun-hat-30",
-        name: "Vampire Vibes: Marcelineâs Sun Hat 30",
-        description: "Vampire Vibes: Marcelineâs Sun Hat",
+        name: "Vampire Vibes: Marceline’s Sun Hat 30",
+        description: "Vampire Vibes: Marceline’s Sun Hat",
         visible: false,
         available_for_purchase: true,
         purchase_once: false,
@@ -7906,8 +8258,12 @@ export async function handleCommerce_products(req: Request<{}, {}, {}, MVSQuerie
         tags: [],
         reward_actions: [],
         items: [],
-        created_at: 1733850548,
-        updated_at: 1734541912,
+        created_at: {
+          _hydra_unix_date: 1733850548,
+        },
+        updated_at: {
+          _hydra_unix_date: 1734541912,
+        },
         prices: [
           {
             item_id: "SNYCHARBUNDLES11",
@@ -7919,7 +8275,7 @@ export async function handleCommerce_products(req: Request<{}, {}, {}, MVSQuerie
             region: "siea",
             usd_price: 2999,
             slug: "vampire-vibes-marceline-s-sun-hat-30-ps5-siea-price",
-            name: "Vampire Vibes: Marcelineâs Sun Hat 30 PS5 SIEA Price",
+            name: "Vampire Vibes: Marceline’s Sun Hat 30 PS5 SIEA Price",
             backend_name: "ps4-inventory",
           },
           {
@@ -7932,7 +8288,7 @@ export async function handleCommerce_products(req: Request<{}, {}, {}, MVSQuerie
             region: "siee",
             usd_price: 2999,
             slug: "vampire-vibes-marceline-s-sun-hat-30-ps5-siee-price",
-            name: "Vampire Vibes: Marcelineâs Sun Hat 30 PS5 SIEE Price",
+            name: "Vampire Vibes: Marceline’s Sun Hat 30 PS5 SIEE Price",
             backend_name: "ps4-inventory",
           },
           {
@@ -7945,7 +8301,7 @@ export async function handleCommerce_products(req: Request<{}, {}, {}, MVSQuerie
             region: "siea",
             usd_price: 2999,
             slug: "vampire-vibes-marceline-s-sun-hat-30-ps-siea-price",
-            name: "Vampire Vibes: Marcelineâs Sun Hat 30 PS SIEA Price",
+            name: "Vampire Vibes: Marceline’s Sun Hat 30 PS SIEA Price",
             backend_name: "ps4-inventory",
           },
           {
@@ -7958,7 +8314,7 @@ export async function handleCommerce_products(req: Request<{}, {}, {}, MVSQuerie
             region: "siee",
             usd_price: 2999,
             slug: "vampire-vibes-marceline-s-sun-hat-30-ps-siee-price",
-            name: "Vampire Vibes: Marcelineâs Sun Hat 30 PS SIEE Price",
+            name: "Vampire Vibes: Marceline’s Sun Hat 30 PS SIEE Price",
             backend_name: "ps4-inventory",
           },
           {
@@ -7968,7 +8324,7 @@ export async function handleCommerce_products(req: Request<{}, {}, {}, MVSQuerie
             is_durable: false,
             usd_price: 2999,
             slug: "vampire-vibes-marceline-s-sun-hat-30-xbox-price",
-            name: "Vampire Vibes: Marcelineâs Sun Hat 30 Xbox Price",
+            name: "Vampire Vibes: Marceline’s Sun Hat 30 Xbox Price",
             backend_name: "xb1-inventory",
           },
           {
@@ -7977,7 +8333,7 @@ export async function handleCommerce_products(req: Request<{}, {}, {}, MVSQuerie
             is_durable: false,
             usd_price: 2999,
             slug: "vampire-vibes-marceline-s-sun-hat-30-egs-price",
-            name: "Vampire Vibes: Marcelineâs Sun Hat 30 EGS Price",
+            name: "Vampire Vibes: Marceline’s Sun Hat 30 EGS Price",
             backend_name: "epic-service",
           },
           {
@@ -8024,7 +8380,7 @@ export async function handleCommerce_products(req: Request<{}, {}, {}, MVSQuerie
               ZAR: 55500,
             },
             slug: "vampire-vibes-marceline-s-sun-hat-30-steam-price",
-            name: "Vampire Vibes: Marcelineâs Sun Hat 30 Steam Price",
+            name: "Vampire Vibes: Marceline’s Sun Hat 30 Steam Price",
             backend_name: "steam-mtx",
           },
         ],
@@ -8053,8 +8409,12 @@ export async function handleCommerce_products(req: Request<{}, {}, {}, MVSQuerie
             proxy_quantity: false,
           },
         ],
-        created_at: 1738689184,
-        updated_at: 1738689184,
+        created_at: {
+          _hydra_unix_date: 1738689184,
+        },
+        updated_at: {
+          _hydra_unix_date: 1738689184,
+        },
         prices: [
           {
             item_id: "MVSPSPLUSPAK00S5",

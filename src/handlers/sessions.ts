@@ -83,7 +83,7 @@ export async function handleSessions_auth_token(req: Request<{}, {}, {}, MVSQuer
       locale: "en-US",
       avatar: {
         name: "MultiVersus Arya",
-        image_url: "https://prod-network-images.wbagora.com/network/account-wbgames-com/multiversus-arya.jpg",
+        image_url: "https://avatars.steamstatic.com/fef49e7fa7e1997310d705b2a6158ff8dc1cdfeb.jpg",
         slug: "multiversus-arya",
       },
       completed: true,

@@ -14,7 +14,7 @@
     "express": "^4.21.2",
     "http-status-codes": "^2.3.0",
     "mongoose": "^8.11.0",
-    "mvs-dump": "^1.0.0",
+    "mvs-dump": "^1.0.1",
     "ts-node": "^10.9.2",
     "ws": "^8.18.1",
     "zod": "^3.24.2"

@@ -1,22 +1,28 @@
 import express, { NextFunction, Request, Response } from "express";
 import router from "./router";
 import { connect } from "./database/client";
-import { hydraDecoderMiddleware as hydraMiddleware } from "./middleware/hydraParser";
+import { hydraDecoderMiddleware } from "./middleware/hydraParser";
 import { createServer } from "http";
 import * as https from "https";
 import { batchMiddleware, BatchResponse, urlSearchParamsToObject } from "./middleware/batchMiddleware";
 import * as fs from "fs";
 import * as path from "path";
 const app = express();
+app.disable("x-powered-by");
+
 const port = 443;
 
+process.on("warning", (e) => {
+  console.warn(e.stack);
+});
+
 const options = {
-  key: fs.readFileSync(path.join(__dirname, "../key.pem")),
-  cert: fs.readFileSync(path.join(__dirname, "../cert.crt")),
+  key: fs.readFileSync(path.join(__dirname, "../dokken-api.wbagora.com-key.pem")),
+  cert: fs.readFileSync(path.join(__dirname, "../dokken-api.wbagora.com.pem")),
 };
 
 app.use(express.json());
-app.use(hydraMiddleware);
+app.use(hydraDecoderMiddleware);
 app.get("/test", (req, res) => {
   res.send("test");
 });
@@ -30,7 +36,7 @@ app.post("/post", (req, res) => {
   res.send("test1");
 });
 
-app.get("/", batchMiddleware, (req: Request, res: Response) => {
+/* app.get("/", batchMiddleware, (req: Request, res: Response) => {
   const customRes = res as BatchResponse;
 
   req.url = "/test";
@@ -46,7 +52,7 @@ app.get("/", batchMiddleware, (req: Request, res: Response) => {
   req.url = "/batch";
   res.statusCode = 200;
   res.send(customRes.batchedRequests);
-});
+}); */
 app.use(router);
 
 export const MVSHTTPServer = https.createServer(options, app);

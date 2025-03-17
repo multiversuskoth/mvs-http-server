@@ -933,8 +933,7 @@ export async function handleSsc_invoke_get_calendar_events(req: Request<{}, {}, 
             display_in_modal: true,
             description: {
               localizations: {
-                game_sunset_description:
-                  "Season 5 will serve as the final update for MultiVersus, beginning 2/4/25 and ending 5/30/25. After Season 5 ends, players will be able to enjoy the game offline for the foreseeable future. Visit our blog post for more details. Thank you for the support of the community throughout this journey.",
+                game_sunset_description: "Welcome to MVS Infinite!",
               },
             },
             priority: 1200,
@@ -2189,7 +2188,7 @@ export async function handleSsc_invoke_get_milestone_reward_tracks(req: Request<
           TrackSlug: "mrt_mastery_account",
           RewardTrackClass: "MvsMilestoneRewardTrackHsda",
           CurrentScore: 563866,
-          CurrentTier: 36,
+          CurrentTier: 100,
           CompletedTiers: [
             "57A3C73C49205A716B3A39996B01CB05",
             "20AF35DF48EF016506487583AF54AAFB",

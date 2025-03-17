@@ -73,7 +73,7 @@ export async function handleMatches_id(req: Request<{}, {}, {}, {}>, res: Respon
           data: {},
           identity: {
             username: "dark-wild-grass-voice-yRPU2",
-            avatar: "https://s3.amazonaws.com/wb-agora-hydra-ugc-dokken/identicons/identicon.584.png",
+            avatar: "https://avatars.steamstatic.com/fef49e7fa7e1997310d705b2a6158ff8dc1cdfeb.jpg",
             default_username: true,
             personal_data: {},
             alternate: {

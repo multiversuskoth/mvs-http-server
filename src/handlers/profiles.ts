@@ -5,7 +5,7 @@ export async function handleProfiles_id_inventory(req: Request<{}, {}, {}, MVSQu
   res.send([
     {
       item_slug: "gleamium",
-      count: 580,
+      count: 58000,
       account_id: "63cef97ced0619f458cfac8f",
       result_type: "simple",
       currency_sources: [

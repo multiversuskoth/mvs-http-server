@@ -64,6 +64,8 @@ export const batchMiddleware = (req: Request, res: Response, next: NextFunction)
 export async function handle_batch_custom(req: Request<{}, {}, {}, {}>, res: Response) {
   const batchBody = req.body as BatchRequest;
   const customRes = res as BatchResponse;
+  //@ts-ignore
+  req.batch = true;
   for (let request of batchBody.requests) {
     res.statusCode = 200;
     req.url = request.url;
@@ -74,5 +76,5 @@ export async function handle_batch_custom(req: Request<{}, {}, {}, {}>, res: Res
   }
   req.url = "/batch";
   res.statusCode = 200;
-  res.send(customRes.batchedRequests);
+  res.send({ responses: customRes.batchedRequests });
 }

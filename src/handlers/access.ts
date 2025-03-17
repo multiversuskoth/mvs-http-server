@@ -4,7 +4,7 @@ import { MVSQueries } from "../interfaces/queries_types";
 export async function handleAccess(req: Request<{}, {}, {}, {}>, res: Response) {
   res.send({
     token:
-      "V2wvUvGjnf0Ma23VCEJXFZHDPewZ8FdaYjXGvpqsdzxMHk9BvyPLMTymAOM6WDqWPkGOXMYAPcTAe78zZa8L2kOpzsk9pVW5zj/0bxOaYgMXPCe4opBb2LY7twuGq4cHh4B7uer44UVxHP/VjzQbHGqEa8BzzdjMrZn3rPGl0H5S9sOkokqiEw==",
+      "V2wvUvGjnf0Ma23VCEJXFZHDPewZ8FdaYjXGvpqsdzxMHk9BvyPLMTymAOM6WDqWPkGOXMYAPcTAe78zZa8L2kOpzsk9pVW5zj/0bxOaYgMXPCe4opBb2LY7twuGq4cHh4B7uer44UVxHP/VjzQbHGqEa8BzzdjMrZn3rPGl0H5S9sOkokqiDw==",
     in_queue: false,
     configuration: {
       gcm: { enabled: null, project_number: null },
@@ -16,16 +16,16 @@ export async function handleAccess(req: Request<{}, {}, {}, {}>, res: Response) 
         "default-cluster": "ec2-us-east-1-dokken",
         servers: {
           "ec2-us-east-1-dokken": {
-            "dokken-realtime-5/2": { ws: "ws://52.72.177.178:8102", wss: "wss://us-east-1-dokken-realtime-5.wbagora.com:9102", udp: "0.0.0.0:0" },
-            "dokken-realtime-1/1": { ws: "ws://52.73.198.117:8101", wss: "wss://us-east-1-dokken-realtime-1.wbagora.com:9101", udp: "0.0.0.0:0" },
-            "dokken-realtime-1/2": { ws: "ws://52.73.198.117:8102", wss: "wss://us-east-1-dokken-realtime-1.wbagora.com:9102", udp: "0.0.0.0:0" },
-            "dokken-realtime-2/1": { ws: "ws://54.91.137.166:8101", wss: "wss://us-east-1-dokken-realtime-2.wbagora.com:9101", udp: "0.0.0.0:0" },
-            "dokken-realtime-3/1": { ws: "ws://54.144.160.165:8101", wss: "wss://us-east-1-dokken-realtime-3.wbagora.com:9101", udp: "0.0.0.0:0" },
-            "dokken-realtime-5/1": { ws: "ws://52.72.177.178:8101", wss: "wss://us-east-1-dokken-realtime-5.wbagora.com:9101", udp: "0.0.0.0:0" },
-            "dokken-realtime-2/2": { ws: "ws://54.91.137.166:8102", wss: "wss://us-east-1-dokken-realtime-2.wbagora.com:9102", udp: "0.0.0.0:0" },
-            "dokken-realtime-4/2": { ws: "ws://35.170.47.9:8102", wss: "wss://us-east-1-dokken-realtime-4.wbagora.com:9102", udp: "0.0.0.0:0" },
-            "dokken-realtime-3/2": { ws: "ws://54.144.160.165:8102", wss: "wss://us-east-1-dokken-realtime-3.wbagora.com:9102", udp: "0.0.0.0:0" },
-            "dokken-realtime-4/1": { ws: "ws://35.170.47.9:8101", wss: "wss://us-east-1-dokken-realtime-4.wbagora.com:9101", udp: "0.0.0.0:0" },
+            "dokken-realtime-5/2": { ws: "ws://52.72.177.178:8102", wss: "wss://prod-network-api.wbagora.com", udp: "0.0.0.0:0" },
+            "dokken-realtime-1/1": { ws: "ws://52.73.198.117:8101", wss: "wss://prod-network-api.wbagora.com", udp: "0.0.0.0:0" },
+            "dokken-realtime-1/2": { ws: "ws://52.73.198.117:8102", wss: "wss://prod-network-api.wbagora.com", udp: "0.0.0.0:0" },
+            "dokken-realtime-2/1": { ws: "ws://54.91.137.166:8101", wss: "wss://prod-network-api.wbagora.com", udp: "0.0.0.0:0" },
+            "dokken-realtime-3/1": { ws: "ws://54.144.160.165:8101", wss: "wss://prod-network-api.wbagora.com", udp: "0.0.0.0:0" },
+            "dokken-realtime-5/1": { ws: "ws://52.72.177.178:8101", wss: "wss://prod-network-api.wbagora.com", udp: "0.0.0.0:0" },
+            "dokken-realtime-2/2": { ws: "ws://54.91.137.166:8102", wss: "wss://prod-network-api.wbagora.com", udp: "0.0.0.0:0" },
+            "dokken-realtime-4/2": { ws: "ws://35.170.47.9:8102", wss: "wss://prod-network-api.wbagora.com", udp: "0.0.0.0:0" },
+            "dokken-realtime-3/2": { ws: "ws://54.144.160.165:8102", wss: "wss://prod-network-api.wbagora.com", udp: "0.0.0.0:0" },
+            "dokken-realtime-4/1": { ws: "ws://35.170.47.9:8101", wss: "wss://prod-network-api.wbagora.com", udp: "0.0.0.0:0" },
           },
         },
       },
@@ -40,7 +40,7 @@ export async function handleAccess(req: Request<{}, {}, {}, {}>, res: Response) 
       orphaned_reason: null,
       public_id: "paee40f62bd814a53bf9f4d21e43ea2c1",
       identity: {
-        avatar: "https://s3.amazonaws.com/wb-agora-hydra-ugc-dokken/identicons/identicon.584.png",
+        avatar: "https://avatars.steamstatic.com/fef49e7fa7e1997310d705b2a6158ff8dc1cdfeb.jpg",
         default_username: true,
         personal_data: {},
         alternate: {
@@ -123,7 +123,7 @@ export async function handleAccess(req: Request<{}, {}, {}, {}>, res: Response) 
       id: "63cef97ced0619f458cfac8f",
       connections: [
         {
-          id: "V2wvUvGjnf0Ma23VCEJXFZHDPewZ8FdaYjXGvpqsdzxMHk9BvyPLMTymAOM6WDqWPkGOXMYAPcTAe78zZa8L2kOpzsk9pVW5zj/0bxOaYgMXPCe4opBb2LY7twuGq4cHh4B7uer44UVxHP/VjzQbHGqEa8BzzdjMrZn3rPGl0H5S9sOkokqiEw==",
+          id: "V2wvUvGjnf0Ma23VCEJXFZHDPewZ8FdaYjXGvpqsdzxMHk9BvyPLMTymAOM6WDqWPkGOXMYAPcTAe78zZa8L2kOpzsk9pVW5zj/0bxOaYgMXPCe4opBb2LY7twuGq4cHh4B7uer44UVxHP/VjzQbHGqEa8BzzdjMrZn3rPGl0H5S9sOkokqiDw==",
           start_time: 1742088590,
           last_used: 1742088590,
           realtime_start_time: 0,
