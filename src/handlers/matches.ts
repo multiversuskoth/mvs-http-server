@@ -3,15 +3,15 @@ import { MVSQueries } from "../interfaces/queries_types";
 
 export async function handleMatches_id(req: Request<{}, {}, {}, {}>, res: Response) {
   res.send({
-    updated_at: 1742088599,
-    created_at: 1742088598,
+    updated_at: { _hydra_unix_date: 1742244156 },
+    created_at: { _hydra_unix_date: 1742244155 },
     account_id: null,
     completion_time: null,
-    name: "bold-floral-wildflower-meadow-knWCr",
+    name: "rough-wild-cherry-darkness-l3v6V",
     state: "open",
     access_level: "public",
     origin: "client",
-    rand: 0.7653591542246007,
+    rand: 0.5624316531042202,
     winning_team: [],
     win: [],
     loss: [],
@@ -25,7 +25,7 @@ export async function handleMatches_id(req: Request<{}, {}, {}, {}>, res: Respon
           Players: {
             "63cef97ced0619f458cfac8f": {
               Account: { id: "63cef97ced0619f458cfac8f" },
-              JoinedAt: 1742088598,
+              JoinedAt: { _hydra_unix_date: 1742244155 },
               BotSettingSlug: "",
               LobbyPlayerIndex: 0,
               CrossplayPreference: 1,
@@ -112,14 +112,14 @@ export async function handleMatches_id(req: Request<{}, {}, {}, {}>, res: Respon
       max_players: 2,
       game_server_integration_enabled: false,
       game_server_config: null,
-      created_at: 1714587806,
-      updated_at: 1729015209,
+      created_at: { _hydra_unix_date: 1714587806 },
+      updated_at: { _hydra_unix_date: 1729015209 },
       data: {},
       id: "6632889e358a2a62107ca7fb",
     },
     criteria: { slug: null },
     shortcode: null,
-    id: "67d6299612d277ef0c11cf72",
+    id: "67d8893b783a81faa05432e6",
     access: "public",
   });
 }

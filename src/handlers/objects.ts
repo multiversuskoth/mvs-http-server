@@ -3,7 +3,7 @@ import { MVSQueries } from "../interfaces/queries_types";
 
 export async function handleObjects_preferences_unique_id_id1(req: Request<{}, {}, {}, {}>, res: Response) {
   res.send({
-    updated_at: 1724119417,
+    updated_at: { _hydra_unix_date: 1724119417 },
     owner_id: "63cef97ced0619f458cfac8f",
     unique_key: "63cef97ced0619f458cfac8f",
     object_type_slug: "preferences",
@@ -217,7 +217,7 @@ export async function handleObjects_preferences_unique_id_id1(req: Request<{}, {
       UIPreferences: { UIStyle: "Recommended" },
     },
     server_data: null,
-    created_at: 1674508742,
+    created_at: { _hydra_unix_date: 1674508742 },
     aggregates: {},
     calculations: {},
     server_owner_data: null,

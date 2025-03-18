@@ -11,7 +11,7 @@ export const hydraDecoderMiddleware = <T>(req: Request, res: Response, next: Nex
     next();
     return;
   } else {
-    //console.log("URL:", req.url);
+    console.log("URL:", req.url);
   }
 
   if (req.headers["content-type"] === HYDRA_CONTENT_TYPE) {
@@ -46,7 +46,6 @@ export const hydraDecoderMiddleware = <T>(req: Request, res: Response, next: Nex
       encoder.encodeValue(data as any);
       const end = performance.now();
       res.setHeader("X-Hydra-Processing-Time", start - end);
-      console.log("SENDING HYDRA");
       res.send(encoder.returnValue());
       return res;
     };

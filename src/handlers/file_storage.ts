@@ -6,8 +6,8 @@ export async function handleFile_storage(req: Request<{}, {}, {}, {}>, res: Resp
     {
       slug: "ftue-carousel-keyart-compressed",
       name: "ftue_carousel_keyart_compressed",
-      created_at: 1716600359,
-      updated_at: 1716600359,
+      created_at: { _hydra_unix_date: 1716600359 },
+      updated_at: { _hydra_unix_date: 1716600359 },
       s3_object_id: "dokken/production/ee1f6d4-ftue_carousel_keyart.png",
       auto_sync: true,
       file_size: 1551387,
@@ -18,13 +18,13 @@ export async function handleFile_storage(req: Request<{}, {}, {}, {}>, res: Resp
       data: {},
       id: "66513e27569e3e6210a7a9bf",
       download_url:
-        "https://wb-agora-hydra-file-storage-dokken.s3.amazonaws.com/dokken/production/ee1f6d4-ftue_carousel_keyart.png?X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=AKIA5J6YDD2RMJ4AQTRN%2F20250316%2Fus-east-1%2Fs3%2Faws4_request&X-Amz-Date=20250316T012958Z&X-Amz-Expires=3600&X-Amz-SignedHeaders=host&X-Amz-Signature=b0b79c7fcddd491d9bb1936a2951276f0d6ae9d8787650c4c2b76004df218f9d",
+        "https://wb-agora-hydra-file-storage-dokken.s3.amazonaws.com/dokken/production/ee1f6d4-ftue_carousel_keyart.png?X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=AKIA5J6YDD2RMJ4AQTRN%2F20250317%2Fus-east-1%2Fs3%2Faws4_request&X-Amz-Date=20250317T204235Z&X-Amz-Expires=3600&X-Amz-SignedHeaders=host&X-Amz-Signature=f91e2120d46dfc54df0431688fa30e6f0825ed8c311a36097acf36ac0edb88e5",
     },
     {
       slug: "ftue-carousel-final-keyart",
       name: "ftue_carousel_final_keyart",
-      created_at: 1716600359,
-      updated_at: 1716600359,
+      created_at: { _hydra_unix_date: 1716600359 },
+      updated_at: { _hydra_unix_date: 1716600359 },
       s3_object_id: "dokken/production/61fd80db-ftue_carousel_keyart (2).png",
       auto_sync: true,
       file_size: 6634980,
@@ -35,13 +35,13 @@ export async function handleFile_storage(req: Request<{}, {}, {}, {}>, res: Resp
       data: {},
       id: "66513e27569e3e6210a7a9c2",
       download_url:
-        "https://wb-agora-hydra-file-storage-dokken.s3.amazonaws.com/dokken/production/61fd80db-ftue_carousel_keyart%20%282%29.png?X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=AKIA5J6YDD2RMJ4AQTRN%2F20250316%2Fus-east-1%2Fs3%2Faws4_request&X-Amz-Date=20250316T012958Z&X-Amz-Expires=3600&X-Amz-SignedHeaders=host&X-Amz-Signature=402f62104373efa840373b165200b46bac53200c28b82386712bed2dc993cee5",
+        "https://wb-agora-hydra-file-storage-dokken.s3.amazonaws.com/dokken/production/61fd80db-ftue_carousel_keyart%20%282%29.png?X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=AKIA5J6YDD2RMJ4AQTRN%2F20250317%2Fus-east-1%2Fs3%2Faws4_request&X-Amz-Date=20250317T204235Z&X-Amz-Expires=3600&X-Amz-SignedHeaders=host&X-Amz-Signature=5d276f5f1ba58ab0891615b20d9ec14d27ea88f1db80aef53e55a575bbed516f",
     },
     {
       slug: "ftue-carousel-final-thumbnail",
       name: "ftue_carousel_final_thumbnail",
-      created_at: 1716600359,
-      updated_at: 1716600359,
+      created_at: { _hydra_unix_date: 1716600359 },
+      updated_at: { _hydra_unix_date: 1716600359 },
       s3_object_id: "dokken/production/de2b1fcc-ftue_carousel_thumbnail (2).png",
       auto_sync: true,
       file_size: 443775,
@@ -52,13 +52,13 @@ export async function handleFile_storage(req: Request<{}, {}, {}, {}>, res: Resp
       data: {},
       id: "66513e27569e3e6210a7a9c3",
       download_url:
-        "https://wb-agora-hydra-file-storage-dokken.s3.amazonaws.com/dokken/production/de2b1fcc-ftue_carousel_thumbnail%20%282%29.png?X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=AKIA5J6YDD2RMJ4AQTRN%2F20250316%2Fus-east-1%2Fs3%2Faws4_request&X-Amz-Date=20250316T012958Z&X-Amz-Expires=3600&X-Amz-SignedHeaders=host&X-Amz-Signature=7215596e9ff8331a956227abda9c9aec1e42a34e8edb978cd509e284945db650",
+        "https://wb-agora-hydra-file-storage-dokken.s3.amazonaws.com/dokken/production/de2b1fcc-ftue_carousel_thumbnail%20%282%29.png?X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=AKIA5J6YDD2RMJ4AQTRN%2F20250317%2Fus-east-1%2Fs3%2Faws4_request&X-Amz-Date=20250317T204235Z&X-Amz-Expires=3600&X-Amz-SignedHeaders=host&X-Amz-Signature=1c5df4b720add5d3569bc86417e3bb02acef402e8c82358532f2b8dc483c6f17",
     },
     {
       slug: "t-discord-qa-carousel-keyart",
       name: "T_DISCORD_QA_CAROUSEL_KEYART",
-      created_at: 1716600359,
-      updated_at: 1716600359,
+      created_at: { _hydra_unix_date: 1716600359 },
+      updated_at: { _hydra_unix_date: 1716600359 },
       s3_object_id: "dokken/production/985a8eab-T_DISCORD_QA_CAROUSEL_KEYART.png",
       auto_sync: true,
       file_size: 2957542,
@@ -69,13 +69,13 @@ export async function handleFile_storage(req: Request<{}, {}, {}, {}>, res: Resp
       data: {},
       id: "66513e27569e3e6210a7a9c8",
       download_url:
-        "https://wb-agora-hydra-file-storage-dokken.s3.amazonaws.com/dokken/production/985a8eab-T_DISCORD_QA_CAROUSEL_KEYART.png?X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=AKIA5J6YDD2RMJ4AQTRN%2F20250316%2Fus-east-1%2Fs3%2Faws4_request&X-Amz-Date=20250316T012958Z&X-Amz-Expires=3600&X-Amz-SignedHeaders=host&X-Amz-Signature=28ccecb5fa1b3daf0d03f7dbf441dbcc4913272ca2d9951148807d96e3e8a1e5",
+        "https://wb-agora-hydra-file-storage-dokken.s3.amazonaws.com/dokken/production/985a8eab-T_DISCORD_QA_CAROUSEL_KEYART.png?X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=AKIA5J6YDD2RMJ4AQTRN%2F20250317%2Fus-east-1%2Fs3%2Faws4_request&X-Amz-Date=20250317T204235Z&X-Amz-Expires=3600&X-Amz-SignedHeaders=host&X-Amz-Signature=ed252e8e20310f35aee94f744fb2de427a8adde53d51906413feeedc42715357",
     },
     {
       slug: "t-discord-qa-carousel-thumbnail",
       name: "T_DISCORD_QA_CAROUSEL_THUMBNAIL",
-      created_at: 1716600359,
-      updated_at: 1716600359,
+      created_at: { _hydra_unix_date: 1716600359 },
+      updated_at: { _hydra_unix_date: 1716600359 },
       s3_object_id: "dokken/production/cbeff8f4-T_DISCORD_QA_CAROUSEL_THUMBNAIL.png",
       auto_sync: true,
       file_size: 153984,
@@ -86,13 +86,13 @@ export async function handleFile_storage(req: Request<{}, {}, {}, {}>, res: Resp
       data: {},
       id: "66513e27569e3e6210a7a9c9",
       download_url:
-        "https://wb-agora-hydra-file-storage-dokken.s3.amazonaws.com/dokken/production/cbeff8f4-T_DISCORD_QA_CAROUSEL_THUMBNAIL.png?X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=AKIA5J6YDD2RMJ4AQTRN%2F20250316%2Fus-east-1%2Fs3%2Faws4_request&X-Amz-Date=20250316T012958Z&X-Amz-Expires=3600&X-Amz-SignedHeaders=host&X-Amz-Signature=3e9d4b6635aff97082dec1eb1da4cbe72b1efeec7256f2a2db175b85ffba836e",
+        "https://wb-agora-hydra-file-storage-dokken.s3.amazonaws.com/dokken/production/cbeff8f4-T_DISCORD_QA_CAROUSEL_THUMBNAIL.png?X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=AKIA5J6YDD2RMJ4AQTRN%2F20250317%2Fus-east-1%2Fs3%2Faws4_request&X-Amz-Date=20250317T204235Z&X-Amz-Expires=3600&X-Amz-SignedHeaders=host&X-Amz-Signature=ff6bd7a557dcbec0da21181321909bbfcaec6b6e3f2d4416a6fd4284c942cc8d",
     },
     {
       slug: "chaos-unleashed-pinned",
       name: "chaos_unleashed_pinned",
-      created_at: 1721696537,
-      updated_at: 1721696537,
+      created_at: { _hydra_unix_date: 1721696537 },
+      updated_at: { _hydra_unix_date: 1721696537 },
       s3_object_id: "dokken/production/dd7e157c-chaos_unleashed_pinned.png",
       auto_sync: true,
       file_size: 187868,
@@ -103,13 +103,13 @@ export async function handleFile_storage(req: Request<{}, {}, {}, {}>, res: Resp
       data: {},
       id: "669f01198b3daffc02f874bc",
       download_url:
-        "https://wb-agora-hydra-file-storage-dokken.s3.amazonaws.com/dokken/production/dd7e157c-chaos_unleashed_pinned.png?X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=AKIA5J6YDD2RMJ4AQTRN%2F20250316%2Fus-east-1%2Fs3%2Faws4_request&X-Amz-Date=20250316T012958Z&X-Amz-Expires=3600&X-Amz-SignedHeaders=host&X-Amz-Signature=140f02daa8f36aa2446baee7d87459166b8be46d3823b5c9efd3cf1b5b44d39b",
+        "https://wb-agora-hydra-file-storage-dokken.s3.amazonaws.com/dokken/production/dd7e157c-chaos_unleashed_pinned.png?X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=AKIA5J6YDD2RMJ4AQTRN%2F20250317%2Fus-east-1%2Fs3%2Faws4_request&X-Amz-Date=20250317T204235Z&X-Amz-Expires=3600&X-Amz-SignedHeaders=host&X-Amz-Signature=d48a90c94914e9a6629040fba0d9964dc0918e6d725bd374fd5747a51a58a34d",
     },
     {
       slug: "looneytunes-starter-pinned",
       name: "looneytunes_starter_pinned",
-      created_at: 1721696554,
-      updated_at: 1721696554,
+      created_at: { _hydra_unix_date: 1721696554 },
+      updated_at: { _hydra_unix_date: 1721696554 },
       s3_object_id: "dokken/production/10b3959c-bugstaz_looneytunesstars_pinned.png",
       auto_sync: true,
       file_size: 165196,
@@ -120,13 +120,13 @@ export async function handleFile_storage(req: Request<{}, {}, {}, {}>, res: Resp
       data: {},
       id: "669f012a32380669f24571dd",
       download_url:
-        "https://wb-agora-hydra-file-storage-dokken.s3.amazonaws.com/dokken/production/10b3959c-bugstaz_looneytunesstars_pinned.png?X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=AKIA5J6YDD2RMJ4AQTRN%2F20250316%2Fus-east-1%2Fs3%2Faws4_request&X-Amz-Date=20250316T012958Z&X-Amz-Expires=3600&X-Amz-SignedHeaders=host&X-Amz-Signature=3f0f61d6e0d3fddb66b63ae98e313daa86c2a0c473e2dac3015b05fc72481be9",
+        "https://wb-agora-hydra-file-storage-dokken.s3.amazonaws.com/dokken/production/10b3959c-bugstaz_looneytunesstars_pinned.png?X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=AKIA5J6YDD2RMJ4AQTRN%2F20250317%2Fus-east-1%2Fs3%2Faws4_request&X-Amz-Date=20250317T204235Z&X-Amz-Expires=3600&X-Amz-SignedHeaders=host&X-Amz-Signature=6474e762783a93127d922f1cd31155ae5f904cd5ee00c77c251a84b05cac131a",
     },
     {
       slug: "get-schwifty-starter-pinned",
       name: "get_schwifty_starter_pinned",
-      created_at: 1721696579,
-      updated_at: 1721696579,
+      created_at: { _hydra_unix_date: 1721696579 },
+      updated_at: { _hydra_unix_date: 1721696579 },
       s3_object_id: "dokken/production/9baad367-rickmorty_getschwifty_pinned.png",
       auto_sync: true,
       file_size: 178464,
@@ -137,13 +137,13 @@ export async function handleFile_storage(req: Request<{}, {}, {}, {}>, res: Resp
       data: {},
       id: "669f014370c26f1ef9c43c34",
       download_url:
-        "https://wb-agora-hydra-file-storage-dokken.s3.amazonaws.com/dokken/production/9baad367-rickmorty_getschwifty_pinned.png?X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=AKIA5J6YDD2RMJ4AQTRN%2F20250316%2Fus-east-1%2Fs3%2Faws4_request&X-Amz-Date=20250316T012958Z&X-Amz-Expires=3600&X-Amz-SignedHeaders=host&X-Amz-Signature=a397a11528fd654e0a976a3fe1e98fab934da20190259c1c02c6f887d26f3011",
+        "https://wb-agora-hydra-file-storage-dokken.s3.amazonaws.com/dokken/production/9baad367-rickmorty_getschwifty_pinned.png?X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=AKIA5J6YDD2RMJ4AQTRN%2F20250317%2Fus-east-1%2Fs3%2Faws4_request&X-Amz-Date=20250317T204235Z&X-Amz-Expires=3600&X-Amz-SignedHeaders=host&X-Amz-Signature=b20c80529f5b3f0a52caaa81e3d2fb617d77ac3c0fbb5003b9b00b568914c76c",
     },
     {
       slug: "heroic-alliance-starter-pinned",
       name: "heroic_alliance_starter_pinned",
-      created_at: 1721696614,
-      updated_at: 1721696614,
+      created_at: { _hydra_unix_date: 1721696614 },
+      updated_at: { _hydra_unix_date: 1721696614 },
       s3_object_id: "dokken/production/484b8c82-heroic_alliance_starter_pinned.png",
       auto_sync: true,
       file_size: 147303,
@@ -154,13 +154,13 @@ export async function handleFile_storage(req: Request<{}, {}, {}, {}>, res: Resp
       data: {},
       id: "669f0166da2906ba6be21769",
       download_url:
-        "https://wb-agora-hydra-file-storage-dokken.s3.amazonaws.com/dokken/production/484b8c82-heroic_alliance_starter_pinned.png?X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=AKIA5J6YDD2RMJ4AQTRN%2F20250316%2Fus-east-1%2Fs3%2Faws4_request&X-Amz-Date=20250316T012958Z&X-Amz-Expires=3600&X-Amz-SignedHeaders=host&X-Amz-Signature=85264fc05bb3cbcb454b3baee9e73e20beac9588d02a052b1d045b7282bbae34",
+        "https://wb-agora-hydra-file-storage-dokken.s3.amazonaws.com/dokken/production/484b8c82-heroic_alliance_starter_pinned.png?X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=AKIA5J6YDD2RMJ4AQTRN%2F20250317%2Fus-east-1%2Fs3%2Faws4_request&X-Amz-Date=20250317T204235Z&X-Amz-Expires=3600&X-Amz-SignedHeaders=host&X-Amz-Signature=dc4404d4555cd45333ec82e91398175e128b568b647102ac319b28d095e396bc",
     },
     {
       slug: "adventure-allies-starter-pinned",
       name: "adventure_allies_starter_pinned",
-      created_at: 1721696636,
-      updated_at: 1721696636,
+      created_at: { _hydra_unix_date: 1721696636 },
+      updated_at: { _hydra_unix_date: 1721696636 },
       s3_object_id: "dokken/production/1b3c892b-adventure_allies_starter_pinned.png",
       auto_sync: true,
       file_size: 149680,
@@ -171,13 +171,13 @@ export async function handleFile_storage(req: Request<{}, {}, {}, {}>, res: Resp
       data: {},
       id: "669f017cd9f091d53fc39b0f",
       download_url:
-        "https://wb-agora-hydra-file-storage-dokken.s3.amazonaws.com/dokken/production/1b3c892b-adventure_allies_starter_pinned.png?X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=AKIA5J6YDD2RMJ4AQTRN%2F20250316%2Fus-east-1%2Fs3%2Faws4_request&X-Amz-Date=20250316T012958Z&X-Amz-Expires=3600&X-Amz-SignedHeaders=host&X-Amz-Signature=6c6b001aea18da1687b99f8799b7124e7dc64d617433f62ceacbd04c71e1bbcc",
+        "https://wb-agora-hydra-file-storage-dokken.s3.amazonaws.com/dokken/production/1b3c892b-adventure_allies_starter_pinned.png?X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=AKIA5J6YDD2RMJ4AQTRN%2F20250317%2Fus-east-1%2Fs3%2Faws4_request&X-Amz-Date=20250317T204235Z&X-Amz-Expires=3600&X-Amz-SignedHeaders=host&X-Amz-Signature=1734c97ae738c3071d861c14797510efc38b1d326452a3724541258ff19bef5e",
     },
     {
       slug: "power-struggle-pinned",
       name: "power_struggle_pinned",
-      created_at: 1721696654,
-      updated_at: 1721696654,
+      created_at: { _hydra_unix_date: 1721696654 },
+      updated_at: { _hydra_unix_date: 1721696654 },
       s3_object_id: "dokken/production/945b04f1-power_struggle_pinned.png",
       auto_sync: true,
       file_size: 159116,
@@ -188,13 +188,13 @@ export async function handleFile_storage(req: Request<{}, {}, {}, {}>, res: Resp
       data: {},
       id: "669f018efd310a393ff141dd",
       download_url:
-        "https://wb-agora-hydra-file-storage-dokken.s3.amazonaws.com/dokken/production/945b04f1-power_struggle_pinned.png?X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=AKIA5J6YDD2RMJ4AQTRN%2F20250316%2Fus-east-1%2Fs3%2Faws4_request&X-Amz-Date=20250316T012958Z&X-Amz-Expires=3600&X-Amz-SignedHeaders=host&X-Amz-Signature=d457983362215836d58d90d5400d68247cf202ce22c45ef004cc930d865ed55d",
+        "https://wb-agora-hydra-file-storage-dokken.s3.amazonaws.com/dokken/production/945b04f1-power_struggle_pinned.png?X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=AKIA5J6YDD2RMJ4AQTRN%2F20250317%2Fus-east-1%2Fs3%2Faws4_request&X-Amz-Date=20250317T204235Z&X-Amz-Expires=3600&X-Amz-SignedHeaders=host&X-Amz-Signature=f0d1b83ba110fbddb3e0aeac832bb8b20184de086e34375f6f66c2dff2183f53",
     },
     {
       slug: "mogwai-madness-starter-pinned",
       name: "mogwai_madness_starter_pinned",
-      created_at: 1721696680,
-      updated_at: 1721696680,
+      created_at: { _hydra_unix_date: 1721696680 },
+      updated_at: { _hydra_unix_date: 1721696680 },
       s3_object_id: "dokken/production/bee758df-gizmostripe_mogwaimadness_pinned.png",
       auto_sync: true,
       file_size: 186328,
@@ -205,13 +205,13 @@ export async function handleFile_storage(req: Request<{}, {}, {}, {}>, res: Resp
       data: {},
       id: "669f01a8ab2cced650399072",
       download_url:
-        "https://wb-agora-hydra-file-storage-dokken.s3.amazonaws.com/dokken/production/bee758df-gizmostripe_mogwaimadness_pinned.png?X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=AKIA5J6YDD2RMJ4AQTRN%2F20250316%2Fus-east-1%2Fs3%2Faws4_request&X-Amz-Date=20250316T012958Z&X-Amz-Expires=3600&X-Amz-SignedHeaders=host&X-Amz-Signature=e99369348c361084c8b2fd48a6e2be2f8f7d8d79f55c3d7d5f82bd40abce702a",
+        "https://wb-agora-hydra-file-storage-dokken.s3.amazonaws.com/dokken/production/bee758df-gizmostripe_mogwaimadness_pinned.png?X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=AKIA5J6YDD2RMJ4AQTRN%2F20250317%2Fus-east-1%2Fs3%2Faws4_request&X-Amz-Date=20250317T204235Z&X-Amz-Expires=3600&X-Amz-SignedHeaders=host&X-Amz-Signature=a405b2662fe175d92904cf86d8eb51ef86ba16868b6ccc36ede2add3667f2975",
     },
     {
       slug: "s3-event-charactermastery-keyart",
       name: "s3_event_charactermastery_keyart",
-      created_at: 1726768240,
-      updated_at: 1726768240,
+      created_at: { _hydra_unix_date: 1726768240 },
+      updated_at: { _hydra_unix_date: 1726768240 },
       s3_object_id: "dokken/production/d8aa2bb-t_event_charactermastery_keyart.png",
       auto_sync: true,
       file_size: 4179867,
@@ -222,13 +222,13 @@ export async function handleFile_storage(req: Request<{}, {}, {}, {}>, res: Resp
       data: {},
       id: "66ec647094698e9731bdf119",
       download_url:
-        "https://wb-agora-hydra-file-storage-dokken.s3.amazonaws.com/dokken/production/d8aa2bb-t_event_charactermastery_keyart.png?X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=AKIA5J6YDD2RMJ4AQTRN%2F20250316%2Fus-east-1%2Fs3%2Faws4_request&X-Amz-Date=20250316T012958Z&X-Amz-Expires=3600&X-Amz-SignedHeaders=host&X-Amz-Signature=fe9633128fd09e893c97287a6bb887396f6dcdaf75ed90962ad9adf38c92396b",
+        "https://wb-agora-hydra-file-storage-dokken.s3.amazonaws.com/dokken/production/d8aa2bb-t_event_charactermastery_keyart.png?X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=AKIA5J6YDD2RMJ4AQTRN%2F20250317%2Fus-east-1%2Fs3%2Faws4_request&X-Amz-Date=20250317T204235Z&X-Amz-Expires=3600&X-Amz-SignedHeaders=host&X-Amz-Signature=7988f0b9e49e07adb7ec6583bf6852c2a985ae6e29b516d04090cf68aefe09cd",
     },
     {
       slug: "s3-event-charactermastery-thumbnail",
       name: "s3_event_charactermastery_thumbnail",
-      created_at: 1726768292,
-      updated_at: 1726768292,
+      created_at: { _hydra_unix_date: 1726768292 },
+      updated_at: { _hydra_unix_date: 1726768292 },
       s3_object_id: "dokken/production/2ff58891-t_event_charactermastery_thumbnail.png",
       auto_sync: true,
       file_size: 385697,
@@ -239,13 +239,13 @@ export async function handleFile_storage(req: Request<{}, {}, {}, {}>, res: Resp
       data: {},
       id: "66ec64a401f541cc05c78eab",
       download_url:
-        "https://wb-agora-hydra-file-storage-dokken.s3.amazonaws.com/dokken/production/2ff58891-t_event_charactermastery_thumbnail.png?X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=AKIA5J6YDD2RMJ4AQTRN%2F20250316%2Fus-east-1%2Fs3%2Faws4_request&X-Amz-Date=20250316T012958Z&X-Amz-Expires=3600&X-Amz-SignedHeaders=host&X-Amz-Signature=d99b0701d26053382ec30bdc8e0a78dc60b411dbc7c46225b1cc7e471458966d",
+        "https://wb-agora-hydra-file-storage-dokken.s3.amazonaws.com/dokken/production/2ff58891-t_event_charactermastery_thumbnail.png?X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=AKIA5J6YDD2RMJ4AQTRN%2F20250317%2Fus-east-1%2Fs3%2Faws4_request&X-Amz-Date=20250317T204235Z&X-Amz-Expires=3600&X-Amz-SignedHeaders=host&X-Amz-Signature=9af07163cb1c24003d09a786d5ab7298a24aaf15189490300e70b34c2b25b295",
     },
     {
       slug: "beginnermode-carousel-keyart",
       name: "beginnermode_carousel_keyart",
-      created_at: 1728661052,
-      updated_at: 1728661052,
+      created_at: { _hydra_unix_date: 1728661052 },
+      updated_at: { _hydra_unix_date: 1728661052 },
       s3_object_id: "dokken/production/70dc43d1-t_begginnermode_carousel_keyart.png",
       auto_sync: true,
       file_size: 8134018,
@@ -256,13 +256,13 @@ export async function handleFile_storage(req: Request<{}, {}, {}, {}>, res: Resp
       data: {},
       id: "6709463c7f18dba761677bc0",
       download_url:
-        "https://wb-agora-hydra-file-storage-dokken.s3.amazonaws.com/dokken/production/70dc43d1-t_begginnermode_carousel_keyart.png?X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=AKIA5J6YDD2RMJ4AQTRN%2F20250316%2Fus-east-1%2Fs3%2Faws4_request&X-Amz-Date=20250316T012958Z&X-Amz-Expires=3600&X-Amz-SignedHeaders=host&X-Amz-Signature=b6562aa7480bfbdfc703162b6c636005c16c6db8bfbbae649079daa6de63751d",
+        "https://wb-agora-hydra-file-storage-dokken.s3.amazonaws.com/dokken/production/70dc43d1-t_begginnermode_carousel_keyart.png?X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=AKIA5J6YDD2RMJ4AQTRN%2F20250317%2Fus-east-1%2Fs3%2Faws4_request&X-Amz-Date=20250317T204235Z&X-Amz-Expires=3600&X-Amz-SignedHeaders=host&X-Amz-Signature=47f9a1efb8b6e5665bf28312071f0eedc02616e3d482f9770380a0abbecce0cd",
     },
     {
       slug: "beginnermode-carousel-thumbnail",
       name: "beginnermode_carousel_thumbnail",
-      created_at: 1728661117,
-      updated_at: 1728661117,
+      created_at: { _hydra_unix_date: 1728661117 },
+      updated_at: { _hydra_unix_date: 1728661117 },
       s3_object_id: "dokken/production/2d3f9f10-t_begginnermode_carousel_thumbnail.png",
       auto_sync: true,
       file_size: 531510,
@@ -273,13 +273,13 @@ export async function handleFile_storage(req: Request<{}, {}, {}, {}>, res: Resp
       data: {},
       id: "6709467d7f18dba761677c39",
       download_url:
-        "https://wb-agora-hydra-file-storage-dokken.s3.amazonaws.com/dokken/production/2d3f9f10-t_begginnermode_carousel_thumbnail.png?X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=AKIA5J6YDD2RMJ4AQTRN%2F20250316%2Fus-east-1%2Fs3%2Faws4_request&X-Amz-Date=20250316T012958Z&X-Amz-Expires=3600&X-Amz-SignedHeaders=host&X-Amz-Signature=7a2413dc4df6c3f7166cd8ef15fd93baddb10217f71fbbf2198ff04a0361f207",
+        "https://wb-agora-hydra-file-storage-dokken.s3.amazonaws.com/dokken/production/2d3f9f10-t_begginnermode_carousel_thumbnail.png?X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=AKIA5J6YDD2RMJ4AQTRN%2F20250317%2Fus-east-1%2Fs3%2Faws4_request&X-Amz-Date=20250317T204235Z&X-Amz-Expires=3600&X-Amz-SignedHeaders=host&X-Amz-Signature=fc5b17793df5d788e9234333f062cee8c1695a0fb5580f252219b4689992a66e",
     },
     {
       slug: "wackyweekend-carousel-keyart",
       name: "wackyweekend_carousel_keyart",
-      created_at: 1729191643,
-      updated_at: 1729191643,
+      created_at: { _hydra_unix_date: 1729191643 },
+      updated_at: { _hydra_unix_date: 1729191643 },
       s3_object_id: "dokken/production/da70f09-t_wackyweekend_carousel_keyart.png",
       auto_sync: true,
       file_size: 7272609,
@@ -290,13 +290,13 @@ export async function handleFile_storage(req: Request<{}, {}, {}, {}>, res: Resp
       data: {},
       id: "67115edb42511328f9cd50c9",
       download_url:
-        "https://wb-agora-hydra-file-storage-dokken.s3.amazonaws.com/dokken/production/da70f09-t_wackyweekend_carousel_keyart.png?X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=AKIA5J6YDD2RMJ4AQTRN%2F20250316%2Fus-east-1%2Fs3%2Faws4_request&X-Amz-Date=20250316T012958Z&X-Amz-Expires=3600&X-Amz-SignedHeaders=host&X-Amz-Signature=56f2a25ad18c7551cb602583a673c87fc071652124d8a3838895a44a498661dd",
+        "https://wb-agora-hydra-file-storage-dokken.s3.amazonaws.com/dokken/production/da70f09-t_wackyweekend_carousel_keyart.png?X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=AKIA5J6YDD2RMJ4AQTRN%2F20250317%2Fus-east-1%2Fs3%2Faws4_request&X-Amz-Date=20250317T204235Z&X-Amz-Expires=3600&X-Amz-SignedHeaders=host&X-Amz-Signature=db8d9aeb05b42d26b8a0dc9dbe32054eb0534d810dfaa734297f3ad33f40f7fe",
     },
     {
       slug: "wackyweekend-carousel-thumbnail",
       name: "wackyweekend_carousel_thumbnail",
-      created_at: 1729191681,
-      updated_at: 1729191681,
+      created_at: { _hydra_unix_date: 1729191681 },
+      updated_at: { _hydra_unix_date: 1729191681 },
       s3_object_id: "dokken/production/695351bd-t_wackyweekend_carousel_thumbnail.png",
       auto_sync: true,
       file_size: 357173,
@@ -307,13 +307,13 @@ export async function handleFile_storage(req: Request<{}, {}, {}, {}>, res: Resp
       data: {},
       id: "67115f01a878cf190b7026ab",
       download_url:
-        "https://wb-agora-hydra-file-storage-dokken.s3.amazonaws.com/dokken/production/695351bd-t_wackyweekend_carousel_thumbnail.png?X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=AKIA5J6YDD2RMJ4AQTRN%2F20250316%2Fus-east-1%2Fs3%2Faws4_request&X-Amz-Date=20250316T012958Z&X-Amz-Expires=3600&X-Amz-SignedHeaders=host&X-Amz-Signature=93aa351e8ed169744615c96e6e91836376adff49d27615b0e2b83a50aa7ac3bf",
+        "https://wb-agora-hydra-file-storage-dokken.s3.amazonaws.com/dokken/production/695351bd-t_wackyweekend_carousel_thumbnail.png?X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=AKIA5J6YDD2RMJ4AQTRN%2F20250317%2Fus-east-1%2Fs3%2Faws4_request&X-Amz-Date=20250317T204235Z&X-Amz-Expires=3600&X-Amz-SignedHeaders=host&X-Amz-Signature=05f03278e50ba9764187b478b05d7ba697402eda852a394d1cc14c8202deae4a",
     },
     {
       slug: "testing-survey-carousel-keyart",
       name: "testing_survey_carousel_keyart",
-      created_at: 1731002973,
-      updated_at: 1731002973,
+      created_at: { _hydra_unix_date: 1731002973 },
+      updated_at: { _hydra_unix_date: 1731002973 },
       s3_object_id: "dokken/production/299f7ee9-testing_survey_carousel_keyart.png",
       auto_sync: true,
       file_size: 2855898,
@@ -324,13 +324,13 @@ export async function handleFile_storage(req: Request<{}, {}, {}, {}>, res: Resp
       data: {},
       id: "672d025de69d1a63b8c4365b",
       download_url:
-        "https://wb-agora-hydra-file-storage-dokken.s3.amazonaws.com/dokken/production/299f7ee9-testing_survey_carousel_keyart.png?X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=AKIA5J6YDD2RMJ4AQTRN%2F20250316%2Fus-east-1%2Fs3%2Faws4_request&X-Amz-Date=20250316T012958Z&X-Amz-Expires=3600&X-Amz-SignedHeaders=host&X-Amz-Signature=822ad530dcbab1e05b3cf38a2d53a0ee4dffdc10f4e67af9ed1160c7200f0e8a",
+        "https://wb-agora-hydra-file-storage-dokken.s3.amazonaws.com/dokken/production/299f7ee9-testing_survey_carousel_keyart.png?X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=AKIA5J6YDD2RMJ4AQTRN%2F20250317%2Fus-east-1%2Fs3%2Faws4_request&X-Amz-Date=20250317T204235Z&X-Amz-Expires=3600&X-Amz-SignedHeaders=host&X-Amz-Signature=f5b7b5ef4142810c1f0ea9dbe274c4f3bd287ccdb22360123d0091206deef861",
     },
     {
       slug: "testing-survey-carousel-thumbnail",
       name: "testing_survey_carousel_thumbnail",
-      created_at: 1731002997,
-      updated_at: 1731002997,
+      created_at: { _hydra_unix_date: 1731002997 },
+      updated_at: { _hydra_unix_date: 1731002997 },
       s3_object_id: "dokken/production/19b1aa33-testing_survey_carousel_thumbnail.png",
       auto_sync: true,
       file_size: 278758,
@@ -341,13 +341,13 @@ export async function handleFile_storage(req: Request<{}, {}, {}, {}>, res: Resp
       data: {},
       id: "672d0275e847129a5561d493",
       download_url:
-        "https://wb-agora-hydra-file-storage-dokken.s3.amazonaws.com/dokken/production/19b1aa33-testing_survey_carousel_thumbnail.png?X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=AKIA5J6YDD2RMJ4AQTRN%2F20250316%2Fus-east-1%2Fs3%2Faws4_request&X-Amz-Date=20250316T012958Z&X-Amz-Expires=3600&X-Amz-SignedHeaders=host&X-Amz-Signature=df9726c260734c8a89d2098d4178c2bcb820bddc0c5c2593785228a7a4511245",
+        "https://wb-agora-hydra-file-storage-dokken.s3.amazonaws.com/dokken/production/19b1aa33-testing_survey_carousel_thumbnail.png?X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=AKIA5J6YDD2RMJ4AQTRN%2F20250317%2Fus-east-1%2Fs3%2Faws4_request&X-Amz-Date=20250317T204235Z&X-Amz-Expires=3600&X-Amz-SignedHeaders=host&X-Amz-Signature=4854c3c6da6d6c09022d68cc09638a3b3bee0ec26654b07fbd655bb21c9b660e",
     },
     {
       slug: "fighterroad-carousel-keyart",
       name: "fighterroad_carousel_keyart",
-      created_at: 1731363173,
-      updated_at: 1731363173,
+      created_at: { _hydra_unix_date: 1731363173 },
+      updated_at: { _hydra_unix_date: 1731363173 },
       s3_object_id: "dokken/production/bd9d42db-fighterroad_carousel_keyart.png",
       auto_sync: true,
       file_size: 11158798,
@@ -358,13 +358,13 @@ export async function handleFile_storage(req: Request<{}, {}, {}, {}>, res: Resp
       data: {},
       id: "673281654445787133293012",
       download_url:
-        "https://wb-agora-hydra-file-storage-dokken.s3.amazonaws.com/dokken/production/bd9d42db-fighterroad_carousel_keyart.png?X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=AKIA5J6YDD2RMJ4AQTRN%2F20250316%2Fus-east-1%2Fs3%2Faws4_request&X-Amz-Date=20250316T012958Z&X-Amz-Expires=3600&X-Amz-SignedHeaders=host&X-Amz-Signature=a43fe3299870696fefb1d575090a115ee6c06ce74b23f811d4e86c755ae39868",
+        "https://wb-agora-hydra-file-storage-dokken.s3.amazonaws.com/dokken/production/bd9d42db-fighterroad_carousel_keyart.png?X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=AKIA5J6YDD2RMJ4AQTRN%2F20250317%2Fus-east-1%2Fs3%2Faws4_request&X-Amz-Date=20250317T204235Z&X-Amz-Expires=3600&X-Amz-SignedHeaders=host&X-Amz-Signature=607afefb6180970a44bc9e7a4795e9b16e1e35cd641b529df9c642a81aa761ff",
     },
     {
       slug: "fighterroad-carousel-thumbnail",
       name: "fighterroad_carousel_thumbnail",
-      created_at: 1731363203,
-      updated_at: 1731363203,
+      created_at: { _hydra_unix_date: 1731363203 },
+      updated_at: { _hydra_unix_date: 1731363203 },
       s3_object_id: "dokken/production/5e034be9-fighterroad_carousel_thumbnail.png",
       auto_sync: true,
       file_size: 639687,
@@ -375,13 +375,13 @@ export async function handleFile_storage(req: Request<{}, {}, {}, {}>, res: Resp
       data: {},
       id: "67328183084905aa5e026da2",
       download_url:
-        "https://wb-agora-hydra-file-storage-dokken.s3.amazonaws.com/dokken/production/5e034be9-fighterroad_carousel_thumbnail.png?X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=AKIA5J6YDD2RMJ4AQTRN%2F20250316%2Fus-east-1%2Fs3%2Faws4_request&X-Amz-Date=20250316T012958Z&X-Amz-Expires=3600&X-Amz-SignedHeaders=host&X-Amz-Signature=4587d76fa3cc267c2fc33ac391e5da268600595d1831e855d428094b2976de80",
+        "https://wb-agora-hydra-file-storage-dokken.s3.amazonaws.com/dokken/production/5e034be9-fighterroad_carousel_thumbnail.png?X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=AKIA5J6YDD2RMJ4AQTRN%2F20250317%2Fus-east-1%2Fs3%2Faws4_request&X-Amz-Date=20250317T204235Z&X-Amz-Expires=3600&X-Amz-SignedHeaders=host&X-Amz-Signature=13249fffdaaf91df798737bf8082e539d7876373d80a78a22be9b7d98c66652d",
     },
     {
       slug: "rankedevents4-carousel-keyart",
       name: "rankedevents4_carousel_keyart",
-      created_at: 1731364194,
-      updated_at: 1731364194,
+      created_at: { _hydra_unix_date: 1731364194 },
+      updated_at: { _hydra_unix_date: 1731364194 },
       s3_object_id: "dokken/production/af34f926-t_rankedevents4_keyart_v2.png",
       auto_sync: true,
       file_size: 7803725,
@@ -392,13 +392,13 @@ export async function handleFile_storage(req: Request<{}, {}, {}, {}>, res: Resp
       data: {},
       id: "67328562757eb81e9b2a8380",
       download_url:
-        "https://wb-agora-hydra-file-storage-dokken.s3.amazonaws.com/dokken/production/af34f926-t_rankedevents4_keyart_v2.png?X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=AKIA5J6YDD2RMJ4AQTRN%2F20250316%2Fus-east-1%2Fs3%2Faws4_request&X-Amz-Date=20250316T012958Z&X-Amz-Expires=3600&X-Amz-SignedHeaders=host&X-Amz-Signature=db6d685744d3a099aa88aaf76415df96626d3c96638816d827e5c70cba3c7d1a",
+        "https://wb-agora-hydra-file-storage-dokken.s3.amazonaws.com/dokken/production/af34f926-t_rankedevents4_keyart_v2.png?X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=AKIA5J6YDD2RMJ4AQTRN%2F20250317%2Fus-east-1%2Fs3%2Faws4_request&X-Amz-Date=20250317T204235Z&X-Amz-Expires=3600&X-Amz-SignedHeaders=host&X-Amz-Signature=664bf6a4722c2e0211d430f4639cfc71d75e529a421dc4587f1e2f0108f3d14f",
     },
     {
       slug: "rankedevents4-carousel-thumbnail",
       name: "rankedevents4_carousel_thumbnail",
-      created_at: 1731364216,
-      updated_at: 1731364216,
+      created_at: { _hydra_unix_date: 1731364216 },
+      updated_at: { _hydra_unix_date: 1731364216 },
       s3_object_id: "dokken/production/fe72e38e-t_rankedevents4_thumbnail.png",
       auto_sync: true,
       file_size: 572960,
@@ -409,13 +409,13 @@ export async function handleFile_storage(req: Request<{}, {}, {}, {}>, res: Resp
       data: {},
       id: "67328578154b02f102cc3ddb",
       download_url:
-        "https://wb-agora-hydra-file-storage-dokken.s3.amazonaws.com/dokken/production/fe72e38e-t_rankedevents4_thumbnail.png?X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=AKIA5J6YDD2RMJ4AQTRN%2F20250316%2Fus-east-1%2Fs3%2Faws4_request&X-Amz-Date=20250316T012958Z&X-Amz-Expires=3600&X-Amz-SignedHeaders=host&X-Amz-Signature=73a31f70c5b572ef60f5844fbc274074f46da1799ecf8c929e422412b70688a3",
+        "https://wb-agora-hydra-file-storage-dokken.s3.amazonaws.com/dokken/production/fe72e38e-t_rankedevents4_thumbnail.png?X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=AKIA5J6YDD2RMJ4AQTRN%2F20250317%2Fus-east-1%2Fs3%2Faws4_request&X-Amz-Date=20250317T204235Z&X-Amz-Expires=3600&X-Amz-SignedHeaders=host&X-Amz-Signature=2da7ee255df02bf53e7dd99baeaa7aa8832ea2be327c73cd8620aa6eeaf807be",
     },
     {
       slug: "event-trigonmrt-carousel-keyart",
       name: "event_trigonmrt_carousel_keyart",
-      created_at: 1731364710,
-      updated_at: 1731364710,
+      created_at: { _hydra_unix_date: 1731364710 },
+      updated_at: { _hydra_unix_date: 1731364710 },
       s3_object_id: "dokken/production/8181e7fe-t_event_trigonmrt_carousel_keyart.png",
       auto_sync: true,
       file_size: 10097965,
@@ -426,13 +426,13 @@ export async function handleFile_storage(req: Request<{}, {}, {}, {}>, res: Resp
       data: {},
       id: "67328766db02b7c2eb69ce70",
       download_url:
-        "https://wb-agora-hydra-file-storage-dokken.s3.amazonaws.com/dokken/production/8181e7fe-t_event_trigonmrt_carousel_keyart.png?X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=AKIA5J6YDD2RMJ4AQTRN%2F20250316%2Fus-east-1%2Fs3%2Faws4_request&X-Amz-Date=20250316T012958Z&X-Amz-Expires=3600&X-Amz-SignedHeaders=host&X-Amz-Signature=2914e81dfc68a030ea2acfbb536092ff1f4dd003efeaf207c13881d1327c5f1a",
+        "https://wb-agora-hydra-file-storage-dokken.s3.amazonaws.com/dokken/production/8181e7fe-t_event_trigonmrt_carousel_keyart.png?X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=AKIA5J6YDD2RMJ4AQTRN%2F20250317%2Fus-east-1%2Fs3%2Faws4_request&X-Amz-Date=20250317T204235Z&X-Amz-Expires=3600&X-Amz-SignedHeaders=host&X-Amz-Signature=0f789d656817ebc2e0d4b39fed18b480c2ee34892c4b6e8d1a4d30d0f2bd7e65",
     },
     {
       slug: "event-trigonmrt-carousel-thumbnail",
       name: "event_trigonmrt_carousel_thumbnail",
-      created_at: 1731364730,
-      updated_at: 1731364730,
+      created_at: { _hydra_unix_date: 1731364730 },
+      updated_at: { _hydra_unix_date: 1731364730 },
       s3_object_id: "dokken/production/a154f091-t_event_trigonmrt_carousel_thumbnail.png",
       auto_sync: true,
       file_size: 544688,
@@ -443,13 +443,13 @@ export async function handleFile_storage(req: Request<{}, {}, {}, {}>, res: Resp
       data: {},
       id: "6732877aa6944a4b7eb2a2a9",
       download_url:
-        "https://wb-agora-hydra-file-storage-dokken.s3.amazonaws.com/dokken/production/a154f091-t_event_trigonmrt_carousel_thumbnail.png?X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=AKIA5J6YDD2RMJ4AQTRN%2F20250316%2Fus-east-1%2Fs3%2Faws4_request&X-Amz-Date=20250316T012958Z&X-Amz-Expires=3600&X-Amz-SignedHeaders=host&X-Amz-Signature=6188baa786d553fdd1e34423b05e62e51a9eae225b953ace892763a027195918",
+        "https://wb-agora-hydra-file-storage-dokken.s3.amazonaws.com/dokken/production/a154f091-t_event_trigonmrt_carousel_thumbnail.png?X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=AKIA5J6YDD2RMJ4AQTRN%2F20250317%2Fus-east-1%2Fs3%2Faws4_request&X-Amz-Date=20250317T204235Z&X-Amz-Expires=3600&X-Amz-SignedHeaders=host&X-Amz-Signature=623f6485a62e380e75ce91b263993362a581b17a0b65e2baa7f2b9c2fe02f447",
     },
     {
       slug: "event-trigonmrt-carousel-pinned",
       name: "event_trigonmrt_carousel_pinned",
-      created_at: 1731364756,
-      updated_at: 1731364756,
+      created_at: { _hydra_unix_date: 1731364756 },
+      updated_at: { _hydra_unix_date: 1731364756 },
       s3_object_id: "dokken/production/e8cca31b-t_event_trigonmrt_carousel_pinned.png",
       auto_sync: true,
       file_size: 158108,
@@ -460,13 +460,13 @@ export async function handleFile_storage(req: Request<{}, {}, {}, {}>, res: Resp
       data: {},
       id: "67328794b9187a21515c8492",
       download_url:
-        "https://wb-agora-hydra-file-storage-dokken.s3.amazonaws.com/dokken/production/e8cca31b-t_event_trigonmrt_carousel_pinned.png?X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=AKIA5J6YDD2RMJ4AQTRN%2F20250316%2Fus-east-1%2Fs3%2Faws4_request&X-Amz-Date=20250316T012958Z&X-Amz-Expires=3600&X-Amz-SignedHeaders=host&X-Amz-Signature=00285738d3d09f8b8f3064188917d36822b7fb5b6140bc978fd31033fe012b83",
+        "https://wb-agora-hydra-file-storage-dokken.s3.amazonaws.com/dokken/production/e8cca31b-t_event_trigonmrt_carousel_pinned.png?X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=AKIA5J6YDD2RMJ4AQTRN%2F20250317%2Fus-east-1%2Fs3%2Faws4_request&X-Amz-Date=20250317T204235Z&X-Amz-Expires=3600&X-Amz-SignedHeaders=host&X-Amz-Signature=bab437529a1473b8bfe8c482d95e97e109e20670a3dbad4e222f6f79c05fcc85",
     },
     {
       slug: "event-ravenrift-carousel-keyart",
       name: "event_ravenrift_carousel_keyart",
-      created_at: 1731365353,
-      updated_at: 1731365353,
+      created_at: { _hydra_unix_date: 1731365353 },
+      updated_at: { _hydra_unix_date: 1731365353 },
       s3_object_id: "dokken/production/d852049d-t_event_ravenrift_carousel_keyart.png",
       auto_sync: true,
       file_size: 3541586,
@@ -477,13 +477,13 @@ export async function handleFile_storage(req: Request<{}, {}, {}, {}>, res: Resp
       data: {},
       id: "673289e9ec2546b67833c5d3",
       download_url:
-        "https://wb-agora-hydra-file-storage-dokken.s3.amazonaws.com/dokken/production/d852049d-t_event_ravenrift_carousel_keyart.png?X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=AKIA5J6YDD2RMJ4AQTRN%2F20250316%2Fus-east-1%2Fs3%2Faws4_request&X-Amz-Date=20250316T012958Z&X-Amz-Expires=3600&X-Amz-SignedHeaders=host&X-Amz-Signature=6bd5993c4a541018cd70d684a3bd7bd636ad56a9ac99ce89f2ccd23171ff811a",
+        "https://wb-agora-hydra-file-storage-dokken.s3.amazonaws.com/dokken/production/d852049d-t_event_ravenrift_carousel_keyart.png?X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=AKIA5J6YDD2RMJ4AQTRN%2F20250317%2Fus-east-1%2Fs3%2Faws4_request&X-Amz-Date=20250317T204235Z&X-Amz-Expires=3600&X-Amz-SignedHeaders=host&X-Amz-Signature=41709beb49d438c37a2b557c8ea0f68552247912bc6cec924795b5d6eb7c0882",
     },
     {
       slug: "event-ravenrift-carousel-thumbnail",
       name: "event_ravenrift_carousel_thumbnail",
-      created_at: 1731365376,
-      updated_at: 1731365376,
+      created_at: { _hydra_unix_date: 1731365376 },
+      updated_at: { _hydra_unix_date: 1731365376 },
       s3_object_id: "dokken/production/201acfec-t_event_ravenrift_carousel_thumbnail.png",
       auto_sync: true,
       file_size: 408102,
@@ -494,13 +494,13 @@ export async function handleFile_storage(req: Request<{}, {}, {}, {}>, res: Resp
       data: {},
       id: "67328a00eaac85e6f149ceb7",
       download_url:
-        "https://wb-agora-hydra-file-storage-dokken.s3.amazonaws.com/dokken/production/201acfec-t_event_ravenrift_carousel_thumbnail.png?X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=AKIA5J6YDD2RMJ4AQTRN%2F20250316%2Fus-east-1%2Fs3%2Faws4_request&X-Amz-Date=20250316T012958Z&X-Amz-Expires=3600&X-Amz-SignedHeaders=host&X-Amz-Signature=2b2111d0bf5f22f77e6cf88390e984a43d6b38f8a1e1328871ca82975d86a0d1",
+        "https://wb-agora-hydra-file-storage-dokken.s3.amazonaws.com/dokken/production/201acfec-t_event_ravenrift_carousel_thumbnail.png?X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=AKIA5J6YDD2RMJ4AQTRN%2F20250317%2Fus-east-1%2Fs3%2Faws4_request&X-Amz-Date=20250317T204235Z&X-Amz-Expires=3600&X-Amz-SignedHeaders=host&X-Amz-Signature=b4980d27a475056a0accceb8ecc823f02e7198aa5e7f200f4d8b6a46356c1191",
     },
     {
       slug: "arenamode-carousel-keyart",
       name: "arenamode_carousel_keyart",
-      created_at: 1731365737,
-      updated_at: 1731365737,
+      created_at: { _hydra_unix_date: 1731365737 },
+      updated_at: { _hydra_unix_date: 1731365737 },
       s3_object_id: "dokken/production/fa216290-t_arenamode_carousel_keyart.png",
       auto_sync: true,
       file_size: 7690560,
@@ -511,13 +511,13 @@ export async function handleFile_storage(req: Request<{}, {}, {}, {}>, res: Resp
       data: {},
       id: "67328b69f6e1e76d8c387dbf",
       download_url:
-        "https://wb-agora-hydra-file-storage-dokken.s3.amazonaws.com/dokken/production/fa216290-t_arenamode_carousel_keyart.png?X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=AKIA5J6YDD2RMJ4AQTRN%2F20250316%2Fus-east-1%2Fs3%2Faws4_request&X-Amz-Date=20250316T012958Z&X-Amz-Expires=3600&X-Amz-SignedHeaders=host&X-Amz-Signature=1cc044f1eef09529baaadc169053f3e342094b1c7331ed473c5da3339ab78d91",
+        "https://wb-agora-hydra-file-storage-dokken.s3.amazonaws.com/dokken/production/fa216290-t_arenamode_carousel_keyart.png?X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=AKIA5J6YDD2RMJ4AQTRN%2F20250317%2Fus-east-1%2Fs3%2Faws4_request&X-Amz-Date=20250317T204235Z&X-Amz-Expires=3600&X-Amz-SignedHeaders=host&X-Amz-Signature=770065efb64b898b8c4c9304831369390b4edb62436280b032c6d332e1950744",
     },
     {
       slug: "arenamode-carousel-thumbnail",
       name: "arenamode_carousel_thumbnail",
-      created_at: 1731365770,
-      updated_at: 1731365770,
+      created_at: { _hydra_unix_date: 1731365770 },
+      updated_at: { _hydra_unix_date: 1731365770 },
       s3_object_id: "dokken/production/bba485d9-t_arenamode_carousel_thumbnail.png",
       auto_sync: true,
       file_size: 503516,
@@ -528,13 +528,13 @@ export async function handleFile_storage(req: Request<{}, {}, {}, {}>, res: Resp
       data: {},
       id: "67328b8a70459e549631e27e",
       download_url:
-        "https://wb-agora-hydra-file-storage-dokken.s3.amazonaws.com/dokken/production/bba485d9-t_arenamode_carousel_thumbnail.png?X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=AKIA5J6YDD2RMJ4AQTRN%2F20250316%2Fus-east-1%2Fs3%2Faws4_request&X-Amz-Date=20250316T012958Z&X-Amz-Expires=3600&X-Amz-SignedHeaders=host&X-Amz-Signature=7f818938f5155d8197b5aed8e7931019b04eb798cdd49463501250fe59725eab",
+        "https://wb-agora-hydra-file-storage-dokken.s3.amazonaws.com/dokken/production/bba485d9-t_arenamode_carousel_thumbnail.png?X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=AKIA5J6YDD2RMJ4AQTRN%2F20250317%2Fus-east-1%2Fs3%2Faws4_request&X-Amz-Date=20250317T204235Z&X-Amz-Expires=3600&X-Amz-SignedHeaders=host&X-Amz-Signature=b9208159fb6a0820ba512c2ce5b49dacc02f3d768f7ec47d43e8e11e2fe8acbb",
     },
     {
       slug: "fighterroad-freetier-carousel-keyart",
       name: "fighterroad_freetier_carousel_keyart",
-      created_at: 1731367118,
-      updated_at: 1731367118,
+      created_at: { _hydra_unix_date: 1731367118 },
+      updated_at: { _hydra_unix_date: 1731367118 },
       s3_object_id: "dokken/production/7f6f39de-t_fighterroad_freetier_keyart.png",
       auto_sync: true,
       file_size: 4557830,
@@ -545,13 +545,13 @@ export async function handleFile_storage(req: Request<{}, {}, {}, {}>, res: Resp
       data: {},
       id: "673290ce0f21a91de7bb7405",
       download_url:
-        "https://wb-agora-hydra-file-storage-dokken.s3.amazonaws.com/dokken/production/7f6f39de-t_fighterroad_freetier_keyart.png?X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=AKIA5J6YDD2RMJ4AQTRN%2F20250316%2Fus-east-1%2Fs3%2Faws4_request&X-Amz-Date=20250316T012958Z&X-Amz-Expires=3600&X-Amz-SignedHeaders=host&X-Amz-Signature=b275f83090fd53b57f1b26275bd9958cef369dd34120ecbdefdd0942eb23a26e",
+        "https://wb-agora-hydra-file-storage-dokken.s3.amazonaws.com/dokken/production/7f6f39de-t_fighterroad_freetier_keyart.png?X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=AKIA5J6YDD2RMJ4AQTRN%2F20250317%2Fus-east-1%2Fs3%2Faws4_request&X-Amz-Date=20250317T204235Z&X-Amz-Expires=3600&X-Amz-SignedHeaders=host&X-Amz-Signature=570ca4a7b0bc606c558c07facb782b5b3a08754b6a4a251dc01dae6e165bb087",
     },
     {
       slug: "fighterroad-freetier-carousel-thumbnail",
       name: "fighterroad_freetier_carousel_thumbnail",
-      created_at: 1731367143,
-      updated_at: 1731367143,
+      created_at: { _hydra_unix_date: 1731367143 },
+      updated_at: { _hydra_unix_date: 1731367143 },
       s3_object_id: "dokken/production/a460e775-t_fighterroad_freetier_thumbnail.png",
       auto_sync: true,
       file_size: 347673,
@@ -562,13 +562,13 @@ export async function handleFile_storage(req: Request<{}, {}, {}, {}>, res: Resp
       data: {},
       id: "673290e7aa304de42068c41c",
       download_url:
-        "https://wb-agora-hydra-file-storage-dokken.s3.amazonaws.com/dokken/production/a460e775-t_fighterroad_freetier_thumbnail.png?X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=AKIA5J6YDD2RMJ4AQTRN%2F20250316%2Fus-east-1%2Fs3%2Faws4_request&X-Amz-Date=20250316T012958Z&X-Amz-Expires=3600&X-Amz-SignedHeaders=host&X-Amz-Signature=b2f45861f7a282a634cc4957bda3bfaa94c6f372a43f4814e31eeaa0d2a82999",
+        "https://wb-agora-hydra-file-storage-dokken.s3.amazonaws.com/dokken/production/a460e775-t_fighterroad_freetier_thumbnail.png?X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=AKIA5J6YDD2RMJ4AQTRN%2F20250317%2Fus-east-1%2Fs3%2Faws4_request&X-Amz-Date=20250317T204235Z&X-Amz-Expires=3600&X-Amz-SignedHeaders=host&X-Amz-Signature=b6facdcd30d2970c4f6773577ad36c8c6536f18b775c8532ea6c0530b2f67582",
     },
     {
       slug: "playersurvey-nov14-carousel-keyart",
       name: "playersurvey_nov14_carousel_keyart",
-      created_at: 1731611543,
-      updated_at: 1731611543,
+      created_at: { _hydra_unix_date: 1731611543 },
+      updated_at: { _hydra_unix_date: 1731611543 },
       s3_object_id: "dokken/production/e0b501d3-playersurvey_nov14_fullscreen.png",
       auto_sync: true,
       file_size: 2857482,
@@ -579,13 +579,13 @@ export async function handleFile_storage(req: Request<{}, {}, {}, {}>, res: Resp
       data: {},
       id: "67364b97d3ab1b31681f7252",
       download_url:
-        "https://wb-agora-hydra-file-storage-dokken.s3.amazonaws.com/dokken/production/e0b501d3-playersurvey_nov14_fullscreen.png?X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=AKIA5J6YDD2RMJ4AQTRN%2F20250316%2Fus-east-1%2Fs3%2Faws4_request&X-Amz-Date=20250316T012958Z&X-Amz-Expires=3600&X-Amz-SignedHeaders=host&X-Amz-Signature=28dcc98be8219e42ec04b3641e10fbcca12ef452d4c544caa6c09b61e42f104f",
+        "https://wb-agora-hydra-file-storage-dokken.s3.amazonaws.com/dokken/production/e0b501d3-playersurvey_nov14_fullscreen.png?X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=AKIA5J6YDD2RMJ4AQTRN%2F20250317%2Fus-east-1%2Fs3%2Faws4_request&X-Amz-Date=20250317T204235Z&X-Amz-Expires=3600&X-Amz-SignedHeaders=host&X-Amz-Signature=13da920d492f354ba4927227437e5f4417e8b4c7c33da69b4bbf72f1d69ff9bd",
     },
     {
       slug: "playersurvey-nov14-carousel-thumbnail",
       name: "playersurvey_nov14_carousel_thumbnail",
-      created_at: 1731611567,
-      updated_at: 1731611567,
+      created_at: { _hydra_unix_date: 1731611567 },
+      updated_at: { _hydra_unix_date: 1731611567 },
       s3_object_id: "dokken/production/a0d77177-playersurvey_nov14_thumbnail.png",
       auto_sync: true,
       file_size: 248179,
@@ -596,13 +596,13 @@ export async function handleFile_storage(req: Request<{}, {}, {}, {}>, res: Resp
       data: {},
       id: "67364bafb7149028b03f36cc",
       download_url:
-        "https://wb-agora-hydra-file-storage-dokken.s3.amazonaws.com/dokken/production/a0d77177-playersurvey_nov14_thumbnail.png?X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=AKIA5J6YDD2RMJ4AQTRN%2F20250316%2Fus-east-1%2Fs3%2Faws4_request&X-Amz-Date=20250316T012958Z&X-Amz-Expires=3600&X-Amz-SignedHeaders=host&X-Amz-Signature=3d4e1b0e6fa503c27775bfbdfcc3efa6a98071290d823582f469113511da51f2",
+        "https://wb-agora-hydra-file-storage-dokken.s3.amazonaws.com/dokken/production/a0d77177-playersurvey_nov14_thumbnail.png?X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=AKIA5J6YDD2RMJ4AQTRN%2F20250317%2Fus-east-1%2Fs3%2Faws4_request&X-Amz-Date=20250317T204235Z&X-Amz-Expires=3600&X-Amz-SignedHeaders=host&X-Amz-Signature=270ef8d4a2ec4df2494e770281e2b31633240af1a4fc0f5e63c73b0c1c03052c",
     },
     {
       slug: "event-academia-carousel-pinned",
       name: "event_academia_carousel_pinned",
-      created_at: 1732642947,
-      updated_at: 1732642947,
+      created_at: { _hydra_unix_date: 1732642947 },
+      updated_at: { _hydra_unix_date: 1732642947 },
       s3_object_id: "dokken/production/49ff5806-t_event_academia_carousel_pinned.png",
       auto_sync: true,
       file_size: 188651,
@@ -613,13 +613,13 @@ export async function handleFile_storage(req: Request<{}, {}, {}, {}>, res: Resp
       data: {},
       id: "674608837d6b7131233d2d4a",
       download_url:
-        "https://wb-agora-hydra-file-storage-dokken.s3.amazonaws.com/dokken/production/49ff5806-t_event_academia_carousel_pinned.png?X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=AKIA5J6YDD2RMJ4AQTRN%2F20250316%2Fus-east-1%2Fs3%2Faws4_request&X-Amz-Date=20250316T012958Z&X-Amz-Expires=3600&X-Amz-SignedHeaders=host&X-Amz-Signature=d7e13bbb66e08d7b5dda9131abcdd0b90fbd9f16e212ee638ccf8ef5d3f8731e",
+        "https://wb-agora-hydra-file-storage-dokken.s3.amazonaws.com/dokken/production/49ff5806-t_event_academia_carousel_pinned.png?X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=AKIA5J6YDD2RMJ4AQTRN%2F20250317%2Fus-east-1%2Fs3%2Faws4_request&X-Amz-Date=20250317T204235Z&X-Amz-Expires=3600&X-Amz-SignedHeaders=host&X-Amz-Signature=7c6caac171837ca78020cf97cfb144295645f403f63304fb91e5896dedd515aa",
     },
     {
       slug: "event-academia-carousel-thumbnail",
       name: "event_academia_carousel_thumbnail",
-      created_at: 1732642976,
-      updated_at: 1732642976,
+      created_at: { _hydra_unix_date: 1732642976 },
+      updated_at: { _hydra_unix_date: 1732642976 },
       s3_object_id: "dokken/production/f0d3fa4b-t_event_academia_carousel_thumbnail.png",
       auto_sync: true,
       file_size: 475827,
@@ -630,13 +630,13 @@ export async function handleFile_storage(req: Request<{}, {}, {}, {}>, res: Resp
       data: {},
       id: "674608a07d6b7131233d2d60",
       download_url:
-        "https://wb-agora-hydra-file-storage-dokken.s3.amazonaws.com/dokken/production/f0d3fa4b-t_event_academia_carousel_thumbnail.png?X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=AKIA5J6YDD2RMJ4AQTRN%2F20250316%2Fus-east-1%2Fs3%2Faws4_request&X-Amz-Date=20250316T012958Z&X-Amz-Expires=3600&X-Amz-SignedHeaders=host&X-Amz-Signature=40687ac9ed145b037963beadeb09b13c5fd78eea43ad851df89e1ababa75b1e2",
+        "https://wb-agora-hydra-file-storage-dokken.s3.amazonaws.com/dokken/production/f0d3fa4b-t_event_academia_carousel_thumbnail.png?X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=AKIA5J6YDD2RMJ4AQTRN%2F20250317%2Fus-east-1%2Fs3%2Faws4_request&X-Amz-Date=20250317T204235Z&X-Amz-Expires=3600&X-Amz-SignedHeaders=host&X-Amz-Signature=2fd84ecf8247dae49d6e4a0bda5a5099d0c16bcf531df508b8390862202cce73",
     },
     {
       slug: "event-academia-carousel-keyart",
       name: "event_academia_carousel_keyart",
-      created_at: 1732643053,
-      updated_at: 1732643053,
+      created_at: { _hydra_unix_date: 1732643053 },
+      updated_at: { _hydra_unix_date: 1732643053 },
       s3_object_id: "dokken/production/d411643f-t_event_academia_carousel_keyart.png",
       auto_sync: true,
       file_size: 6974975,
@@ -647,13 +647,13 @@ export async function handleFile_storage(req: Request<{}, {}, {}, {}>, res: Resp
       data: {},
       id: "674608ed219c34321cb54bf0",
       download_url:
-        "https://wb-agora-hydra-file-storage-dokken.s3.amazonaws.com/dokken/production/d411643f-t_event_academia_carousel_keyart.png?X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=AKIA5J6YDD2RMJ4AQTRN%2F20250316%2Fus-east-1%2Fs3%2Faws4_request&X-Amz-Date=20250316T012958Z&X-Amz-Expires=3600&X-Amz-SignedHeaders=host&X-Amz-Signature=269119dd268941466a5ecfad7c164e53a2078aac435edafd74cc4b264ebc6707",
+        "https://wb-agora-hydra-file-storage-dokken.s3.amazonaws.com/dokken/production/d411643f-t_event_academia_carousel_keyart.png?X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=AKIA5J6YDD2RMJ4AQTRN%2F20250317%2Fus-east-1%2Fs3%2Faws4_request&X-Amz-Date=20250317T204235Z&X-Amz-Expires=3600&X-Amz-SignedHeaders=host&X-Amz-Signature=ecbe6b9d9a1b12d5ac7a87181354fc43e6b1a17bd133019b3fc22f2d2b669768",
     },
     {
       slug: "event-academiarift-carousel-thumbnail",
       name: "event_academiarift_carousel_thumbnail",
-      created_at: 1732643110,
-      updated_at: 1732643110,
+      created_at: { _hydra_unix_date: 1732643110 },
+      updated_at: { _hydra_unix_date: 1732643110 },
       s3_object_id: "dokken/production/d4a1a2f7-t_event_academiarift_carousel_thumbnail.png",
       auto_sync: true,
       file_size: 434877,
@@ -664,13 +664,13 @@ export async function handleFile_storage(req: Request<{}, {}, {}, {}>, res: Resp
       data: {},
       id: "67460926dd3afef738507a4a",
       download_url:
-        "https://wb-agora-hydra-file-storage-dokken.s3.amazonaws.com/dokken/production/d4a1a2f7-t_event_academiarift_carousel_thumbnail.png?X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=AKIA5J6YDD2RMJ4AQTRN%2F20250316%2Fus-east-1%2Fs3%2Faws4_request&X-Amz-Date=20250316T012958Z&X-Amz-Expires=3600&X-Amz-SignedHeaders=host&X-Amz-Signature=fe76e289f7b08d7ca49a3eff4cdbecc013b126673c2775cbd4591a9942a5e925",
+        "https://wb-agora-hydra-file-storage-dokken.s3.amazonaws.com/dokken/production/d4a1a2f7-t_event_academiarift_carousel_thumbnail.png?X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=AKIA5J6YDD2RMJ4AQTRN%2F20250317%2Fus-east-1%2Fs3%2Faws4_request&X-Amz-Date=20250317T204235Z&X-Amz-Expires=3600&X-Amz-SignedHeaders=host&X-Amz-Signature=c4491a9761214a80662b1da9e5d22f6629a3f1aa7359ef9263617cc2a78769c6",
     },
     {
       slug: "event-academiarift-carousel-keyart",
       name: "event_academiarift_carousel_keyart",
-      created_at: 1732643137,
-      updated_at: 1732643137,
+      created_at: { _hydra_unix_date: 1732643137 },
+      updated_at: { _hydra_unix_date: 1732643137 },
       s3_object_id: "dokken/production/3141ca61-t_event_academiarft_carousel_keyart.png",
       auto_sync: true,
       file_size: 5441929,
@@ -681,13 +681,13 @@ export async function handleFile_storage(req: Request<{}, {}, {}, {}>, res: Resp
       data: {},
       id: "67460941c8576c904a48657d",
       download_url:
-        "https://wb-agora-hydra-file-storage-dokken.s3.amazonaws.com/dokken/production/3141ca61-t_event_academiarft_carousel_keyart.png?X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=AKIA5J6YDD2RMJ4AQTRN%2F20250316%2Fus-east-1%2Fs3%2Faws4_request&X-Amz-Date=20250316T012958Z&X-Amz-Expires=3600&X-Amz-SignedHeaders=host&X-Amz-Signature=9d257c4835cab503c0f2ef3a0bb02ad1fbcdc5ccb7ea89efd8f190e399dd2dcd",
+        "https://wb-agora-hydra-file-storage-dokken.s3.amazonaws.com/dokken/production/3141ca61-t_event_academiarft_carousel_keyart.png?X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=AKIA5J6YDD2RMJ4AQTRN%2F20250317%2Fus-east-1%2Fs3%2Faws4_request&X-Amz-Date=20250317T204235Z&X-Amz-Expires=3600&X-Amz-SignedHeaders=host&X-Amz-Signature=6c8651298a935ec8d9f330a59ad9580ae5966b8f78000b521f6297869ba263e2",
     },
     {
       slug: "arena-survey-carousel-keyart",
       name: "arena_survey_carousel_keyart",
-      created_at: 1732753006,
-      updated_at: 1732753006,
+      created_at: { _hydra_unix_date: 1732753006 },
+      updated_at: { _hydra_unix_date: 1732753006 },
       s3_object_id: "dokken/production/fc810814-arena_survey_carousel_keyart.png",
       auto_sync: true,
       file_size: 2465904,
@@ -698,13 +698,13 @@ export async function handleFile_storage(req: Request<{}, {}, {}, {}>, res: Resp
       data: {},
       id: "6747b66ed8f9c0efe1448dd8",
       download_url:
-        "https://wb-agora-hydra-file-storage-dokken.s3.amazonaws.com/dokken/production/fc810814-arena_survey_carousel_keyart.png?X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=AKIA5J6YDD2RMJ4AQTRN%2F20250316%2Fus-east-1%2Fs3%2Faws4_request&X-Amz-Date=20250316T012958Z&X-Amz-Expires=3600&X-Amz-SignedHeaders=host&X-Amz-Signature=24f50c3beb87bb95bfe63d9aefac56621f1524cb645cf6f7d1555ce8571228af",
+        "https://wb-agora-hydra-file-storage-dokken.s3.amazonaws.com/dokken/production/fc810814-arena_survey_carousel_keyart.png?X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=AKIA5J6YDD2RMJ4AQTRN%2F20250317%2Fus-east-1%2Fs3%2Faws4_request&X-Amz-Date=20250317T204235Z&X-Amz-Expires=3600&X-Amz-SignedHeaders=host&X-Amz-Signature=40e8ac16d7a69446673ec3be9e9f2aff0a03120263da9f8c2aced50eb8961d05",
     },
     {
       slug: "arena-survey-carousel-thumbnail",
       name: "arena_survey_carousel_thumbnail",
-      created_at: 1732753030,
-      updated_at: 1732753030,
+      created_at: { _hydra_unix_date: 1732753030 },
+      updated_at: { _hydra_unix_date: 1732753030 },
       s3_object_id: "dokken/production/5882ef6b-arena_survey_carousel_thumbnail.png",
       auto_sync: true,
       file_size: 217631,
@@ -715,13 +715,13 @@ export async function handleFile_storage(req: Request<{}, {}, {}, {}>, res: Resp
       data: {},
       id: "6747b686149ef46673f6aef4",
       download_url:
-        "https://wb-agora-hydra-file-storage-dokken.s3.amazonaws.com/dokken/production/5882ef6b-arena_survey_carousel_thumbnail.png?X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=AKIA5J6YDD2RMJ4AQTRN%2F20250316%2Fus-east-1%2Fs3%2Faws4_request&X-Amz-Date=20250316T012958Z&X-Amz-Expires=3600&X-Amz-SignedHeaders=host&X-Amz-Signature=c73604e6c960753b3ed64dc0d1788a8843b08ceeb0c432ef66f9963347bd8c22",
+        "https://wb-agora-hydra-file-storage-dokken.s3.amazonaws.com/dokken/production/5882ef6b-arena_survey_carousel_thumbnail.png?X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=AKIA5J6YDD2RMJ4AQTRN%2F20250317%2Fus-east-1%2Fs3%2Faws4_request&X-Amz-Date=20250317T204235Z&X-Amz-Expires=3600&X-Amz-SignedHeaders=host&X-Amz-Signature=003071b01b978def1517467eccd24ebeec5f98637cf23a42a3ce0d303e38ec13",
     },
     {
       slug: "soundtrack-vol2-qr-carousel-keyart",
       name: "soundtrack_vol2_qr_carousel_keyart",
-      created_at: 1733778189,
-      updated_at: 1733778189,
+      created_at: { _hydra_unix_date: 1733778189 },
+      updated_at: { _hydra_unix_date: 1733778189 },
       s3_object_id: "dokken/production/4ba97f3a-soundtrack_qr_keyart.png",
       auto_sync: true,
       file_size: 8161525,
@@ -732,13 +732,13 @@ export async function handleFile_storage(req: Request<{}, {}, {}, {}>, res: Resp
       data: {},
       id: "67575b0d386b6a11d7c5c007",
       download_url:
-        "https://wb-agora-hydra-file-storage-dokken.s3.amazonaws.com/dokken/production/4ba97f3a-soundtrack_qr_keyart.png?X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=AKIA5J6YDD2RMJ4AQTRN%2F20250316%2Fus-east-1%2Fs3%2Faws4_request&X-Amz-Date=20250316T012958Z&X-Amz-Expires=3600&X-Amz-SignedHeaders=host&X-Amz-Signature=dbf501722b2521fbd3b6137ac91eef632ee2ff812ad56d34c938299f147f65bd",
+        "https://wb-agora-hydra-file-storage-dokken.s3.amazonaws.com/dokken/production/4ba97f3a-soundtrack_qr_keyart.png?X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=AKIA5J6YDD2RMJ4AQTRN%2F20250317%2Fus-east-1%2Fs3%2Faws4_request&X-Amz-Date=20250317T204235Z&X-Amz-Expires=3600&X-Amz-SignedHeaders=host&X-Amz-Signature=6a4a1293ee007e4468c0d1cecc79724955876a9ca6fa5d84f6f30f3803c1d203",
     },
     {
       slug: "soundtrack-vol2-qr-carousel-thumbnail",
       name: "soundtrack_vol2_qr_carousel_thumbnail",
-      created_at: 1733778213,
-      updated_at: 1733778213,
+      created_at: { _hydra_unix_date: 1733778213 },
+      updated_at: { _hydra_unix_date: 1733778213 },
       s3_object_id: "dokken/production/61108a04-soundtrack_qr_thumbnail.png",
       auto_sync: true,
       file_size: 466057,
@@ -749,13 +749,13 @@ export async function handleFile_storage(req: Request<{}, {}, {}, {}>, res: Resp
       data: {},
       id: "67575b254a14bb22d14ee645",
       download_url:
-        "https://wb-agora-hydra-file-storage-dokken.s3.amazonaws.com/dokken/production/61108a04-soundtrack_qr_thumbnail.png?X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=AKIA5J6YDD2RMJ4AQTRN%2F20250316%2Fus-east-1%2Fs3%2Faws4_request&X-Amz-Date=20250316T012958Z&X-Amz-Expires=3600&X-Amz-SignedHeaders=host&X-Amz-Signature=9d250e31ac1f4ee540e3a78f9c350b372b384973abf1956576883177a9f0d90e",
+        "https://wb-agora-hydra-file-storage-dokken.s3.amazonaws.com/dokken/production/61108a04-soundtrack_qr_thumbnail.png?X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=AKIA5J6YDD2RMJ4AQTRN%2F20250317%2Fus-east-1%2Fs3%2Faws4_request&X-Amz-Date=20250317T204235Z&X-Amz-Expires=3600&X-Amz-SignedHeaders=host&X-Amz-Signature=d6f2a5413d3135b46a552dbddb47e114a84e3a2f2d55255509babb52f2336718",
     },
     {
       slug: "event-marcelinerift-carousel-keyart",
       name: "event_marcelinerift_carousel_keyart",
-      created_at: 1734384127,
-      updated_at: 1734384127,
+      created_at: { _hydra_unix_date: 1734384127 },
+      updated_at: { _hydra_unix_date: 1734384127 },
       s3_object_id: "dokken/production/b819c221-t_event_marcelinerift_carousel_keyart.png",
       auto_sync: true,
       file_size: 4054917,
@@ -766,13 +766,13 @@ export async function handleFile_storage(req: Request<{}, {}, {}, {}>, res: Resp
       data: {},
       id: "676099ffe7713a3c15973829",
       download_url:
-        "https://wb-agora-hydra-file-storage-dokken.s3.amazonaws.com/dokken/production/b819c221-t_event_marcelinerift_carousel_keyart.png?X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=AKIA5J6YDD2RMJ4AQTRN%2F20250316%2Fus-east-1%2Fs3%2Faws4_request&X-Amz-Date=20250316T012958Z&X-Amz-Expires=3600&X-Amz-SignedHeaders=host&X-Amz-Signature=c511c7c805a28dd6ad129870bb0e50312d83156d889a46fd9dba47f4a81b0264",
+        "https://wb-agora-hydra-file-storage-dokken.s3.amazonaws.com/dokken/production/b819c221-t_event_marcelinerift_carousel_keyart.png?X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=AKIA5J6YDD2RMJ4AQTRN%2F20250317%2Fus-east-1%2Fs3%2Faws4_request&X-Amz-Date=20250317T204235Z&X-Amz-Expires=3600&X-Amz-SignedHeaders=host&X-Amz-Signature=d93deb06677843199eed267ad21d1cb1308c1de072e39869e7cd93432451804a",
     },
     {
       slug: "event-marcelinerift-carousel-thumbnail",
       name: "event_marcelinerift_carousel_thumbnail",
-      created_at: 1734384158,
-      updated_at: 1734384158,
+      created_at: { _hydra_unix_date: 1734384158 },
+      updated_at: { _hydra_unix_date: 1734384158 },
       s3_object_id: "dokken/production/47abc013-t_event_marcelinerift_carousel_thumbnail.png",
       auto_sync: true,
       file_size: 349538,
@@ -783,13 +783,13 @@ export async function handleFile_storage(req: Request<{}, {}, {}, {}>, res: Resp
       data: {},
       id: "67609a1e60fe1e720adb1ecb",
       download_url:
-        "https://wb-agora-hydra-file-storage-dokken.s3.amazonaws.com/dokken/production/47abc013-t_event_marcelinerift_carousel_thumbnail.png?X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=AKIA5J6YDD2RMJ4AQTRN%2F20250316%2Fus-east-1%2Fs3%2Faws4_request&X-Amz-Date=20250316T012958Z&X-Amz-Expires=3600&X-Amz-SignedHeaders=host&X-Amz-Signature=9f3f0331c0d0cc4fb6f9f9c6dd2f7d60a8d170db1ed5c002e53f6c02eb1f1d9f",
+        "https://wb-agora-hydra-file-storage-dokken.s3.amazonaws.com/dokken/production/47abc013-t_event_marcelinerift_carousel_thumbnail.png?X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=AKIA5J6YDD2RMJ4AQTRN%2F20250317%2Fus-east-1%2Fs3%2Faws4_request&X-Amz-Date=20250317T204235Z&X-Amz-Expires=3600&X-Amz-SignedHeaders=host&X-Amz-Signature=d2db7ea152bb88dddee6b7e4f3889de798b9932cf820e82b43463653843342f4",
     },
     {
       slug: "event-holidaygathering-carousel-keyart",
       name: "event_holidaygathering_carousel_keyart",
-      created_at: 1734384968,
-      updated_at: 1734384968,
+      created_at: { _hydra_unix_date: 1734384968 },
+      updated_at: { _hydra_unix_date: 1734384968 },
       s3_object_id: "dokken/production/5131fc19-t_event_holidaygathering_carousel_keyart.png",
       auto_sync: true,
       file_size: 7564373,
@@ -800,13 +800,13 @@ export async function handleFile_storage(req: Request<{}, {}, {}, {}>, res: Resp
       data: {},
       id: "67609d48b878f0ad736db55f",
       download_url:
-        "https://wb-agora-hydra-file-storage-dokken.s3.amazonaws.com/dokken/production/5131fc19-t_event_holidaygathering_carousel_keyart.png?X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=AKIA5J6YDD2RMJ4AQTRN%2F20250316%2Fus-east-1%2Fs3%2Faws4_request&X-Amz-Date=20250316T012958Z&X-Amz-Expires=3600&X-Amz-SignedHeaders=host&X-Amz-Signature=1bd89f6e7fb5ba5319b70835c0d052ccbcab5e440a6bceba042a18b27d876858",
+        "https://wb-agora-hydra-file-storage-dokken.s3.amazonaws.com/dokken/production/5131fc19-t_event_holidaygathering_carousel_keyart.png?X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=AKIA5J6YDD2RMJ4AQTRN%2F20250317%2Fus-east-1%2Fs3%2Faws4_request&X-Amz-Date=20250317T204235Z&X-Amz-Expires=3600&X-Amz-SignedHeaders=host&X-Amz-Signature=6c7a1b3ef9a02e10087a65f0e76ffc498665001d006bcc58eee214bab599af13",
     },
     {
       slug: "event-holidaygathering-carousel-thumbnail",
       name: "event_holidaygathering_carousel_thumbnail",
-      created_at: 1734384992,
-      updated_at: 1734384992,
+      created_at: { _hydra_unix_date: 1734384992 },
+      updated_at: { _hydra_unix_date: 1734384992 },
       s3_object_id: "dokken/production/faf29c98-t_event_holidaygathering_carousel_thumbnail.png",
       auto_sync: true,
       file_size: 569849,
@@ -817,13 +817,13 @@ export async function handleFile_storage(req: Request<{}, {}, {}, {}>, res: Resp
       data: {},
       id: "67609d602957013c64fa6e0a",
       download_url:
-        "https://wb-agora-hydra-file-storage-dokken.s3.amazonaws.com/dokken/production/faf29c98-t_event_holidaygathering_carousel_thumbnail.png?X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=AKIA5J6YDD2RMJ4AQTRN%2F20250316%2Fus-east-1%2Fs3%2Faws4_request&X-Amz-Date=20250316T012958Z&X-Amz-Expires=3600&X-Amz-SignedHeaders=host&X-Amz-Signature=0d94b3b0539a78f05cde51f282425f2acca8e15ba0732714d74703bca81dd6ea",
+        "https://wb-agora-hydra-file-storage-dokken.s3.amazonaws.com/dokken/production/faf29c98-t_event_holidaygathering_carousel_thumbnail.png?X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=AKIA5J6YDD2RMJ4AQTRN%2F20250317%2Fus-east-1%2Fs3%2Faws4_request&X-Amz-Date=20250317T204235Z&X-Amz-Expires=3600&X-Amz-SignedHeaders=host&X-Amz-Signature=638bcaae893be6473adf26be2036df60fd20f50b8137e44c90e38f600edb3e08",
     },
     {
       slug: "event-holidaygathering-carousel-pinned",
       name: "event_holidaygathering_carousel_pinned",
-      created_at: 1734386711,
-      updated_at: 1734386711,
+      created_at: { _hydra_unix_date: 1734386711 },
+      updated_at: { _hydra_unix_date: 1734386711 },
       s3_object_id: "dokken/production/9e0874af-t_event_holidaygathering_carousel_pinned.png",
       auto_sync: true,
       file_size: 184844,
@@ -834,13 +834,13 @@ export async function handleFile_storage(req: Request<{}, {}, {}, {}>, res: Resp
       data: {},
       id: "6760a4176961bf410ce67fe1",
       download_url:
-        "https://wb-agora-hydra-file-storage-dokken.s3.amazonaws.com/dokken/production/9e0874af-t_event_holidaygathering_carousel_pinned.png?X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=AKIA5J6YDD2RMJ4AQTRN%2F20250316%2Fus-east-1%2Fs3%2Faws4_request&X-Amz-Date=20250316T012958Z&X-Amz-Expires=3600&X-Amz-SignedHeaders=host&X-Amz-Signature=afc9901dabaf95cead3b74b5fe4acd08332a070f43e3c03454522113f20318ed",
+        "https://wb-agora-hydra-file-storage-dokken.s3.amazonaws.com/dokken/production/9e0874af-t_event_holidaygathering_carousel_pinned.png?X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=AKIA5J6YDD2RMJ4AQTRN%2F20250317%2Fus-east-1%2Fs3%2Faws4_request&X-Amz-Date=20250317T204235Z&X-Amz-Expires=3600&X-Amz-SignedHeaders=host&X-Amz-Signature=292d4da9fa8c16ea90f6b1469a9a68c65e67ecc321c9e1952e703cee3976d5c8",
     },
     {
       slug: "arenamode-carousel-pinned",
       name: "arenamode_carousel_pinned",
-      created_at: 1734388066,
-      updated_at: 1734388066,
+      created_at: { _hydra_unix_date: 1734388066 },
+      updated_at: { _hydra_unix_date: 1734388066 },
       s3_object_id: "dokken/production/b2631b78-t_arenamode_carousel_pinned.png",
       auto_sync: true,
       file_size: 149775,
@@ -851,13 +851,13 @@ export async function handleFile_storage(req: Request<{}, {}, {}, {}>, res: Resp
       data: {},
       id: "6760a9623c46329a0c7f5a40",
       download_url:
-        "https://wb-agora-hydra-file-storage-dokken.s3.amazonaws.com/dokken/production/b2631b78-t_arenamode_carousel_pinned.png?X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=AKIA5J6YDD2RMJ4AQTRN%2F20250316%2Fus-east-1%2Fs3%2Faws4_request&X-Amz-Date=20250316T012958Z&X-Amz-Expires=3600&X-Amz-SignedHeaders=host&X-Amz-Signature=6f5986d6c8ad99071e6c64fa488691321c01b86c3370b28a23be5dccfa9ba70a",
+        "https://wb-agora-hydra-file-storage-dokken.s3.amazonaws.com/dokken/production/b2631b78-t_arenamode_carousel_pinned.png?X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=AKIA5J6YDD2RMJ4AQTRN%2F20250317%2Fus-east-1%2Fs3%2Faws4_request&X-Amz-Date=20250317T204235Z&X-Amz-Expires=3600&X-Amz-SignedHeaders=host&X-Amz-Signature=d1205e9bc8b5adbec453b90e7fec1cbc83503b5d96b78111f074ff46689c4d11",
     },
     {
       slug: "event-winterevent-carousel-keyart",
       name: "event_winterevent_carousel_keyart",
-      created_at: 1734557309,
-      updated_at: 1734557309,
+      created_at: { _hydra_unix_date: 1734557309 },
+      updated_at: { _hydra_unix_date: 1734557309 },
       s3_object_id: "dokken/production/cf4064cd-t_event_winterevent_carousel_keyart.png",
       auto_sync: true,
       file_size: 10194282,
@@ -868,13 +868,13 @@ export async function handleFile_storage(req: Request<{}, {}, {}, {}>, res: Resp
       data: {},
       id: "67633e7d597105b5a80c4e52",
       download_url:
-        "https://wb-agora-hydra-file-storage-dokken.s3.amazonaws.com/dokken/production/cf4064cd-t_event_winterevent_carousel_keyart.png?X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=AKIA5J6YDD2RMJ4AQTRN%2F20250316%2Fus-east-1%2Fs3%2Faws4_request&X-Amz-Date=20250316T012958Z&X-Amz-Expires=3600&X-Amz-SignedHeaders=host&X-Amz-Signature=eb4baae2fc2247a914e09ae0944e5fe1634dda1a7e84fc32ebfcd12190edf727",
+        "https://wb-agora-hydra-file-storage-dokken.s3.amazonaws.com/dokken/production/cf4064cd-t_event_winterevent_carousel_keyart.png?X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=AKIA5J6YDD2RMJ4AQTRN%2F20250317%2Fus-east-1%2Fs3%2Faws4_request&X-Amz-Date=20250317T204235Z&X-Amz-Expires=3600&X-Amz-SignedHeaders=host&X-Amz-Signature=3b0b90f675c53244de739eb5fc7c1997e2904ede8f793d9a834f60d1370e4c31",
     },
     {
       slug: "event-winterevent-carousel-thumbnail",
       name: "event_winterevent_carousel_thumbnail",
-      created_at: 1734557374,
-      updated_at: 1734557374,
+      created_at: { _hydra_unix_date: 1734557374 },
+      updated_at: { _hydra_unix_date: 1734557374 },
       s3_object_id: "dokken/production/8041604a-t_event_winterevent_carousel_thumbnail.png",
       auto_sync: true,
       file_size: 518829,
@@ -885,13 +885,13 @@ export async function handleFile_storage(req: Request<{}, {}, {}, {}>, res: Resp
       data: {},
       id: "67633ebe4169251b195326aa",
       download_url:
-        "https://wb-agora-hydra-file-storage-dokken.s3.amazonaws.com/dokken/production/8041604a-t_event_winterevent_carousel_thumbnail.png?X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=AKIA5J6YDD2RMJ4AQTRN%2F20250316%2Fus-east-1%2Fs3%2Faws4_request&X-Amz-Date=20250316T012958Z&X-Amz-Expires=3600&X-Amz-SignedHeaders=host&X-Amz-Signature=e8e31cbf24b41ddaf64c4a0524dce83c5a56f575e518cb3367a9e13d76e76d26",
+        "https://wb-agora-hydra-file-storage-dokken.s3.amazonaws.com/dokken/production/8041604a-t_event_winterevent_carousel_thumbnail.png?X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=AKIA5J6YDD2RMJ4AQTRN%2F20250317%2Fus-east-1%2Fs3%2Faws4_request&X-Amz-Date=20250317T204235Z&X-Amz-Expires=3600&X-Amz-SignedHeaders=host&X-Amz-Signature=c947c3992ffab5868588d6e00d365360a80975b2ae48c8220c70e775efbf5c2d",
     },
     {
       slug: "event-winterevent-carousel-pinned",
       name: "event_winterevent_carousel_pinned",
-      created_at: 1734557481,
-      updated_at: 1734557481,
+      created_at: { _hydra_unix_date: 1734557481 },
+      updated_at: { _hydra_unix_date: 1734557481 },
       s3_object_id: "dokken/production/d480042a-t_event_winterevent_carousel_pinned.png",
       auto_sync: true,
       file_size: 156649,
@@ -902,13 +902,13 @@ export async function handleFile_storage(req: Request<{}, {}, {}, {}>, res: Resp
       data: {},
       id: "67633f2924285ab16288786e",
       download_url:
-        "https://wb-agora-hydra-file-storage-dokken.s3.amazonaws.com/dokken/production/d480042a-t_event_winterevent_carousel_pinned.png?X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=AKIA5J6YDD2RMJ4AQTRN%2F20250316%2Fus-east-1%2Fs3%2Faws4_request&X-Amz-Date=20250316T012958Z&X-Amz-Expires=3600&X-Amz-SignedHeaders=host&X-Amz-Signature=b2506e91f4a9b9e4f02596c23392e2d94270ecbe4f4b85ac66145074f05bc029",
+        "https://wb-agora-hydra-file-storage-dokken.s3.amazonaws.com/dokken/production/d480042a-t_event_winterevent_carousel_pinned.png?X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=AKIA5J6YDD2RMJ4AQTRN%2F20250317%2Fus-east-1%2Fs3%2Faws4_request&X-Amz-Date=20250317T204235Z&X-Amz-Expires=3600&X-Amz-SignedHeaders=host&X-Amz-Signature=dd66a66de55127e860cdc8696cf85e582879c1a46f3bc8984f83bd3604e87dbd",
     },
     {
       slug: "rift-challenge-carousel-keyart",
       name: "rift_challenge_carousel_keyart",
-      created_at: 1734559113,
-      updated_at: 1734559113,
+      created_at: { _hydra_unix_date: 1734559113 },
+      updated_at: { _hydra_unix_date: 1734559113 },
       s3_object_id: "dokken/production/c268e6f9-t_rift_challenge_carousel_keyart.png",
       auto_sync: true,
       file_size: 3703601,
@@ -919,13 +919,13 @@ export async function handleFile_storage(req: Request<{}, {}, {}, {}>, res: Resp
       data: {},
       id: "676345893ed3704ab3678019",
       download_url:
-        "https://wb-agora-hydra-file-storage-dokken.s3.amazonaws.com/dokken/production/c268e6f9-t_rift_challenge_carousel_keyart.png?X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=AKIA5J6YDD2RMJ4AQTRN%2F20250316%2Fus-east-1%2Fs3%2Faws4_request&X-Amz-Date=20250316T012958Z&X-Amz-Expires=3600&X-Amz-SignedHeaders=host&X-Amz-Signature=a629713b0e94ecd509b9df20b261e1bccc7fb17e04f587eea186cb8eb000cabc",
+        "https://wb-agora-hydra-file-storage-dokken.s3.amazonaws.com/dokken/production/c268e6f9-t_rift_challenge_carousel_keyart.png?X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=AKIA5J6YDD2RMJ4AQTRN%2F20250317%2Fus-east-1%2Fs3%2Faws4_request&X-Amz-Date=20250317T204235Z&X-Amz-Expires=3600&X-Amz-SignedHeaders=host&X-Amz-Signature=72c3d93377489056c60ac08056989dd06d2626f0fc67adfb1eaaf5bc01f9547b",
     },
     {
       slug: "rift-challenge-carousel-thumbnail",
       name: "rift_challenge_carousel_thumbnail",
-      created_at: 1734559134,
-      updated_at: 1734559134,
+      created_at: { _hydra_unix_date: 1734559134 },
+      updated_at: { _hydra_unix_date: 1734559134 },
       s3_object_id: "dokken/production/e6c1e2fb-t_rift_challenge_carousel_thumbnail.png",
       auto_sync: true,
       file_size: 249217,
@@ -936,13 +936,13 @@ export async function handleFile_storage(req: Request<{}, {}, {}, {}>, res: Resp
       data: {},
       id: "6763459ee7713a3c159868e3",
       download_url:
-        "https://wb-agora-hydra-file-storage-dokken.s3.amazonaws.com/dokken/production/e6c1e2fb-t_rift_challenge_carousel_thumbnail.png?X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=AKIA5J6YDD2RMJ4AQTRN%2F20250316%2Fus-east-1%2Fs3%2Faws4_request&X-Amz-Date=20250316T012958Z&X-Amz-Expires=3600&X-Amz-SignedHeaders=host&X-Amz-Signature=a44f1d8f1b5203c4a509b7eee452ec337e8718fa080e00abfd9bf9d7f45d7f2c",
+        "https://wb-agora-hydra-file-storage-dokken.s3.amazonaws.com/dokken/production/e6c1e2fb-t_rift_challenge_carousel_thumbnail.png?X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=AKIA5J6YDD2RMJ4AQTRN%2F20250317%2Fus-east-1%2Fs3%2Faws4_request&X-Amz-Date=20250317T204235Z&X-Amz-Expires=3600&X-Amz-SignedHeaders=host&X-Amz-Signature=23af56fd87e406368cc7195c7031a3aa8c6b5d1cc3978bf4f4b1cbd06c5e8a78",
     },
     {
       slug: "nubia-rift-s5-keyart",
       name: "nubia_rift_s5_keyart",
-      created_at: 1738630838,
-      updated_at: 1738630838,
+      created_at: { _hydra_unix_date: 1738630838 },
+      updated_at: { _hydra_unix_date: 1738630838 },
       s3_object_id: "dokken/production/8fdcf62c-nubia_Rift_S5_keyart.png",
       auto_sync: true,
       file_size: 1866287,
@@ -953,13 +953,13 @@ export async function handleFile_storage(req: Request<{}, {}, {}, {}>, res: Resp
       data: {},
       id: "67a166b65e10a90a68441af0",
       download_url:
-        "https://wb-agora-hydra-file-storage-dokken.s3.amazonaws.com/dokken/production/8fdcf62c-nubia_Rift_S5_keyart.png?X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=AKIA5J6YDD2RMJ4AQTRN%2F20250316%2Fus-east-1%2Fs3%2Faws4_request&X-Amz-Date=20250316T012958Z&X-Amz-Expires=3600&X-Amz-SignedHeaders=host&X-Amz-Signature=ceda7791302e182e71e33ed3027951e0c3f6a7c4ad19c4c4032bf856ed7f97b0",
+        "https://wb-agora-hydra-file-storage-dokken.s3.amazonaws.com/dokken/production/8fdcf62c-nubia_Rift_S5_keyart.png?X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=AKIA5J6YDD2RMJ4AQTRN%2F20250317%2Fus-east-1%2Fs3%2Faws4_request&X-Amz-Date=20250317T204235Z&X-Amz-Expires=3600&X-Amz-SignedHeaders=host&X-Amz-Signature=76358d56f0e1c039c82407aceb95957681277fdd49ac1ef36f95d4df1da48630",
     },
     {
       slug: "nubia-rift-s5-thumbnail",
       name: "nubia_rift_s5_thumbnail",
-      created_at: 1738630868,
-      updated_at: 1738630868,
+      created_at: { _hydra_unix_date: 1738630868 },
+      updated_at: { _hydra_unix_date: 1738630868 },
       s3_object_id: "dokken/production/e2a40fff-nubia_Rift_S5_thumbnail.png",
       auto_sync: true,
       file_size: 217377,
@@ -970,13 +970,13 @@ export async function handleFile_storage(req: Request<{}, {}, {}, {}>, res: Resp
       data: {},
       id: "67a166d467096aeb31821c1e",
       download_url:
-        "https://wb-agora-hydra-file-storage-dokken.s3.amazonaws.com/dokken/production/e2a40fff-nubia_Rift_S5_thumbnail.png?X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=AKIA5J6YDD2RMJ4AQTRN%2F20250316%2Fus-east-1%2Fs3%2Faws4_request&X-Amz-Date=20250316T012958Z&X-Amz-Expires=3600&X-Amz-SignedHeaders=host&X-Amz-Signature=871fb5e6b5216767eb058db8a57939901be739642467c47799cf61fcff0b4652",
+        "https://wb-agora-hydra-file-storage-dokken.s3.amazonaws.com/dokken/production/e2a40fff-nubia_Rift_S5_thumbnail.png?X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=AKIA5J6YDD2RMJ4AQTRN%2F20250317%2Fus-east-1%2Fs3%2Faws4_request&X-Amz-Date=20250317T204235Z&X-Amz-Expires=3600&X-Amz-SignedHeaders=host&X-Amz-Signature=36ee3331a0170eeef5c092b2d847fd160e70fc377bc175f9f2436f5ed4bded9b",
     },
     {
       slug: "s5-bp-carousel-keyart",
       name: "s5_bp_carousel_keyart",
-      created_at: 1738631162,
-      updated_at: 1738631162,
+      created_at: { _hydra_unix_date: 1738631162 },
+      updated_at: { _hydra_unix_date: 1738631162 },
       s3_object_id: "dokken/production/a6db14c3-MVS_SEASON5_bp_carousel_keyart.png",
       auto_sync: true,
       file_size: 7939670,
@@ -987,13 +987,13 @@ export async function handleFile_storage(req: Request<{}, {}, {}, {}>, res: Resp
       data: {},
       id: "67a167fac9f8478011462227",
       download_url:
-        "https://wb-agora-hydra-file-storage-dokken.s3.amazonaws.com/dokken/production/a6db14c3-MVS_SEASON5_bp_carousel_keyart.png?X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=AKIA5J6YDD2RMJ4AQTRN%2F20250316%2Fus-east-1%2Fs3%2Faws4_request&X-Amz-Date=20250316T012958Z&X-Amz-Expires=3600&X-Amz-SignedHeaders=host&X-Amz-Signature=d34497a0ae0541523416209214f8353001ebf1a0b38a7137128f7134ef1ed9bd",
+        "https://wb-agora-hydra-file-storage-dokken.s3.amazonaws.com/dokken/production/a6db14c3-MVS_SEASON5_bp_carousel_keyart.png?X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=AKIA5J6YDD2RMJ4AQTRN%2F20250317%2Fus-east-1%2Fs3%2Faws4_request&X-Amz-Date=20250317T204235Z&X-Amz-Expires=3600&X-Amz-SignedHeaders=host&X-Amz-Signature=fd88fe9c98f2a173e7cb0fe2c9043551b0aa78ea5ce0fa98e99f1d0d2882283c",
     },
     {
       slug: "s5-bp-carousel-thumbnail",
       name: "s5_bp_carousel_thumbnail",
-      created_at: 1738631201,
-      updated_at: 1738631201,
+      created_at: { _hydra_unix_date: 1738631201 },
+      updated_at: { _hydra_unix_date: 1738631201 },
       s3_object_id: "dokken/production/6d849a8f-MVS_SEASON5_bp_carousel_thumbnail.png",
       auto_sync: true,
       file_size: 568876,
@@ -1004,13 +1004,13 @@ export async function handleFile_storage(req: Request<{}, {}, {}, {}>, res: Resp
       data: {},
       id: "67a168217d5313a213518cdb",
       download_url:
-        "https://wb-agora-hydra-file-storage-dokken.s3.amazonaws.com/dokken/production/6d849a8f-MVS_SEASON5_bp_carousel_thumbnail.png?X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=AKIA5J6YDD2RMJ4AQTRN%2F20250316%2Fus-east-1%2Fs3%2Faws4_request&X-Amz-Date=20250316T012958Z&X-Amz-Expires=3600&X-Amz-SignedHeaders=host&X-Amz-Signature=1b7365e2307f83d6b8c7aab75a5d489fc04664affe908f3b2ae8e3020dc5f23d",
+        "https://wb-agora-hydra-file-storage-dokken.s3.amazonaws.com/dokken/production/6d849a8f-MVS_SEASON5_bp_carousel_thumbnail.png?X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=AKIA5J6YDD2RMJ4AQTRN%2F20250317%2Fus-east-1%2Fs3%2Faws4_request&X-Amz-Date=20250317T204235Z&X-Amz-Expires=3600&X-Amz-SignedHeaders=host&X-Amz-Signature=bcb5041fba6ed269b0c0609225fe46252ce37254eb305ca86655b04a1e707fbf",
     },
     {
       slug: "event-valentineon-pinned",
       name: "event_valentineon_pinned",
-      created_at: 1738631675,
-      updated_at: 1738631675,
+      created_at: { _hydra_unix_date: 1738631675 },
+      updated_at: { _hydra_unix_date: 1738631675 },
       s3_object_id: "dokken/production/c00e3342-t_event_valentineon_pinned.png",
       auto_sync: true,
       file_size: 107883,
@@ -1021,13 +1021,13 @@ export async function handleFile_storage(req: Request<{}, {}, {}, {}>, res: Resp
       data: {},
       id: "67a169fbfdba842c7c15586f",
       download_url:
-        "https://wb-agora-hydra-file-storage-dokken.s3.amazonaws.com/dokken/production/c00e3342-t_event_valentineon_pinned.png?X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=AKIA5J6YDD2RMJ4AQTRN%2F20250316%2Fus-east-1%2Fs3%2Faws4_request&X-Amz-Date=20250316T012958Z&X-Amz-Expires=3600&X-Amz-SignedHeaders=host&X-Amz-Signature=c58a83d54231f2ba8c1bd2cfc63ff0bc1db9c1f43ff83a46693f43db8b81711e",
+        "https://wb-agora-hydra-file-storage-dokken.s3.amazonaws.com/dokken/production/c00e3342-t_event_valentineon_pinned.png?X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=AKIA5J6YDD2RMJ4AQTRN%2F20250317%2Fus-east-1%2Fs3%2Faws4_request&X-Amz-Date=20250317T204235Z&X-Amz-Expires=3600&X-Amz-SignedHeaders=host&X-Amz-Signature=a5e3b240a5682be091b6aa91d43e6fbbce47cbd125e222d7519de2cf97fcfb99",
     },
     {
       slug: "agent-arena-keyart",
       name: "agent_arena_keyart",
-      created_at: 1739234943,
-      updated_at: 1739234943,
+      created_at: { _hydra_unix_date: 1739234943 },
+      updated_at: { _hydra_unix_date: 1739234943 },
       s3_object_id: "dokken/production/fe5bd6d6-Agent_arena_keyart.png",
       auto_sync: true,
       file_size: 4864036,
@@ -1038,13 +1038,13 @@ export async function handleFile_storage(req: Request<{}, {}, {}, {}>, res: Resp
       data: {},
       id: "67aa9e7f810ffcec3fb40644",
       download_url:
-        "https://wb-agora-hydra-file-storage-dokken.s3.amazonaws.com/dokken/production/fe5bd6d6-Agent_arena_keyart.png?X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=AKIA5J6YDD2RMJ4AQTRN%2F20250316%2Fus-east-1%2Fs3%2Faws4_request&X-Amz-Date=20250316T012958Z&X-Amz-Expires=3600&X-Amz-SignedHeaders=host&X-Amz-Signature=039036c8cbbc5873a933378bc487b7ebc2f9ea736117f2e3142be9bc7209337a",
+        "https://wb-agora-hydra-file-storage-dokken.s3.amazonaws.com/dokken/production/fe5bd6d6-Agent_arena_keyart.png?X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=AKIA5J6YDD2RMJ4AQTRN%2F20250317%2Fus-east-1%2Fs3%2Faws4_request&X-Amz-Date=20250317T204235Z&X-Amz-Expires=3600&X-Amz-SignedHeaders=host&X-Amz-Signature=483998bdafcdc1ec6d166b39aa5283df929ac5f187cacc0a6618c24bcb7d75d2",
     },
     {
       slug: "agent-arena-thumbnail",
       name: "agent_arena_thumbnail",
-      created_at: 1739234962,
-      updated_at: 1739234962,
+      created_at: { _hydra_unix_date: 1739234962 },
+      updated_at: { _hydra_unix_date: 1739234962 },
       s3_object_id: "dokken/production/945bc674-Agent_arena_thumbnail.png",
       auto_sync: true,
       file_size: 456750,
@@ -1055,13 +1055,13 @@ export async function handleFile_storage(req: Request<{}, {}, {}, {}>, res: Resp
       data: {},
       id: "67aa9e9270afac8a0128eed3",
       download_url:
-        "https://wb-agora-hydra-file-storage-dokken.s3.amazonaws.com/dokken/production/945bc674-Agent_arena_thumbnail.png?X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=AKIA5J6YDD2RMJ4AQTRN%2F20250316%2Fus-east-1%2Fs3%2Faws4_request&X-Amz-Date=20250316T012958Z&X-Amz-Expires=3600&X-Amz-SignedHeaders=host&X-Amz-Signature=09fbb4dcbbba2a171b5b23ec7614855e114563feb87c56aa40159523983a1060",
+        "https://wb-agora-hydra-file-storage-dokken.s3.amazonaws.com/dokken/production/945bc674-Agent_arena_thumbnail.png?X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=AKIA5J6YDD2RMJ4AQTRN%2F20250317%2Fus-east-1%2Fs3%2Faws4_request&X-Amz-Date=20250317T204235Z&X-Amz-Expires=3600&X-Amz-SignedHeaders=host&X-Amz-Signature=735275b7a910cd086e0a334056e7e2234d4c5b8277096e8664c50cff6d3f0a3a",
     },
     {
       slug: "raven-rift-s5-thumbnail",
       name: "raven_rift_s5_thumbnail",
-      created_at: 1739843161,
-      updated_at: 1739843161,
+      created_at: { _hydra_unix_date: 1739843161 },
+      updated_at: { _hydra_unix_date: 1739843161 },
       s3_object_id: "dokken/production/e24e9d9f-raven_Rift_S5_thumbnail.png",
       auto_sync: true,
       file_size: 221428,
@@ -1072,13 +1072,13 @@ export async function handleFile_storage(req: Request<{}, {}, {}, {}>, res: Resp
       data: {},
       id: "67b3e6595ffd025d9f087733",
       download_url:
-        "https://wb-agora-hydra-file-storage-dokken.s3.amazonaws.com/dokken/production/e24e9d9f-raven_Rift_S5_thumbnail.png?X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=AKIA5J6YDD2RMJ4AQTRN%2F20250316%2Fus-east-1%2Fs3%2Faws4_request&X-Amz-Date=20250316T012958Z&X-Amz-Expires=3600&X-Amz-SignedHeaders=host&X-Amz-Signature=672978841ee1d684668a9ef2afdf46ec7d826e531adfe0d3c3ca2abcd838aad5",
+        "https://wb-agora-hydra-file-storage-dokken.s3.amazonaws.com/dokken/production/e24e9d9f-raven_Rift_S5_thumbnail.png?X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=AKIA5J6YDD2RMJ4AQTRN%2F20250317%2Fus-east-1%2Fs3%2Faws4_request&X-Amz-Date=20250317T204235Z&X-Amz-Expires=3600&X-Amz-SignedHeaders=host&X-Amz-Signature=e3d8fec1b2d688c2b3538581a5a4aa2e45212ec1ad46d269251cf9a318121ee1",
     },
     {
       slug: "raven-rift-s5-keyart",
       name: "raven_rift_s5_keyart",
-      created_at: 1739843189,
-      updated_at: 1739843189,
+      created_at: { _hydra_unix_date: 1739843189 },
+      updated_at: { _hydra_unix_date: 1739843189 },
       s3_object_id: "dokken/production/f711f276-raven_Rift_S5_keyart.png",
       auto_sync: true,
       file_size: 2054819,
@@ -1089,13 +1089,13 @@ export async function handleFile_storage(req: Request<{}, {}, {}, {}>, res: Resp
       data: {},
       id: "67b3e6757bf687991d103a9c",
       download_url:
-        "https://wb-agora-hydra-file-storage-dokken.s3.amazonaws.com/dokken/production/f711f276-raven_Rift_S5_keyart.png?X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=AKIA5J6YDD2RMJ4AQTRN%2F20250316%2Fus-east-1%2Fs3%2Faws4_request&X-Amz-Date=20250316T012958Z&X-Amz-Expires=3600&X-Amz-SignedHeaders=host&X-Amz-Signature=404f6b6e33fb788b9d8cc244b05b0134ac74cba93f9439b001e00c3ba5498bd9",
+        "https://wb-agora-hydra-file-storage-dokken.s3.amazonaws.com/dokken/production/f711f276-raven_Rift_S5_keyart.png?X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=AKIA5J6YDD2RMJ4AQTRN%2F20250317%2Fus-east-1%2Fs3%2Faws4_request&X-Amz-Date=20250317T204235Z&X-Amz-Expires=3600&X-Amz-SignedHeaders=host&X-Amz-Signature=b455c5eb48f4abe2132bb06914607fdb4b65a13a80d325839f85a5d419cc36c4",
     },
     {
       slug: "rick-arena-keyart",
       name: "rick_arena_keyart",
-      created_at: 1740427326,
-      updated_at: 1740427326,
+      created_at: { _hydra_unix_date: 1740427326 },
+      updated_at: { _hydra_unix_date: 1740427326 },
       s3_object_id: "dokken/production/3202b19c-Rick_arena_keyart.png",
       auto_sync: true,
       file_size: 4602857,
@@ -1106,13 +1106,13 @@ export async function handleFile_storage(req: Request<{}, {}, {}, {}>, res: Resp
       data: {},
       id: "67bcd03e00935001c4b84c6e",
       download_url:
-        "https://wb-agora-hydra-file-storage-dokken.s3.amazonaws.com/dokken/production/3202b19c-Rick_arena_keyart.png?X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=AKIA5J6YDD2RMJ4AQTRN%2F20250316%2Fus-east-1%2Fs3%2Faws4_request&X-Amz-Date=20250316T012958Z&X-Amz-Expires=3600&X-Amz-SignedHeaders=host&X-Amz-Signature=8345f0019f5473f6d06c86bdbe26db06178c0c3bdd11e79faa92a424e11e23ad",
+        "https://wb-agora-hydra-file-storage-dokken.s3.amazonaws.com/dokken/production/3202b19c-Rick_arena_keyart.png?X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=AKIA5J6YDD2RMJ4AQTRN%2F20250317%2Fus-east-1%2Fs3%2Faws4_request&X-Amz-Date=20250317T204235Z&X-Amz-Expires=3600&X-Amz-SignedHeaders=host&X-Amz-Signature=8941056e6e3ba4669d581e028bdfaef2dfca1eeb1a3c44121d52b3bda328d844",
     },
     {
       slug: "rick-arena-thumbnail",
       name: "rick_arena_thumbnail",
-      created_at: 1740427345,
-      updated_at: 1740427345,
+      created_at: { _hydra_unix_date: 1740427345 },
+      updated_at: { _hydra_unix_date: 1740427345 },
       s3_object_id: "dokken/production/cfc2d726-Rick_arena_thumbnail.png",
       auto_sync: true,
       file_size: 453953,
@@ -1123,13 +1123,13 @@ export async function handleFile_storage(req: Request<{}, {}, {}, {}>, res: Resp
       data: {},
       id: "67bcd05147cba9abb898d3df",
       download_url:
-        "https://wb-agora-hydra-file-storage-dokken.s3.amazonaws.com/dokken/production/cfc2d726-Rick_arena_thumbnail.png?X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=AKIA5J6YDD2RMJ4AQTRN%2F20250316%2Fus-east-1%2Fs3%2Faws4_request&X-Amz-Date=20250316T012958Z&X-Amz-Expires=3600&X-Amz-SignedHeaders=host&X-Amz-Signature=1550d228348cf73173700d889871c747181f6e21dc4c22980ae156aff0551a52",
+        "https://wb-agora-hydra-file-storage-dokken.s3.amazonaws.com/dokken/production/cfc2d726-Rick_arena_thumbnail.png?X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=AKIA5J6YDD2RMJ4AQTRN%2F20250317%2Fus-east-1%2Fs3%2Faws4_request&X-Amz-Date=20250317T204235Z&X-Amz-Expires=3600&X-Amz-SignedHeaders=host&X-Amz-Signature=0b014dd202b490ea6e4ed43fb8c2ec216ab5f3632e78d6d03aa54299027edeeb",
     },
     {
       slug: "harley-rift-s5-keyart",
       name: "harley_rift_s5_keyart",
-      created_at: 1741047207,
-      updated_at: 1741047207,
+      created_at: { _hydra_unix_date: 1741047207 },
+      updated_at: { _hydra_unix_date: 1741047207 },
       s3_object_id: "dokken/production/86e37e3d-harley_Rift_S5_keyart.png",
       auto_sync: true,
       file_size: 1670879,
@@ -1140,13 +1140,13 @@ export async function handleFile_storage(req: Request<{}, {}, {}, {}>, res: Resp
       data: {},
       id: "67c645a73451e4f30b3b739b",
       download_url:
-        "https://wb-agora-hydra-file-storage-dokken.s3.amazonaws.com/dokken/production/86e37e3d-harley_Rift_S5_keyart.png?X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=AKIA5J6YDD2RMJ4AQTRN%2F20250316%2Fus-east-1%2Fs3%2Faws4_request&X-Amz-Date=20250316T012958Z&X-Amz-Expires=3600&X-Amz-SignedHeaders=host&X-Amz-Signature=d2cab9e378fc2506aae851efd6b45d07e3bd3bfdb3f3ad47b8461f5bc74e050b",
+        "https://wb-agora-hydra-file-storage-dokken.s3.amazonaws.com/dokken/production/86e37e3d-harley_Rift_S5_keyart.png?X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=AKIA5J6YDD2RMJ4AQTRN%2F20250317%2Fus-east-1%2Fs3%2Faws4_request&X-Amz-Date=20250317T204235Z&X-Amz-Expires=3600&X-Amz-SignedHeaders=host&X-Amz-Signature=e480ea71403eb0933cfb73dde4ea89bd6f57c2733d0c68a7ea711864a1444036",
     },
     {
       slug: "harley-rift-s5-thumbnail",
       name: "harley_rift_s5_thumbnail",
-      created_at: 1741047249,
-      updated_at: 1741047249,
+      created_at: { _hydra_unix_date: 1741047249 },
+      updated_at: { _hydra_unix_date: 1741047249 },
       s3_object_id: "dokken/production/8338ebac-harley_rift_s5_thumbnail.png",
       auto_sync: true,
       file_size: 219351,
@@ -1157,13 +1157,13 @@ export async function handleFile_storage(req: Request<{}, {}, {}, {}>, res: Resp
       data: {},
       id: "67c645d16e3939f376d9a32d",
       download_url:
-        "https://wb-agora-hydra-file-storage-dokken.s3.amazonaws.com/dokken/production/8338ebac-harley_rift_s5_thumbnail.png?X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=AKIA5J6YDD2RMJ4AQTRN%2F20250316%2Fus-east-1%2Fs3%2Faws4_request&X-Amz-Date=20250316T012958Z&X-Amz-Expires=3600&X-Amz-SignedHeaders=host&X-Amz-Signature=2101cef658fa72c115c93933d00bd72e2f364b036c14c9a95ed7b7341d185549",
+        "https://wb-agora-hydra-file-storage-dokken.s3.amazonaws.com/dokken/production/8338ebac-harley_rift_s5_thumbnail.png?X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=AKIA5J6YDD2RMJ4AQTRN%2F20250317%2Fus-east-1%2Fs3%2Faws4_request&X-Amz-Date=20250317T204235Z&X-Amz-Expires=3600&X-Amz-SignedHeaders=host&X-Amz-Signature=ff0e1904ddd7c6b2ee305efb50a39a7659f2505ca3d25c10540c1a0c2a21dd19",
     },
     {
       slug: "wonderwoman-arena-keyart",
       name: "wonderwoman_arena_keyart",
-      created_at: 1741687678,
-      updated_at: 1741687678,
+      created_at: { _hydra_unix_date: 1741687678 },
+      updated_at: { _hydra_unix_date: 1741687678 },
       s3_object_id: "dokken/production/8bf55e45-wonderwoman_arena_keyart.png",
       auto_sync: true,
       file_size: 7668786,
@@ -1174,13 +1174,13 @@ export async function handleFile_storage(req: Request<{}, {}, {}, {}>, res: Resp
       data: {},
       id: "67d00b7efea8dda900cd7f6e",
       download_url:
-        "https://wb-agora-hydra-file-storage-dokken.s3.amazonaws.com/dokken/production/8bf55e45-wonderwoman_arena_keyart.png?X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=AKIA5J6YDD2RMJ4AQTRN%2F20250316%2Fus-east-1%2Fs3%2Faws4_request&X-Amz-Date=20250316T012958Z&X-Amz-Expires=3600&X-Amz-SignedHeaders=host&X-Amz-Signature=0eb33e8a9c4778a9515e11dc253186525bca525f62f92ad15f65c8739dc50f57",
+        "https://wb-agora-hydra-file-storage-dokken.s3.amazonaws.com/dokken/production/8bf55e45-wonderwoman_arena_keyart.png?X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=AKIA5J6YDD2RMJ4AQTRN%2F20250317%2Fus-east-1%2Fs3%2Faws4_request&X-Amz-Date=20250317T204235Z&X-Amz-Expires=3600&X-Amz-SignedHeaders=host&X-Amz-Signature=d8371cc4902f64747324a7c66e955287163f00166539410efafcefbcd5fb64b3",
     },
     {
       slug: "wonderwoman-arena-thumbnail",
       name: "wonderwoman_arena_thumbnail",
-      created_at: 1741687691,
-      updated_at: 1741687691,
+      created_at: { _hydra_unix_date: 1741687691 },
+      updated_at: { _hydra_unix_date: 1741687691 },
       s3_object_id: "dokken/production/2f582ef8-wonderwoman_arena_thumbnail.png",
       auto_sync: true,
       file_size: 509381,
@@ -1191,7 +1191,7 @@ export async function handleFile_storage(req: Request<{}, {}, {}, {}>, res: Resp
       data: {},
       id: "67d00b8b0dfc84393ed0208b",
       download_url:
-        "https://wb-agora-hydra-file-storage-dokken.s3.amazonaws.com/dokken/production/2f582ef8-wonderwoman_arena_thumbnail.png?X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=AKIA5J6YDD2RMJ4AQTRN%2F20250316%2Fus-east-1%2Fs3%2Faws4_request&X-Amz-Date=20250316T012958Z&X-Amz-Expires=3600&X-Amz-SignedHeaders=host&X-Amz-Signature=887899f87e03157c156ccd39df2d7e3d0b6c5deefdedba12b28a22e2494a69f1",
+        "https://wb-agora-hydra-file-storage-dokken.s3.amazonaws.com/dokken/production/2f582ef8-wonderwoman_arena_thumbnail.png?X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=AKIA5J6YDD2RMJ4AQTRN%2F20250317%2Fus-east-1%2Fs3%2Faws4_request&X-Amz-Date=20250317T204235Z&X-Amz-Expires=3600&X-Amz-SignedHeaders=host&X-Amz-Signature=4f9ba337e8f3a5432c89bf0841efe9755335f7a0addf9a0e77790d55bfbc89d4",
     },
   ]);
 }
@@ -1200,8 +1200,8 @@ export async function handleFile_storage_beginnermode_carousel_keyart(req: Reque
   res.send({
     slug: "beginnermode-carousel-keyart",
     name: "beginnermode_carousel_keyart",
-    created_at: 1728661052,
-    updated_at: 1728661052,
+    created_at: { _hydra_unix_date: 1728661052 },
+    updated_at: { _hydra_unix_date: 1728661052 },
     s3_object_id: "dokken/production/70dc43d1-t_begginnermode_carousel_keyart.png",
     auto_sync: true,
     file_size: 8134018,
@@ -1212,7 +1212,7 @@ export async function handleFile_storage_beginnermode_carousel_keyart(req: Reque
     data: {},
     id: "6709463c7f18dba761677bc0",
     download_url:
-      "https://wb-agora-hydra-file-storage-dokken.s3.amazonaws.com/dokken/production/70dc43d1-t_begginnermode_carousel_keyart.png?X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=AKIA5J6YDD2RMJ4AQTRN%2F20250316%2Fus-east-1%2Fs3%2Faws4_request&X-Amz-Date=20250316T012958Z&X-Amz-Expires=3600&X-Amz-SignedHeaders=host&X-Amz-Signature=b6562aa7480bfbdfc703162b6c636005c16c6db8bfbbae649079daa6de63751d",
+      "https://wb-agora-hydra-file-storage-dokken.s3.amazonaws.com/dokken/production/70dc43d1-t_begginnermode_carousel_keyart.png?X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=AKIA5J6YDD2RMJ4AQTRN%2F20250317%2Fus-east-1%2Fs3%2Faws4_request&X-Amz-Date=20250317T204235Z&X-Amz-Expires=3600&X-Amz-SignedHeaders=host&X-Amz-Signature=47f9a1efb8b6e5665bf28312071f0eedc02616e3d482f9770380a0abbecce0cd",
   });
 }
 
@@ -1220,8 +1220,8 @@ export async function handleFile_storage_beginnermode_carousel_thumbnail(req: Re
   res.send({
     slug: "beginnermode-carousel-thumbnail",
     name: "beginnermode_carousel_thumbnail",
-    created_at: 1728661117,
-    updated_at: 1728661117,
+    created_at: { _hydra_unix_date: 1728661117 },
+    updated_at: { _hydra_unix_date: 1728661117 },
     s3_object_id: "dokken/production/2d3f9f10-t_begginnermode_carousel_thumbnail.png",
     auto_sync: true,
     file_size: 531510,
@@ -1232,7 +1232,7 @@ export async function handleFile_storage_beginnermode_carousel_thumbnail(req: Re
     data: {},
     id: "6709467d7f18dba761677c39",
     download_url:
-      "https://wb-agora-hydra-file-storage-dokken.s3.amazonaws.com/dokken/production/2d3f9f10-t_begginnermode_carousel_thumbnail.png?X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=AKIA5J6YDD2RMJ4AQTRN%2F20250316%2Fus-east-1%2Fs3%2Faws4_request&X-Amz-Date=20250316T012958Z&X-Amz-Expires=3600&X-Amz-SignedHeaders=host&X-Amz-Signature=7a2413dc4df6c3f7166cd8ef15fd93baddb10217f71fbbf2198ff04a0361f207",
+      "https://wb-agora-hydra-file-storage-dokken.s3.amazonaws.com/dokken/production/2d3f9f10-t_begginnermode_carousel_thumbnail.png?X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=AKIA5J6YDD2RMJ4AQTRN%2F20250317%2Fus-east-1%2Fs3%2Faws4_request&X-Amz-Date=20250317T204235Z&X-Amz-Expires=3600&X-Amz-SignedHeaders=host&X-Amz-Signature=fc5b17793df5d788e9234333f062cee8c1695a0fb5580f252219b4689992a66e",
   });
 }
 
@@ -1240,8 +1240,8 @@ export async function handleFile_storage_harley_rift_s5_keyart(req: Request<{}, 
   res.send({
     slug: "harley-rift-s5-keyart",
     name: "harley_rift_s5_keyart",
-    created_at: 1741047207,
-    updated_at: 1741047207,
+    created_at: { _hydra_unix_date: 1741047207 },
+    updated_at: { _hydra_unix_date: 1741047207 },
     s3_object_id: "dokken/production/86e37e3d-harley_Rift_S5_keyart.png",
     auto_sync: true,
     file_size: 1670879,
@@ -1252,7 +1252,7 @@ export async function handleFile_storage_harley_rift_s5_keyart(req: Request<{}, 
     data: {},
     id: "67c645a73451e4f30b3b739b",
     download_url:
-      "https://wb-agora-hydra-file-storage-dokken.s3.amazonaws.com/dokken/production/86e37e3d-harley_Rift_S5_keyart.png?X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=AKIA5J6YDD2RMJ4AQTRN%2F20250316%2Fus-east-1%2Fs3%2Faws4_request&X-Amz-Date=20250316T012958Z&X-Amz-Expires=3600&X-Amz-SignedHeaders=host&X-Amz-Signature=d2cab9e378fc2506aae851efd6b45d07e3bd3bfdb3f3ad47b8461f5bc74e050b",
+      "https://wb-agora-hydra-file-storage-dokken.s3.amazonaws.com/dokken/production/86e37e3d-harley_Rift_S5_keyart.png?X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=AKIA5J6YDD2RMJ4AQTRN%2F20250317%2Fus-east-1%2Fs3%2Faws4_request&X-Amz-Date=20250317T204235Z&X-Amz-Expires=3600&X-Amz-SignedHeaders=host&X-Amz-Signature=e480ea71403eb0933cfb73dde4ea89bd6f57c2733d0c68a7ea711864a1444036",
   });
 }
 
@@ -1260,8 +1260,8 @@ export async function handleFile_storage_harley_rift_s5_thumbnail(req: Request<{
   res.send({
     slug: "harley-rift-s5-thumbnail",
     name: "harley_rift_s5_thumbnail",
-    created_at: 1741047249,
-    updated_at: 1741047249,
+    created_at: { _hydra_unix_date: 1741047249 },
+    updated_at: { _hydra_unix_date: 1741047249 },
     s3_object_id: "dokken/production/8338ebac-harley_rift_s5_thumbnail.png",
     auto_sync: true,
     file_size: 219351,
@@ -1272,7 +1272,7 @@ export async function handleFile_storage_harley_rift_s5_thumbnail(req: Request<{
     data: {},
     id: "67c645d16e3939f376d9a32d",
     download_url:
-      "https://wb-agora-hydra-file-storage-dokken.s3.amazonaws.com/dokken/production/8338ebac-harley_rift_s5_thumbnail.png?X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=AKIA5J6YDD2RMJ4AQTRN%2F20250316%2Fus-east-1%2Fs3%2Faws4_request&X-Amz-Date=20250316T012958Z&X-Amz-Expires=3600&X-Amz-SignedHeaders=host&X-Amz-Signature=2101cef658fa72c115c93933d00bd72e2f364b036c14c9a95ed7b7341d185549",
+      "https://wb-agora-hydra-file-storage-dokken.s3.amazonaws.com/dokken/production/8338ebac-harley_rift_s5_thumbnail.png?X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=AKIA5J6YDD2RMJ4AQTRN%2F20250317%2Fus-east-1%2Fs3%2Faws4_request&X-Amz-Date=20250317T204235Z&X-Amz-Expires=3600&X-Amz-SignedHeaders=host&X-Amz-Signature=ff0e1904ddd7c6b2ee305efb50a39a7659f2505ca3d25c10540c1a0c2a21dd19",
   });
 }
 
@@ -1280,8 +1280,8 @@ export async function handleFile_storage_s5_bp_carousel_keyart(req: Request<{}, 
   res.send({
     slug: "s5-bp-carousel-keyart",
     name: "s5_bp_carousel_keyart",
-    created_at: 1738631162,
-    updated_at: 1738631162,
+    created_at: { _hydra_unix_date: 1738631162 },
+    updated_at: { _hydra_unix_date: 1738631162 },
     s3_object_id: "dokken/production/a6db14c3-MVS_SEASON5_bp_carousel_keyart.png",
     auto_sync: true,
     file_size: 7939670,
@@ -1292,7 +1292,7 @@ export async function handleFile_storage_s5_bp_carousel_keyart(req: Request<{}, 
     data: {},
     id: "67a167fac9f8478011462227",
     download_url:
-      "https://wb-agora-hydra-file-storage-dokken.s3.amazonaws.com/dokken/production/a6db14c3-MVS_SEASON5_bp_carousel_keyart.png?X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=AKIA5J6YDD2RMJ4AQTRN%2F20250316%2Fus-east-1%2Fs3%2Faws4_request&X-Amz-Date=20250316T012958Z&X-Amz-Expires=3600&X-Amz-SignedHeaders=host&X-Amz-Signature=d34497a0ae0541523416209214f8353001ebf1a0b38a7137128f7134ef1ed9bd",
+      "https://wb-agora-hydra-file-storage-dokken.s3.amazonaws.com/dokken/production/a6db14c3-MVS_SEASON5_bp_carousel_keyart.png?X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=AKIA5J6YDD2RMJ4AQTRN%2F20250317%2Fus-east-1%2Fs3%2Faws4_request&X-Amz-Date=20250317T204235Z&X-Amz-Expires=3600&X-Amz-SignedHeaders=host&X-Amz-Signature=fd88fe9c98f2a173e7cb0fe2c9043551b0aa78ea5ce0fa98e99f1d0d2882283c",
   });
 }
 
@@ -1300,8 +1300,8 @@ export async function handleFile_storage_s5_bp_carousel_thumbnail(req: Request<{
   res.send({
     slug: "s5-bp-carousel-thumbnail",
     name: "s5_bp_carousel_thumbnail",
-    created_at: 1738631201,
-    updated_at: 1738631201,
+    created_at: { _hydra_unix_date: 1738631201 },
+    updated_at: { _hydra_unix_date: 1738631201 },
     s3_object_id: "dokken/production/6d849a8f-MVS_SEASON5_bp_carousel_thumbnail.png",
     auto_sync: true,
     file_size: 568876,
@@ -1312,7 +1312,7 @@ export async function handleFile_storage_s5_bp_carousel_thumbnail(req: Request<{
     data: {},
     id: "67a168217d5313a213518cdb",
     download_url:
-      "https://wb-agora-hydra-file-storage-dokken.s3.amazonaws.com/dokken/production/6d849a8f-MVS_SEASON5_bp_carousel_thumbnail.png?X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=AKIA5J6YDD2RMJ4AQTRN%2F20250316%2Fus-east-1%2Fs3%2Faws4_request&X-Amz-Date=20250316T012958Z&X-Amz-Expires=3600&X-Amz-SignedHeaders=host&X-Amz-Signature=1b7365e2307f83d6b8c7aab75a5d489fc04664affe908f3b2ae8e3020dc5f23d",
+      "https://wb-agora-hydra-file-storage-dokken.s3.amazonaws.com/dokken/production/6d849a8f-MVS_SEASON5_bp_carousel_thumbnail.png?X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=AKIA5J6YDD2RMJ4AQTRN%2F20250317%2Fus-east-1%2Fs3%2Faws4_request&X-Amz-Date=20250317T204235Z&X-Amz-Expires=3600&X-Amz-SignedHeaders=host&X-Amz-Signature=bcb5041fba6ed269b0c0609225fe46252ce37254eb305ca86655b04a1e707fbf",
   });
 }
 
@@ -1320,8 +1320,8 @@ export async function handleFile_storage_t_discord_qa_carousel_keyart(req: Reque
   res.send({
     slug: "t-discord-qa-carousel-keyart",
     name: "T_DISCORD_QA_CAROUSEL_KEYART",
-    created_at: 1716600359,
-    updated_at: 1716600359,
+    created_at: { _hydra_unix_date: 1716600359 },
+    updated_at: { _hydra_unix_date: 1716600359 },
     s3_object_id: "dokken/production/985a8eab-T_DISCORD_QA_CAROUSEL_KEYART.png",
     auto_sync: true,
     file_size: 2957542,
@@ -1332,7 +1332,7 @@ export async function handleFile_storage_t_discord_qa_carousel_keyart(req: Reque
     data: {},
     id: "66513e27569e3e6210a7a9c8",
     download_url:
-      "https://wb-agora-hydra-file-storage-dokken.s3.amazonaws.com/dokken/production/985a8eab-T_DISCORD_QA_CAROUSEL_KEYART.png?X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=AKIA5J6YDD2RMJ4AQTRN%2F20250316%2Fus-east-1%2Fs3%2Faws4_request&X-Amz-Date=20250316T012958Z&X-Amz-Expires=3600&X-Amz-SignedHeaders=host&X-Amz-Signature=28ccecb5fa1b3daf0d03f7dbf441dbcc4913272ca2d9951148807d96e3e8a1e5",
+      "https://wb-agora-hydra-file-storage-dokken.s3.amazonaws.com/dokken/production/985a8eab-T_DISCORD_QA_CAROUSEL_KEYART.png?X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=AKIA5J6YDD2RMJ4AQTRN%2F20250317%2Fus-east-1%2Fs3%2Faws4_request&X-Amz-Date=20250317T204235Z&X-Amz-Expires=3600&X-Amz-SignedHeaders=host&X-Amz-Signature=ed252e8e20310f35aee94f744fb2de427a8adde53d51906413feeedc42715357",
   });
 }
 
@@ -1340,8 +1340,8 @@ export async function handleFile_storage_t_discord_qa_carousel_thumbnail(req: Re
   res.send({
     slug: "t-discord-qa-carousel-thumbnail",
     name: "T_DISCORD_QA_CAROUSEL_THUMBNAIL",
-    created_at: 1716600359,
-    updated_at: 1716600359,
+    created_at: { _hydra_unix_date: 1716600359 },
+    updated_at: { _hydra_unix_date: 1716600359 },
     s3_object_id: "dokken/production/cbeff8f4-T_DISCORD_QA_CAROUSEL_THUMBNAIL.png",
     auto_sync: true,
     file_size: 153984,
@@ -1352,7 +1352,7 @@ export async function handleFile_storage_t_discord_qa_carousel_thumbnail(req: Re
     data: {},
     id: "66513e27569e3e6210a7a9c9",
     download_url:
-      "https://wb-agora-hydra-file-storage-dokken.s3.amazonaws.com/dokken/production/cbeff8f4-T_DISCORD_QA_CAROUSEL_THUMBNAIL.png?X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=AKIA5J6YDD2RMJ4AQTRN%2F20250316%2Fus-east-1%2Fs3%2Faws4_request&X-Amz-Date=20250316T012958Z&X-Amz-Expires=3600&X-Amz-SignedHeaders=host&X-Amz-Signature=3e9d4b6635aff97082dec1eb1da4cbe72b1efeec7256f2a2db175b85ffba836e",
+      "https://wb-agora-hydra-file-storage-dokken.s3.amazonaws.com/dokken/production/cbeff8f4-T_DISCORD_QA_CAROUSEL_THUMBNAIL.png?X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=AKIA5J6YDD2RMJ4AQTRN%2F20250317%2Fus-east-1%2Fs3%2Faws4_request&X-Amz-Date=20250317T204235Z&X-Amz-Expires=3600&X-Amz-SignedHeaders=host&X-Amz-Signature=ff6bd7a557dcbec0da21181321909bbfcaec6b6e3f2d4416a6fd4284c942cc8d",
   });
 }
 
@@ -1360,8 +1360,8 @@ export async function handleFile_storage_wonderwoman_arena_keyart(req: Request<{
   res.send({
     slug: "wonderwoman-arena-keyart",
     name: "wonderwoman_arena_keyart",
-    created_at: 1741687678,
-    updated_at: 1741687678,
+    created_at: { _hydra_unix_date: 1741687678 },
+    updated_at: { _hydra_unix_date: 1741687678 },
     s3_object_id: "dokken/production/8bf55e45-wonderwoman_arena_keyart.png",
     auto_sync: true,
     file_size: 7668786,
@@ -1372,7 +1372,7 @@ export async function handleFile_storage_wonderwoman_arena_keyart(req: Request<{
     data: {},
     id: "67d00b7efea8dda900cd7f6e",
     download_url:
-      "https://wb-agora-hydra-file-storage-dokken.s3.amazonaws.com/dokken/production/8bf55e45-wonderwoman_arena_keyart.png?X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=AKIA5J6YDD2RMJ4AQTRN%2F20250316%2Fus-east-1%2Fs3%2Faws4_request&X-Amz-Date=20250316T012958Z&X-Amz-Expires=3600&X-Amz-SignedHeaders=host&X-Amz-Signature=0eb33e8a9c4778a9515e11dc253186525bca525f62f92ad15f65c8739dc50f57",
+      "https://wb-agora-hydra-file-storage-dokken.s3.amazonaws.com/dokken/production/8bf55e45-wonderwoman_arena_keyart.png?X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=AKIA5J6YDD2RMJ4AQTRN%2F20250317%2Fus-east-1%2Fs3%2Faws4_request&X-Amz-Date=20250317T204235Z&X-Amz-Expires=3600&X-Amz-SignedHeaders=host&X-Amz-Signature=d8371cc4902f64747324a7c66e955287163f00166539410efafcefbcd5fb64b3",
   });
 }
 
@@ -1380,8 +1380,8 @@ export async function handleFile_storage_wonderwoman_arena_thumbnail(req: Reques
   res.send({
     slug: "wonderwoman-arena-thumbnail",
     name: "wonderwoman_arena_thumbnail",
-    created_at: 1741687691,
-    updated_at: 1741687691,
+    created_at: { _hydra_unix_date: 1741687691 },
+    updated_at: { _hydra_unix_date: 1741687691 },
     s3_object_id: "dokken/production/2f582ef8-wonderwoman_arena_thumbnail.png",
     auto_sync: true,
     file_size: 509381,
@@ -1392,6 +1392,6 @@ export async function handleFile_storage_wonderwoman_arena_thumbnail(req: Reques
     data: {},
     id: "67d00b8b0dfc84393ed0208b",
     download_url:
-      "https://wb-agora-hydra-file-storage-dokken.s3.amazonaws.com/dokken/production/2f582ef8-wonderwoman_arena_thumbnail.png?X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=AKIA5J6YDD2RMJ4AQTRN%2F20250316%2Fus-east-1%2Fs3%2Faws4_request&X-Amz-Date=20250316T012958Z&X-Amz-Expires=3600&X-Amz-SignedHeaders=host&X-Amz-Signature=887899f87e03157c156ccd39df2d7e3d0b6c5deefdedba12b28a22e2494a69f1",
+      "https://wb-agora-hydra-file-storage-dokken.s3.amazonaws.com/dokken/production/2f582ef8-wonderwoman_arena_thumbnail.png?X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=AKIA5J6YDD2RMJ4AQTRN%2F20250317%2Fus-east-1%2Fs3%2Faws4_request&X-Amz-Date=20250317T204235Z&X-Amz-Expires=3600&X-Amz-SignedHeaders=host&X-Amz-Signature=4f9ba337e8f3a5432c89bf0841efe9755335f7a0addf9a0e77790d55bfbc89d4",
   });
 }
