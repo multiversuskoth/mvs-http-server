@@ -4,7 +4,7 @@ import { MVSQueries } from "../interfaces/queries_types";
 export async function handleAccess(req: Request<{}, {}, {}, {}>, res: Response) {
   res.send({
     token:
-      "V2wvUvGjnf0Ma23VCEJXFZHDPewZ8FdaYjXGvpqsdzxMHk9BvyPLMTymAOM6WDqWPkGOXMYAPcSGWplKHhypOUOpzsk9pVW5zj/0bxOaYgMXPCe4opBb2LY7twuGq4cHh4B7uer44UVxHP/VjzQbHGqEa8BzzdjMrZn3rPGl0H5S9sOkokqiEw==",
+      "V2wvUvGjnf0Ma23VCEJXFZHDPewZ8FdaYjXGvpqsdzxMHk9BvyPLMTymAOM6WDqWPkGOXMYAPcQNgL7p1vegh0Opzsk9pVW5zj/0bxOaYgMXPCe4opBb2LY7twuGq4cHh4B7uer44UVxHP/VjzQbHGqEa8BzzdjMrZn3rPGl0H5S9sOkokqiEw==",
     in_queue: false,
     configuration: {
       gcm: { enabled: null, project_number: null },
@@ -33,14 +33,14 @@ export async function handleAccess(req: Request<{}, {}, {}, {}>, res: Response) 
     },
     achievements: [],
     account: {
-      updated_at: { _hydra_unix_date: 1742244149 },
+      updated_at: { _hydra_unix_date: 1742265239 },
       created_at: { _hydra_unix_date: 1674508668 },
       deleted: false,
       orphaned: false,
       orphaned_reason: null,
       public_id: "paee40f62bd814a53bf9f4d21e43ea2c1",
       identity: {
-        avatar: "https://avatars.steamstatic.com/fef49e7fa7e1997310d705b2a6158ff8dc1cdfeb.jpg",
+        avatar: "https://s3.amazonaws.com/wb-agora-hydra-ugc-dokken/identicons/identicon.584.png",
         default_username: true,
         personal_data: {},
         alternate: {
@@ -123,9 +123,9 @@ export async function handleAccess(req: Request<{}, {}, {}, {}>, res: Response) 
       id: "63cef97ced0619f458cfac8f",
       connections: [
         {
-          id: "V2wvUvGjnf0Ma23VCEJXFZHDPewZ8FdaYjXGvpqsdzxMHk9BvyPLMTymAOM6WDqWPkGOXMYAPcSGWplKHhypOUOpzsk9pVW5zj/0bxOaYgMXPCe4opBb2LY7twuGq4cHh4B7uer44UVxHP/VjzQbHGqEa8BzzdjMrZn3rPGl0H5S9sOkokqiEw==",
-          start_time: 1742244149,
-          last_used: 1742244149,
+          id: "V2wvUvGjnf0Ma23VCEJXFZHDPewZ8FdaYjXGvpqsdzxMHk9BvyPLMTymAOM6WDqWPkGOXMYAPcQNgL7p1vegh0Opzsk9pVW5zj/0bxOaYgMXPCe4opBb2LY7twuGq4cHh4B7uer44UVxHP/VjzQbHGqEa8BzzdjMrZn3rPGl0H5S9sOkokqiEw==",
+          start_time: 1742265239,
+          last_used: 1742265239,
           realtime_start_time: 0,
           realtime_end_time: 0,
           metadata: "`\u00010\bPlatform0\u0002PC",
@@ -136,10 +136,10 @@ export async function handleAccess(req: Request<{}, {}, {}, {}>, res: Response) 
       presence: "online",
     },
     profile: {
-      updated_at: { _hydra_unix_date: 1742244151 },
+      updated_at: { _hydra_unix_date: 1742265241 },
       account_id: "63cef97ced0619f458cfac8f",
       created_at: { _hydra_unix_date: 1674508668 },
-      last_login: { _hydra_unix_date: 1742244149 },
+      last_login: { _hydra_unix_date: 1742265239 },
       points: null,
       data: {
         IsChildAccount: false,
@@ -499,9 +499,9 @@ export async function handleAccess(req: Request<{}, {}, {}, {}>, res: Response) 
             },
           },
           "Season:SeasonFive": {
-            LastLoginDay: { _hydra_unix_date: 1742169600 },
-            NumDaysLoggedIn: 20,
-            NumLogins: 196,
+            LastLoginDay: { _hydra_unix_date: 1742256000 },
+            NumDaysLoggedIn: 21,
+            NumLogins: 206,
             Ranked: {
               DataByMode: {
                 "1v1": {
@@ -728,6 +728,6 @@ export async function handleAccess(req: Request<{}, {}, {}, {}>, res: Response) 
     },
     notifications: [],
     maintenance: null,
-    wb_network: { network_token: "I+MPokHx/JkCFmuHpcEiapwYTzvy14BB88u8jKLLnsrPwfm+1eChlbt/LX34GUd2hTwmRnLzaYs+oFHMwDtsifDkjbqlTeyULXvGSNjjQms=" },
+    wb_network: { network_token: "I+MPokHx/JkCFmuHpcEias5C57LFnOlyVi+GnqfSwaRdLlr2+2bK+xvZRjkMMZaVrcGlUdOsuew+oFHMwDtsiXSqXfoXsMeTLXvGSNjjQms=" },
   });
 }

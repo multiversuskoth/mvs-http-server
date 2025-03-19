@@ -220,6 +220,11 @@ router.get("/matches/all/:id", (req: Request<MVSParams, {}, {}, MVSQueries.Match
   h.handleMatches_all_id(req, res);
 });
 
+router.post("/matches/matchmaking/1v1-retail/request", (req: Request<{}, {}, {}, {}>, res: Response) => {
+  // @ts-ignore TODO : implementation. Remove comment once implemented`
+  h.handleMatches_matchmaking_1v1_retail_request(req, res);
+});
+
 router.get("/objects/preferences/unique/:id/:id1", (req: Request<MVSParams, {}, {}, {}>, res: Response) => {
   // @ts-ignore TODO : implementation. Remove comment once implemented`
   h.handleObjects_preferences_unique_id_id1(req, res);
@@ -248,6 +253,11 @@ router.get("/social/me/blocked", (req: Request<{}, {}, {}, {}>, res: Response) =
 router.post("/ssc/invoke/attempt_daily_refresh", (req: Request<{}, {}, {}, {}>, res: Response) => {
   // @ts-ignore TODO : implementation. Remove comment once implemented`
   h.handleSsc_invoke_attempt_daily_refresh(req, res);
+});
+
+router.post("/ssc/invoke/claim_mission_rewards", (req: Request<{}, {}, {}, {}>, res: Response) => {
+  // @ts-ignore TODO : implementation. Remove comment once implemented`
+  h.handleSsc_invoke_claim_mission_rewards(req, res);
 });
 
 router.put("/ssc/invoke/create_party_lobby", (req: Request<{}, {}, {}, {}>, res: Response) => {
@@ -310,9 +320,39 @@ router.get("/ssc/invoke/perks_get_all_pages", (req: Request<{}, {}, {}, {}>, res
   h.handleSsc_invoke_perks_get_all_pages(req, res);
 });
 
+router.put("/ssc/invoke/perks_lock", (req: Request<{}, {}, {}, {}>, res: Response) => {
+  // @ts-ignore TODO : implementation. Remove comment once implemented`
+  h.handleSsc_invoke_perks_lock(req, res);
+});
+
 router.get("/ssc/invoke/ranked_data", (req: Request<{}, {}, {}, {}>, res: Response) => {
   // @ts-ignore TODO : implementation. Remove comment once implemented`
   h.handleSsc_invoke_ranked_data(req, res);
+});
+
+router.put("/ssc/invoke/rematch_decline", (req: Request<{}, {}, {}, {}>, res: Response) => {
+  // @ts-ignore TODO : implementation. Remove comment once implemented`
+  h.handleSsc_invoke_rematch_decline(req, res);
+});
+
+router.put("/ssc/invoke/set_lobby_joinable", (req: Request<{}, {}, {}, {}>, res: Response) => {
+  // @ts-ignore TODO : implementation. Remove comment once implemented`
+  h.handleSsc_invoke_set_lobby_joinable(req, res);
+});
+
+router.put("/ssc/invoke/set_ready_for_lobby", (req: Request<{}, {}, {}, {}>, res: Response) => {
+  // @ts-ignore TODO : implementation. Remove comment once implemented`
+  h.handleSsc_invoke_set_ready_for_lobby(req, res);
+});
+
+router.put("/ssc/invoke/submit_end_of_match_stats", (req: Request<{}, {}, {}, {}>, res: Response) => {
+  // @ts-ignore TODO : implementation. Remove comment once implemented`
+  h.handleSsc_invoke_submit_end_of_match_stats(req, res);
+});
+
+router.put("/ssc/invoke/toast_player", (req: Request<{}, {}, {}, {}>, res: Response) => {
+  // @ts-ignore TODO : implementation. Remove comment once implemented`
+  h.handleSsc_invoke_toast_player(req, res);
 });
 
 export default router;
