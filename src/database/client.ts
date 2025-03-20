@@ -1,8 +1,11 @@
 import mongoose from "mongoose";
 import env from "../env/env";
+import { accountModel } from "./Account";
+import { getModelForClass, prop } from "@typegoose/typegoose";
 
 // connect().then(async () => {
 //   console.log("try insert");
+//   // console.log(await accountModel.findOne());
 //   // for testing
 
 //   // await configurationModel.create({

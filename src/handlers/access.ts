@@ -6,7 +6,10 @@ import { Request, Response } from "express";
 import serverConfiguration from "../config/serverConfiguration";
 import * as jwt from "jsonwebtoken";
 import env from "../env/env";
-import { playerModel } from "../database/Player";
+import { Player, playerModel } from "../database/Player";
+import { ObjectWithUnix } from "../utils/date";
+import { IdToString } from "../utils/objectId";
+import { TestNaja, UndefinedToNull } from "../utils/undefinedToNull";
 
 type AccountDoc = Omit<Account, "_id">;
 
@@ -81,8 +84,8 @@ export async function handleAccess(
     token: jwtToken,
     in_queue: false,
     configuration: serverConfiguration,
-    account: updatedAccount.toJSON(),
-    profile: player.toJSON(),
+    account: updatedAccount.toJSON<IdToString<Account>>(),
+    profile: player.toJSON<IdToString<Player>>(),
     wb_network: {
       network_token: "gg",
     },

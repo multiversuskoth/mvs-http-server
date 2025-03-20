@@ -32,7 +32,7 @@ For date that is used as number -> set dateToMVSTime as getter
 
 ```
 @prop({ required: true, get: dateToMVSTime })
-updated_at!: Date;
+updated_at!: number;
 ```
 
 And add `toJSON:{getters: true}` to top-level model, or model that calls toJSON, for example
@@ -51,13 +51,9 @@ export class Account {
 Use
 
 ```
-@prop({default:null})
-garnet?: InventoryCharacter;
+@prop({default:null, type: InventoryCharacter})
+garnet: InventoryCharacter|null=null;
 ```
 
-Avoid using union type if possible, so don't do the following
-
-```
-@prop({})
-garnet!: InventoryCharacter | null;
-```
+Note the type in prop, it is necessary with union type.
+Don't use optional field (garnet?)

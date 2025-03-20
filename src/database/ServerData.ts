@@ -1,4 +1,4 @@
-import { modelOptions, prop } from "@typegoose/typegoose";
+import { modelOptions, mongoose, prop } from "@typegoose/typegoose";
 import { Entries } from "type-fest";
 import { dateToMVSTime } from "../utils/date";
 
@@ -130,6 +130,39 @@ class SeasonalDatas {
 }
 
 @modelOptions({ schemaOptions: { _id: false } })
+export class ServerDataMatchMultiqueueConfig {
+  /**
+   *
+   * Matchmade
+   *
+   */
+  Context!: string;
+  /**
+   *
+   * Versus
+   *
+   */
+  GameModeAlias!: string;
+  /**
+   *
+   * Unranked
+   *
+   */
+  QueueType!: string;
+  /**
+   *
+   * Duos
+   *
+   */
+  TeamStyle!: string;
+}
+
+@modelOptions({ schemaOptions: { _id: false } })
+export class ServerDataMatchConfig {
+  MultiqueueConfigs!: ServerDataMatchMultiqueueConfig;
+}
+
+@modelOptions({ schemaOptions: { _id: false } })
 export class ServerData {
   @prop()
   "shuffle.0"?: Ratings;
@@ -144,6 +177,22 @@ export class ServerData {
   // Transforms?: new Schema({
   //   welcome_back: Boolean;
   // };{_id:false});
+
+  @prop()
+  BattlepassID?: mongoose.Types.ObjectId;
+
+  @prop()
+  CurrentXP?: number;
+
+  @prop()
+  HasReceivedBattlepassRewardFromOpenBeta?: boolean;
+
+  @prop()
+  Level?: number;
+
+  @prop()
+  MatchConfig!: ServerDataMatchConfig;
+
   @prop()
   NumOwnedBaseRosterFighters?: number;
   @prop()

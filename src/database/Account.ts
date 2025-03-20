@@ -8,28 +8,38 @@ import { dateToMVSTime } from "../utils/date";
 
 @modelOptions({ schemaOptions: { _id: false } })
 export class IdentityAlternateItem {
-  @prop()
+  @prop({ default: undefined, type: String })
   id?: string;
   @prop({ required: true })
   username!: string;
-  @prop({ default: null })
-  avatar?: string;
-  @prop({ default: null })
-  email?: string;
+  @prop({ default: null, type: String })
+  avatar: string | null = null;
+  @prop({ default: null, type: String })
+  email: string | null = null;
 }
 
 @modelOptions({ schemaOptions: { _id: false } })
 export class IdentityAlternate {
-  @prop()
-  wb_network?: IdentityAlternateItem;
-  @prop()
-  twitch?: IdentityAlternateItem;
-  @prop()
-  xb1?: IdentityAlternateItem;
-  @prop()
-  ps4?: IdentityAlternateItem;
-  @prop()
-  steam?: IdentityAlternateItem;
+  @prop({ type: IdentityAlternateItem, default: null })
+  wb_network: IdentityAlternateItem | null = null;
+  @prop({ type: IdentityAlternateItem, default: null })
+  twitch: IdentityAlternateItem | null = null;
+
+  @prop({ type: IdentityAlternateItem, default: null })
+  xb1: IdentityAlternateItem | null = null;
+  @prop({ type: IdentityAlternateItem, default: null })
+  ps4: IdentityAlternateItem | null = null;
+  @prop({ type: IdentityAlternateItem, default: null })
+  steam: IdentityAlternateItem | null = null;
+}
+
+@modelOptions({ schemaOptions: { _id: false } })
+export class IdentityUsername {
+  @prop({ required: true })
+  auth!: string;
+
+  @prop({ required: true })
+  username!: string;
 }
 
 @modelOptions({ schemaOptions: { _id: false } })
@@ -37,8 +47,8 @@ export class Identity {
   @prop({ required: true })
   username!: string;
 
-  @prop({ default: null })
-  avatar?: string;
+  @prop({ default: null, type: String })
+  avatar: string | null = null;
 
   @prop({ required: true })
   default_username!: boolean;
@@ -48,6 +58,20 @@ export class Identity {
 
   @prop({ required: true })
   alternate!: IdentityAlternate;
+
+  @prop({ required: true })
+  current_platform!: string;
+
+  @prop({ required: true })
+  is_cross_platform!: boolean;
+
+  personal_data = {};
+
+  @prop({ required: true })
+  platforms!: string[];
+
+  @prop({ required: true })
+  usernames!: IdentityUsername[];
 }
 
 @modelOptions({ schemaOptions: { _id: false } })
@@ -60,7 +84,10 @@ export class WbAccount {
   age_category?: string;
 }
 
-export class ConnectionStatusEnv {}
+export class ConnectionStatusEnv {
+  @prop({ required: true })
+  id!: string;
+}
 
 @modelOptions({ schemaOptions: { _id: false } })
 export class ConnectionStatus {
@@ -75,9 +102,9 @@ export class Connection {
   @prop({ required: true })
   id!: string;
   @prop({ required: true, get: dateToMVSTime })
-  start_time!: Date;
+  start_time!: number;
   @prop({ required: true, get: dateToMVSTime })
-  last_used!: Date;
+  last_used!: number;
   @prop({ required: true })
   metadata!: string;
   @prop({ required: true })
@@ -92,7 +119,7 @@ export class AccountAuthWbNetwork {
   id!: mongoose.Types.ObjectId;
 
   @prop({ required: true, get: dateToMVSTime })
-  created_at!: Date;
+  created_at!: number;
 }
 
 @modelOptions({ schemaOptions: { _id: false } })
@@ -104,7 +131,7 @@ export class AccountAuth {
 @modelOptions({ schemaOptions: { _id: false } })
 export class AccountData {
   @prop({ required: true, get: dateToMVSTime })
-  EULAAcceptTimestamp!: Date;
+  EULAAcceptTimestamp!: number;
   @prop({ required: true })
   EULAAcceptVersion!: number;
   @prop({ required: true })
@@ -168,7 +195,99 @@ export class AccountPrivacyLevel {
     _id: false,
   },
 })
-export class AccountServerData {}
+export class AccountServerDataProfileIcon {
+  @prop({ required: true })
+  AssetPath!: string;
+  @prop({ required: true })
+  Slug!: string;
+}
+
+@modelOptions({
+  schemaOptions: {
+    _id: false,
+  },
+})
+export class AccountServerDataTransforms {
+  @prop({})
+  BannerKnightSlugFixed?: boolean;
+
+  @prop({ required: true, type: Date, get: dateToMVSTime })
+  CharacterCurrencyRoundUp?: number;
+
+  @prop({})
+  FixRankedCharactersInGold?: boolean;
+
+  @prop({})
+  GoldStatTracker?: boolean;
+
+  @prop({})
+  MmrSeason4?: boolean;
+
+  @prop({})
+  OpenBetaFreebies?: boolean;
+
+  @prop({})
+  Season2CharactersInMasterCalculated?: boolean;
+
+  @prop({})
+  Season3PrestigeFix?: boolean;
+
+  @prop({})
+  Season4FighterRoadPromo?: boolean;
+
+  @prop({})
+  Season4FixRolloverRp?: boolean;
+
+  @prop({})
+  Season4Promo?: boolean;
+
+  @prop({})
+  Season4RankedRewardCatchup?: boolean;
+
+  @prop({ required: true, type: Date, get: dateToMVSTime })
+  SeasonFourAcademiaMakeGood?: number;
+
+  @prop()
+  SeasonFourAcademiaMakeGoodScoreGranted?: number;
+
+  @prop({ required: true, type: Date, get: dateToMVSTime })
+  ShaggySkinMakeGoodS4?: number;
+
+  @prop({ required: true, type: Date, get: dateToMVSTime })
+  UpgradeWarMakeGood_8_5_2024?: number;
+}
+
+@modelOptions({
+  schemaOptions: { _id: false },
+})
+export class AccountServerData {
+  @prop({ required: true })
+  AntiCheatServerKick!: number;
+  @prop({ required: true, type: Date, get: dateToMVSTime })
+  LastDailyRefresh!: number;
+  @prop({ required: true })
+  LastKnownDebugDelta!: number;
+  @prop({ required: true })
+  LastLoginPlatform!: string;
+  @prop({ required: true })
+  LastLoginTime!: number;
+
+  LastLogoutTime!: number;
+  LastRefreshBattlepassEvent!: string;
+  LastRefreshSeason!: string;
+
+  @prop({ required: true, type: Date, get: dateToMVSTime })
+  LastWeeklyRefresh!: number;
+  OpenBeta!: boolean;
+
+  ProfileIcon!: AccountServerDataProfileIcon;
+
+  RestedXP!: number;
+  @prop({ required: true, type: Date, get: dateToMVSTime })
+  RetroactiveRiftBattlepassPayoutTime!: number;
+
+  Transforms!: AccountServerDataTransforms;
+}
 
 @modelOptions({
   schemaOptions: {
@@ -181,9 +300,9 @@ export class Account {
   id!: string;
 
   @prop({ required: true, get: dateToMVSTime })
-  updated_at!: Date;
+  updated_at!: number;
   @prop({ required: true, get: dateToMVSTime })
-  created_at!: Date;
+  created_at!: number;
 
   @prop({ required: true })
   deleted!: boolean;
@@ -191,8 +310,8 @@ export class Account {
   @prop({ required: true })
   orphaned!: boolean;
 
-  @prop({ default: null })
-  orphaned_reason?: string;
+  @prop({ default: null, type: String })
+  orphaned_reason: string | null = null;
 
   @prop({ required: true })
   public_id!: string;

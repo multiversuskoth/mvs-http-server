@@ -1,15 +1,15 @@
 interface ServerConfiguration {
   gcm: {
-    enabled: boolean | null;
+    enabled: null;
 
-    project_number: boolean | null;
+    project_number: null;
   };
 
   gpgs: {
-    google_play_client_id?: string | null;
+    google_play_client_id: null;
   };
 
-  apns: { enabled?: boolean | null; environment?: string | null; sha1?: string | null };
+  apns: { enabled: boolean | null; environment: null; sha1: null };
 
   server_side_code_deploy: {
     sha: string; // sha-1
