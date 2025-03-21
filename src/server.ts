@@ -59,7 +59,7 @@ export const MVSHTTPServer = https.createServer(options, app);
 
 export async function start() {
   console.log("connecting to database...");
-  await connect();
+  //await connect();
   console.log("connected to database!");
 
   MVSHTTPServer.listen(port, () => {
