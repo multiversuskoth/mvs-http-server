@@ -3,11 +3,14 @@ import { GAME_MATCH_STATE, GAME_SERVER_STATE, OP_CODES, PLAYER_NUMBER, Player_ST
 
 export const GAME_SERVER_PORT = 41234;
 
+const INIT_RESPONSE = Buffer.from([0x02, 0x03, 0xa0, 0x8c]);
+
 export class GameServer {
   gameMatches: Map<string, GameMatch> = new Map();
   players: Map<string, Player> = new Map();
   udp = dgram.createSocket("udp4");
   state = GAME_SERVER_STATE.INIT;
+  buffer = Buffer.alloc(128);
 
   starServer() {
     this.handleMessages();
@@ -35,73 +38,57 @@ export class GameServer {
           console.log("UDP:", "CLIENT_UDP_HOLE_PUNCH_P1");
           const matchID = bufferRead.readToHexString();
           const match = this.registerMatch(matchID);
-          const player = this.checkIfPlayerJoinedMatch(match, PLAYER_NUMBER.ONE, rinfo);
+          this.registerPlayer(match, PLAYER_NUMBER.ONE, rinfo);
 
           break;
         }
         case OP_CODES.CLIENT_INIT_CONNECTION_P1: {
           console.log("UDP:", "CLIENT_INIT_CONNECTION_P1");
           const receivedPacketNumber = bufferRead.readUint8();
-          let player = this.getPlayer(rinfo);
+          let { player, success } = this.getPlayer(msg, rinfo);
+          if (!success) {
+            return;
+          }
           if (!player) {
             const matchID = bufferRead.readToHexString();
             const match = this.checkIfMatchExists(matchID);
-            player = this.checkIfPlayerJoinedMatch(match, PLAYER_NUMBER.ONE, rinfo);
+            player = this.registerPlayer(match, PLAYER_NUMBER.ONE, rinfo);
+            player.currentPacket = receivedPacketNumber;
           }
-          if (receivedPacketNumber < player.currentPacket) {
-            // Packet out of order
-            return;
-          }
-          player.currentPacket = receivedPacketNumber;
 
-          let sendBuffer = Buffer.alloc(8);
+          await this.sendMessage(player, this.craftMessage(player.match, OP_CODES.SERVER_INITIAL_RESPONSE_P1, INIT_RESPONSE, false), rinfo);
+          await this.sendMessage(player, this.craftMessage(player.match, OP_CODES.SERVER_INITIAL2_RESPONSE_P1, INIT_RESPONSE), rinfo);
+          await this.sendMessage(player, this.craftMessage(player.match, OP_CODES.SERVER_PHASE1_1, null), rinfo);
 
-          sendBuffer.writeUInt16BE(OP_CODES.SERVER_INITIAL_RESPONSE_P1);
-          sendBuffer.writeUIntBE(OP_CODES.SERVER_INITIAL_RESPONSE_DATA, 2, 4);
-          await this.sendMessage(player.match, sendBuffer, 6, rinfo);
-
-          sendBuffer.writeUInt16BE(OP_CODES.SERVER_INITIAL2_RESPONSE_P1);
-          sendBuffer.writeUIntBE(player.match.packetNumber, 2, 1);
-          sendBuffer.writeUIntBE(OP_CODES.SERVER_INITIAL_RESPONSE_DATA, 3, 4);
-          await this.sendMessage(player.match, sendBuffer, 7, rinfo);
-
-          sendBuffer.writeUInt16BE(OP_CODES.SERVER_PHASE1_1);
-          sendBuffer.writeUIntBE(player.match.packetNumber, 2, 1);
-          await this.sendMessage(player.match, sendBuffer, 4, rinfo);
-          player.lastPacketSentTimeStamp = new Date().getTime();
           break;
         }
 
         case OP_CODES.CLIENT_PHASE1_RESPONSE: {
           console.log("UDP:", "CLIENT_PHASE1_RESPONSE");
-          const receivedPacketNumber = bufferRead.readUint8();
-          const player = this.getPlayer(rinfo);
+          const { player, success } = this.getPlayer(msg, rinfo);
+          if (!success) {
+            return;
+          }
+
           if (!player) {
             //this.udp.disconnect()
             return;
           }
 
-          if (receivedPacketNumber < player.currentPacket) {
-            // Packet out of order
-            return;
-          }
-          player.currentPacket = receivedPacketNumber;
-          player.lastPacketReceivedTimeStamp = new Date().getTime();
-          console.log("PING:", player.lastPacketReceivedTimeStamp - player.lastPacketSentTimeStamp);
-          let sendBuffer = Buffer.alloc(8);
-
           if (player.lastPacketSentTimeStamp && player.match.state === GAME_MATCH_STATE.PLAYERS_CONNECTED) {
-            sendBuffer.writeUInt16BE(OP_CODES.SERVER_PHASE1_2);
-            sendBuffer.writeUIntBE(player.match.packetNumber, 2, 1);
-            sendBuffer.writeUInt8(player.lastPacketReceivedTimeStamp - player.lastPacketSentTimeStamp, 3);
-            await this.sendMessage(player.match, sendBuffer, 4, rinfo);
-            player.lastPacketSentTimeStamp = new Date().getTime();
+            await this.sendMessage(
+              player,
+              this.craftMessage(
+                player.match,
+                OP_CODES.SERVER_PHASE1_2,
+                Buffer.from([player.lastPacketReceivedTimeStamp - player.lastPacketSentTimeStamp])
+              ),
+              rinfo
+            );
             return;
           }
 
-          sendBuffer.writeUInt16BE(OP_CODES.SERVER_PHASE1_1);
-          sendBuffer.writeUIntBE(player.match.packetNumber, 2, 1);
-          await this.sendMessage(player.match, sendBuffer, 4, rinfo);
+          await this.sendMessage(player, this.craftMessage(player.match, OP_CODES.SERVER_PHASE1_1, null), rinfo);
           player.lastPacketSentTimeStamp = new Date().getTime();
 
           //TODO: Both players need to be connected before changing to the next state
@@ -112,37 +99,62 @@ export class GameServer {
     });
   }
 
+  craftMessage(match: GameMatch, opcode: OP_CODES, data: Buffer | null, packetNumber = true) {
+    this.buffer.writeUInt16BE(opcode);
+    const headerLength = !packetNumber ? 2 : 3;
+    if (packetNumber) {
+      this.buffer.writeUIntBE(match.packetNumber, 2, 1);
+    }
+    if (data) {
+      data.copy(this.buffer, headerLength);
+    }
+    const dataByteLength = data ? data.byteLength : 0;
+    let messageLength = headerLength + dataByteLength;
+    if (messageLength < 4) {
+      messageLength = 4;
+      this.buffer[3] = 0;
+    }
+    return this.buffer.subarray(0, messageLength);
+  }
+
   registerMatch(matchId: string) {
     const match = new GameMatch();
     this.gameMatches.set(matchId, match);
     return match;
   }
 
-  getPlayer(rinfo: dgram.RemoteInfo) {
+  getPlayer(rcvBuffer: Buffer, rinfo: dgram.RemoteInfo) {
     const playerId = `${rinfo.address}:${rinfo.port}`;
-    return this.players.get(playerId);
+    const player = this.players.get(playerId);
+    if (player) {
+      const receivedPacketNumber = rcvBuffer.readUint8();
+      if (receivedPacketNumber < player.currentPacket) {
+        // Packet out of order
+        return { player: null, success: false };
+      }
+      player.currentPacket = receivedPacketNumber;
+      player.lastPacketReceivedTimeStamp = new Date().getTime();
+      return { player, success: true };
+    }
+    return { player: null, success: true };
   }
 
-  sendMessage(match: GameMatch, buffer: Buffer, length: number, rinfo: dgram.RemoteInfo) {
+  sendMessage(player: Player, buffer: Buffer, rinfo: dgram.RemoteInfo) {
     return new Promise((resolve) => {
-      const bufferCut = buffer.subarray(0, length);
-      this.udp.send(bufferCut, rinfo.port, rinfo.address, () => {
-        console.log(bufferCut.toString("hex"));
-        //Clear buffer
-        buffer.fill(0);
+      this.udp.send(buffer, rinfo.port, rinfo.address, () => {
+        console.log(buffer.toString("hex"));
         resolve(true);
       });
-      match.packetNumber++;
+      player.match.packetNumber++;
+      player.lastPacketSentTimeStamp = new Date().getTime();
     });
   }
 
-  checkIfPlayerJoinedMatch(match: GameMatch, player_number: PLAYER_NUMBER.ONE, rinfo: dgram.RemoteInfo) {
+  registerPlayer(match: GameMatch, player_number: PLAYER_NUMBER.ONE, rinfo: dgram.RemoteInfo) {
     const playerId = `${rinfo.address}:${rinfo.port}`;
-    let player = this.players.get(playerId);
-    if (!player) {
-      player = new Player(match, rinfo);
-      this.players.set(playerId, player);
-    }
+    const player = new Player(match, rinfo);
+    this.players.set(playerId, player);
+
     return player;
   }
 
