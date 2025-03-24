@@ -3,21 +3,21 @@ import { Entries } from "type-fest";
 
 @modelOptions({ schemaOptions: { _id: false } })
 class MatchesStat {
-  @prop({ required: true })
+  @prop({ required: true, default: 0 })
   win!: number;
-  @prop({ required: true })
+  @prop({ required: true, default: 0 })
   loss!: number;
-  @prop({ required: true })
+  @prop({ required: true, default: 0 })
   win_streak!: number;
-  @prop({ required: true })
+  @prop({ required: true, default: 0 })
   longest_win_streak!: number;
-  @prop({ required: true })
+  @prop({ required: true, default: 0 })
   challenge_loss!: number;
-  @prop({ required: true })
+  @prop({ required: true, default: 0 })
   challenge_win!: number;
-  @prop({ required: true })
+  @prop({ required: true, default: 0 })
   longest_loss_streak!: number;
-  @prop({ required: true })
+  @prop({ required: true, default: 0 })
   loss_streak!: number;
 
   public static flatten(matchesStat: MatchesStat, prefix: string): Record<any, any> {

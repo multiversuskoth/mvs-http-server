@@ -1,7 +1,16 @@
 import Characters from "../enums/characters";
+import {PartialRecord} from "../utils/partialRecord";
 
 //* AUTO GENERATED */
 export namespace MVSResponses {
+  enum SeasonalName {
+    season1 = "Season:SeasonOne",
+    season2 = "Season:SeasonTwo",
+    season3 = "Season:SeasonThree",
+    season4 = "Season:SeasonFour",
+    season5 = "Season:SeasonFive",
+  }
+
   export interface Access_RESPONSE {
     account: {
       auth: {
@@ -1563,31 +1572,11 @@ export namespace MVSResponses {
         NumOwnedFighters: number;
         OpenBeta: boolean;
         SeasonalData: {
-          "Season:SeasonFive": {
-            /**
-             *
-             * 2025-03-14T00:00:00.000Z
-             *
-             */
-            LastLoginDay: string;
-            /**
-             *
-             * 18
-             *
-             */
-            NumDaysLoggedIn: number;
-            /**
-             *
-             * 179
-             *
-             */
-            NumLogins: number;
-            Ranked: {
-              /**
-               *
-               * D17B128B40B9A1A73A8602A9D25A1A3A
-               *
-               */
+          [K in SeasonalName]?: {
+            LastLoginDay?: number;
+            NumDaysLoggedIn?: number;
+            NumLogins?: number;
+            Ranked?: {
               ClaimedRewards: string[];
               DataByMode: {
                 "1v1": {
@@ -1615,7 +1604,7 @@ export namespace MVSResponses {
                      * 2025-02-08T02:53:45.000Z
                      *
                      */
-                    LastUpdateTimestamp: string;
+                    LastUpdateTimestamp: number;
                     /**
                      *
                      * 2179
@@ -1629,8 +1618,8 @@ export namespace MVSResponses {
                      */
                     SetsPlayed: number;
                   };
-                  DataByCharacter: {
-                    character_Jason: {
+                  DataByCharacter: PartialRecord<Characters,
+                  {
                       /**
                        *
                        * 2137
@@ -1672,7 +1661,7 @@ export namespace MVSResponses {
                        * 2025-03-02T08:15:12.000Z
                        *
                        */
-                      LastUpdateTimestamp: string;
+                      LastUpdateTimestamp: number;
                       /**
                        *
                        * 79
@@ -1703,8 +1692,7 @@ export namespace MVSResponses {
                        *
                        */
                       Wins: number;
-                    };
-                  };
+                    }>;
                   /**
                    *
                    * 371
@@ -1716,7 +1704,7 @@ export namespace MVSResponses {
                    * 2025-03-02T08:15:12.000Z
                    *
                    */
-                  LastUpdateTimestamp: string;
+                  LastUpdateTimestamp: number;
                   /**
                    *
                    * 160
@@ -1727,757 +1715,921 @@ export namespace MVSResponses {
               };
             };
           };
-          "Season:SeasonFour": {
-            /**
-             *
-             * 2025-01-31T00:00:00.000Z
-             *
-             */
-            LastLoginDay: string;
-            /**
-             *
-             * 27
-             *
-             */
-            NumDaysLoggedIn: number;
-            /**
-             *
-             * 45
-             *
-             */
-            NumLogins: number;
-            Ranked: {
-              /**
-               *
-               * B67EDC654607F8583E06978841798205
-               *
-               */
-              ClaimedRewards: string[];
-              DataByMode: {
-                "1v1": {
-                  BestCharacter: {
-                    /**
-                     *
-                     * character_Jason
-                     *
-                     */
-                    CharacterSlug: string;
-                    /**
-                     *
-                     * 2457
-                     *
-                     */
-                    CurrentPoints: number;
-                    /**
-                     *
-                     * 1189
-                     *
-                     */
-                    GamesPlayed: number;
-                    /**
-                     *
-                     * 2024-11-13T15:47:31.000Z
-                     *
-                     */
-                    LastUpdateTimestamp: string;
-                    /**
-                     *
-                     * 2605
-                     *
-                     */
-                    MaxPoints: number;
-                    /**
-                     *
-                     * 493
-                     *
-                     */
-                    SetsPlayed: number;
-                  };
-                  DataByCharacter: {
-                    character_Jason: {
-                      /**
-                       *
-                       * 2457
-                       *
-                       */
-                      CurrentPoints: number;
-                      /**
-                       *
-                       * 361469
-                       *
-                       */
-                      DamageDealt: number;
-                      /**
-                       *
-                       * 379378
-                       *
-                       */
-                      DamageTaken: number;
-                      /**
-                       *
-                       * 2780
-                       *
-                       */
-                      Deaths: number;
-                      /**
-                       *
-                       * 1189
-                       *
-                       */
-                      GamesPlayed: number;
-                      /**
-                       *
-                       * 0
-                       *
-                       */
-                      LastDecayMs: number;
-                      /**
-                       *
-                       * 2025-01-31T20:44:58.000Z
-                       *
-                       */
-                      LastUpdateTimestamp: string;
-                      /**
-                       *
-                       * 239
-                       *
-                       */
-                      Losses: number;
-                      /**
-                       *
-                       * 2605
-                       *
-                       */
-                      MaxPoints: number;
-                      /**
-                       *
-                       * 2713
-                       *
-                       */
-                      Ringouts: number;
-                      /**
-                       *
-                       * 493
-                       *
-                       */
-                      SetsPlayed: number;
-                      /**
-                       *
-                       * 238
-                       *
-                       */
-                      Wins: number;
-                    };
-                  };
-                  /**
-                   *
-                   * 694
-                   *
-                   */
-                  FinalLeaderboardRank: number;
-                  /**
-                   *
-                   * 1189
-                   *
-                   */
-                  GamesPlayed: number;
-                  /**
-                   *
-                   * 2025-01-31T20:44:58.000Z
-                   *
-                   */
-                  LastUpdateTimestamp: string;
-                  /**
-                   *
-                   * 493
-                   *
-                   */
-                  SetsPlayed: number;
-                };
-              };
-              bEndOfSeasonRewardsGranted: boolean;
-            };
-          };
-          "Season:SeasonThree": {
-            Ranked: {
-              /**
-               *
-               * B67EDC654607F8583E06978841798205
-               *
-               */
-              ClaimedRewards: string[];
-              DataByMode: {
-                "1v1": {
-                  BestCharacter: {
-                    /**
-                     *
-                     * character_Jason
-                     *
-                     */
-                    CharacterSlug: string;
-                    /**
-                     *
-                     * 2858
-                     *
-                     */
-                    CurrentPoints: number;
-                    /**
-                     *
-                     * 1591
-                     *
-                     */
-                    GamesPlayed: number;
-                    /**
-                     *
-                     * 2024-09-18T01:39:41.000Z
-                     *
-                     */
-                    LastUpdateTimestamp: string;
-                    /**
-                     *
-                     * 2929
-                     *
-                     */
-                    MaxPoints: number;
-                    /**
-                     *
-                     * 672
-                     *
-                     */
-                    SetsPlayed: number;
-                  };
-                  DataByCharacter: {
-                    character_Jason: {
-                      /**
-                       *
-                       * 2858
-                       *
-                       */
-                      CurrentPoints: number;
-                      /**
-                       *
-                       * 376835
-                       *
-                       */
-                      DamageDealt: number;
-                      /**
-                       *
-                       * 481079
-                       *
-                       */
-                      DamageTaken: number;
-                      /**
-                       *
-                       * 3411
-                       *
-                       */
-                      Deaths: number;
-                      /**
-                       *
-                       * 1591
-                       *
-                       */
-                      GamesPlayed: number;
-                      /**
-                       *
-                       * 0
-                       *
-                       */
-                      LastDecayMs: number;
-                      /**
-                       *
-                       * 2024-11-11T23:10:40.000Z
-                       *
-                       */
-                      LastUpdateTimestamp: string;
-                      /**
-                       *
-                       * 403
-                       *
-                       */
-                      Losses: number;
-                      /**
-                       *
-                       * 2929
-                       *
-                       */
-                      MaxPoints: number;
-                      /**
-                       *
-                       * 3929
-                       *
-                       */
-                      Ringouts: number;
-                      /**
-                       *
-                       * 672
-                       *
-                       */
-                      SetsPlayed: number;
-                      /**
-                       *
-                       * 404
-                       *
-                       */
-                      Wins: number;
-                    };
-                  };
-                  /**
-                   *
-                   * 857
-                   *
-                   */
-                  FinalLeaderboardRank: number;
-                  /**
-                   *
-                   * 1591
-                   *
-                   */
-                  GamesPlayed: number;
-                  /**
-                   *
-                   * 2024-11-11T23:10:40.000Z
-                   *
-                   */
-                  LastUpdateTimestamp: string;
-                  /**
-                   *
-                   * 672
-                   *
-                   */
-                  SetsPlayed: number;
-                };
-                "2v2": {
-                  BestCharacter: {
-                    /**
-                     *
-                     * character_Jason
-                     *
-                     */
-                    CharacterSlug: string;
-                    /**
-                     *
-                     * 35
-                     *
-                     */
-                    CurrentPoints: number;
-                    /**
-                     *
-                     * 0
-                     *
-                     */
-                    GamesPlayed: number;
-                    /**
-                     *
-                     * 2024-09-18T01:39:41.000Z
-                     *
-                     */
-                    LastUpdateTimestamp: string;
-                    /**
-                     *
-                     * 35
-                     *
-                     */
-                    MaxPoints: number;
-                    /**
-                     *
-                     * 1
-                     *
-                     */
-                    SetsPlayed: number;
-                  };
-                  DataByCharacter: {
-                    character_Jason: {
-                      /**
-                       *
-                       * 35
-                       *
-                       */
-                      CurrentPoints: number;
-                      /**
-                       *
-                       * 0
-                       *
-                       */
-                      DamageDealt: number;
-                      /**
-                       *
-                       * 0
-                       *
-                       */
-                      DamageTaken: number;
-                      /**
-                       *
-                       * 0
-                       *
-                       */
-                      Deaths: number;
-                      /**
-                       *
-                       * 0
-                       *
-                       */
-                      GamesPlayed: number;
-                      /**
-                       *
-                       * 0
-                       *
-                       */
-                      LastDecayMs: number;
-                      /**
-                       *
-                       * 2024-09-18T01:39:41.000Z
-                       *
-                       */
-                      LastUpdateTimestamp: string;
-                      /**
-                       *
-                       * 0
-                       *
-                       */
-                      Losses: number;
-                      /**
-                       *
-                       * 35
-                       *
-                       */
-                      MaxPoints: number;
-                      /**
-                       *
-                       * 0
-                       *
-                       */
-                      Ringouts: number;
-                      /**
-                       *
-                       * 0
-                       *
-                       */
-                      SetsPlayed: number;
-                      /**
-                       *
-                       * 0
-                       *
-                       */
-                      Wins: number;
-                    };
-                  };
-                  /**
-                   *
-                   * 129774
-                   *
-                   */
-                  FinalLeaderboardRank: number;
-                  /**
-                   *
-                   * 0
-                   *
-                   */
-                  GamesPlayed: number;
-                  /**
-                   *
-                   * 0
-                   *
-                   */
-                  SetsPlayed: number;
-                };
-              };
-              bEndOfSeasonRewardsGranted: boolean;
-            };
-          };
-          "Season:SeasonTwo": {
-            Ranked: {
-              /**
-               *
-               * EC1B6F59453B11272D24DD94189FC209
-               *
-               */
-              ClaimedRewards: string[];
-              DataByMode: {
-                "1v1": {
-                  BestCharacter: {
-                    /**
-                     *
-                     * character_Jason
-                     *
-                     */
-                    CharacterSlug: string;
-                    /**
-                     *
-                     * 2709
-                     *
-                     */
-                    CurrentPoints: number;
-                    /**
-                     *
-                     * 2270
-                     *
-                     */
-                    GamesPlayed: number;
-                    /**
-                     *
-                     * 2024-07-26T04:35:44.000Z
-                     *
-                     */
-                    LastUpdateTimestamp: string;
-                    /**
-                     *
-                     * 2745
-                     *
-                     */
-                    MaxPoints: number;
-                    /**
-                     *
-                     * 1317
-                     *
-                     */
-                    SetsPlayed: number;
-                  };
-                  DataByCharacter: {
-                    character_Jason: {
-                      /**
-                       *
-                       * 2709
-                       *
-                       */
-                      CurrentPoints: number;
-                      /**
-                       *
-                       * 518935
-                       *
-                       */
-                      DamageDealt: number;
-                      /**
-                       *
-                       * 670230
-                       *
-                       */
-                      DamageTaken: number;
-                      /**
-                       *
-                       * 4941
-                       *
-                       */
-                      Deaths: number;
-                      /**
-                       *
-                       * 2270
-                       *
-                       */
-                      GamesPlayed: number;
-                      /**
-                       *
-                       * 0
-                       *
-                       */
-                      LastDecayMs: number;
-                      /**
-                       *
-                       * 2024-09-17T05:37:40.000Z
-                       *
-                       */
-                      LastUpdateTimestamp: string;
-                      /**
-                       *
-                       * 752
-                       *
-                       */
-                      Losses: number;
-                      /**
-                       *
-                       * 2745
-                       *
-                       */
-                      MaxPoints: number;
-                      /**
-                       *
-                       * 5496
-                       *
-                       */
-                      Ringouts: number;
-                      /**
-                       *
-                       * 1317
-                       *
-                       */
-                      SetsPlayed: number;
-                      /**
-                       *
-                       * 753
-                       *
-                       */
-                      Wins: number;
-                    };
-                  };
-                  /**
-                   *
-                   * 745
-                   *
-                   */
-                  FinalLeaderboardRank: number;
-                  /**
-                   *
-                   * 2272
-                   *
-                   */
-                  GamesPlayed: number;
-                  /**
-                   *
-                   * 2024-09-17T05:37:40.000Z
-                   *
-                   */
-                  LastUpdateTimestamp: string;
-                  /**
-                   *
-                   * 1318
-                   *
-                   */
-                  SetsPlayed: number;
-                };
-                "2v2": {
-                  BestCharacter: {
-                    /**
-                     *
-                     * character_Jason
-                     *
-                     */
-                    CharacterSlug: string;
-                    /**
-                     *
-                     * 1035
-                     *
-                     */
-                    CurrentPoints: number;
-                    /**
-                     *
-                     * 107
-                     *
-                     */
-                    GamesPlayed: number;
-                    /**
-                     *
-                     * 2024-08-20T02:02:32.000Z
-                     *
-                     */
-                    LastUpdateTimestamp: string;
-                    /**
-                     *
-                     * 1047
-                     *
-                     */
-                    MaxPoints: number;
-                    /**
-                     *
-                     * 48
-                     *
-                     */
-                    SetsPlayed: number;
-                  };
-                  DataByCharacter: {
-                    character_Jason: {
-                      /**
-                       *
-                       * 1035
-                       *
-                       */
-                      CurrentPoints: number;
-                      /**
-                       *
-                       * 18082
-                       *
-                       */
-                      DamageDealt: number;
-                      /**
-                       *
-                       * 26826
-                       *
-                       */
-                      DamageTaken: number;
-                      /**
-                       *
-                       * 177
-                       *
-                       */
-                      Deaths: number;
-                      /**
-                       *
-                       * 107
-                       *
-                       */
-                      GamesPlayed: number;
-                      /**
-                       *
-                       * 0
-                       *
-                       */
-                      LastDecayMs: number;
-                      /**
-                       *
-                       * 2024-08-24T16:45:00.000Z
-                       *
-                       */
-                      LastUpdateTimestamp: string;
-                      /**
-                       *
-                       * 26
-                       *
-                       */
-                      Losses: number;
-                      /**
-                       *
-                       * 1047
-                       *
-                       */
-                      MaxPoints: number;
-                      /**
-                       *
-                       * 193
-                       *
-                       */
-                      Ringouts: number;
-                      /**
-                       *
-                       * 48
-                       *
-                       */
-                      SetsPlayed: number;
-                      /**
-                       *
-                       * 25
-                       *
-                       */
-                      Wins: number;
-                    };
-                  };
-                  /**
-                   *
-                   * 37414
-                   *
-                   */
-                  FinalLeaderboardRank: number;
-                  /**
-                   *
-                   * 107
-                   *
-                   */
-                  GamesPlayed: number;
-                  /**
-                   *
-                   * 2024-08-24T16:45:00.000Z
-                   *
-                   */
-                  LastUpdateTimestamp: string;
-                  /**
-                   *
-                   * 48
-                   *
-                   */
-                  SetsPlayed: number;
-                };
-              };
-              bEndOfSeasonRewardsGranted: boolean;
-            };
-          };
+          // "Season:SeasonFive": {
+          //   /**
+          //    *
+          //    * 2025-03-14T00:00:00.000Z
+          //    *
+          //    */
+          //   LastLoginDay: string;
+          //   /**
+          //    *
+          //    * 18
+          //    *
+          //    */
+          //   NumDaysLoggedIn: number;
+          //   /**
+          //    *
+          //    * 179
+          //    *
+          //    */
+          //   NumLogins: number;
+          //   Ranked: {
+          //     /**
+          //      *
+          //      * D17B128B40B9A1A73A8602A9D25A1A3A
+          //      *
+          //      */
+          //     ClaimedRewards: string[];
+          //     DataByMode: {
+          //       "1v1": {
+          //         BestCharacter: {
+          //           /**
+          //            *
+          //            * character_Jason
+          //            *
+          //            */
+          //           CharacterSlug: string;
+          //           /**
+          //            *
+          //            * 2137
+          //            *
+          //            */
+          //           CurrentPoints: number;
+          //           /**
+          //            *
+          //            * 371
+          //            *
+          //            */
+          //           GamesPlayed: number;
+          //           /**
+          //            *
+          //            * 2025-02-08T02:53:45.000Z
+          //            *
+          //            */
+          //           LastUpdateTimestamp: string;
+          //           /**
+          //            *
+          //            * 2179
+          //            *
+          //            */
+          //           MaxPoints: number;
+          //           /**
+          //            *
+          //            * 160
+          //            *
+          //            */
+          //           SetsPlayed: number;
+          //         };
+          //         DataByCharacter: {
+          //           character_Jason: {
+          //             /**
+          //              *
+          //              * 2137
+          //              *
+          //              */
+          //             CurrentPoints: number;
+          //             /**
+          //              *
+          //              * 109764
+          //              *
+          //              */
+          //             DamageDealt: number;
+          //             /**
+          //              *
+          //              * 120253
+          //              *
+          //              */
+          //             DamageTaken: number;
+          //             /**
+          //              *
+          //              * 856
+          //              *
+          //              */
+          //             Deaths: number;
+          //             /**
+          //              *
+          //              * 371
+          //              *
+          //              */
+          //             GamesPlayed: number;
+          //             /**
+          //              *
+          //              * 0
+          //              *
+          //              */
+          //             LastDecayMs: number;
+          //             /**
+          //              *
+          //              * 2025-03-02T08:15:12.000Z
+          //              *
+          //              */
+          //             LastUpdateTimestamp: string;
+          //             /**
+          //              *
+          //              * 79
+          //              *
+          //              */
+          //             Losses: number;
+          //             /**
+          //              *
+          //              * 2179
+          //              *
+          //              */
+          //             MaxPoints: number;
+          //             /**
+          //              *
+          //              * 837
+          //              *
+          //              */
+          //             Ringouts: number;
+          //             /**
+          //              *
+          //              * 160
+          //              *
+          //              */
+          //             SetsPlayed: number;
+          //             /**
+          //              *
+          //              * 80
+          //              *
+          //              */
+          //             Wins: number;
+          //           };
+          //         };
+          //         /**
+          //          *
+          //          * 371
+          //          *
+          //          */
+          //         GamesPlayed: number;
+          //         /**
+          //          *
+          //          * 2025-03-02T08:15:12.000Z
+          //          *
+          //          */
+          //         LastUpdateTimestamp: string;
+          //         /**
+          //          *
+          //          * 160
+          //          *
+          //          */
+          //         SetsPlayed: number;
+          //       };
+          //     };
+          //   };
+          // };
+          // "Season:SeasonFour": {
+          //   /**
+          //    *
+          //    * 2025-01-31T00:00:00.000Z
+          //    *
+          //    */
+          //   LastLoginDay: string;
+          //   /**
+          //    *
+          //    * 27
+          //    *
+          //    */
+          //   NumDaysLoggedIn: number;
+          //   /**
+          //    *
+          //    * 45
+          //    *
+          //    */
+          //   NumLogins: number;
+          //   Ranked: {
+          //     /**
+          //      *
+          //      * B67EDC654607F8583E06978841798205
+          //      *
+          //      */
+          //     ClaimedRewards: string[];
+          //     DataByMode: {
+          //       "1v1": {
+          //         BestCharacter: {
+          //           /**
+          //            *
+          //            * character_Jason
+          //            *
+          //            */
+          //           CharacterSlug: string;
+          //           /**
+          //            *
+          //            * 2457
+          //            *
+          //            */
+          //           CurrentPoints: number;
+          //           /**
+          //            *
+          //            * 1189
+          //            *
+          //            */
+          //           GamesPlayed: number;
+          //           /**
+          //            *
+          //            * 2024-11-13T15:47:31.000Z
+          //            *
+          //            */
+          //           LastUpdateTimestamp: string;
+          //           /**
+          //            *
+          //            * 2605
+          //            *
+          //            */
+          //           MaxPoints: number;
+          //           /**
+          //            *
+          //            * 493
+          //            *
+          //            */
+          //           SetsPlayed: number;
+          //         };
+          //         DataByCharacter: {
+          //           character_Jason: {
+          //             /**
+          //              *
+          //              * 2457
+          //              *
+          //              */
+          //             CurrentPoints: number;
+          //             /**
+          //              *
+          //              * 361469
+          //              *
+          //              */
+          //             DamageDealt: number;
+          //             /**
+          //              *
+          //              * 379378
+          //              *
+          //              */
+          //             DamageTaken: number;
+          //             /**
+          //              *
+          //              * 2780
+          //              *
+          //              */
+          //             Deaths: number;
+          //             /**
+          //              *
+          //              * 1189
+          //              *
+          //              */
+          //             GamesPlayed: number;
+          //             /**
+          //              *
+          //              * 0
+          //              *
+          //              */
+          //             LastDecayMs: number;
+          //             /**
+          //              *
+          //              * 2025-01-31T20:44:58.000Z
+          //              *
+          //              */
+          //             LastUpdateTimestamp: string;
+          //             /**
+          //              *
+          //              * 239
+          //              *
+          //              */
+          //             Losses: number;
+          //             /**
+          //              *
+          //              * 2605
+          //              *
+          //              */
+          //             MaxPoints: number;
+          //             /**
+          //              *
+          //              * 2713
+          //              *
+          //              */
+          //             Ringouts: number;
+          //             /**
+          //              *
+          //              * 493
+          //              *
+          //              */
+          //             SetsPlayed: number;
+          //             /**
+          //              *
+          //              * 238
+          //              *
+          //              */
+          //             Wins: number;
+          //           };
+          //         };
+          //         /**
+          //          *
+          //          * 694
+          //          *
+          //          */
+          //         FinalLeaderboardRank: number;
+          //         /**
+          //          *
+          //          * 1189
+          //          *
+          //          */
+          //         GamesPlayed: number;
+          //         /**
+          //          *
+          //          * 2025-01-31T20:44:58.000Z
+          //          *
+          //          */
+          //         LastUpdateTimestamp: string;
+          //         /**
+          //          *
+          //          * 493
+          //          *
+          //          */
+          //         SetsPlayed: number;
+          //       };
+          //     };
+          //     bEndOfSeasonRewardsGranted: boolean;
+          //   };
+          // };
+          // "Season:SeasonThree": {
+          //   Ranked: {
+          //     /**
+          //      *
+          //      * B67EDC654607F8583E06978841798205
+          //      *
+          //      */
+          //     ClaimedRewards: string[];
+          //     DataByMode: {
+          //       "1v1": {
+          //         BestCharacter: {
+          //           /**
+          //            *
+          //            * character_Jason
+          //            *
+          //            */
+          //           CharacterSlug: string;
+          //           /**
+          //            *
+          //            * 2858
+          //            *
+          //            */
+          //           CurrentPoints: number;
+          //           /**
+          //            *
+          //            * 1591
+          //            *
+          //            */
+          //           GamesPlayed: number;
+          //           /**
+          //            *
+          //            * 2024-09-18T01:39:41.000Z
+          //            *
+          //            */
+          //           LastUpdateTimestamp: string;
+          //           /**
+          //            *
+          //            * 2929
+          //            *
+          //            */
+          //           MaxPoints: number;
+          //           /**
+          //            *
+          //            * 672
+          //            *
+          //            */
+          //           SetsPlayed: number;
+          //         };
+          //         DataByCharacter: {
+          //           character_Jason: {
+          //             /**
+          //              *
+          //              * 2858
+          //              *
+          //              */
+          //             CurrentPoints: number;
+          //             /**
+          //              *
+          //              * 376835
+          //              *
+          //              */
+          //             DamageDealt: number;
+          //             /**
+          //              *
+          //              * 481079
+          //              *
+          //              */
+          //             DamageTaken: number;
+          //             /**
+          //              *
+          //              * 3411
+          //              *
+          //              */
+          //             Deaths: number;
+          //             /**
+          //              *
+          //              * 1591
+          //              *
+          //              */
+          //             GamesPlayed: number;
+          //             /**
+          //              *
+          //              * 0
+          //              *
+          //              */
+          //             LastDecayMs: number;
+          //             /**
+          //              *
+          //              * 2024-11-11T23:10:40.000Z
+          //              *
+          //              */
+          //             LastUpdateTimestamp: string;
+          //             /**
+          //              *
+          //              * 403
+          //              *
+          //              */
+          //             Losses: number;
+          //             /**
+          //              *
+          //              * 2929
+          //              *
+          //              */
+          //             MaxPoints: number;
+          //             /**
+          //              *
+          //              * 3929
+          //              *
+          //              */
+          //             Ringouts: number;
+          //             /**
+          //              *
+          //              * 672
+          //              *
+          //              */
+          //             SetsPlayed: number;
+          //             /**
+          //              *
+          //              * 404
+          //              *
+          //              */
+          //             Wins: number;
+          //           };
+          //         };
+          //         /**
+          //          *
+          //          * 857
+          //          *
+          //          */
+          //         FinalLeaderboardRank: number;
+          //         /**
+          //          *
+          //          * 1591
+          //          *
+          //          */
+          //         GamesPlayed: number;
+          //         /**
+          //          *
+          //          * 2024-11-11T23:10:40.000Z
+          //          *
+          //          */
+          //         LastUpdateTimestamp: string;
+          //         /**
+          //          *
+          //          * 672
+          //          *
+          //          */
+          //         SetsPlayed: number;
+          //       };
+          //       "2v2": {
+          //         BestCharacter: {
+          //           /**
+          //            *
+          //            * character_Jason
+          //            *
+          //            */
+          //           CharacterSlug: string;
+          //           /**
+          //            *
+          //            * 35
+          //            *
+          //            */
+          //           CurrentPoints: number;
+          //           /**
+          //            *
+          //            * 0
+          //            *
+          //            */
+          //           GamesPlayed: number;
+          //           /**
+          //            *
+          //            * 2024-09-18T01:39:41.000Z
+          //            *
+          //            */
+          //           LastUpdateTimestamp: string;
+          //           /**
+          //            *
+          //            * 35
+          //            *
+          //            */
+          //           MaxPoints: number;
+          //           /**
+          //            *
+          //            * 1
+          //            *
+          //            */
+          //           SetsPlayed: number;
+          //         };
+          //         DataByCharacter: {
+          //           character_Jason: {
+          //             /**
+          //              *
+          //              * 35
+          //              *
+          //              */
+          //             CurrentPoints: number;
+          //             /**
+          //              *
+          //              * 0
+          //              *
+          //              */
+          //             DamageDealt: number;
+          //             /**
+          //              *
+          //              * 0
+          //              *
+          //              */
+          //             DamageTaken: number;
+          //             /**
+          //              *
+          //              * 0
+          //              *
+          //              */
+          //             Deaths: number;
+          //             /**
+          //              *
+          //              * 0
+          //              *
+          //              */
+          //             GamesPlayed: number;
+          //             /**
+          //              *
+          //              * 0
+          //              *
+          //              */
+          //             LastDecayMs: number;
+          //             /**
+          //              *
+          //              * 2024-09-18T01:39:41.000Z
+          //              *
+          //              */
+          //             LastUpdateTimestamp: string;
+          //             /**
+          //              *
+          //              * 0
+          //              *
+          //              */
+          //             Losses: number;
+          //             /**
+          //              *
+          //              * 35
+          //              *
+          //              */
+          //             MaxPoints: number;
+          //             /**
+          //              *
+          //              * 0
+          //              *
+          //              */
+          //             Ringouts: number;
+          //             /**
+          //              *
+          //              * 0
+          //              *
+          //              */
+          //             SetsPlayed: number;
+          //             /**
+          //              *
+          //              * 0
+          //              *
+          //              */
+          //             Wins: number;
+          //           };
+          //         };
+          //         /**
+          //          *
+          //          * 129774
+          //          *
+          //          */
+          //         FinalLeaderboardRank: number;
+          //         /**
+          //          *
+          //          * 0
+          //          *
+          //          */
+          //         GamesPlayed: number;
+          //         /**
+          //          *
+          //          * 0
+          //          *
+          //          */
+          //         SetsPlayed: number;
+          //       };
+          //     };
+          //     bEndOfSeasonRewardsGranted: boolean;
+          //   };
+          // };
+          // "Season:SeasonTwo": {
+          //   Ranked: {
+          //     /**
+          //      *
+          //      * EC1B6F59453B11272D24DD94189FC209
+          //      *
+          //      */
+          //     ClaimedRewards: string[];
+          //     DataByMode: {
+          //       "1v1": {
+          //         BestCharacter: {
+          //           /**
+          //            *
+          //            * character_Jason
+          //            *
+          //            */
+          //           CharacterSlug: string;
+          //           /**
+          //            *
+          //            * 2709
+          //            *
+          //            */
+          //           CurrentPoints: number;
+          //           /**
+          //            *
+          //            * 2270
+          //            *
+          //            */
+          //           GamesPlayed: number;
+          //           /**
+          //            *
+          //            * 2024-07-26T04:35:44.000Z
+          //            *
+          //            */
+          //           LastUpdateTimestamp: string;
+          //           /**
+          //            *
+          //            * 2745
+          //            *
+          //            */
+          //           MaxPoints: number;
+          //           /**
+          //            *
+          //            * 1317
+          //            *
+          //            */
+          //           SetsPlayed: number;
+          //         };
+          //         DataByCharacter: {
+          //           character_Jason: {
+          //             /**
+          //              *
+          //              * 2709
+          //              *
+          //              */
+          //             CurrentPoints: number;
+          //             /**
+          //              *
+          //              * 518935
+          //              *
+          //              */
+          //             DamageDealt: number;
+          //             /**
+          //              *
+          //              * 670230
+          //              *
+          //              */
+          //             DamageTaken: number;
+          //             /**
+          //              *
+          //              * 4941
+          //              *
+          //              */
+          //             Deaths: number;
+          //             /**
+          //              *
+          //              * 2270
+          //              *
+          //              */
+          //             GamesPlayed: number;
+          //             /**
+          //              *
+          //              * 0
+          //              *
+          //              */
+          //             LastDecayMs: number;
+          //             /**
+          //              *
+          //              * 2024-09-17T05:37:40.000Z
+          //              *
+          //              */
+          //             LastUpdateTimestamp: string;
+          //             /**
+          //              *
+          //              * 752
+          //              *
+          //              */
+          //             Losses: number;
+          //             /**
+          //              *
+          //              * 2745
+          //              *
+          //              */
+          //             MaxPoints: number;
+          //             /**
+          //              *
+          //              * 5496
+          //              *
+          //              */
+          //             Ringouts: number;
+          //             /**
+          //              *
+          //              * 1317
+          //              *
+          //              */
+          //             SetsPlayed: number;
+          //             /**
+          //              *
+          //              * 753
+          //              *
+          //              */
+          //             Wins: number;
+          //           };
+          //         };
+          //         /**
+          //          *
+          //          * 745
+          //          *
+          //          */
+          //         FinalLeaderboardRank: number;
+          //         /**
+          //          *
+          //          * 2272
+          //          *
+          //          */
+          //         GamesPlayed: number;
+          //         /**
+          //          *
+          //          * 2024-09-17T05:37:40.000Z
+          //          *
+          //          */
+          //         LastUpdateTimestamp: string;
+          //         /**
+          //          *
+          //          * 1318
+          //          *
+          //          */
+          //         SetsPlayed: number;
+          //       };
+          //       "2v2": {
+          //         BestCharacter: {
+          //           /**
+          //            *
+          //            * character_Jason
+          //            *
+          //            */
+          //           CharacterSlug: string;
+          //           /**
+          //            *
+          //            * 1035
+          //            *
+          //            */
+          //           CurrentPoints: number;
+          //           /**
+          //            *
+          //            * 107
+          //            *
+          //            */
+          //           GamesPlayed: number;
+          //           /**
+          //            *
+          //            * 2024-08-20T02:02:32.000Z
+          //            *
+          //            */
+          //           LastUpdateTimestamp: string;
+          //           /**
+          //            *
+          //            * 1047
+          //            *
+          //            */
+          //           MaxPoints: number;
+          //           /**
+          //            *
+          //            * 48
+          //            *
+          //            */
+          //           SetsPlayed: number;
+          //         };
+          //         DataByCharacter: {
+          //           character_Jason: {
+          //             /**
+          //              *
+          //              * 1035
+          //              *
+          //              */
+          //             CurrentPoints: number;
+          //             /**
+          //              *
+          //              * 18082
+          //              *
+          //              */
+          //             DamageDealt: number;
+          //             /**
+          //              *
+          //              * 26826
+          //              *
+          //              */
+          //             DamageTaken: number;
+          //             /**
+          //              *
+          //              * 177
+          //              *
+          //              */
+          //             Deaths: number;
+          //             /**
+          //              *
+          //              * 107
+          //              *
+          //              */
+          //             GamesPlayed: number;
+          //             /**
+          //              *
+          //              * 0
+          //              *
+          //              */
+          //             LastDecayMs: number;
+          //             /**
+          //              *
+          //              * 2024-08-24T16:45:00.000Z
+          //              *
+          //              */
+          //             LastUpdateTimestamp: string;
+          //             /**
+          //              *
+          //              * 26
+          //              *
+          //              */
+          //             Losses: number;
+          //             /**
+          //              *
+          //              * 1047
+          //              *
+          //              */
+          //             MaxPoints: number;
+          //             /**
+          //              *
+          //              * 193
+          //              *
+          //              */
+          //             Ringouts: number;
+          //             /**
+          //              *
+          //              * 48
+          //              *
+          //              */
+          //             SetsPlayed: number;
+          //             /**
+          //              *
+          //              * 25
+          //              *
+          //              */
+          //             Wins: number;
+          //           };
+          //         };
+          //         /**
+          //          *
+          //          * 37414
+          //          *
+          //          */
+          //         FinalLeaderboardRank: number;
+          //         /**
+          //          *
+          //          * 107
+          //          *
+          //          */
+          //         GamesPlayed: number;
+          //         /**
+          //          *
+          //          * 2024-08-24T16:45:00.000Z
+          //          *
+          //          */
+          //         LastUpdateTimestamp: string;
+          //         /**
+          //          *
+          //          * 48
+          //          *
+          //          */
+          //         SetsPlayed: number;
+          //       };
+          //     };
+          //     bEndOfSeasonRewardsGranted: boolean;
+          //   };
+          // };
         };
         /**
          *
@@ -2486,11 +2638,7 @@ export namespace MVSResponses {
          */
         TotalPrestige: number;
         Transforms: {
-          currency_conversion_errored: {
-            Version_1: boolean;
-            Version_2: boolean;
-            Version_3: boolean;
-          };
+          currency_conversion_errored: {};
           welcome_back: boolean;
         };
         checked_grants: {
@@ -2824,8 +2972,8 @@ export namespace MVSResponses {
              *
              */
             character_wonder_woman: number;
-          };
-          season1: {
+          };} &
+          PartialRecord<"season1"|"season2"|"season3"|"season4"|"season5",{
             /**
              *
              * 131.25
@@ -2875,531 +3023,530 @@ export namespace MVSResponses {
                *
                */
               character_shaggy: number;
-            };
-          };
-          season2: {
-            /**
-             *
-             * 546.0574951171875
-             *
-             */
-            HighestDamageDealt: number;
-            /**
-             *
-             * 32
-             *
-             */
-            TotalAssists: number;
-            /**
-             *
-             * 19596
-             *
-             */
-            TotalAttacksDodged: number;
-            /**
-             *
-             * 6
-             *
-             */
-            TotalDoubleRingouts: number;
-            /**
-             *
-             * 12
-             *
-             */
-            TotalRingoutLeader: number;
-            /**
-             *
-             * 5774
-             *
-             */
-            TotalRingouts: number;
-            /**
-             *
-             * 1349
-             *
-             */
-            TotalWins: number;
-            character_highest_damage_dealt: {
-              /**
-               *
-               * 546.0574951171875
-               *
-               */
-              character_Jason: number;
-            };
-            character_matches: {
-              /**
-               *
-               * 2409
-               *
-               */
-              character_Jason: number;
-            };
-            character_ringouts: {
-              /**
-               *
-               * 5774
-               *
-               */
-              character_Jason: number;
-            };
-            character_total_damage_dealt: {
-              /**
-               *
-               * 545648.9259185791
-               *
-               */
-              character_Jason: number;
-            };
-            character_wins: {
-              /**
-               *
-               * 1349
-               *
-               */
-              character_Jason: number;
-            };
-            ranked: {
-              "1v1": {
-                /**
-                 *
-                 * 1
-                 *
-                 */
-                CharactersInGold: number;
-                /**
-                 *
-                 * 779
-                 *
-                 */
-                Wins: number;
-              };
-              "2v2": {
-                /**
-                 *
-                 * 1
-                 *
-                 */
-                CharactersInGold: number;
-              };
-            };
-          };
-          season3: {
-            /**
-             *
-             * 591
-             *
-             */
-            HighestDamageDealt: number;
-            /**
-             *
-             * 12501
-             *
-             */
-            TotalAttacksDodged: number;
-            /**
-             *
-             * 7
-             *
-             */
-            TotalDoubleRingouts: number;
-            /**
-             *
-             * 3
-             *
-             */
-            TotalRingoutLeader: number;
-            /**
-             *
-             * 3957
-             *
-             */
-            TotalRingouts: number;
-            /**
-             *
-             * 920
-             *
-             */
-            TotalWins: number;
-            character_highest_damage_dealt: {
-              /**
-               *
-               * 591
-               *
-               */
-              character_Jason: number;
-            };
-            character_matches: {
-              /**
-               *
-               * 1600
-               *
-               */
-              character_Jason: number;
-            };
-            character_ringouts: {
-              /**
-               *
-               * 3957
-               *
-               */
-              character_Jason: number;
-            };
-            character_total_damage_dealt: {
-              /**
-               *
-               * 379634
-               *
-               */
-              character_Jason: number;
-            };
-            character_wins: {
-              /**
-               *
-               * 920
-               *
-               */
-              character_Jason: number;
-            };
-            ranked: {
-              "1v1": {
-                /**
-                 *
-                 * 1
-                 *
-                 */
-                CharactersInGold: number;
-                /**
-                 *
-                 * 404
-                 *
-                 */
-                Wins: number;
-              };
-            };
-          };
-          season4: {
-            /**
-             *
-             * 643
-             *
-             */
-            HighestDamageDealt: number;
-            /**
-             *
-             * 2
-             *
-             */
-            TotalAssists: number;
-            /**
-             *
-             * 10418
-             *
-             */
-            TotalAttacksDodged: number;
-            /**
-             *
-             * 1
-             *
-             */
-            TotalDoubleRingouts: number;
-            /**
-             *
-             * 1
-             *
-             */
-            TotalRingoutLeader: number;
-            /**
-             *
-             * 2785
-             *
-             */
-            TotalRingouts: number;
-            /**
-             *
-             * 599
-             *
-             */
-            TotalWins: number;
-            character_highest_damage_dealt: {
-              /**
-               *
-               * 167
-               *
-               */
-              character_C018: number;
-              /**
-               *
-               * 643
-               *
-               */
-              character_Jason: number;
-            };
-            character_matches: {
-              /**
-               *
-               * 2
-               *
-               */
-              character_C018: number;
-              /**
-               *
-               * 1217
-               *
-               */
-              character_Jason: number;
-            };
-            character_ringouts: {
-              /**
-               *
-               * 3
-               *
-               */
-              character_C018: number;
-              /**
-               *
-               * 2782
-               *
-               */
-              character_Jason: number;
-            };
-            character_total_damage_dealt: {
-              /**
-               *
-               * 295
-               *
-               */
-              character_C018: number;
-              /**
-               *
-               * 370542
-               *
-               */
-              character_Jason: number;
-            };
-            character_wins: {
-              /**
-               *
-               * 1
-               *
-               */
-              character_C018: number;
-              /**
-               *
-               * 598
-               *
-               */
-              character_Jason: number;
-            };
-            ranked: {
-              "1v1": {
-                /**
-                 *
-                 * 1
-                 *
-                 */
-                CharactersInGold: number;
-                /**
-                 *
-                 * 242
-                 *
-                 */
-                Wins: number;
-              };
-            };
-          };
-          season5: {
-            /**
-             *
-             * 656
-             *
-             */
-            HighestDamageDealt: number;
-            /**
-             *
-             * 14
-             *
-             */
-            TotalAssists: number;
-            /**
-             *
-             * 3680
-             *
-             */
-            TotalAttacksDodged: number;
-            /**
-             *
-             * 4
-             *
-             */
-            TotalDoubleRingouts: number;
-            /**
-             *
-             * 4
-             *
-             */
-            TotalRingoutLeader: number;
-            /**
-             *
-             * 923
-             *
-             */
-            TotalRingouts: number;
-            /**
-             *
-             * 251
-             *
-             */
-            TotalWins: number;
-            character_highest_damage_dealt: {
-              /**
-               *
-               * 656
-               *
-               */
-              character_Jason: number;
-              /**
-               *
-               * 310
-               *
-               */
-              character_c16: number;
-              /**
-               *
-               * 459
-               *
-               */
-              character_shaggy: number;
-              /**
-               *
-               * 524
-               *
-               */
-              character_wonder_woman: number;
-            };
-            character_matches: {
-              /**
-               *
-               * 382
-               *
-               */
-              character_Jason: number;
-              /**
-               *
-               * 1
-               *
-               */
-              character_c16: number;
-              /**
-               *
-               * 65
-               *
-               */
-              character_shaggy: number;
-              /**
-               *
-               * 9
-               *
-               */
-              character_wonder_woman: number;
-            };
-            character_ringouts: {
-              /**
-               *
-               * 855
-               *
-               */
-              character_Jason: number;
-              /**
-               *
-               * 3
-               *
-               */
-              character_c16: number;
-              /**
-               *
-               * 40
-               *
-               */
-              character_shaggy: number;
-              /**
-               *
-               * 25
-               *
-               */
-              character_wonder_woman: number;
-            };
-            character_total_damage_dealt: {
-              /**
-               *
-               * 111475
-               *
-               */
-              character_Jason: number;
-              /**
-               *
-               * 310
-               *
-               */
-              character_c16: number;
-              /**
-               *
-               * 3908
-               *
-               */
-              character_shaggy: number;
-              /**
-               *
-               * 3285
-               *
-               */
-              character_wonder_woman: number;
-            };
-            character_wins: {
-              /**
-               *
-               * 186
-               *
-               */
-              character_Jason: number;
-              /**
-               *
-               * 1
-               *
-               */
-              character_c16: number;
-              /**
-               *
-               * 57
-               *
-               */
-              character_shaggy: number;
-              /**
-               *
-               * 7
-               *
-               */
-              character_wonder_woman: number;
-            };
-            ranked: {
-              "1v1": {
-                /**
-                 *
-                 * 1
-                 *
-                 */
-                CharactersInGold: number;
-                /**
-                 *
-                 * 80
-                 *
-                 */
-                Wins: number;
-              };
-            };
-          };
-        };
+            }}>
+        //   season2: {
+        //     /**
+        //      *
+        //      * 546.0574951171875
+        //      *
+        //      */
+        //     HighestDamageDealt: number;
+        //     /**
+        //      *
+        //      * 32
+        //      *
+        //      */
+        //     TotalAssists: number;
+        //     /**
+        //      *
+        //      * 19596
+        //      *
+        //      */
+        //     TotalAttacksDodged: number;
+        //     /**
+        //      *
+        //      * 6
+        //      *
+        //      */
+        //     TotalDoubleRingouts: number;
+        //     /**
+        //      *
+        //      * 12
+        //      *
+        //      */
+        //     TotalRingoutLeader: number;
+        //     /**
+        //      *
+        //      * 5774
+        //      *
+        //      */
+        //     TotalRingouts: number;
+        //     /**
+        //      *
+        //      * 1349
+        //      *
+        //      */
+        //     TotalWins: number;
+        //     character_highest_damage_dealt: {
+        //       /**
+        //        *
+        //        * 546.0574951171875
+        //        *
+        //        */
+        //       character_Jason: number;
+        //     };
+        //     character_matches: {
+        //       /**
+        //        *
+        //        * 2409
+        //        *
+        //        */
+        //       character_Jason: number;
+        //     };
+        //     character_ringouts: {
+        //       /**
+        //        *
+        //        * 5774
+        //        *
+        //        */
+        //       character_Jason: number;
+        //     };
+        //     character_total_damage_dealt: {
+        //       /**
+        //        *
+        //        * 545648.9259185791
+        //        *
+        //        */
+        //       character_Jason: number;
+        //     };
+        //     character_wins: {
+        //       /**
+        //        *
+        //        * 1349
+        //        *
+        //        */
+        //       character_Jason: number;
+        //     };
+        //     ranked: {
+        //       "1v1": {
+        //         /**
+        //          *
+        //          * 1
+        //          *
+        //          */
+        //         CharactersInGold: number;
+        //         /**
+        //          *
+        //          * 779
+        //          *
+        //          */
+        //         Wins: number;
+        //       };
+        //       "2v2": {
+        //         /**
+        //          *
+        //          * 1
+        //          *
+        //          */
+        //         CharactersInGold: number;
+        //       };
+        //     };
+        //   };
+        //   season3: {
+        //     /**
+        //      *
+        //      * 591
+        //      *
+        //      */
+        //     HighestDamageDealt: number;
+        //     /**
+        //      *
+        //      * 12501
+        //      *
+        //      */
+        //     TotalAttacksDodged: number;
+        //     /**
+        //      *
+        //      * 7
+        //      *
+        //      */
+        //     TotalDoubleRingouts: number;
+        //     /**
+        //      *
+        //      * 3
+        //      *
+        //      */
+        //     TotalRingoutLeader: number;
+        //     /**
+        //      *
+        //      * 3957
+        //      *
+        //      */
+        //     TotalRingouts: number;
+        //     /**
+        //      *
+        //      * 920
+        //      *
+        //      */
+        //     TotalWins: number;
+        //     character_highest_damage_dealt: {
+        //       /**
+        //        *
+        //        * 591
+        //        *
+        //        */
+        //       character_Jason: number;
+        //     };
+        //     character_matches: {
+        //       /**
+        //        *
+        //        * 1600
+        //        *
+        //        */
+        //       character_Jason: number;
+        //     };
+        //     character_ringouts: {
+        //       /**
+        //        *
+        //        * 3957
+        //        *
+        //        */
+        //       character_Jason: number;
+        //     };
+        //     character_total_damage_dealt: {
+        //       /**
+        //        *
+        //        * 379634
+        //        *
+        //        */
+        //       character_Jason: number;
+        //     };
+        //     character_wins: {
+        //       /**
+        //        *
+        //        * 920
+        //        *
+        //        */
+        //       character_Jason: number;
+        //     };
+        //     ranked: {
+        //       "1v1": {
+        //         /**
+        //          *
+        //          * 1
+        //          *
+        //          */
+        //         CharactersInGold: number;
+        //         /**
+        //          *
+        //          * 404
+        //          *
+        //          */
+        //         Wins: number;
+        //       };
+        //     };
+        //   };
+        //   season4: {
+        //     /**
+        //      *
+        //      * 643
+        //      *
+        //      */
+        //     HighestDamageDealt: number;
+        //     /**
+        //      *
+        //      * 2
+        //      *
+        //      */
+        //     TotalAssists: number;
+        //     /**
+        //      *
+        //      * 10418
+        //      *
+        //      */
+        //     TotalAttacksDodged: number;
+        //     /**
+        //      *
+        //      * 1
+        //      *
+        //      */
+        //     TotalDoubleRingouts: number;
+        //     /**
+        //      *
+        //      * 1
+        //      *
+        //      */
+        //     TotalRingoutLeader: number;
+        //     /**
+        //      *
+        //      * 2785
+        //      *
+        //      */
+        //     TotalRingouts: number;
+        //     /**
+        //      *
+        //      * 599
+        //      *
+        //      */
+        //     TotalWins: number;
+        //     character_highest_damage_dealt: {
+        //       /**
+        //        *
+        //        * 167
+        //        *
+        //        */
+        //       character_C018: number;
+        //       /**
+        //        *
+        //        * 643
+        //        *
+        //        */
+        //       character_Jason: number;
+        //     };
+        //     character_matches: {
+        //       /**
+        //        *
+        //        * 2
+        //        *
+        //        */
+        //       character_C018: number;
+        //       /**
+        //        *
+        //        * 1217
+        //        *
+        //        */
+        //       character_Jason: number;
+        //     };
+        //     character_ringouts: {
+        //       /**
+        //        *
+        //        * 3
+        //        *
+        //        */
+        //       character_C018: number;
+        //       /**
+        //        *
+        //        * 2782
+        //        *
+        //        */
+        //       character_Jason: number;
+        //     };
+        //     character_total_damage_dealt: {
+        //       /**
+        //        *
+        //        * 295
+        //        *
+        //        */
+        //       character_C018: number;
+        //       /**
+        //        *
+        //        * 370542
+        //        *
+        //        */
+        //       character_Jason: number;
+        //     };
+        //     character_wins: {
+        //       /**
+        //        *
+        //        * 1
+        //        *
+        //        */
+        //       character_C018: number;
+        //       /**
+        //        *
+        //        * 598
+        //        *
+        //        */
+        //       character_Jason: number;
+        //     };
+        //     ranked: {
+        //       "1v1": {
+        //         /**
+        //          *
+        //          * 1
+        //          *
+        //          */
+        //         CharactersInGold: number;
+        //         /**
+        //          *
+        //          * 242
+        //          *
+        //          */
+        //         Wins: number;
+        //       };
+        //     };
+        //   };
+        //   season5: {
+        //     /**
+        //      *
+        //      * 656
+        //      *
+        //      */
+        //     HighestDamageDealt: number;
+        //     /**
+        //      *
+        //      * 14
+        //      *
+        //      */
+        //     TotalAssists: number;
+        //     /**
+        //      *
+        //      * 3680
+        //      *
+        //      */
+        //     TotalAttacksDodged: number;
+        //     /**
+        //      *
+        //      * 4
+        //      *
+        //      */
+        //     TotalDoubleRingouts: number;
+        //     /**
+        //      *
+        //      * 4
+        //      *
+        //      */
+        //     TotalRingoutLeader: number;
+        //     /**
+        //      *
+        //      * 923
+        //      *
+        //      */
+        //     TotalRingouts: number;
+        //     /**
+        //      *
+        //      * 251
+        //      *
+        //      */
+        //     TotalWins: number;
+        //     character_highest_damage_dealt: {
+        //       /**
+        //        *
+        //        * 656
+        //        *
+        //        */
+        //       character_Jason: number;
+        //       /**
+        //        *
+        //        * 310
+        //        *
+        //        */
+        //       character_c16: number;
+        //       /**
+        //        *
+        //        * 459
+        //        *
+        //        */
+        //       character_shaggy: number;
+        //       /**
+        //        *
+        //        * 524
+        //        *
+        //        */
+        //       character_wonder_woman: number;
+        //     };
+        //     character_matches: {
+        //       /**
+        //        *
+        //        * 382
+        //        *
+        //        */
+        //       character_Jason: number;
+        //       /**
+        //        *
+        //        * 1
+        //        *
+        //        */
+        //       character_c16: number;
+        //       /**
+        //        *
+        //        * 65
+        //        *
+        //        */
+        //       character_shaggy: number;
+        //       /**
+        //        *
+        //        * 9
+        //        *
+        //        */
+        //       character_wonder_woman: number;
+        //     };
+        //     character_ringouts: {
+        //       /**
+        //        *
+        //        * 855
+        //        *
+        //        */
+        //       character_Jason: number;
+        //       /**
+        //        *
+        //        * 3
+        //        *
+        //        */
+        //       character_c16: number;
+        //       /**
+        //        *
+        //        * 40
+        //        *
+        //        */
+        //       character_shaggy: number;
+        //       /**
+        //        *
+        //        * 25
+        //        *
+        //        */
+        //       character_wonder_woman: number;
+        //     };
+        //     character_total_damage_dealt: {
+        //       /**
+        //        *
+        //        * 111475
+        //        *
+        //        */
+        //       character_Jason: number;
+        //       /**
+        //        *
+        //        * 310
+        //        *
+        //        */
+        //       character_c16: number;
+        //       /**
+        //        *
+        //        * 3908
+        //        *
+        //        */
+        //       character_shaggy: number;
+        //       /**
+        //        *
+        //        * 3285
+        //        *
+        //        */
+        //       character_wonder_woman: number;
+        //     };
+        //     character_wins: {
+        //       /**
+        //        *
+        //        * 186
+        //        *
+        //        */
+        //       character_Jason: number;
+        //       /**
+        //        *
+        //        * 1
+        //        *
+        //        */
+        //       character_c16: number;
+        //       /**
+        //        *
+        //        * 57
+        //        *
+        //        */
+        //       character_shaggy: number;
+        //       /**
+        //        *
+        //        * 7
+        //        *
+        //        */
+        //       character_wonder_woman: number;
+        //     };
+        //     ranked: {
+        //       "1v1": {
+        //         /**
+        //          *
+        //          * 1
+        //          *
+        //          */
+        //         CharactersInGold: number;
+        //         /**
+        //          *
+        //          * 80
+        //          *
+        //          */
+        //         Wins: number;
+        //       };
+        //     };
+        //   };
+        // };
       };
       server_owner_data: {};
       /**
@@ -3407,7 +3554,7 @@ export namespace MVSResponses {
        * 2025-03-14T16:43:54.000Z
        *
        */
-      updated_at: string;
+      updated_at: number;
       /**
        *
        * test-user-segment

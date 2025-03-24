@@ -78,7 +78,7 @@ export async function handleProfiles_bulk(
   const players = await playersQuery;
   const mapAccountIdToPlayer: Map<string, (typeof players)[0]> = new Map();
   players.map((doc) => {
-    mapAccountIdToPlayer.set(doc.account_id._id.toHexString(), doc);
+    mapAccountIdToPlayer.set(doc.account_id, doc);
   });
   for (const accountId of requestBody.ids) {
     const player = mapAccountIdToPlayer.get(accountId);

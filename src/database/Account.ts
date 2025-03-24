@@ -67,10 +67,10 @@ export class Identity {
 
   personal_data = {};
 
-  @prop({ required: true })
+  @prop({ type: String, required: true })
   platforms!: string[];
 
-  @prop({ required: true })
+  @prop({ type: IdentityUsername, required: true })
   usernames!: IdentityUsername[];
 }
 
@@ -101,9 +101,9 @@ export class ConnectionStatus {
 export class Connection {
   @prop({ required: true })
   id!: string;
-  @prop({ required: true, get: dateToMVSTime })
+  @prop({ type: Date, required: true, get: dateToMVSTime })
   start_time!: number;
-  @prop({ required: true, get: dateToMVSTime })
+  @prop({ type: Date, required: true, get: dateToMVSTime })
   last_used!: number;
   @prop({ required: true })
   metadata!: string;
@@ -118,7 +118,7 @@ export class Connection {
 export class AccountAuthWbNetwork {
   id!: mongoose.Types.ObjectId;
 
-  @prop({ required: true, get: dateToMVSTime })
+  @prop({ type: Date, required: true, get: dateToMVSTime })
   created_at!: number;
 }
 
@@ -130,7 +130,7 @@ export class AccountAuth {
 
 @modelOptions({ schemaOptions: { _id: false } })
 export class AccountData {
-  @prop({ required: true, get: dateToMVSTime })
+  @prop({ type: Date, required: true, get: dateToMVSTime })
   EULAAcceptTimestamp!: number;
   @prop({ required: true })
   EULAAcceptVersion!: number;
@@ -299,9 +299,9 @@ export class Account {
 
   id!: string;
 
-  @prop({ required: true, get: dateToMVSTime })
+  @prop({ type: Date, required: true, get: dateToMVSTime })
   updated_at!: number;
-  @prop({ required: true, get: dateToMVSTime })
+  @prop({ type: Date, required: true, get: dateToMVSTime })
   created_at!: number;
 
   @prop({ required: true })
@@ -325,8 +325,7 @@ export class Account {
   @prop({ required: true })
   wb_account!: WbAccount;
 
-  @prop({ default: 0 })
-  points!: number;
+  points = 0;
 
   @prop({ required: true })
   state!: string;

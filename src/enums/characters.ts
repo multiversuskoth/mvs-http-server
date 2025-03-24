@@ -36,4 +36,6 @@ enum Characters {
   character_wonder_woman = "character_wonder_woman",
 }
 
+export const CharactersSet = new Set(Object.values(Characters)) as Set<string>;
+
 export default Characters;

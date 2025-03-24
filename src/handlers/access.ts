@@ -7,13 +7,8 @@ import serverConfiguration from "../config/serverConfiguration";
 import * as jwt from "jsonwebtoken";
 import env from "../env/env";
 import { Player, playerModel } from "../database/Player";
-import { ObjectWithUnix } from "../utils/date";
 import { IdToString } from "../utils/objectId";
-import { TestNaja, UndefinedToNull } from "../utils/undefinedToNull";
-
-type AccountDoc = Omit<Account, "_id">;
-
-// handleAccess({} as any, {} as any);
+import { MapToRecord } from "../utils/mapToRecord";
 
 export async function handleAccess(
   req: Request<{}, MVSResponses.Access_RESPONSE, MVSRequests.Access_REQUEST, {}>,
@@ -85,7 +80,10 @@ export async function handleAccess(
     in_queue: false,
     configuration: serverConfiguration,
     account: updatedAccount.toJSON<IdToString<Account>>(),
-    profile: player.toJSON<IdToString<Player>>(),
+    profile: player.toJSON<MapToRecord<Player>>(),
+    notifications: player.notifications,
+    achievements: [],
+    maintenance: null,
     wb_network: {
       network_token: "gg",
     },

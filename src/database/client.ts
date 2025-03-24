@@ -1,7 +1,5 @@
 import mongoose from "mongoose";
 import env from "../env/env";
-import { accountModel } from "./Account";
-import { getModelForClass, prop } from "@typegoose/typegoose";
 
 // connect().then(async () => {
 //   console.log("try insert");
@@ -40,136 +38,76 @@ import { getModelForClass, prop } from "@typegoose/typegoose";
 //   //     },
 //   //   },
 //   // });
-//   await accountModel.create({
-//     _id: new mongoose.Types.ObjectId("67b298f635dda07642f9d3a7"),
-//     updated_at: 1740278186,
-//     created_at: 1739757814,
-//     deleted: false,
-//     orphaned: false,
-//     orphaned_reason: null,
-//     public_id: "gffd",
-//     identity: {
-//       username: "gg",
-//       avatar: "link to image",
-//       default_username: false,
-//       alternate: {
-//         steam: {
-//           id: "123",
-//           username: "123",
-//           avatar: "",
-//           email: "",
-//         },
-//       },
-//     },
-//     locale: "en-US",
-//     wb_account: {
-//       completed: true,
-//     },
-//     points: 0,
-//     state: "normal",
-//     wbplay_data_synced: false,
-//     wbplay_identity: null,
-//     connections: [],
-//     data: {
-//       EULAAcceptTimestamp: Date.now(),
-//       EULAAcceptVersion: 1,
-//       LastLoginPlatform: "EPlatform::PC",
-//       LastPlayedCharacterSlug: "character_superman",
-//     },
-//     presence_state: 1,
-//     email_verification: {
-//       state: "unverified",
-//     },
 
-//     external_accounts: {},
+//   // await accountModel.create({
+//   //   _id: new mongoose.Types.ObjectId("67b298f635dda07642f9d3a7"),
+//   //   updated_at: 1740278186,
+//   //   created_at: 1739757814,
+//   //   deleted: false,
+//   //   orphaned: false,
+//   //   orphaned_reason: null,
+//   //   public_id: "gffd",
+//   //   identity: {
+//   //     username: "gg",
+//   //     avatar: "link to image",
+//   //     default_username: false,
+//   //     alternate: {
+//   //       steam: {
+//   //         id: "123",
+//   //         username: "123",
+//   //         avatar: "",
+//   //         email: "",
+//   //       },
+//   //     },
+//   //   },
+//   //   locale: "en-US",
+//   //   wb_account: {
+//   //     completed: true,
+//   //   },
+//   //   points: 0,
+//   //   state: "normal",
+//   //   wbplay_data_synced: false,
+//   //   wbplay_identity: null,
+//   //   connections: [],
+//   //   data: {
+//   //     EULAAcceptTimestamp: Date.now(),
+//   //     EULAAcceptVersion: 1,
+//   //     LastLoginPlatform: "EPlatform::PC",
+//   //     LastPlayedCharacterSlug: "character_superman",
+//   //   },
+//   //   presence_state: 1,
+//   //   email_verification: {
+//   //     state: "unverified",
+//   //   },
 
-//     opt_ins: {
-//       wbplay_optin: true,
-//     },
-//     presence: "online",
-//     privacy_levels: {
-//       clan: {
-//         invitation: "default",
-//       },
-//       match: {
-//         invitation: "default",
-//       },
-//       presence: {
-//         state: "default",
-//       },
-//       relationship: {
-//         follow: "default",
-//       },
-//     },
-//     restriction_status: {},
-//     auth: {
-//       wb_network: [],
-//     },
-//     server_data: {},
-//   });
-//   // await playerModel.create({
-//   //   _id: new mongoose.Types.ObjectId("67b298f635dda07642f9d3af"),
-//   //   updated_at: Date.now(),
-//   //   account_id: new mongoose.Types.ObjectId("67b298f635dda07642f9d3a7"),
-//   //   created_at: Date.now(),
-//   //   last_login: Date.now(),
-//   //   points: null,
-//   //   random_distribution: 0.8,
-//   //   inventory: {
-//   //     characters: {
-//   //       shaggy: {
-//   //         count: 1,
-//   //         created_at: Date.now(),
-//   //       },
-//   //       currency: {
-//   //         count: 130,
-//   //         created_at: null,
-//   //       },
-//   //       garnet: {
-//   //         count: 1,
-//   //         created_at: Date.now(),
-//   //       },
-//   //       C029: {
-//   //         count: 1,
-//   //         created_at: Date.now(),
-//   //       },
+//   //   external_accounts: {},
+
+//   //   opt_ins: {
+//   //     wbplay_optin: true,
+//   //   },
+//   //   presence: "online",
+//   //   privacy_levels: {
+//   //     clan: {
+//   //       invitation: "default",
 //   //     },
-//   //     battlepass: {
-//   //       "season-1": {
-//   //         count: 1,
-//   //         created_at: Date.now(),
-//   //       },
+//   //     match: {
+//   //       invitation: "default",
 //   //     },
-//   //     skins: {
-//   //       c034_s01: {
-//   //         count: 1,
-//   //         created_at: Date.now(),
-//   //       },
+//   //     presence: {
+//   //       state: "default",
 //   //     },
-//   //     gleamium: {
-//   //       count: 100,
-//   //       created_at: null,
+//   //     relationship: {
+//   //       follow: "default",
 //   //     },
 //   //   },
-//   //   matches: {
-//   //     "2v2-set": {
-//   //       win: 10,
-//   //       loss: 5,
-//   //       win_streak: 3,
-//   //       longest_win_streak: 3,
-//   //     },
+//   //   restriction_status: {},
+//   //   auth: {
+//   //     wb_network: [],
 //   //   },
-//   //   server_data: {
-//   //     SeasonalData: {
-//   //       "Season:SeasonOne": {
-//   //         LastLoginDay: "2024-12-17",
-//   //         NumDaysLoggedIn: 4,
-//   //         NumLogins: 2,
-//   //       },
-//   //     },
-//   //   },
-//   //   user_segments: [UserSegment.IS_STEAM],
+//   //   server_data: {},
 //   // });
+
+//   await playerModel.create(playerSampleData);
 //   mongoose.disconnect();
 // });
 

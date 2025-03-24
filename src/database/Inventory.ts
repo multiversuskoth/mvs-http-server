@@ -1,7 +1,6 @@
 import { modelOptions, prop } from "@typegoose/typegoose";
 import { Entries } from "type-fest";
 import { dateToMVSTime } from "../utils/date";
-import Characters from "../enums/characters";
 
 @modelOptions({ schemaOptions: { _id: false } })
 export class InventoryItem {
@@ -18,19 +17,6 @@ export class InventoryItem {
     // }
     return result;
   }
-}
-
-function AddFields(fields: string[]) {
-  return function <T extends { new (...args: any[]): {} }>(constructor: T) {
-    return class extends constructor {
-      constructor(...args: any[]) {
-        super(...args);
-        fields.forEach((field) => {
-          (this as any)[field] = null; // Initialize fields with null
-        });
-      }
-    };
-  };
 }
 
 @modelOptions({ schemaOptions: { _id: false } })

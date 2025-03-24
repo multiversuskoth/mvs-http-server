@@ -8,6 +8,9 @@ import UserSegment from "../enums/user_segment";
 import { Account } from "./Account";
 import toJSONVirtualId from "../utils/toJSONVirtualId";
 import { dateToMVSTime } from "../utils/date";
+import { MapToRecord } from "../utils/mapToRecord";
+import Characters from "../enums/characters";
+import characterKeysValidator from "../utils/characterKeysValidator";
 
 @modelOptions({
   schemaOptions: {
@@ -28,10 +31,14 @@ export class PlayerAggregateItem {
   },
 })
 export class PlayerAggregates {
-  "fighter-road-xp": PlayerAggregateItem;
-  "s1-battlepass-score": PlayerAggregateItem;
-  "s3-battlepass-score": PlayerAggregateItem;
-  "s4-battlepass-score": PlayerAggregateItem;
+  @prop({ required: true })
+  "fighter-road-xp"!: PlayerAggregateItem;
+  @prop({ required: true })
+  "s1-battlepass-score"!: PlayerAggregateItem;
+  @prop({ required: true })
+  "s3-battlepass-score"!: PlayerAggregateItem;
+  @prop({ required: true })
+  "s4-battlepass-score"!: PlayerAggregateItem;
 }
 
 @modelOptions({
@@ -60,86 +67,8 @@ export class PlayerDataPerkPreferenceItem {
   },
 })
 export class PlayerDataPerkPreferences {
-  @prop({ required: true })
-  Characters!: PlayerDataPerkPreferencesCharacters;
-}
-
-@modelOptions({
-  schemaOptions: {
-    _id: false,
-  },
-})
-export class PlayerDataPerkPreferencesCharacters {
-  @prop()
-  character_BananaGuard?: PlayerDataPerkPreferenceItem;
-  @prop()
-  character_C017?: PlayerDataPerkPreferenceItem;
-  @prop()
-  character_C018?: PlayerDataPerkPreferenceItem;
-  @prop()
-  character_C020?: PlayerDataPerkPreferenceItem;
-  @prop()
-  character_C021?: PlayerDataPerkPreferenceItem;
-  @prop()
-  character_C023A?: PlayerDataPerkPreferenceItem;
-  @prop()
-  character_C023B?: PlayerDataPerkPreferenceItem;
-  @prop()
-  character_C025?: PlayerDataPerkPreferenceItem;
-  @prop()
-  character_C026?: PlayerDataPerkPreferenceItem;
-  @prop()
-  character_C027?: PlayerDataPerkPreferenceItem;
-  @prop()
-  character_C028?: PlayerDataPerkPreferenceItem;
-  @prop()
-  character_C029?: PlayerDataPerkPreferenceItem;
-  @prop()
-  character_C030?: PlayerDataPerkPreferenceItem;
-  @prop()
-  character_C031?: PlayerDataPerkPreferenceItem;
-  @prop()
-  character_Jason?: PlayerDataPerkPreferenceItem;
-  @prop()
-  character_arya?: PlayerDataPerkPreferenceItem;
-  @prop()
-  character_batman?: PlayerDataPerkPreferenceItem;
-  @prop()
-  character_bugs_bunny?: PlayerDataPerkPreferenceItem;
-  @prop()
-  character_c019?: PlayerDataPerkPreferenceItem;
-  @prop()
-  character_c024?: PlayerDataPerkPreferenceItem;
-  @prop()
-  character_c036?: PlayerDataPerkPreferenceItem;
-  @prop()
-  character_c038?: PlayerDataPerkPreferenceItem;
-  @prop()
-  character_c16?: PlayerDataPerkPreferenceItem;
-  @prop()
-  character_creature?: PlayerDataPerkPreferenceItem;
-  @prop()
-  character_finn?: PlayerDataPerkPreferenceItem;
-  @prop()
-  character_garnet?: PlayerDataPerkPreferenceItem;
-  @prop()
-  character_harleyquinn?: PlayerDataPerkPreferenceItem;
-  @prop()
-  character_jake?: PlayerDataPerkPreferenceItem;
-  @prop()
-  character_shaggy?: PlayerDataPerkPreferenceItem;
-  @prop()
-  character_steven?: PlayerDataPerkPreferenceItem;
-  @prop()
-  character_superman?: PlayerDataPerkPreferenceItem;
-  @prop()
-  character_taz?: PlayerDataPerkPreferenceItem;
-  @prop()
-  character_tom_and_jerry?: PlayerDataPerkPreferenceItem;
-  @prop()
-  character_velma?: PlayerDataPerkPreferenceItem;
-  @prop()
-  character_wonder_woman?: PlayerDataPerkPreferenceItem;
+  @prop({ type: PlayerDataPerkPreferenceItem, required: true, validate: characterKeysValidator })
+  Characters!: Map<Characters, PlayerDataPerkPreferenceItem>;
 }
 
 @modelOptions({
@@ -168,11 +97,11 @@ export class PlayerData {
 })
 export class Player {
   _id!: mongoose.Types.ObjectId;
+  // _id!: string;
 
   id!: string;
 
-  @prop({ required: true })
-  files!: any[];
+  files = [];
 
   @prop({
     ref: () => Account,
@@ -180,18 +109,18 @@ export class Player {
     localField: "account_id",
     justOne: true,
   })
-  account?: Account | (mongoose.Document & Account);
+  account?: Account;
 
-  @prop({ required: true, get: dateToMVSTime })
+  @prop({ type: Date, required: true, get: dateToMVSTime })
   updated_at!: number;
   @prop({ required: true, ref: () => Account })
-  account_id!: mongoose.Types.ObjectId;
-  @prop({ required: true, get: dateToMVSTime })
+  account_id!: string;
+  @prop({ type: Date, required: true, get: dateToMVSTime })
   created_at!: number;
-  @prop({ required: true, get: dateToMVSTime })
+  @prop({ type: Date, required: true, get: dateToMVSTime })
   last_login!: number;
-  @prop({ default: null })
-  points: number | null = null;
+
+  points = null;
 
   @prop({ required: true })
   random_distribution!: number;
@@ -199,14 +128,14 @@ export class Player {
   @prop({ required: true })
   inventory!: Inventory;
 
-  @prop({ required: true, select: false })
+  @prop({ required: true })
   server_data!: ServerData;
 
   @prop({
     type: String,
     enum: UserSegment,
   })
-  user_segments?: UserSegment[];
+  user_segments!: UserSegment[];
 
   calculations = {};
 
@@ -214,8 +143,7 @@ export class Player {
 
   server_owner_data = {};
 
-  @prop({ required: true })
-  notifications: any = {};
+  notifications = [];
 
   @prop({ required: true })
   data!: PlayerData;
@@ -226,15 +154,18 @@ export class Player {
   @prop({ required: true })
   matches!: Matches;
 
-  public static flatten(player: Player, result: Record<any, any> = {}): Record<any, any> {
+  public static flatten(player: MapToRecord<Player>, result: Record<any, any> = {}): Record<any, any> {
     for (const [key, value] of Object.entries(player) as Entries<Player>) {
       if (!["inventory", "server_data", "matches"].includes(key)) {
         result[key] = value;
       }
     }
+
     Inventory.flatten(player.inventory, "inventory", result);
     Matches.flatten(player.matches, "matches", result);
-    ServerData.flatten(player.server_data, "server_data", result);
+    if (player.server_data != null) {
+      ServerData.flatten(player.server_data, "server_data", result);
+    }
     if (player.account != null) {
       result.account = {};
       Account.flatten(player.account, result.account);
