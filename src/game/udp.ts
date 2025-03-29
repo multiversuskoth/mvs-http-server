@@ -4,6 +4,7 @@ import { GAME_MATCH_STATE, GAME_SERVER_STATE, OP_CODES, PLAYER_NUMBER, Player_ST
 export const GAME_SERVER_PORT = 41234;
 
 const INIT_RESPONSE = Buffer.from([0x02, 0x03, 0xa0, 0x8c]);
+const PHASE2_DATA = Buffer.from([0x02, 0x03, 0x01, 0x01]);
 
 export class GameServer {
   gameMatches: Map<string, GameMatch> = new Map();
@@ -30,6 +31,7 @@ export class GameServer {
 
   handleMessages() {
     this.udp.on("message", async (msg, rinfo) => {
+      console.log("Received:",msg.toString("hex"));
       const bufferRead = new BufferReader(msg);
       const opCode = bufferRead.readUint16BE();
 
@@ -44,12 +46,12 @@ export class GameServer {
         }
         case OP_CODES.CLIENT_INIT_CONNECTION_P1: {
           console.log("UDP:", "CLIENT_INIT_CONNECTION_P1");
-          const receivedPacketNumber = bufferRead.readUint8();
           let { player, success } = this.getPlayer(msg, rinfo);
           if (!success) {
             return;
           }
           if (!player) {
+            const receivedPacketNumber = bufferRead.readUint8();
             const matchID = bufferRead.readToHexString();
             const match = this.checkIfMatchExists(matchID);
             player = this.registerPlayer(match, PLAYER_NUMBER.ONE, rinfo);
@@ -76,6 +78,14 @@ export class GameServer {
           }
 
           if (player.lastPacketSentTimeStamp && player.match.state === GAME_MATCH_STATE.PLAYERS_CONNECTED) {
+            // TODO: I don't think it changes a 3f but when both clients packets ==3f? need more capturing to verify
+            if (player.currentPacket === 0x3f) {
+              await this.sendMessage(player, this.craftMessage(player.match, OP_CODES.SERVER_PHASE2, PHASE2_DATA), rinfo);
+              player.state = Player_STATE.PHASE2;
+              //TODO Implement resends incase packet is lost
+              return;
+            }
+
             await this.sendMessage(
               player,
               this.craftMessage(
@@ -93,6 +103,59 @@ export class GameServer {
 
           //TODO: Both players need to be connected before changing to the next state
           player.match.state = GAME_MATCH_STATE.PLAYERS_CONNECTED;
+          break;
+        }
+
+        case OP_CODES.CLIENT_PHASE2_WAIT: {
+          console.log("UDP:", "CLIENT_PHASE2_WAIT");
+          let { player, success } = this.getPlayer(msg, rinfo);
+          if (!success) {
+            return;
+          }
+          if (!player) {
+            //this.udp.disconnect()
+            return;
+          }
+          const retryInterval = setInterval(async () => {
+            if (player.state === Player_STATE.PHASE2) {
+              await this.sendMessage(player, this.craftMessage(player.match, OP_CODES.SERVER_PHASE2, PHASE2_DATA), rinfo);
+            } else {
+              clearInterval(retryInterval);
+            }
+          }, 196);
+          break;
+        }
+
+        case OP_CODES.CLIENT_PHASE2_LOADING: {
+          console.log("UDP:", "CLIENT_PHASE2_LOADING");
+          let { player, success } = this.getPlayer(msg, rinfo);
+          if (!success) {
+            return;
+          }
+          if (!player) {
+            //this.udp.disconnect()
+            return;
+          }
+          player.state = Player_STATE.PHASE3;
+          setTimeout(async () => {
+            // Send this when both clients have caught up
+            await this.sendMessage(player, this.craftMessage(player.match, OP_CODES.SERVER_CLIENT_PHASE3, null), rinfo);
+          }, 4000);
+          break;
+        }
+
+        case OP_CODES.SERVER_CLIENT_PHASE3: {
+          console.log("UDP:", "SERVER_CLIENT_PHASE3");
+          let { player, success } = this.getPlayer(msg, rinfo);
+          if (!success) {
+            return;
+          }
+          if (!player) {
+            //this.udp.disconnect()
+            return;
+          }
+          player.state = Player_STATE.PHASE3;
+          await this.sendMessage(player, this.craftMessage(player.match, OP_CODES.SERVER_CLIENT_PHASE3, null), rinfo);
           break;
         }
       }
@@ -127,9 +190,10 @@ export class GameServer {
     const playerId = `${rinfo.address}:${rinfo.port}`;
     const player = this.players.get(playerId);
     if (player) {
-      const receivedPacketNumber = rcvBuffer.readUint8();
+      const receivedPacketNumber = rcvBuffer.readUint8(2);
       if (receivedPacketNumber < player.currentPacket) {
         // Packet out of order
+        console.log("Packet out of order");
         return { player: null, success: false };
       }
       player.currentPacket = receivedPacketNumber;
