@@ -4,3 +4,10 @@ dist
 .env
 build
 data
+
+packets/
+game.log
+dokken-api.wbagora.com.pem
+dokken-api.wbagora.com-key.pem
+test.json
+udpTest.ts
