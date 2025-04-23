@@ -52,8 +52,7 @@ export function serializeServerMessage(header: ServerHeader, data: any, maxPlaye
        * uint32BE ChecksumAckFrame;
        * uint32BE InputPerFrame[maxPlayers][maxFrames];
        */
-      const size = 1 + 4 * maxPlayers + maxPlayers + 2 + 2 + 2 + 2 + 2 + 4 + 4 * maxPlayers * maxFrames;
-      payloadBuf = Buffer.alloc(size);
+      payloadBuf = Buffer.alloc(1024);
       let off = 0;
       payloadBuf.writeUInt8(data.numPlayers, off);
       off += 1;
@@ -83,7 +82,7 @@ export function serializeServerMessage(header: ServerHeader, data: any, maxPlaye
       off += 2;
       payloadBuf.writeInt16LE(data.packetsLossPercent || 0, off);
       off += 2;
-      payloadBuf.writeInt16LE(data.rift || 0, off);
+      payloadBuf.writeInt16LE(Math.trunc((Math.trunc(data.rift * 100) / 100) * 100) || 0, off);
       off += 2;
 
       // ChecksumAckFrame
@@ -93,12 +92,13 @@ export function serializeServerMessage(header: ServerHeader, data: any, maxPlaye
       // InputPerFrame[][
       for (let pi = 0; pi < maxPlayers; pi++) {
         const arr: number[] = data.inputPerFrame[pi] || [];
-        for (let f = 0; f < maxFrames; f++) {
+        for (let f = 0; f < data.numFrames[pi]; f++) {
           const v = arr[f] || 0;
           payloadBuf.writeUInt32LE(v, off);
           off += 4;
         }
       }
+      payloadBuf = payloadBuf.subarray(0, off);
       break;
     }
 

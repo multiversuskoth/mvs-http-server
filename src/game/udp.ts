@@ -4,6 +4,7 @@ import {
   InputPayload,
   NewConnectionPayload,
   PlayerInputAckPayload,
+  QualityDataPayload,
   ReadyToStartMatchPayload,
   UdpClientMessage,
   parseUdpClientOutboundMessage,
@@ -30,17 +31,26 @@ function formatTime(date: Date) {
   return `${minutes}:${seconds}.${milliseconds}`;
 }
 
-function logPacket(data: Buffer, type: string, direction: "RECV" | "SEND") {
+function logPacket(data: Buffer | null, type: string, direction: "RECV" | "SEND", json?: Object) {
   if (direction === "RECV") {
-    console.log(chalk.green(direction), chalk.green(type), chalk.blue(formatTime(new Date())), chalk.green(space2(data.toString("hex"))));
+    console.log(chalk.green(direction), chalk.green(type), chalk.blue(formatTime(new Date())), data ? chalk.green(space2(data.toString("hex"))) : "");
   } else {
-    console.log(chalk.yellow(direction), chalk.yellow(type), chalk.blue(formatTime(new Date())), chalk.yellow(space2(data.toString("hex"))));
+    console.log(
+      chalk.yellow(direction),
+      chalk.yellow(type),
+      chalk.blue(formatTime(new Date())),
+      data ? chalk.yellow(space2(data.toString("hex"))) : ""
+    );
+  }
+  if (json) {
+    console.log(JSON.stringify(json, null, 2));
   }
 }
 
 interface PlayerInfo {
   address: string;
   port: number;
+  matchId: string;
   playerIndex: number;
   lastSeqRecv: number;
   lastSeqSent: number;
@@ -54,6 +64,7 @@ interface PlayerInfo {
   rift: number;
   missedInputs: number;
   pendingPings: Map<number, number>;
+  emulated: boolean;
 }
 
 interface MatchState {
@@ -72,9 +83,31 @@ interface MatchState {
   pingPhaseTotal: number; // e.g. 65
 }
 
+const EMULATE_P2 = true;
+let P2_CONNECTED = false;
+
+function emulateP2NewConnection(server: RollbackServer, payload: NewConnectionPayload) {
+  const rinfo = { address: "emulated", port: 1434 } as dgram.RemoteInfo;
+  const p2Payload: NewConnectionPayload = {
+    ...payload,
+    playerData: {
+      playerIndex: 1,
+      teamId: 1,
+    },
+  };
+  const player = server.handleNewConnection(p2Payload, rinfo, true);
+  if (player) {
+    const match = server.matches.get(player.matchId);
+    if (!match) {
+      return;
+    }
+  }
+}
+
 export class RollbackServer {
   private socket = dgram.createSocket("udp4");
-  private matches = new Map<string, MatchState>();
+  public matches = new Map<string, MatchState>();
+  private players: PlayerInfo[] = [];
 
   constructor(private port = GAME_SERVER_PORT, private maxPlayers = 2) {
     this.socket.on("message", (msg, rinfo) => this.onMessage(msg, rinfo));
@@ -92,19 +125,20 @@ export class RollbackServer {
     }
     const { header, u } = clientMsg;
     const { type, sequence } = header;
-    console.log("RECV:", ClientMessageType[type]);
+    logPacket(raw.subarray(0, 10), ClientMessageType[type], "RECV", clientMsg);
 
     // NewConnection has no match yet
     let match = (u as NewConnectionPayload).matchData ? this.matches.get((u as NewConnectionPayload).matchData.matchId) : undefined;
 
     let player: PlayerInfo | undefined;
     if (type === ClientMessageType.NewConnection) {
-      player = this.handleNewConnection(u as any, sequence, rinfo);
+      player = this.handleNewConnection(u as any, rinfo);
       match = this.matches.get((u as any).matchData.matchId)!;
     } else {
       // find existing
-      if (match) {
-        player = match.players.find((p) => p.address === rinfo.address && p.port === rinfo.port);
+      player = this.players.find((p) => p.address === rinfo.address && p.port === rinfo.port);
+      if (player) {
+        match = this.matches.get(player.matchId);
       }
     }
     if (!player || !match) return;
@@ -115,7 +149,7 @@ export class RollbackServer {
 
     if (type === ClientMessageType.QualityData) {
       // find the matching timestamp in this player’s pendingPings
-      const ts0 = player.pendingPings.get(sequence);
+      const ts0 = player.pendingPings.get((u as QualityDataPayload).serverMessageSequenceNumber);
       if (ts0 !== undefined) {
         player.ping = Date.now() - ts0;
         player.pendingPings.delete(sequence);
@@ -137,7 +171,7 @@ export class RollbackServer {
     }
   }
 
-  private handleNewConnection(payload: any, seq: number, rinfo: dgram.RemoteInfo): PlayerInfo | undefined {
+  public handleNewConnection(payload: NewConnectionPayload, rinfo: dgram.RemoteInfo, debug = false): PlayerInfo | undefined {
     const { matchData } = payload;
     let match = this.matches.get(matchData.matchId);
     if (!match) {
@@ -153,7 +187,7 @@ export class RollbackServer {
         lastTickDuration: 0,
         lastTickTime: 0,
         pingPhaseCount: 0,
-        pingPhaseTotal: 65,
+        pingPhaseTotal: 20,
         sequenceCounter: -1,
       };
       this.matches.set(matchData.matchId, match);
@@ -166,18 +200,21 @@ export class RollbackServer {
     const newPlayer: PlayerInfo = {
       address: rinfo.address,
       port: rinfo.port,
+      matchId: matchData.matchId,
       playerIndex: match.players.length,
       lastSeqRecv: 0,
       lastSeqSent: 0,
       ackedFrames: Array(this.maxPlayers).fill(0),
       ping: 0,
-      ready: false,
+      ready: debug,
       lastClientFrame: 0,
       rift: 0,
       missedInputs: 0,
       pendingPings: new Map(),
+      emulated: debug,
     };
     match.players.push(newPlayer);
+    this.players.push(newPlayer);
 
     this.sendServerMessage(match, newPlayer, ServerMessageType.NewConnectionReply, {
       success: 0,
@@ -192,13 +229,17 @@ export class RollbackServer {
     if (match.players.length === this.maxPlayers) {
       this.startPingPhase(match);
     }
+    if (EMULATE_P2 && !P2_CONNECTED) {
+      P2_CONNECTED = true;
+      emulateP2NewConnection(this, payload);
+    }
     return newPlayer;
   }
 
   /** 1) Start the RequestQualityData phase */
   private startPingPhase(match: MatchState) {
     // send immediately and then every 200ms (for example)
-    const intervalMs = 200;
+    const intervalMs = 50;
 
     const intervalID = setInterval(() => {
       if (match.pingPhaseCount >= match.pingPhaseTotal) {
@@ -254,7 +295,7 @@ export class RollbackServer {
     }
   }
 
-  private handleReady(match: MatchState, player: PlayerInfo, isReady: boolean) {
+  public handleReady(match: MatchState, player: PlayerInfo, isReady: boolean) {
     player.ready = isReady;
     if (match.players.every((p) => p.ready)) {
       // broadcast StartGame
@@ -266,7 +307,7 @@ export class RollbackServer {
     }
   }
 
-  private handleClientInput(match: MatchState, player: PlayerInfo, payload: InputPayload) {
+  public handleClientInput(match: MatchState, player: PlayerInfo, payload: InputPayload) {
     const { startFrame, clientFrame, numFrames, inputPerFrame } = payload;
 
     // 1) record clientFrame
@@ -281,7 +322,7 @@ export class RollbackServer {
 
     // 3) prune any frames older than (currentServerFrame - 50)
     //    we assume match.currentFrame is your global tick count
-    const minFrame = match.currentFrame - 50;
+    const minFrame = match.currentFrame - 9500;
     for (const f of histMap.keys()) {
       if (f < minFrame) {
         histMap.delete(f);
@@ -293,10 +334,55 @@ export class RollbackServer {
 
     // and update this player’s rift once, here:
     player.rift = this.calcRiftVariableTick(serverFrame, clientFrame, player.ping, match.lastTickDuration);
+
+    if (EMULATE_P2) {
+      const { startFrame, clientFrame, numFrames, inputPerFrame } = payload;
+      const player = this.players.find((p) => p.address === "emulated");
+      if (!player) {
+        return;
+      }
+      // 1) record clientFrame
+      player.lastClientFrame = clientFrame;
+
+      // 2) store each new input in the Map
+      const histMap = match.inputs[player.playerIndex];
+      for (let i = 0; i < numFrames; i++) {
+        const f = startFrame + i;
+        histMap.set(f, inputPerFrame[i]);
+      }
+
+      // 3) prune any frames older than (currentServerFrame - 50)
+      //    we assume match.currentFrame is your global tick count
+      const minFrame = match.currentFrame - 9500;
+      for (const f of histMap.keys()) {
+        if (f < minFrame) {
+          histMap.delete(f);
+        }
+      }
+
+      // compute the serverFrame as your global tick count:
+      const serverFrame = match.currentFrame;
+
+      // and update this player’s rift once, here:
+      player.rift = this.calcRiftVariableTick(serverFrame, clientFrame, player.ping, match.lastTickDuration);
+    }
   }
 
   private calcRiftVariableTick(serverFrame: number, clientFrame: number, ping: number, lastTickDuration: number): number {
-    return (serverFrame - clientFrame) * lastTickDuration - ping;
+
+    const TARGET_FRAME_TIME = 1000/60
+    const elapsed = Date.now() - lastTickDuration;
+    const subFrameProgress = Math.min(elapsed /TARGET_FRAME_TIME, 1.0);
+    const preciseServerFrame = serverFrame + subFrameProgress;
+
+    const pingInFrames = ping / TARGET_FRAME_TIME;
+
+    const expectedClientFrame = preciseServerFrame - (pingInFrames / 2);
+    const newRift = clientFrame - expectedClientFrame;
+
+    const rift = (clientFrame - serverFrame) * lastTickDuration - ping;
+    console.log("rift", newRift);
+    return newRift;
   }
 
   private startTickLoop(match: MatchState) {
@@ -322,20 +408,22 @@ export class RollbackServer {
         exit = true;
       }
     }
-    // Lets build up some input first
-    if (exit) {
-      return;
-    }
 
     // 3) For each recipient, build a totally individualized payload
     match.players.forEach((recipient) => {
+      if (exit) {
+        // Lets build up some input first
+        this.sendServerMessage(match, recipient, ServerMessageType.StartGame, null);
+        return;
+      }
+
       const startFrame: number[] = [];
       const numFrames: number[] = [];
       const inputPerFrame: number[][] = [];
       let numPredictedOverrides = 0;
 
       // prepare empty sub‑arrays for each peer
-      for (let i = 0; i < match.players.length; i++) {
+      for (let i = 0; i < this.maxPlayers; i++) {
         inputPerFrame.push([]);
         numFrames.push(0);
       }
@@ -389,7 +477,7 @@ export class RollbackServer {
 
       // 5) Fire off the personalized PlayerInput
       this.sendPlayerInput(match, recipient, {
-        numPlayers: match.players.length,
+        numPlayers: this.maxPlayers,
         startFrame,
         numFrames,
         inputPerFrame,
@@ -414,14 +502,15 @@ export class RollbackServer {
       sequence: ++match.sequenceCounter,
     };
 
-    const buf = serializeServerMessage(
-      header,
-      data,
-      this.maxPlayers // pass in your configured player count
-    );
-
-    const compressBuf = compressPacket(buf);
-    console.log(logPacket(compressBuf, ServerMessageType[type], "SEND"));
-    this.socket.send(compressBuf, player.port, player.address);
+    if (!player.emulated) {
+      const buf = serializeServerMessage(
+        header,
+        data,
+        this.maxPlayers // pass in your configured player count
+      );
+      const compressBuf = compressPacket(buf);
+      logPacket(compressBuf, ServerMessageType[type], "SEND", data);
+      this.socket.send(compressBuf, player.port, player.address);
+    }
   }
 }

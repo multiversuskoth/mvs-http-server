@@ -85,7 +85,7 @@ export type ClientUnion =
 export interface UdpClientMessage {
   header: Header;
   u: ClientUnion;
-  buffer: Buffer;
+  //buffer: Buffer;
 }
 
 const HEADER_SIZE = 1 + 4; // type:uint8 + sequence:uint32LE
@@ -213,5 +213,5 @@ export function parseUdpClientOutboundMessage(buf: Buffer): UdpClientMessage {
       throw new Error(`Unknown client message type ${typeByte}`);
   }
 
-  return { header, u, buffer: buf };
+  return { header, u };
 }

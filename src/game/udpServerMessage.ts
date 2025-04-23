@@ -101,7 +101,7 @@ export type MessageTypeUnion =
 export interface UdpServerMessage {
   header: Header;
   u: MessageTypeUnion;
-  buffer: Buffer; // the original full decompressed buffer
+  //buffer: Buffer; // the original full decompressed buffer
 }
 
 const HEADER_SIZE = 5;
@@ -188,8 +188,7 @@ export function parseUdpServerMessage(buf: Buffer): UdpServerMessage {
           inputPerFrame[p][f] = buf.readUInt32LE(offset);
           offset += 4;
         }
-        // skip any remaining slots for this player
-        offset += 4 * (30 - numFrames[p]);
+  
       }
 
       u = {
@@ -295,6 +294,5 @@ export function parseUdpServerMessage(buf: Buffer): UdpServerMessage {
   return {
     header,
     u,
-    buffer: buf,
   };
 }
