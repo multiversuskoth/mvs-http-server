@@ -3,14 +3,26 @@ import { websocket_clients, WebSocketPlayer } from "../websocket";
 import ObjectID from "bson-objectid";
 import { GAME_SERVER_PORT } from "../game/udp";
 import { sleep } from "../utils/sleep";
+import env from "../env/env";
 
 export interface OnMatchmakerStarted {
   MatchmakingRequestId: string;
   matchId: string;
 }
 
+let count = 0;
+const ips = ["127.0.0.1", "127.0.0.1", env.LOCAL_PUBLIC_IP, env.LOCAL_PUBLIC_IP];
+let playerCount = 0;
+
+let playerIndexCount = 0;
+const playersIndexes = [[1,0], [0,1]]
+
+const NewMatchId = ObjectID();
+const Id= ObjectID();
+const NewMatchmakingId = ObjectID();
+
 export async function onMatchmakerStarted(data: OnMatchmakerStarted) {
-  const client = websocket_clients.values().next().value;
+  const client = Array.from(websocket_clients.entries())[playerCount++][1]
   if (client) {
     const encoder = new HydraEncoder(true);
     encoder.encodeValue({
@@ -37,16 +49,16 @@ export async function onMatchmakerStarted(data: OnMatchmakerStarted) {
     }, 1000);
 
     // Once match found send gameServerReadyNotification
-    await sleep(1000);
-    const newMatchId = ObjectID();
+    await sleep(2000);
+    const newMatchId = NewMatchId;
     clearInterval(interval);
     gameServerReadyNotification(client, newMatchId);
-    await sleep(200);
+    await sleep(300);
     gameServerInstanceReady(client, newMatchId);
-    await sleep(200);
+    await sleep(300);
     onGameplayConfigNotified(client, newMatchId);
     matchmakingComplete(client, newMatchId, data.MatchmakingRequestId);
-    await sleep(5000);
+    await sleep(8000);
     perksLockedNotification(client, newMatchId);
   }
 }
@@ -75,7 +87,7 @@ export function gameServerReadyNotification(client: WebSocketPlayer, matchId: Ob
       MatchID: matchId.toHexString(),
       Port: GAME_SERVER_PORT,
       template_id: "GameServerReadyNotification",
-      IPAddress: "127.0.0.1",
+      IPAddress: ips[count++],
     },
     payload: {
       match: {
@@ -85,7 +97,7 @@ export function gameServerReadyNotification(client: WebSocketPlayer, matchId: Ob
     },
     header: "",
     cmd: "update",
-  };
+  };    
   let encoder = new HydraEncoder(true);
   encoder.encodeValue(message);
   console.log("gameServerReadyNotification");
@@ -100,9 +112,9 @@ export function gameServerInstanceReady(client: WebSocketPlayer, matchId: Object
         game_server_type_slug: "multiplay",
         port: GAME_SERVER_PORT,
         owner_id: matchId.toHexString(),
-        host: "127.0.0.1",
+        host: ips[count++],
         // ?? what is this? not sure
-        id: ObjectID(),
+        id: Id,
       },
       proxied_data: null,
     },
@@ -137,7 +149,12 @@ export function onGameplayConfigNotified(client: WebSocketPlayer, matchId: Objec
         bIsCustomGame: false,
         Players: {
           "63b3b7c7fc8aef5b5da03139": {
-            Taunts: ["taunt_shaggy_default", "taunt_shaggy_default", "taunt_shaggy_default", "taunt_shaggy_default"],
+            Taunts: [
+              "taunt_wonder_woman_hands_on_hips",
+              "taunt_wonder_woman_hands_on_hips",
+              "taunt_wonder_woman_hands_on_hips",
+              "taunt_wonder_woman_hands_on_hips",
+            ],
             BotBehaviorOverride: "",
             AccountId: "63b3b7c7fc8aef5b5da03139",
             bAutoPartyPreference: true,
@@ -149,25 +166,24 @@ export function onGameplayConfigNotified(client: WebSocketPlayer, matchId: Objec
             RankedDivision: null,
             bUseCharacterDisplayName: false,
             StartingDamage: 0,
-            TeamIndex: 1,
+            TeamIndex: playersIndexes[playerIndexCount][0],
             ProfileIcon: "",
             WinStreak: null,
             RankedTier: null,
             Handicap: 0,
             RingoutVfx: "ring_out_vfx_rising_stars",
-            Character: "character_shaggy",
+            Character: "character_wonder_woman",
             Banner: "banner_foretold_champion_epic2",
             StatTrackers: [
-              ["stat_tracking_bundle_shaggy_wins", 77],
-              ["stat_tracking_bundle_shaggy_wins", 77],
-              ["stat_tracking_bundle_shaggy_wins", 77],
+              ["stattracking_ranked_seasonfive_charactersingold_1v1", 1],
+              ["stat_tracking_bundle_ranked_season_two_wins_1v1", 779],
             ],
             Perks: [],
-            PlayerIndex: 1,
+            PlayerIndex: playersIndexes[playerIndexCount][0],
             PartyId: "67d8dba624caa7eb9f093373",
             Username: {},
             Buffs: [],
-            Skin: "skin_shaggy_default",
+            Skin: "skin_wonder_woman_default",
             BotDifficultyMin: 0,
           },
           "63cef97ced0619f458cfac8f": {
@@ -188,7 +204,7 @@ export function onGameplayConfigNotified(client: WebSocketPlayer, matchId: Objec
             RankedDivision: null,
             bUseCharacterDisplayName: false,
             StartingDamage: 0,
-            TeamIndex: 0,
+            TeamIndex: playersIndexes[playerIndexCount][1],
             ProfileIcon: "",
             WinStreak: null,
             RankedTier: null,
@@ -201,7 +217,7 @@ export function onGameplayConfigNotified(client: WebSocketPlayer, matchId: Objec
               ["stat_tracking_bundle_ranked_season_two_wins_1v1", 779],
             ],
             Perks: [],
-            PlayerIndex: 0,
+            PlayerIndex: playersIndexes[playerIndexCount][1],
             PartyId: "67d8db9c0bd3637fea0c872e",
             Username: {},
             Buffs: [],
@@ -251,13 +267,13 @@ export function onGameplayConfigNotified(client: WebSocketPlayer, matchId: Objec
 }
 
 export function matchmakingComplete(client: WebSocketPlayer, matchId: ObjectID, matchmakingRequestId: string) {
-  const newMatchmakingId =  ObjectID();
+  const newMatchmakingId = NewMatchmakingId
   const message = {
     data: {},
     payload: {
       result: {
         // New ID, I thinks its to store the matchingmaking ID
-        id: newMatchmakingId.toHexString()
+        id: newMatchmakingId.toHexString(),
       },
       match: {
         id: matchId.toHexString(),
@@ -295,7 +311,12 @@ export function perksLockedNotification(client: WebSocketPlayer, matchId: Object
         bIsCustomGame: false,
         Players: {
           "63b3b7c7fc8aef5b5da03139": {
-            Taunts: ["taunt_shaggy_default", "taunt_shaggy_default", "taunt_shaggy_default", "taunt_shaggy_default"],
+            Taunts: [
+              "taunt_wonder_woman_hands_on_hips",
+              "taunt_wonder_woman_hands_on_hips",
+              "taunt_wonder_woman_hands_on_hips",
+              "taunt_wonder_woman_hands_on_hips",
+            ],
             BotBehaviorOverride: "",
             AccountId: "63b3b7c7fc8aef5b5da03139",
             bAutoPartyPreference: true,
@@ -307,25 +328,24 @@ export function perksLockedNotification(client: WebSocketPlayer, matchId: Object
             RankedDivision: null,
             bUseCharacterDisplayName: false,
             StartingDamage: 0,
-            TeamIndex: 1,
+            TeamIndex: playersIndexes[playerIndexCount][0],
             ProfileIcon: "",
             WinStreak: null,
             RankedTier: null,
             Handicap: 0,
             RingoutVfx: "ring_out_vfx_rising_stars",
-            Character: "character_shaggy",
+            Character: "character_wonder_woman",
             Banner: "banner_foretold_champion_epic2",
             StatTrackers: [
-              ["stat_tracking_bundle_shaggy_wins", 77],
-              ["stat_tracking_bundle_shaggy_wins", 77],
-              ["stat_tracking_bundle_shaggy_wins", 77],
+              ["stattracking_ranked_seasonfive_charactersingold_1v1", 1],
+              ["stat_tracking_bundle_ranked_season_two_wins_1v1", 779],
             ],
-            Perks: ["perk_char_one_last_zoinks", "perk_gen_fire_projectile", "perk_gen_jump_on_kb", "perk_static_electricity"],
-            PlayerIndex: 1,
+            Perks: ["perk_gen_well_rounded", "perk_purest_of_motivations", "perk_team_speed_force_assist", "perk_gen_boxer"],
+            PlayerIndex: playersIndexes[playerIndexCount][0],
             PartyId: "67d8dba624caa7eb9f093373",
             Username: {},
             Buffs: [],
-            Skin: "skin_shaggy_default",
+            Skin: "skin_wonder_woman_default",
             BotDifficultyMin: 0,
           },
           "63cef97ced0619f458cfac8f": {
@@ -346,7 +366,7 @@ export function perksLockedNotification(client: WebSocketPlayer, matchId: Object
             RankedDivision: null,
             bUseCharacterDisplayName: false,
             StartingDamage: 0,
-            TeamIndex: 0,
+            TeamIndex: playersIndexes[playerIndexCount][1],
             ProfileIcon: "",
             WinStreak: null,
             RankedTier: null,
@@ -359,7 +379,7 @@ export function perksLockedNotification(client: WebSocketPlayer, matchId: Object
               ["stat_tracking_bundle_ranked_season_two_wins_1v1", 779],
             ],
             Perks: ["perk_gen_well_rounded", "perk_purest_of_motivations", "perk_team_speed_force_assist", "perk_gen_boxer"],
-            PlayerIndex: 0,
+            PlayerIndex: playersIndexes[playerIndexCount][1],
             PartyId: "67d8db9c0bd3637fea0c872e",
             Username: {},
             Buffs: [],
@@ -402,6 +422,8 @@ export function perksLockedNotification(client: WebSocketPlayer, matchId: Object
     header: "",
     cmd: "update",
   };
+  console.log(playersIndexes[playerIndexCount]);
+  playerIndexCount++;
   let encoder = new HydraEncoder(true);
   encoder.encodeValue(message);
   console.log("perksLockedNotification");

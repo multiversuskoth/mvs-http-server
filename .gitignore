@@ -11,3 +11,4 @@ dokken-api.wbagora.com.pem
 dokken-api.wbagora.com-key.pem
 test.json
 udpTest.ts
+vcpkg_installed

@@ -1,0 +1,15 @@
+{
+    "name": "rollback-server",
+    "version": "1.0.0",
+    "dependencies": [
+        {
+            "name": "boost-asio"
+        },
+        {
+            "name": "boost-system"
+        },
+        {
+            "name": "boost-thread"
+        }
+    ]
+}

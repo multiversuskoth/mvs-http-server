@@ -46,7 +46,7 @@ export function startWebsocketServer() {
       // Need to send ping to client or client will disconnect
       setInterval(() => {
         playerWS.send(pingBuffer);
-      }, 5000);
+      }, 20000);
     });
 
     ws.on("close", () => {

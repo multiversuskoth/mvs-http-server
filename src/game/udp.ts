@@ -158,7 +158,7 @@ export class RollbackServer {
 
     switch (type) {
       case ClientMessageType.PlayerInputAck:
-        this.handlePlayerInputAck(match, player, (u as PlayerInputAckPayload).ackFrame);
+        this.handlePlayerInputAck(match, player, u as PlayerInputAckPayload);
         break;
 
       case ClientMessageType.ReadyToStartMatch:
@@ -280,18 +280,21 @@ export class RollbackServer {
     }
   }
 
-  private handlePlayerInputAck(match: MatchState, player: PlayerInfo, ackFrame: number[]) {
+  private handlePlayerInputAck(match: MatchState, player: PlayerInfo, u: PlayerInputAckPayload) {
     // update that client's view of acked frames
-    for (let i = 0; i < ackFrame.length; i++) {
-      const playerAckedFrame = ackFrame[i];
+    for (let i = 0; i < u.ackFrame.length; i++) {
+      const playerAckedFrame = u.ackFrame[i];
       if (playerAckedFrame && player.ackedFrames[i] < playerAckedFrame) {
         player.ackedFrames[i] = playerAckedFrame;
       }
     }
 
     // compute ping as RTT: now minus when we sent the last PlayerInput to this client
-    if (player.lastSentTime) {
-      player.ping = Date.now() - player.lastSentTime;
+    // find the matching timestamp in this player’s pendingPings
+    const ts0 = player.pendingPings.get(u.serverMessageSequenceNumber);
+    if (ts0 !== undefined) {
+      player.ping = Date.now() - ts0;
+      player.pendingPings.delete(u.serverMessageSequenceNumber);
     }
   }
 
@@ -369,19 +372,18 @@ export class RollbackServer {
   }
 
   private calcRiftVariableTick(serverFrame: number, clientFrame: number, ping: number, lastTickDuration: number): number {
-
-    const TARGET_FRAME_TIME = 1000/60
+    const TARGET_FRAME_TIME = lastTickDuration;
     const elapsed = Date.now() - lastTickDuration;
-    const subFrameProgress = Math.min(elapsed /TARGET_FRAME_TIME, 1.0);
+    const subFrameProgress = Math.min(elapsed / TARGET_FRAME_TIME, 1.0);
     const preciseServerFrame = serverFrame + subFrameProgress;
 
     const pingInFrames = ping / TARGET_FRAME_TIME;
 
-    const expectedClientFrame = preciseServerFrame - (pingInFrames / 2);
-    const newRift = clientFrame - expectedClientFrame;
+    const expectedClientFrame = preciseServerFrame - pingInFrames / 2;
+    const newRift = clientFrame - expectedClientFrame + 5;
 
-    const rift = (clientFrame - serverFrame) * lastTickDuration - ping;
-    console.log("rift", newRift);
+    const rift = (clientFrame  + (ping / TARGET_FRAME_TIME/2)) - serverFrame;
+    console.log("rift", newRift, "serverFrame", serverFrame, "ping", ping, "lastTickDuration", lastTickDuration, "FRAME_ADV",rift);
     return newRift;
   }
 
@@ -474,6 +476,7 @@ export class RollbackServer {
           numPredictedOverrides = predictedCount;
         }
       });
+      const ts = Date.now();
 
       // 5) Fire off the personalized PlayerInput
       this.sendPlayerInput(match, recipient, {
@@ -488,6 +491,7 @@ export class RollbackServer {
         rift: recipient.rift,
         checksumAckFrame: 0,
       });
+      recipient.pendingPings.set(match.sequenceCounter, ts);
     });
   }
   private sendPlayerInput(match: MatchState, player: PlayerInfo, data: any) {

@@ -4,4 +4,4 @@ import { startWebsocketServer } from "./websocket";
 
 start();
 startWebsocketServer();
-const gameServer = new RollbackServer();
+//const gameServer = new RollbackServer();
