@@ -1,5 +1,8 @@
 import express, { Request, Response } from "express";
 import { MVSQueries } from "../interfaces/queries_types";
+import { MVSTime } from "../utils/date";
+import env from "../env/env";
+import ObjectID from "bson-objectid";
 
 export async function handleSsc_invoke_attempt_daily_refresh(req: Request<{}, {}, {}, {}>, res: Response) {
   res.send({
@@ -1452,6 +1455,7 @@ export async function handleSsc_invoke_claim_mission_rewards(req: Request<{}, {}
 }
 
 export async function handleSsc_invoke_create_party_lobby(req: Request<{}, {}, {}, {}>, res: Response) {
+  const account = req.token;
   res.send({
     body: {
       lobby: {
@@ -1459,9 +1463,9 @@ export async function handleSsc_invoke_create_party_lobby(req: Request<{}, {}, {
           {
             TeamIndex: 0,
             Players: {
-              "63cef97ced0619f458cfac8f": {
-                Account: { id: "63cef97ced0619f458cfac8f" },
-                JoinedAt: { _hydra_unix_date: 1742265244 },
+              [account.id]: {
+                Account: { id: account.id },
+                JoinedAt: { _hydra_unix_date: MVSTime(new Date()) },
                 BotSettingSlug: "",
                 LobbyPlayerIndex: 0,
                 CrossplayPreference: 1,
@@ -1474,14 +1478,14 @@ export async function handleSsc_invoke_create_party_lobby(req: Request<{}, {}, {
           { TeamIndex: 3, Players: {}, Length: 0 },
           { TeamIndex: 4, Players: {}, Length: 0 },
         ],
-        LeaderID: "63cef97ced0619f458cfac8f",
+        LeaderID: account.id,
         LobbyType: 0,
         ReadyPlayers: {},
-        PlayerGameplayPreferences: { "63cef97ced0619f458cfac8f": 544 },
-        PlayerAutoPartyPreferences: { "63cef97ced0619f458cfac8f": true },
-        GameVersion: "CLIENT:2F322-Retail DATA:4CF442B2 PERKS:1",
+        PlayerGameplayPreferences: { [account.id]: 544 },
+        PlayerAutoPartyPreferences: { [account.id]: true },
+        GameVersion: env.GAME_VERSION,
         HissCrc: 1167552915,
-        Platforms: { "63cef97ced0619f458cfac8f": "PC" },
+        Platforms: { [account.id]: "PC" },
         AllMultiplayParams: {
           "1": { MultiplayClusterSlug: "ec2-us-east-1-dokken", MultiplayProfileId: "1252499", MultiplayRegionId: "" },
           "2": {
@@ -1496,10 +1500,10 @@ export async function handleSsc_invoke_create_party_lobby(req: Request<{}, {}, {
             MultiplayRegionId: "19c465a7-f21f-11ea-a5e3-0954f48c5682",
           },
         },
-        LockedLoadouts: { "63cef97ced0619f458cfac8f": { Character: "character_wonder_woman", Skin: "skin_wonder_woman_default" } },
+        LockedLoadouts: { [account.id]: { Character: "character_wonder_woman", Skin: "skin_wonder_woman_default" } },
         ModeString: "1v1",
         IsLobbyJoinable: true,
-        MatchID: "67d8db9c0bd3637fea0c872e",
+        MatchID: ObjectID().toHexString(),
       },
       Cluster: "ec2-us-east-1-dokken",
     },
@@ -1563,8 +1567,7 @@ export async function handleSsc_invoke_get_calendar_events(req: Request<{}, {}, 
             display_in_modal: true,
             description: {
               localizations: {
-                game_sunset_description:
-                  "Welcome TO MVS Infinite",
+                game_sunset_description: "Welcome TO MVS Infinite",
               },
             },
             priority: 1200,
@@ -5521,10 +5524,11 @@ export async function handleSsc_invoke_get_milestone_reward_tracks(req: Request<
 }
 
 export async function handleSsc_invoke_get_or_create_mission_object(req: Request<{}, {}, {}, {}>, res: Response) {
+  const account = req.token;
   res.send({
     body: {
       updated_at: { _hydra_unix_date: 1742223633 },
-      owner_id: "63cef97ced0619f458cfac8f",
+      owner_id: account.id,
       unique_key: "missions",
       object_type_slug: "player-missions",
       server_data: {
@@ -59539,9 +59543,10 @@ export async function handleSsc_invoke_set_lobby_joinable(req: Request<{}, {}, {
   res.send({ body: {}, metadata: null, return_code: 0 });
 }
 
-export async function handleSsc_invoke_set_ready_for_lobby(req: Request<{}, {}, {}, {}>, res: Response) {
+export async function handleSsc_invoke_set_ready_for_lobby(req: Request<{}, {}, Ssc_invoke_set_ready_for_lobby_REQUEST, {}>, res: Response) {
+  const account = req.token;
   res.send({
-    body: { MatchID: "67d8db9c0bd3637fea0c872e", PlayerID: "63cef97ced0619f458cfac8f", Ready: true, bAllPlayersReady: true },
+    body: { MatchID: req.body.MatchID, PlayerID: account.id, Ready: true, bAllPlayersReady: true },
     metadata: null,
     return_code: 0,
   });
@@ -59553,4 +59558,57 @@ export async function handleSsc_invoke_submit_end_of_match_stats(req: Request<{}
 
 export async function handleSsc_invoke_toast_player(req: Request<{}, {}, {}, {}>, res: Response) {
   res.send({ body: {}, metadata: null, return_code: 0 });
+}
+
+export interface Ssc_invoke_set_ready_for_lobby_REQUEST {
+  AutoPartyPreference: boolean;
+  /**
+   *
+   * 1
+   *
+   */
+  CrossplayPreference: number;
+  /**
+   *
+   * 544
+   *
+   */
+  GameplayPreferences: number;
+  /**
+   *
+   * 1914377025
+   *
+   */
+  HissCrc: number;
+  /**
+   *
+   * 67ead64959521e4ff6c1eabb
+   *
+   */
+  LobbyId: string;
+  /**
+   *
+   * party_lobby
+   *
+   */
+  LobbyTemplate: string;
+  /**
+   *
+   * 67ead64959521e4ff6c1eabb
+   *
+   */
+  MatchID: string;
+  /**
+   *
+   * PC
+   *
+   */
+  Platform: string;
+  Ready: boolean;
+  /**
+   *
+   * CLIENT:2FAE7-Retail DATA:4CF442B2 PERKS:1
+   *
+   */
+  Version: string;
 }

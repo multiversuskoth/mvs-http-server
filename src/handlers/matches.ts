@@ -1,8 +1,13 @@
 import express, { Request, Response } from "express";
 import { MVSQueries } from "../interfaces/queries_types";
 import { onMatchmakerStarted } from "../websocket_handlers/websocket_handler";
+import ObjectID from "bson-objectid";
+import { randomUUID } from "crypto";
+import { MVSTime } from "../utils/date";
+import env from "../env/env";
 
 export async function handleMatches_id(req: Request<{}, {}, {}, {}>, res: Response) {
+  const account = req.token;
   res.send({
     updated_at: { _hydra_unix_date: 1742265244 },
     created_at: { _hydra_unix_date: 1742265244 },
@@ -24,9 +29,9 @@ export async function handleMatches_id(req: Request<{}, {}, {}, {}>, res: Respon
         {
           TeamIndex: 0,
           Players: {
-            "63cef97ced0619f458cfac8f": {
-              Account: { id: "63cef97ced0619f458cfac8f" },
-              JoinedAt: { _hydra_unix_date: 1742265244 },
+            [account.id]: {
+              Account: { id: account.id },
+              JoinedAt: { _hydra_unix_date: MVSTime(new Date()) },
               BotSettingSlug: "",
               LobbyPlayerIndex: 0,
               CrossplayPreference: 1,
@@ -39,14 +44,14 @@ export async function handleMatches_id(req: Request<{}, {}, {}, {}>, res: Respon
         { TeamIndex: 3, Players: {}, Length: 0 },
         { TeamIndex: 4, Players: {}, Length: 0 },
       ],
-      LeaderID: "63cef97ced0619f458cfac8f",
+      LeaderID: account.id,
       LobbyType: 0,
       ReadyPlayers: {},
-      PlayerGameplayPreferences: { "63cef97ced0619f458cfac8f": 544 },
-      PlayerAutoPartyPreferences: { "63cef97ced0619f458cfac8f": true },
-      GameVersion: "CLIENT:2F322-Retail DATA:4CF442B2 PERKS:1",
+      PlayerGameplayPreferences: { [account.id]: 544 },
+      PlayerAutoPartyPreferences: { [account.id]: true },
+      GameVersion: env.GAME_VERSION,
       HissCrc: 1167552915,
-      Platforms: { "63cef97ced0619f458cfac8f": "PC" },
+      Platforms: { [account.id]: "PC" },
       AllMultiplayParams: {
         "1": { MultiplayClusterSlug: "ec2-us-east-1-dokken", MultiplayProfileId: "1252499", MultiplayRegionId: "" },
         "2": {
@@ -61,37 +66,37 @@ export async function handleMatches_id(req: Request<{}, {}, {}, {}>, res: Respon
           MultiplayRegionId: "19c465a7-f21f-11ea-a5e3-0954f48c5682",
         },
       },
-      LockedLoadouts: { "63cef97ced0619f458cfac8f": { Character: "character_wonder_woman", Skin: "skin_wonder_woman_default" } },
+      LockedLoadouts: { [account.id]: { Character: "character_wonder_woman", Skin: "skin_wonder_woman_default" } },
       ModeString: "1v1",
       IsLobbyJoinable: true,
     },
     players: {
       all: [
         {
-          account_id: "63cef97ced0619f458cfac8f",
+          account_id: account.id,
           source: {},
           state: "join",
           data: {},
           identity: {
-            username: "dark-wild-grass-voice-yRPU2",
+            username: account.hydraUsername,
             avatar: "https://s3.amazonaws.com/wb-agora-hydra-ugc-dokken/identicons/identicon.584.png",
             default_username: true,
             personal_data: {},
             alternate: {
-              wb_network: [{ id: "pafd8d7950aa1484ea791d06662fa75ce", username: "MultiVersusKOTH", avatar: null, email: null }],
+              wb_network: [{ id: account.wb_network_id, username: account.username, avatar: null, email: null }],
               steam: [
                 {
                   id: "76561195177950873",
-                  username: "multiversuskoth",
+                  username: account.username,
                   avatar: "https://avatars.steamstatic.com/fef49e7fa7e1997310d705b2a6158ff8dc1cdfeb.jpg",
                   email: null,
                 },
               ],
             },
             usernames: [
-              { auth: "hydra", username: "dark-wild-grass-voice-yrpu2" },
-              { auth: "steam", username: "multiversuskoth" },
-              { auth: "wb_network", username: "multiversuskoth" },
+              { auth: "hydra", username: account.hydraUsername },
+              { auth: "steam", username: account.username },
+              { auth: "wb_network", username: account.username },
             ],
             platforms: ["steam"],
             current_platform: "steam",
@@ -99,7 +104,7 @@ export async function handleMatches_id(req: Request<{}, {}, {}, {}>, res: Respon
           },
         },
       ],
-      current: ["63cef97ced0619f458cfac8f"],
+      current: [account.id],
       count: 1,
     },
     matchmaking: null,
@@ -113,14 +118,14 @@ export async function handleMatches_id(req: Request<{}, {}, {}, {}>, res: Respon
       max_players: 2,
       game_server_integration_enabled: false,
       game_server_config: null,
-      created_at: { _hydra_unix_date: 1714587806 },
-      updated_at: { _hydra_unix_date: 1729015209 },
+      created_at: { _hydra_unix_date: MVSTime(new Date()) },
+      updated_at: { _hydra_unix_date: MVSTime(new Date()) },
       data: {},
-      id: "6632889e358a2a62107ca7fb",
+      id: ObjectID().toHexString(),
     },
     criteria: { slug: null },
     shortcode: null,
-    id: "67d8db9c0bd3637fea0c872e",
+    id: ObjectID().toHexString(),
     access: "public",
   });
 }
@@ -134,22 +139,86 @@ export async function handleMatches_all_id(req: Request<{}, {}, {}, MVSQueries.M
   });
 }
 
-export async function handleMatches_matchmaking_1v1_retail_request(req: Request<{}, {}, {}, {}>, res: Response) {
+export interface Matches_matchmaking_1v1_retail_request_REQUEST {
+  data: {
+    MultiplayParams: {
+      /**
+       *
+       * ec2-us-east-1-dokken
+       *
+       */
+      MultiplayClusterSlug: string;
+      /**
+       *
+       * 1252922
+       *
+       */
+      MultiplayProfileId: string;
+      /**
+       *
+       * 19c465a7-f21f-11ea-a5e3-0954f48c5682
+       *
+       */
+      MultiplayRegionId: string;
+      /**
+       *
+       * 1
+       *
+       */
+      MultiplayRegionSearchId: number;
+    };
+    /**
+     *
+     * All
+     *
+     */
+    crossplay_buckets: string[];
+    /**
+     *
+     * CLIENT:2FAE7-Retail DATA:4CF442B2 PERKS:1
+     *
+     */
+    version: string;
+  };
+  game_server: {
+    launch_data: {
+      /**
+       *
+       * 1
+       *
+       */
+      id: number;
+      /**
+       *
+       * 1252922
+       *
+       */
+      profile: string;
+    };
+  };
+  /**
+   *
+   * 67ead64959521e4ff6c1eabb
+   *
+   */
+  match: string;
+}
+
+export async function handleMatches_matchmaking_1v1_retail_request(
+  req: Request<{}, {}, Matches_matchmaking_1v1_retail_request_REQUEST, {}>,
+  res: Response
+) {
+  const account = req.token;
   const data = {
-    updated_at: { _hydra_unix_date: 1742265254 },
-    requester_account_id: "63cef97ced0619f458cfac8f",
+    updated_at: { _hydra_unix_date: MVSTime(new Date()) },
+    requester_account_id: account.id,
     is_concurrent: false,
-    concurrent_identifier: "7f394c29-9184-468f-83bf-a162c6c7dda0",
-    created_at: { _hydra_unix_date: 1742265251 },
+    concurrent_identifier: randomUUID(),
+    created_at: { _hydra_unix_date: MVSTime(new Date()) },
     data: {
-      MultiplayParams: {
-        MultiplayClusterSlug: "ec2-us-east-1-dokken",
-        MultiplayProfileId: "1252922",
-        MultiplayRegionId: "19c465a7-f21f-11ea-a5e3-0954f48c5682",
-        MultiplayRegionSearchId: 1,
-      },
+      MultiplayParams: req.body.data.MultiplayParams,
       crossplay_buckets: ["All", "PC"],
-      version: "CLIENT:2F322-Retail DATA:4CF442B2 PERKS:1",
+      version: env.GAME_VERSION,
       matchmaking_rating: 606.406234735998,
       player_count: 1,
       double_character_key: "character_wonder_woman",
@@ -159,9 +228,9 @@ export async function handleMatches_matchmaking_1v1_retail_request(req: Request<
     },
     server_data: null,
     criteria_slug: "1v1-retail",
-    cluster: "ec2-us-east-1-dokken",
+    cluster: req.body.data.MultiplayParams.MultiplayClusterSlug,
     players_connection_info: {
-      "63cef97ced0619f458cfac8f": {
+      [account.id]: {
         game_server_region_data: [
           { region_id: "19c465a7-f21f-11ea-a5e3-0954f48c5682", latency: 0.04239736124873161 },
           { region_id: "19bf18ce-f21f-11ea-b94f-f946c68d5a4f", latency: 0.032917093485593796 },
@@ -177,11 +246,11 @@ export async function handleMatches_matchmaking_1v1_retail_request(req: Request<
         ],
       },
     },
-    player_connections: { "63cef97ced0619f458cfac8f": ["42ae2f26-ad91-4516-8a25-34ae9f0041bf"] },
+    player_connections: { [account.id]: [randomUUID()] },
     players: {
-      "63cef97ced0619f458cfac8f": {
+      [account.id]: {
         updated_at: null,
-        account_id: "63cef97ced0619f458cfac8f",
+        account_id: account.id,
         created_at: null,
         last_login: null,
         last_inbox_read: null,
@@ -199,13 +268,13 @@ export async function handleMatches_matchmaking_1v1_retail_request(req: Request<
         files: [],
         user_segments: [],
         random_distribution: null,
-        id: "63cef97ced0619f458cfac90",
+        id: account.profile_id,
       },
     },
     groups: [1],
     relationships: [],
-    recently_played: { "63cef97ced0619f458cfac8f": [] },
-    from_match: "67d8db9c0bd3637fea0c872e",
+    recently_played: { [account.id]: [] },
+    from_match: req.body.match,
     reuse_match: false,
     party_id: null,
     state: 2,
@@ -284,8 +353,8 @@ export async function handleMatches_matchmaking_1v1_retail_request(req: Request<
       optional_launch_config_params: {},
     },
     server_submitted: false,
-    id: "67d8dba3e41af3c0dd4bb8d0",
+    id: ObjectID().toHexString(),
   };
   res.send(data);
-  onMatchmakerStarted({ MatchmakingRequestId: data.id, matchId: data.from_match });
+  onMatchmakerStarted({ MatchmakingRequestId: data.id, partyId: data.from_match });
 }

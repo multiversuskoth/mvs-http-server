@@ -7,7 +7,7 @@ import env from "../env/env";
 
 export interface OnMatchmakerStarted {
   MatchmakingRequestId: string;
-  matchId: string;
+  partyId: string;
 }
 
 let count = 0;
@@ -15,14 +15,13 @@ const ips = ["127.0.0.1", "127.0.0.1", env.LOCAL_PUBLIC_IP, env.LOCAL_PUBLIC_IP]
 let playerCount = 0;
 
 let playerIndexCount = 0;
-const playersIndexes = [[1,0], [0,1]]
-
-const NewMatchId = ObjectID();
-const Id= ObjectID();
-const NewMatchmakingId = ObjectID();
+const playersIndexes = [
+  [1, 0],
+  [0, 1],
+];
 
 export async function onMatchmakerStarted(data: OnMatchmakerStarted) {
-  const client = Array.from(websocket_clients.entries())[playerCount++][1]
+  const client = Array.from(websocket_clients.entries())[playerCount++][1];
   if (client) {
     const encoder = new HydraEncoder(true);
     encoder.encodeValue({
@@ -32,7 +31,7 @@ export async function onMatchmakerStarted(data: OnMatchmakerStarted) {
       },
       payload: {
         match: {
-          id: data.matchId,
+          id: data.partyId,
         },
         custom_notification: "realtime",
       },
@@ -50,7 +49,6 @@ export async function onMatchmakerStarted(data: OnMatchmakerStarted) {
 
     // Once match found send gameServerReadyNotification
     await sleep(2000);
-    const newMatchId = NewMatchId;
     clearInterval(interval);
     gameServerReadyNotification(client, newMatchId);
     await sleep(300);
@@ -69,7 +67,7 @@ export function matchmakingTick(client: WebSocketPlayer, data: OnMatchmakerStart
   encoder.encodeValue({
     data: {},
     payload: {
-      id: data.matchId,
+      id: data.partyId,
       state: 2,
     },
     header: "matchmaking-tick",
@@ -84,20 +82,21 @@ export function gameServerReadyNotification(client: WebSocketPlayer, matchId: Ob
   const message = {
     data: {
       MatchKey: "a58hIiIGSr+o3ObwYn7EMYqHMhuT2ENij9K+I/OCL+k=",
-      MatchID: matchId.toHexString(),
+      MatchID: ObjectID().toHexString(),
       Port: GAME_SERVER_PORT,
       template_id: "GameServerReadyNotification",
       IPAddress: ips[count++],
     },
     payload: {
       match: {
-        id: matchId.toHexString(),
+        id: ObjectID().toHexString(),
       },
       custom_notification: "realtime",
     },
     header: "",
     cmd: "update",
-  };    
+  };
+  
   let encoder = new HydraEncoder(true);
   encoder.encodeValue(message);
   console.log("gameServerReadyNotification");
@@ -186,7 +185,7 @@ export function onGameplayConfigNotified(client: WebSocketPlayer, matchId: Objec
             Skin: "skin_wonder_woman_default",
             BotDifficultyMin: 0,
           },
-          "63cef97ced0619f458cfac8f": {
+          [client.account.id]: {
             Taunts: [
               "taunt_wonder_woman_hands_on_hips",
               "taunt_wonder_woman_hands_on_hips",
@@ -194,7 +193,7 @@ export function onGameplayConfigNotified(client: WebSocketPlayer, matchId: Objec
               "taunt_wonder_woman_hands_on_hips",
             ],
             BotBehaviorOverride: "",
-            AccountId: "63cef97ced0619f458cfac8f",
+            AccountId: client.account.id,
             bAutoPartyPreference: true,
             Gems: [],
             PartyMember: null,
@@ -267,7 +266,7 @@ export function onGameplayConfigNotified(client: WebSocketPlayer, matchId: Objec
 }
 
 export function matchmakingComplete(client: WebSocketPlayer, matchId: ObjectID, matchmakingRequestId: string) {
-  const newMatchmakingId = NewMatchmakingId
+  const newMatchmakingId = NewMatchmakingId;
   const message = {
     data: {},
     payload: {
@@ -348,7 +347,7 @@ export function perksLockedNotification(client: WebSocketPlayer, matchId: Object
             Skin: "skin_wonder_woman_default",
             BotDifficultyMin: 0,
           },
-          "63cef97ced0619f458cfac8f": {
+          "680c459a69f798cb6846c35c": {
             Taunts: [
               "taunt_wonder_woman_hands_on_hips",
               "taunt_wonder_woman_hands_on_hips",
@@ -356,7 +355,7 @@ export function perksLockedNotification(client: WebSocketPlayer, matchId: Object
               "taunt_wonder_woman_hands_on_hips",
             ],
             BotBehaviorOverride: "",
-            AccountId: "63cef97ced0619f458cfac8f",
+            AccountId: "680c459a69f798cb6846c35c",
             bAutoPartyPreference: true,
             Gems: [],
             PartyMember: null,

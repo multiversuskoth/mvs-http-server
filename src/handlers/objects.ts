@@ -2,10 +2,11 @@ import express, { Request, Response } from "express";
 import { MVSQueries } from "../interfaces/queries_types";
 
 export async function handleObjects_preferences_unique_id_id1(req: Request<{}, {}, {}, {}>, res: Response) {
+  const account = req.token;
   res.send({
     updated_at: { _hydra_unix_date: 1724119417 },
-    owner_id: "63cef97ced0619f458cfac8f",
-    unique_key: "63cef97ced0619f458cfac8f",
+    owner_id: account.id,
+    unique_key: account.id,
     object_type_slug: "preferences",
     data: {
       Characters: {
