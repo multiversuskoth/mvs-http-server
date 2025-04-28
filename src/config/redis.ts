@@ -8,7 +8,6 @@ const redisConfig = {
 
 export const QUEUE_KEY_1V1 = 'matchmaking:queue:1v1';
 export const QUEUE_KEY_2V2 = 'matchmaking:queue:2v2';
-export const MATCH_NOTIFICATION_CHANNEL = "match:notifications";
 
 // Create Redis client
 export const redisClient = Redis.createClient(redisConfig);

@@ -3,13 +3,10 @@ import { Match, MatchPlayer, MatchTicket, QueuedPlayer } from "../types/match";
 import { QUEUE_KEY_1V1, QUEUE_KEY_2V2, redisClient } from "../config/redis";
 import { logger } from "../config/logger";
 import ObjectID from "bson-objectid";
+import { MVSTime } from "../utils/date";
+import { PARTY_QUEUED_CHANNEL, PARTY_QUEUED_NOTIFICATION } from "../websocket";
 
 export class MatchmakingService {
-  // Channels for notifications
-  private static readonly MATCH_NOTIFICATION_CHANNEL = "match:notifications";
-  private static readonly PLAYER_QUEUED_CHANNEL = "player:queued";
-  private static readonly PLAYER_DEQUEUED_CHANNEL = "player:dequeued";
-
   // Get queue key for a specific match type
   private static getQueueKeyForMatchType(matchType: string): string {
     switch (matchType) {
@@ -22,37 +19,31 @@ export class MatchmakingService {
     }
   }
 
-  // Create a match ticket for a player or party
-  private createMatchTicket(players: QueuedPlayer[], partyId: string, matchmakingRequestId: string, partySize: number): MatchTicket {
-    // Convert Player objects to MatchPlayer objects
-    const matchPlayers: MatchPlayer[] = players.map((player) => ({
-      id: player.id,
-      partyId,
-      region: "MVSI",
-      skill: 0,
-    }));
-
-    return {
-      matchmakingRequestId,
-      partyId,
-      party_size: partySize,
-      players: matchPlayers,
-      created_at: Date.now(),
-    };
-  }
-
-  // Queue a single player for matchmaking
-  async queuePlayer(playerId: string, partyId: string, matchmakingRequestId: string, matchType: string = "1v1"): Promise<void> {
+  async queuePartyLobby(playerIds: string[], partyId: string, matchmakingRequestId: string, matchType: string = "1v1"): Promise<void> {
     try {
       // Update player status
-      const queuePlayer: QueuedPlayer = {
-        id: playerId,
-        status: "queued",
-      };
-      await redisClient.set(`player:${playerId}`, JSON.stringify(queuePlayer));
+      for (const playerId of playerIds) {
+        const queuePlayer: QueuedPlayer = {
+          id: playerId,
+          status: "queued",
+        };
+        await redisClient.set(`player:${playerId}`, JSON.stringify(queuePlayer));
+      }
 
-      // Create a match ticket for this player (solo ticket)
-      const ticket = this.createMatchTicket([queuePlayer], partyId, matchmakingRequestId, 1);
+      // Create a match ticket
+      const ticket: MatchTicket = {
+        created_at: MVSTime(new Date()),
+        matchmakingRequestId,
+        partyId,
+        party_size: playerIds.length,
+        players: playerIds.map((p) => {
+          return {
+            id: p,
+            region: "MVSI",
+            skill: 0,
+          };
+        }),
+      };
 
       // Get the appropriate queue key
       const queueKey = MatchmakingService.getQueueKeyForMatchType(matchType);
@@ -60,18 +51,16 @@ export class MatchmakingService {
       // Add ticket to the matchmaking queue
       await redisClient.lPush(queueKey, JSON.stringify(ticket));
 
-      // Publish a message that a new player has been queued
-      await redisClient.publish(
-        MatchmakingService.PLAYER_QUEUED_CHANNEL,
-        JSON.stringify({
-          type: "PLAYER_QUEUED",
-          playerId: playerId,
-          matchType: matchType,
-          ticketId: ticket.partyId,
-        })
-      );
+      const notification: PARTY_QUEUED_NOTIFICATION = {
+        partyId,
+        playerIds,
+        matchmakingRequestId,
+      };
 
-      logger.info(`Player (${playerId}) added to ${matchType} matchmaking queue with ticket ${ticket.partyId}`);
+      // Publish a message that a party has been queued
+      await redisClient.publish(PARTY_QUEUED_CHANNEL, JSON.stringify(notification));
+
+      logger.info(`Party (${partyId}) has been added to ${matchType} matchmaking queue. Players (${playerIds.join(",")})`);
     } catch (error) {
       logger.error(`Error queueing player: ${error}`);
       throw error;

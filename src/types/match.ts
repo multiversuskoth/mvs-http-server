@@ -2,7 +2,7 @@ export interface MatchPlayer {
   id: string;
   skill: number;
   region: string;
-  partyId: string;
+  //partyId: string;
 }
 
 export interface QueuedPlayer {
@@ -26,4 +26,11 @@ export interface Match {
   createdAt: number;
   matchType: string;
   totalPlayers: number;
+}
+
+export interface TeamEntry {
+  playerId: string;
+  partyId: string;
+  playerIndex: number;
+  teamIndex: 0 | 1;
 }

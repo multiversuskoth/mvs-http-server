@@ -1,7 +1,9 @@
-import { redisClient, MATCH_NOTIFICATION_CHANNEL, QUEUE_KEY_1V1, QUEUE_KEY_2V2 } from "./config/redis";
+import { redisClient, QUEUE_KEY_1V1, QUEUE_KEY_2V2 } from "./config/redis";
 import { logger } from "./config/logger";
 import ObjectID from "bson-objectid";
-import { MatchTicket, QueuedPlayer, Match } from "./types/match";
+import { MatchTicket, QueuedPlayer, Match, TeamEntry } from "./types/match";
+import { MATCH_FOUND_NOTIFICATION, MATCH_NOTIFICATION_CHANNEL } from "./websocket";
+import { randomBytes } from "crypto";
 
 const CHECK_INTERVAL_MS = 1000;
 
@@ -212,6 +214,58 @@ async function verifyTicketPlayers(ticket: MatchTicket): Promise<boolean> {
   return true;
 }
 
+// ChatGPT came up with this o.o
+export function createTeams(tickets: MatchTicket[]): TeamEntry[] {
+  // 1. total number of players
+  const totalPlayers = tickets.reduce((sum, t) => sum + t.players.length, 0);
+  if (totalPlayers % 2 !== 0) {
+    throw new Error("Need an even number of total players");
+  }
+  const slotsPerTeam = totalPlayers / 2;
+
+  // 2. shuffle parties (Fisher–Yates)
+  const shuffled = tickets.slice();
+  for (let i = shuffled.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [shuffled[i], shuffled[j]] = [shuffled[j], shuffled[i]];
+  }
+
+  // 3. assign each party to team 0 or 1
+  const usedSlots = { 0: 0, 1: 0 };
+  const assignment = new Map<MatchTicket, 0 | 1>();
+  for (const party of shuffled) {
+    const size = party.players.length;
+    if (usedSlots[0] + size <= slotsPerTeam) {
+      assignment.set(party, 0);
+      usedSlots[0] += size;
+    } else {
+      assignment.set(party, 1);
+      usedSlots[1] += size;
+    }
+  }
+
+  // 4. flatten into per-player entries
+  const result: TeamEntry[] = [];
+  for (const teamIndex of [0, 1] as const) {
+    let idxInTeam = 0;
+    for (const party of shuffled) {
+      if (assignment.get(party) !== teamIndex) continue;
+      for (const player of party.players) {
+        const playerIndex = teamIndex * slotsPerTeam + idxInTeam;
+        result.push({
+          playerId: player.id,
+          partyId: party.partyId,
+          playerIndex,
+          teamIndex,
+        });
+        idxInTeam++;
+      }
+    }
+  }
+
+  return result;
+}
+
 // Create a match from selected tickets
 async function createMatch(tickets: MatchTicket[], matchType: string): Promise<void> {
   try {
@@ -230,36 +284,35 @@ async function createMatch(tickets: MatchTicket[], matchType: string): Promise<v
     };
 
     // Get all player IDs from all tickets
-    const playerIds = tickets.flatMap((ticket) => ticket.players.map((p) => p.id));
+    const players = tickets.flatMap((ticket) =>
+      ticket.players.map((player) => ({
+        playerId: player.id,
+        partyId: ticket.partyId,
+      }))
+    );
 
     // Update player statuses
-    for (const playerId of playerIds) {
-      const playerData = await redisClient.get(`player:${playerId}`);
+    for (const player of players) {
+      const playerData = await redisClient.get(`player:${player.playerId}`);
       if (playerData) {
         const player = JSON.parse(playerData);
         player.status = "in_match";
         player.currentMatchId = match.id;
-        await redisClient.set(`player:${playerId}`, JSON.stringify(player));
+        await redisClient.set(`player:${player.id}`, JSON.stringify(player));
       }
     }
 
     // Store match data
     await redisClient.set(`match:${match.id}`, JSON.stringify(match));
 
+    const notification: MATCH_FOUND_NOTIFICATION = {
+      players: createTeams(tickets),
+      matchId: ObjectID().toHexString(),
+      matchKey: randomBytes(32).toString("base64"),
+    };
+
     // Notify about the match creation
-    await redisClient.publish(
-      MATCH_NOTIFICATION_CHANNEL,
-      JSON.stringify({
-        type: "MATCH_CREATED",
-        matchId: match.id,
-        matchType,
-        players: tickets.flatMap((ticket) =>
-          ticket.players.map((player) => ({
-            id: player.id,
-          }))
-        ),
-      })
-    );
+    await redisClient.publish(MATCH_NOTIFICATION_CHANNEL, JSON.stringify(notification));
 
     logger.info(`Created ${matchType} match ${match.id} with ${totalPlayers} players across ${tickets.length} tickets`);
   } catch (error) {
