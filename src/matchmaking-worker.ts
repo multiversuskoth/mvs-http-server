@@ -309,6 +309,8 @@ async function createMatch(tickets: MatchTicket[], matchType: string): Promise<v
       players: createTeams(tickets),
       matchId: ObjectID().toHexString(),
       matchKey: randomBytes(32).toString("base64"),
+      map : "M016_V3",
+      mode:matchType
     };
 
     // Notify about the match creation

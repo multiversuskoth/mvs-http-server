@@ -10,6 +10,7 @@ import { Server } from "https";
 import { GAME_SERVER_PORT } from "./game/udp";
 import { logger } from "./config/logger";
 import { TeamEntry } from "./types/match";
+import { MVSTime } from "./utils/date";
 
 export class WebSocketPlayer {
   init: boolean = false;
@@ -50,9 +51,10 @@ export interface MATCH_FOUND_NOTIFICATION extends MVS_NOTIFICATION {
   matchId: string;
   matchKey: string;
   map: string;
+  mode: string;
 }
 
-export interface PlayerConfig {
+export interface PlayerConfigRedis {
   taunts: string[];
   RingoutVfx: string;
   Character: string;
@@ -61,6 +63,36 @@ export interface PlayerConfig {
   Perks: string[];
 }
 
+export interface PlayerConfig {
+  Taunts: string[];
+  BotBehaviorOverride: string;
+  AccountId: string;
+  bAutoPartyPreference: boolean;
+  Gems: any[]; // Assuming Gems is an array of any type, replace with specific type if known
+  PartyMember: any | null; // Replace `any` with the specific type if known
+  GameplayPreferences: number;
+  BotDifficultyMax: number;
+  bIsBot: boolean;
+  RankedDivision: any | null; // Replace `any` with the specific type if known
+  bUseCharacterDisplayName: boolean;
+  StartingDamage: number;
+  TeamIndex: number;
+  ProfileIcon: string;
+  WinStreak: any | null; // Replace `any` with the specific type if known
+  RankedTier: any | null; // Replace `any` with the specific type if known
+  Handicap: number;
+  RingoutVfx: string;
+  Character: string;
+  Banner: string;
+  StatTrackers: [string, number][];
+  Perks: string[];
+  PlayerIndex: number;
+  PartyId: string;
+  Username: Record<string, any>; // Assuming Username is an object, replace with specific type if known
+  Buffs: any[]; // Replace `any` with the specific type if known
+  Skin: string;
+  BotDifficultyMin: number;
+}
 type StatTrackerEntry = [statKey: string, statValue: number];
 
 const redisSub = initRedisSubscriber();
@@ -210,14 +242,71 @@ export class WebSocketService {
 
   async handleSendGamePlayConfig(notification: MATCH_FOUND_NOTIFICATION) {
     const multi = redisClient.multi();
+    const MatchTime = 420;
+    const NumRingouts = 3;
+
+    // Get the player configs from redis
     for (const player of notification.players) {
       multi.hGetAll(`playerConfig:${player.playerId}`);
     }
 
     const results = await multi.exec();
-    const a = results.map((reply) => reply as PlayerConfig);
+    if (results.some((result) => result === null)) {
+      logger.error(`Failed to retrieve player configs for players: ${notification.players.map((p) => p.playerId).join(", ")}`);
+      // Handle the error as needed, e.g., send an error message to the players
+      for (const player of notification.players) {
+        const client = this.clients.get(player.playerId);
+        if (client) {
+          // TODO Send dequeued message
+          logger.info(`Sent dequeued message to player ${player.playerId} for match ${notification.matchId}`);
+        }
+      }
+      return;
+    }
+    // Cast the results to PlayerConfigRedis
+    const playerIndexCount = notification.players.length - 1;
+    // Get the player configs from redis
 
-    const playerConfigs = redisClient.hmGet;
+    const playerConfigs = results.map((reply) => reply as unknown as PlayerConfigRedis);
+    const Players: { [key: string]: PlayerConfig } = {};
+
+
+    for (let i = 0; i < notification.players.length; i++) {
+      const player = notification.players[i];
+      const playerConfig = playerConfigs[i];
+      Players[player.playerId] = {
+        AccountId: player.playerId,
+        Taunts: playerConfig.taunts,
+        BotBehaviorOverride: "",
+        bAutoPartyPreference: true,
+        Gems: [],
+        PartyMember: null,
+        GameplayPreferences: 964,
+        BotDifficultyMax: 0,
+        bIsBot: false,
+        RankedDivision: null,
+        bUseCharacterDisplayName: false,
+        StartingDamage: 0,
+        TeamIndex: player.teamIndex,
+        ProfileIcon: "",
+        WinStreak: null,
+        RankedTier: null,
+        Handicap: 0,
+        RingoutVfx: playerConfig.RingoutVfx,
+        Character: playerConfig.Character,
+        Banner: playerConfig.Banner,
+        StatTrackers: playerConfig.StatTrackers,
+        Perks: [],
+        PlayerIndex: player.playerIndex,
+        PartyId: player.partyId,
+        Username: {},
+        Buffs: [],
+        Skin: playerConfig.Character,
+        BotDifficultyMin: 0,
+      };
+    }
+
+    // Create the message to send to the players
     const message = {
       data: {
         MatchId: notification.matchId,
@@ -227,9 +316,9 @@ export class WebSocketService {
           ScoreEvaluationRule: "TargetScoreIsWin",
           bIsPvP: true,
           ScoreAttributionRule: "AttributeToAttacker",
-          MatchDurationSeconds: 420,
+          MatchDurationSeconds: MatchTime,
           Created: {
-            _hydra_unix_date: 1742265276,
+            _hydra_unix_date: MVSTime(new Date()),
           },
           EventQueueSlug: "",
           bModeGrantsProgress: true,
@@ -237,89 +326,12 @@ export class WebSocketService {
           Spectators: {},
           bIsRanked: false,
           bIsCustomGame: false,
-          Players: {
-            "63b3b7c7fc8aef5b5da03139": {
-              Taunts: [
-                "taunt_wonder_woman_hands_on_hips",
-                "taunt_wonder_woman_hands_on_hips",
-                "taunt_wonder_woman_hands_on_hips",
-                "taunt_wonder_woman_hands_on_hips",
-              ],
-              BotBehaviorOverride: "",
-              AccountId: "63b3b7c7fc8aef5b5da03139",
-              bAutoPartyPreference: true,
-              Gems: [],
-              PartyMember: null,
-              GameplayPreferences: 964,
-              BotDifficultyMax: 0,
-              bIsBot: false,
-              RankedDivision: null,
-              bUseCharacterDisplayName: false,
-              StartingDamage: 0,
-              TeamIndex: playersIndexes[playerIndexCount][0],
-              ProfileIcon: "",
-              WinStreak: null,
-              RankedTier: null,
-              Handicap: 0,
-              RingoutVfx: "ring_out_vfx_rising_stars",
-              Character: "character_wonder_woman",
-              Banner: "banner_foretold_champion_epic2",
-              StatTrackers: [
-                ["stattracking_ranked_seasonfive_charactersingold_1v1", 1],
-                ["stat_tracking_bundle_ranked_season_two_wins_1v1", 779],
-              ],
-              Perks: [],
-              PlayerIndex: playersIndexes[playerIndexCount][0],
-              PartyId: "67d8dba624caa7eb9f093373",
-              Username: {},
-              Buffs: [],
-              Skin: "skin_wonder_woman_default",
-              BotDifficultyMin: 0,
-            },
-            [client.account.id]: {
-              Taunts: [
-                "taunt_wonder_woman_hands_on_hips",
-                "taunt_wonder_woman_hands_on_hips",
-                "taunt_wonder_woman_hands_on_hips",
-                "taunt_wonder_woman_hands_on_hips",
-              ],
-              BotBehaviorOverride: "",
-              AccountId: client.account.id,
-              bAutoPartyPreference: true,
-              Gems: [],
-              PartyMember: null,
-              GameplayPreferences: 544,
-              BotDifficultyMax: 0,
-              bIsBot: false,
-              RankedDivision: null,
-              bUseCharacterDisplayName: false,
-              StartingDamage: 0,
-              TeamIndex: playersIndexes[playerIndexCount][1],
-              ProfileIcon: "",
-              WinStreak: null,
-              RankedTier: null,
-              Handicap: 0,
-              RingoutVfx: "ring_out_vfx_default",
-              Character: "character_wonder_woman",
-              Banner: "banner_foretold_champion_rare",
-              StatTrackers: [
-                ["stattracking_ranked_seasonfive_charactersingold_1v1", 1],
-                ["stat_tracking_bundle_ranked_season_two_wins_1v1", 779],
-              ],
-              Perks: [],
-              PlayerIndex: playersIndexes[playerIndexCount][1],
-              PartyId: "67d8db9c0bd3637fea0c872e",
-              Username: {},
-              Buffs: [],
-              Skin: "skin_wonder_woman_default",
-              BotDifficultyMin: 0,
-            },
-          },
+          Players,
           CustomGameSettings: {
             bHazardsEnabled: true,
             bShieldsEnabled: true,
-            MatchTime: 420,
-            NumRingouts: 3,
+            MatchTime,
+            NumRingouts,
           },
           HudSettings: {
             bDisplayPortraits: true,
@@ -333,23 +345,32 @@ export class WebSocketService {
           Cluster: "ec2-us-east-1-dokken",
           WorldBuffs: [],
           bIsTutorial: false,
-          MatchId: matchId.toHexString(),
+          MatchId: notification.matchId,
           bIsOnlineMatch: true,
-          ModeString: "1v1",
-          Map: "M016_V3",
+          ModeString: notification.mode,
+          Map: notification.map,
           bIsRift: false,
         },
         template_id: "OnGameplayConfigNotified",
       },
       payload: {
         match: {
-          id: matchId.toHexString(),
+          id: notification.matchId,
         },
         custom_notification: "realtime",
       },
       header: "",
       cmd: "update",
     };
+
+    // Send the message to each player in the match
+    for (const player of notification.players) {
+      const client = this.clients.get(player.playerId);
+      if (client) {
+        client.send(message);
+        logger.info(`Sent gameplay config to player ${player.playerId} for match ${notification.matchId}`);
+      }
+    }
   }
 
   handlePlayerDequeued() {}
