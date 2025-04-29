@@ -1,8 +1,7 @@
 // ----- services/matchmakingService.ts -----
-import { Match, MatchPlayer, MatchTicket, QueuedPlayer } from "../types/match";
+import {  MatchPlayer, MatchTicket, QueuedPlayer } from "../types/match";
 import { QUEUE_KEY_1V1, QUEUE_KEY_2V2, redisClient } from "../config/redis";
 import { logger } from "../config/logger";
-import ObjectID from "bson-objectid";
 import { MVSTime } from "../utils/date";
 import { PARTY_QUEUED_CHANNEL, PARTY_QUEUED_NOTIFICATION } from "../websocket";
 
@@ -104,7 +103,7 @@ export class MatchmakingService {
   } */
 
   // Dequeue a player from matchmaking
-  async dequeuePlayer(playerId: string, username?: string, matchType?: string): Promise<void> {
+  /*   async dequeuePlayer(playerId: string, username?: string, matchType?: string): Promise<void> {
     try {
       // Get player data if username not provided
       let playerUsername = username;
@@ -202,32 +201,7 @@ export class MatchmakingService {
       throw error;
     }
   }
-
-  // Notify all relevant parties about a match being created
-  async notifyMatchCreated(match: Match): Promise<void> {
-    try {
-      // Extract all player IDs from all tickets
-      const playerDetails = match.tickets.flatMap((ticket) =>
-        ticket.players.map((player) => ({
-          id: player.id,
-        }))
-      );
-
-      // Publish match data to Redis channel for WebSocket servers to pick up
-      await redisClient.publish(
-        MatchmakingService.MATCH_NOTIFICATION_CHANNEL,
-        JSON.stringify({
-          type: "MATCH_CREATED",
-          matchId: match.id,
-          matchType: match.matchType,
-          players: playerDetails,
-        })
-      );
-    } catch (error) {
-      logger.error(`Error notifying match creation: ${error}`);
-      throw error;
-    }
-  }
+ */
 }
 
 // Helper function to extract match type from queue key

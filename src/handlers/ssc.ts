@@ -3,6 +3,7 @@ import { MVSQueries } from "../interfaces/queries_types";
 import { MVSTime } from "../utils/date";
 import env from "../env/env";
 import ObjectID from "bson-objectid";
+import { redisClient } from "../config/redis";
 
 export async function handleSsc_invoke_attempt_daily_refresh(req: Request<{}, {}, {}, {}>, res: Response) {
   res.send({
@@ -59274,7 +59275,20 @@ export async function handleSsc_invoke_perks_get_all_pages(req: Request<{}, {}, 
   });
 }
 
-export async function handleSsc_invoke_perks_lock(req: Request<{}, {}, {}, {}>, res: Response) {
+export interface Ssc_invoke_perks_lock_REQUEST {
+  ContainerMatchId: string;
+  Perks: string[];
+}
+
+export async function handleSsc_invoke_perks_lock(req: Request<{}, {}, Ssc_invoke_perks_lock_REQUEST, {}>, res: Response) {
+  const account = req.token;
+  await redisClient.set(`match:${req.body.ContainerMatchId}:perks:${account.id}`, JSON.stringify(req.body.Perks),{EX:1255});
+  await redisClient.hSet(`match:${req.body.ContainerMatchId}:perks`, JSON.stringify(req.body.Perks),{EX});
+  
+  setTimeout(() => {
+    
+  }, 1000);
+
   res.send({ body: {}, metadata: null, return_code: 0 });
 }
 

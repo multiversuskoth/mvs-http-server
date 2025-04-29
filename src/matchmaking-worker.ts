@@ -1,8 +1,8 @@
 import { redisClient, QUEUE_KEY_1V1, QUEUE_KEY_2V2 } from "./config/redis";
 import { logger } from "./config/logger";
 import ObjectID from "bson-objectid";
-import { MatchTicket, QueuedPlayer, Match, TeamEntry } from "./types/match";
-import { MATCH_FOUND_NOTIFICATION, MATCH_NOTIFICATION_CHANNEL } from "./websocket";
+import { MatchTicket, QueuedPlayer, TeamEntry } from "./types/match";
+import { MATCH_FOUND_NOTIFICATION, MATCH_NOTIFICATION_CHANNEL, MATCHMAKING_COMPLETE_CHANNEL, MATCHMAKING_COMPLETE_NOTIFICATION } from "./websocket";
 import { randomBytes } from "crypto";
 
 const CHECK_INTERVAL_MS = 1000;
@@ -271,11 +271,13 @@ async function createMatch(tickets: MatchTicket[], matchType: string): Promise<v
   try {
     // Count total players
     const totalPlayers = tickets.reduce((sum, ticket) => sum + ticket.players.length, 0);
+    const matchId = ObjectID().toHexString();
+    const resultId = ObjectID().toHexString();
 
     // Create match object
     const match: Match = {
-      matchId: ObjectID().toHexString(),
-      id: ObjectID().toHexString(),
+      matchId,
+      resultId,
       tickets,
       status: "pending",
       createdAt: Date.now(),
@@ -297,26 +299,35 @@ async function createMatch(tickets: MatchTicket[], matchType: string): Promise<v
       if (playerData) {
         const player = JSON.parse(playerData);
         player.status = "in_match";
-        player.currentMatchId = match.id;
+        player.currentMatchId = match.resultId;
         await redisClient.set(`player:${player.id}`, JSON.stringify(player));
       }
     }
 
     // Store match data
-    await redisClient.set(`match:${match.id}`, JSON.stringify(match));
+    await redisClient.set(`match:${match.resultId}`, JSON.stringify(match));
 
     const notification: MATCH_FOUND_NOTIFICATION = {
       players: createTeams(tickets),
-      matchId: ObjectID().toHexString(),
+      matchId,
       matchKey: randomBytes(32).toString("base64"),
-      map : "M016_V3",
-      mode:matchType
+      map: "M016_V3",
+      mode: matchType,
     };
 
     // Notify about the match creation
     await redisClient.publish(MATCH_NOTIFICATION_CHANNEL, JSON.stringify(notification));
+    // Notify about the matchmaking complete
+    for (const ticket of tickets) {
+      const matchmakingComplete: MATCHMAKING_COMPLETE_NOTIFICATION = {
+        resultId,
+        matchId,
+        matchmakingRequestId: ticket.matchmakingRequestId,
+      };
+      await redisClient.publish(MATCHMAKING_COMPLETE_CHANNEL, JSON.stringify(matchmakingComplete));
+    }
 
-    logger.info(`Created ${matchType} match ${match.id} with ${totalPlayers} players across ${tickets.length} tickets`);
+    logger.info(`Created ${matchType} match ${match.resultId} with ${totalPlayers} players across ${tickets.length} tickets`);
   } catch (error) {
     logger.error(`Error creating match: ${error}`);
   }

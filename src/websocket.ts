@@ -54,6 +54,12 @@ export interface MATCH_FOUND_NOTIFICATION extends MVS_NOTIFICATION {
   mode: string;
 }
 
+export interface MATCHMAKING_COMPLETE_NOTIFICATION extends MVS_NOTIFICATION {
+  resultId: string;
+  matchId: string;
+  matchmakingRequestId: string;
+}
+
 export interface PlayerConfigRedis {
   taunts: string[];
   RingoutVfx: string;
@@ -100,6 +106,7 @@ const redisSub = initRedisSubscriber();
 const PING_BUFFER = Buffer.from([0x0c]);
 
 export const MATCH_NOTIFICATION_CHANNEL = "match:notifications";
+export const MATCHMAKING_COMPLETE_CHANNEL = "matchmaking:complete";
 export const PARTY_QUEUED_CHANNEL = "party:queued";
 export const PLAYER_DEQUEUED_CHANNEL = "party:dequeued";
 
@@ -269,7 +276,6 @@ export class WebSocketService {
 
     const playerConfigs = results.map((reply) => reply as unknown as PlayerConfigRedis);
     const Players: { [key: string]: PlayerConfig } = {};
-
 
     for (let i = 0; i < notification.players.length; i++) {
       const player = notification.players[i];
