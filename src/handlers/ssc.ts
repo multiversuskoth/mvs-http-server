@@ -3,7 +3,7 @@ import { MVSQueries } from "../interfaces/queries_types";
 import { MVSTime } from "../utils/date";
 import env from "../env/env";
 import ObjectID from "bson-objectid";
-import { redisClient } from "../config/redis";
+import { redisClient, redisGetMatch, redisGetPlayerPerk, redisLockPerks, redisPublishAllPerksLocked } from "../config/redis";
 
 export async function handleSsc_invoke_attempt_daily_refresh(req: Request<{}, {}, {}, {}>, res: Response) {
   res.send({
@@ -59282,12 +59282,28 @@ export interface Ssc_invoke_perks_lock_REQUEST {
 
 export async function handleSsc_invoke_perks_lock(req: Request<{}, {}, Ssc_invoke_perks_lock_REQUEST, {}>, res: Response) {
   const account = req.token;
-  await redisClient.set(`match:${req.body.ContainerMatchId}:perks:${account.id}`, JSON.stringify(req.body.Perks),{EX:1255});
-  await redisClient.hSet(`match:${req.body.ContainerMatchId}:perks`, JSON.stringify(req.body.Perks),{EX});
-  
-  setTimeout(() => {
-    
-  }, 1000);
+  await redisLockPerks({ containerMatchId: req.body.ContainerMatchId, playerId: account.id, perks: req.body.Perks });
+  //await redisClient.set(`match:${req.body.ContainerMatchId}:perks:${account.id}`, JSON.stringify(req.body.Perks),{EX:1255});
+
+  // Check if all players have locked their perks
+  // If all players have locked their perks, publich the event
+  const match = await redisGetMatch(req.body.ContainerMatchId);
+  if (match && match.status !== "locked") {
+    const playersIds = match.tickets.flatMap((ticket) => ticket.players.map((player) => player.id)).filter((id) => id !== account.id);
+    const playersPerks = await Promise.all(
+      playersIds.map(async (playerId) => {
+        const perks = await redisGetPlayerPerk(req.body.ContainerMatchId, playerId);
+        if (perks) {
+          return true;
+        }
+        return false;
+      })
+    );
+    const allPerksLocked = playersPerks.every((perk) => perk === true);
+    if (allPerksLocked) {
+      await redisPublishAllPerksLocked(req.body.ContainerMatchId);
+    }
+  }
 
   res.send({ body: {}, metadata: null, return_code: 0 });
 }

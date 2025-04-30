@@ -1,9 +1,8 @@
 // ----- services/matchmakingService.ts -----
-import {  MatchPlayer, MatchTicket, QueuedPlayer } from "../types/match";
-import { QUEUE_KEY_1V1, QUEUE_KEY_2V2, redisClient } from "../config/redis";
+import {   QueuedPlayer } from "../types/match";
+import { PARTY_QUEUED_CHANNEL, PARTY_QUEUED_NOTIFICATION, QUEUE_KEY_1V1, QUEUE_KEY_2V2, redisClient, RedisMatchTicket } from "../config/redis";
 import { logger } from "../config/logger";
 import { MVSTime } from "../utils/date";
-import { PARTY_QUEUED_CHANNEL, PARTY_QUEUED_NOTIFICATION } from "../websocket";
 
 export class MatchmakingService {
   // Get queue key for a specific match type
@@ -30,7 +29,7 @@ export class MatchmakingService {
       }
 
       // Create a match ticket
-      const ticket: MatchTicket = {
+      const ticket: RedisMatchTicket = {
         created_at: MVSTime(new Date()),
         matchmakingRequestId,
         partyId,

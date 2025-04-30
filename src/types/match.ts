@@ -7,9 +7,3 @@ export interface QueuedPlayer {
 
 
 
-export interface TeamEntry {
-  playerId: string;
-  partyId: string;
-  playerIndex: number;
-  teamIndex: 0 | 1;
-}

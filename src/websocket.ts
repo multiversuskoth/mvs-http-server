@@ -5,11 +5,10 @@ import { HydraDecoder, HydraEncoder } from "mvs-dump";
 import { buffer } from "stream/consumers";
 import { decodeToken } from "./middleware/auth";
 import { AccountToken } from "./handlers";
-import { initRedisSubscriber, redisClient } from "./config/redis";
+import { ALL_PERKS_LOCK_NOTIFICATION, ALL_PERKS_LOCKED_CHANNEL, initRedisSubscriber, MATCH_FOUND_NOTIFICATION, MATCH_NOTIFICATION_CHANNEL, PARTY_QUEUED_CHANNEL, PARTY_QUEUED_NOTIFICATION, redisClient, RedisPlayerConfig } from "./config/redis";
 import { Server } from "https";
 import { GAME_SERVER_PORT } from "./game/udp";
 import { logger } from "./config/logger";
-import { TeamEntry } from "./types/match";
 import { MVSTime } from "./utils/date";
 
 export class WebSocketPlayer {
@@ -38,36 +37,6 @@ export class WebSocketPlayer {
   }
 }
 
-export interface MVS_NOTIFICATION {}
-
-export interface PARTY_QUEUED_NOTIFICATION extends MVS_NOTIFICATION {
-  playerIds: string[];
-  matchmakingRequestId: string;
-  partyId: string;
-}
-
-export interface MATCH_FOUND_NOTIFICATION extends MVS_NOTIFICATION {
-  players: TeamEntry[];
-  matchId: string;
-  matchKey: string;
-  map: string;
-  mode: string;
-}
-
-export interface MATCHMAKING_COMPLETE_NOTIFICATION extends MVS_NOTIFICATION {
-  resultId: string;
-  matchId: string;
-  matchmakingRequestId: string;
-}
-
-export interface PlayerConfigRedis {
-  taunts: string[];
-  RingoutVfx: string;
-  Character: string;
-  Banner: string;
-  StatTrackers: StatTrackerEntry[];
-  Perks: string[];
-}
 
 export interface PlayerConfig {
   Taunts: string[];
@@ -99,16 +68,12 @@ export interface PlayerConfig {
   Skin: string;
   BotDifficultyMin: number;
 }
-type StatTrackerEntry = [statKey: string, statValue: number];
 
 const redisSub = initRedisSubscriber();
 
 const PING_BUFFER = Buffer.from([0x0c]);
 
-export const MATCH_NOTIFICATION_CHANNEL = "match:notifications";
-export const MATCHMAKING_COMPLETE_CHANNEL = "matchmaking:complete";
-export const PARTY_QUEUED_CHANNEL = "party:queued";
-export const PLAYER_DEQUEUED_CHANNEL = "party:dequeued";
+
 
 export class WebSocketService {
   private ws: WebSocketServer;
@@ -270,11 +235,10 @@ export class WebSocketService {
       }
       return;
     }
-    // Cast the results to PlayerConfigRedis
-    const playerIndexCount = notification.players.length - 1;
+
     // Get the player configs from redis
 
-    const playerConfigs = results.map((reply) => reply as unknown as PlayerConfigRedis);
+    const playerConfigs = results.map((reply) => reply as unknown as RedisPlayerConfig);
     const Players: { [key: string]: PlayerConfig } = {};
 
     for (let i = 0; i < notification.players.length; i++) {
@@ -379,6 +343,17 @@ export class WebSocketService {
     }
   }
 
+  handleAllPerksLocked(notification: ALL_PERKS_LOCK_NOTIFICATION) {
+        // Send the message to each player in the match
+        for (const playerId of notification.playersIds) {
+          const client = this.clients.get(playerId);
+          if (client) {
+            client.send(message);
+            logger.info(`Sent gameplay config to player ${playerId.playerId} for match ${notification.matchId}`);
+          }
+        }
+  }
+
   handlePlayerDequeued() {}
 
   private setupRedisSubscription() {
@@ -387,13 +362,15 @@ export class WebSocketService {
       const notification = JSON.parse(message) as MATCH_FOUND_NOTIFICATION;
       this.handleMatchFound(notification);
     });
+
+    redisSub.subscribe(ALL_PERKS_LOCKED_CHANNEL, (message) => {
+      const notification = JSON.parse(message) as ALL_PERKS_LOCK_NOTIFICATION;
+      this.handleAllPerksLocked(notification);
+    });
+
     redisSub.subscribe(PARTY_QUEUED_CHANNEL, (message) => {
       const notification = JSON.parse(message) as PARTY_QUEUED_NOTIFICATION;
       this.handlePartyQueued(notification);
-    });
-
-    redisSub.subscribe(PLAYER_DEQUEUED_CHANNEL, (message) => {
-      this.handlePlayerDequeued();
     });
   }
 }
