@@ -1,7 +1,13 @@
+import { startRedis } from "./config/redis";
 import { RollbackServer } from "./game/udp";
-import { start } from "./server";
-import { startWebsocketServer } from "./websocket";
+import { startMatchMakingWorker } from "./matchmaking-worker";
 
-start();
-startWebsocketServer();
+import { MVSHTTPServer, start } from "./server";
+import { WebSocketService } from "./websocket";
+startRedis().then(() => {
+  start();
+  const websocket = new WebSocketService(MVSHTTPServer);
+  startMatchMakingWorker();
+});
+
 //const gameServer = new RollbackServer();

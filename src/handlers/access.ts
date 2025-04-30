@@ -20,8 +20,8 @@ export const accounts = new Map<string, AccountToken>();
 
 function generateStaticAccess() {
   const account: AccountToken = {
-    id: "680c459a69f798cb6846c35c",
-    profile_id: "680c45b006f088ca1187113f",
+    id: ObjectID().toHexString(),
+    profile_id: ObjectID().toHexString(),
     public_id: "paee40f62bd814a53bf9f4d21e43ea2c1",
     wb_network_id: "pafd8d7950aa1484ea791d06662fa75ce",
     hydraUsername: "dark-wild-grass-voice-yrpu2",

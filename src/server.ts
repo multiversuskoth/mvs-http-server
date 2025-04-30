@@ -24,6 +24,10 @@ app.use(hydraDecoderMiddleware);
 app.use(hydraTokenMiddleware);
 
 app.use(router);
+app.use((req, res, next) => {
+  console.log("UNKNOWN - ", req.method, req.url);
+  res.send({ body: { Crc: 1167552915, MatchmakingCrc: 1291076274 }, metadata: null, return_code: 200 });
+});
 
 export const MVSHTTPServer = https.createServer(options, app);
 

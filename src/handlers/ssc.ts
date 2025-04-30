@@ -3,7 +3,14 @@ import { MVSQueries } from "../interfaces/queries_types";
 import { MVSTime } from "../utils/date";
 import env from "../env/env";
 import ObjectID from "bson-objectid";
-import { redisClient, redisGetMatch, redisGetPlayerPerk, redisLockPerks, redisPublishAllPerksLocked } from "../config/redis";
+import {
+  redisClient,
+  redisGetMatch,
+  redisGetPlayerPerk,
+  redisLockPerks,
+  redisPublishAllPerksLocked,
+  redisSaveEquippedComsetics,
+} from "../config/redis";
 
 export async function handleSsc_invoke_attempt_daily_refresh(req: Request<{}, {}, {}, {}>, res: Response) {
   res.send({
@@ -1767,87 +1774,94 @@ export async function handleSsc_invoke_get_country_code(req: Request<{}, {}, {},
 }
 
 export async function handleSsc_invoke_get_equipped_cosmetics(req: Request<{}, {}, {}, {}>, res: Response) {
-  res.send({
-    body: {
-      EquippedCosmetics: {
-        Taunts: {
-          character_Jason: { TauntSlots: ["taunt_jason_default", "emote_pass_the_salt", "taunt_jason_default", "taunt_jason_default"] },
-          character_wonder_woman: {
-            TauntSlots: [
-              "taunt_wonder_woman_hands_on_hips",
-              "taunt_wonder_woman_hands_on_hips",
-              "taunt_wonder_woman_hands_on_hips",
-              "taunt_wonder_woman_hands_on_hips",
-            ],
-          },
-          character_velma: { TauntSlots: ["taunt_velma_default", "taunt_velma_default", "taunt_velma_default", "taunt_velma_default"] },
-          character_tom_and_jerry: {
-            TauntSlots: ["taunt_tomandjerry_default", "taunt_tomandjerry_default", "taunt_tomandjerry_default", "taunt_tomandjerry_default"],
-          },
-          character_superman: {
-            TauntSlots: ["taunt_superman_crack_neck", "taunt_superman_crack_neck", "taunt_superman_crack_neck", "taunt_superman_crack_neck"],
-          },
-          character_steven: { TauntSlots: ["taunt_steven_default", "taunt_steven_default", "taunt_steven_default", "taunt_steven_default"] },
-          character_shaggy: { TauntSlots: ["taunt_shaggy_default", "taunt_shaggy_default", "taunt_shaggy_default", "taunt_shaggy_default"] },
-          character_jake: { TauntSlots: ["taunt_jake_default", "taunt_jake_default", "taunt_jake_default", "taunt_jake_default"] },
-          character_harleyquinn: { TauntSlots: ["taunt_harley_default", "taunt_harley_default", "taunt_harley_default", "taunt_harley_default"] },
-          character_garnet: { TauntSlots: ["taunt_garnet_default", "taunt_garnet_default", "taunt_garnet_default", "taunt_garnet_default"] },
-          character_finn: {
-            TauntSlots: ["taunt_finn_baby_default", "taunt_finn_baby_default", "taunt_finn_baby_default", "taunt_finn_baby_default"],
-          },
-          character_creature: {
-            TauntSlots: ["taunt_creature_default", "taunt_creature_default", "taunt_creature_default", "taunt_creature_default"],
-          },
-          character_C028: { TauntSlots: ["Taunt_C028_Default", "Taunt_C028_Default", "Taunt_C028_Default", "Taunt_C028_Default"] },
-          character_C023B: { TauntSlots: ["taunt_c023b_default", "taunt_c023b_default", "taunt_c023b_default", "taunt_c023b_default"] },
-          character_C023A: { TauntSlots: ["taunt_c023A_default", "taunt_c023A_default", "taunt_c023A_default", "taunt_c023A_default"] },
-          character_C021: { TauntSlots: ["taunt_c021_default", "taunt_c021_default", "taunt_c021_default", "taunt_c021_default"] },
-          character_C020: { TauntSlots: ["taunt_c020_taunt_0", "taunt_c020_taunt_0", "taunt_c020_taunt_0", "taunt_c020_taunt_0"] },
-          character_c019: { TauntSlots: ["taunt_c019_default", "taunt_c019_default", "taunt_c019_default", "taunt_c019_default"] },
-          character_C018: { TauntSlots: ["taunt_c018_default", "taunt_c018_default", "taunt_c018_default", "taunt_c018_default"] },
-          character_C017: {
-            TauntSlots: ["taunt_irongiant_default", "taunt_irongiant_default", "taunt_irongiant_default", "taunt_irongiant_default"],
-          },
-          character_c16: { TauntSlots: ["taunt_c016_default", "taunt_c016_default", "taunt_c016_default", "taunt_c016_default"] },
-          character_taz: { TauntSlots: ["Taunt_Taz_Default", "Taunt_Taz_Default", "Taunt_Taz_Default", "Taunt_Taz_Default"] },
-          character_bugs_bunny: { TauntSlots: ["taunt_bugs_default", "taunt_bugs_default", "taunt_bugs_default", "taunt_bugs_default"] },
-          character_batman: { TauntSlots: ["taunt_batman_default", "taunt_batman_default", "taunt_batman_default", "taunt_batman_default"] },
-          character_arya: { TauntSlots: ["taunt_arya_default", "taunt_arya_default", "taunt_arya_default", "taunt_arya_default"] },
-          character_BananaGuard: {
-            TauntSlots: ["taunt_bananaguard_default", "taunt_bananaguard_default", "taunt_bananaguard_default", "taunt_bananaguard_default"],
-          },
-          character_c036: { TauntSlots: ["taunt_c036_default", "taunt_c036_default", "taunt_c036_default", "taunt_c036_default"] },
-          character_C030: { TauntSlots: ["taunt_c030_default_01", "taunt_c030_default_01", "taunt_c030_default_01", "taunt_c030_default_01"] },
-          character_C026: { TauntSlots: ["taunt_C026_default", "taunt_C026_default", "taunt_C026_default", "taunt_C026_default"] },
-          character_c024: { TauntSlots: ["taunt_C024_default", "taunt_C024_default", "taunt_C024_default", "taunt_C024_default"] },
-          character_C025: { TauntSlots: ["taunt_c025_default", "taunt_c025_default", "taunt_c025_default", "taunt_c025_default"] },
-          character_C027: { TauntSlots: ["taunt_c027_default", "taunt_c027_default", "taunt_c027_default", "taunt_c027_default"] },
-          character_C031: {
-            TauntSlots: ["taunt_c031_defaulttaunt", "taunt_c031_defaulttaunt", "taunt_c031_defaulttaunt", "taunt_c031_defaulttaunt"],
-          },
-          character_c038: {
-            TauntSlots: ["taunt_c038_defaulttaunt", "taunt_c038_defaulttaunt", "taunt_c038_defaulttaunt", "taunt_c038_defaulttaunt"],
-          },
-          character_C029: {
-            TauntSlots: ["taunt_c029_defaulttaunt", "taunt_c029_defaulttaunt", "taunt_c029_defaulttaunt", "taunt_c029_defaulttaunt"],
-          },
-        },
-        AnnouncerPack: "announcer_pack_c034",
-        Banner: "banner_foretold_champion_rare",
-        StatTrackers: {
-          StatTrackerSlots: [
-            "stattracking_ranked_seasonfive_charactersingold_1v1",
-            "stat_tracking_bundle_ranked_season_two_wins_1v1",
-            "stat_tracking_bundle_default",
-          ],
-        },
-        RingoutVfx: "ring_out_vfx_default",
-        Gems: { GemSlots: ["", "", ""] },
+  const account = req.token;
+
+  const EquippedCosmetcis = {
+    Taunts: {
+      character_Jason: { TauntSlots: ["taunt_jason_default", "emote_pass_the_salt", "taunt_jason_default", "taunt_jason_default"] },
+      character_wonder_woman: {
+        TauntSlots: [
+          "taunt_wonder_woman_hands_on_hips",
+          "taunt_wonder_woman_hands_on_hips",
+          "taunt_wonder_woman_hands_on_hips",
+          "taunt_wonder_woman_hands_on_hips",
+        ],
       },
+      character_velma: { TauntSlots: ["taunt_velma_default", "taunt_velma_default", "taunt_velma_default", "taunt_velma_default"] },
+      character_tom_and_jerry: {
+        TauntSlots: ["taunt_tomandjerry_default", "taunt_tomandjerry_default", "taunt_tomandjerry_default", "taunt_tomandjerry_default"],
+      },
+      character_superman: {
+        TauntSlots: ["taunt_superman_crack_neck", "taunt_superman_crack_neck", "taunt_superman_crack_neck", "taunt_superman_crack_neck"],
+      },
+      character_steven: { TauntSlots: ["taunt_steven_default", "taunt_steven_default", "taunt_steven_default", "taunt_steven_default"] },
+      character_shaggy: { TauntSlots: ["taunt_shaggy_default", "taunt_shaggy_default", "taunt_shaggy_default", "taunt_shaggy_default"] },
+      character_jake: { TauntSlots: ["taunt_jake_default", "taunt_jake_default", "taunt_jake_default", "taunt_jake_default"] },
+      character_harleyquinn: { TauntSlots: ["taunt_harley_default", "taunt_harley_default", "taunt_harley_default", "taunt_harley_default"] },
+      character_garnet: { TauntSlots: ["taunt_garnet_default", "taunt_garnet_default", "taunt_garnet_default", "taunt_garnet_default"] },
+      character_finn: {
+        TauntSlots: ["taunt_finn_baby_default", "taunt_finn_baby_default", "taunt_finn_baby_default", "taunt_finn_baby_default"],
+      },
+      character_creature: {
+        TauntSlots: ["taunt_creature_default", "taunt_creature_default", "taunt_creature_default", "taunt_creature_default"],
+      },
+      character_C028: { TauntSlots: ["Taunt_C028_Default", "Taunt_C028_Default", "Taunt_C028_Default", "Taunt_C028_Default"] },
+      character_C023B: { TauntSlots: ["taunt_c023b_default", "taunt_c023b_default", "taunt_c023b_default", "taunt_c023b_default"] },
+      character_C023A: { TauntSlots: ["taunt_c023A_default", "taunt_c023A_default", "taunt_c023A_default", "taunt_c023A_default"] },
+      character_C021: { TauntSlots: ["taunt_c021_default", "taunt_c021_default", "taunt_c021_default", "taunt_c021_default"] },
+      character_C020: { TauntSlots: ["taunt_c020_taunt_0", "taunt_c020_taunt_0", "taunt_c020_taunt_0", "taunt_c020_taunt_0"] },
+      character_c019: { TauntSlots: ["taunt_c019_default", "taunt_c019_default", "taunt_c019_default", "taunt_c019_default"] },
+      character_C018: { TauntSlots: ["taunt_c018_default", "taunt_c018_default", "taunt_c018_default", "taunt_c018_default"] },
+      character_C017: {
+        TauntSlots: ["taunt_irongiant_default", "taunt_irongiant_default", "taunt_irongiant_default", "taunt_irongiant_default"],
+      },
+      character_c16: { TauntSlots: ["taunt_c016_default", "taunt_c016_default", "taunt_c016_default", "taunt_c016_default"] },
+      character_taz: { TauntSlots: ["Taunt_Taz_Default", "Taunt_Taz_Default", "Taunt_Taz_Default", "Taunt_Taz_Default"] },
+      character_bugs_bunny: { TauntSlots: ["taunt_bugs_default", "taunt_bugs_default", "taunt_bugs_default", "taunt_bugs_default"] },
+      character_batman: { TauntSlots: ["taunt_batman_default", "taunt_batman_default", "taunt_batman_default", "taunt_batman_default"] },
+      character_arya: { TauntSlots: ["taunt_arya_default", "taunt_arya_default", "taunt_arya_default", "taunt_arya_default"] },
+      character_BananaGuard: {
+        TauntSlots: ["taunt_bananaguard_default", "taunt_bananaguard_default", "taunt_bananaguard_default", "taunt_bananaguard_default"],
+      },
+      character_c036: { TauntSlots: ["taunt_c036_default", "taunt_c036_default", "taunt_c036_default", "taunt_c036_default"] },
+      character_C030: { TauntSlots: ["taunt_c030_default_01", "taunt_c030_default_01", "taunt_c030_default_01", "taunt_c030_default_01"] },
+      character_C026: { TauntSlots: ["taunt_C026_default", "taunt_C026_default", "taunt_C026_default", "taunt_C026_default"] },
+      character_c024: { TauntSlots: ["taunt_C024_default", "taunt_C024_default", "taunt_C024_default", "taunt_C024_default"] },
+      character_C025: { TauntSlots: ["taunt_c025_default", "taunt_c025_default", "taunt_c025_default", "taunt_c025_default"] },
+      character_C027: { TauntSlots: ["taunt_c027_default", "taunt_c027_default", "taunt_c027_default", "taunt_c027_default"] },
+      character_C031: {
+        TauntSlots: ["taunt_c031_defaulttaunt", "taunt_c031_defaulttaunt", "taunt_c031_defaulttaunt", "taunt_c031_defaulttaunt"],
+      },
+      character_c038: {
+        TauntSlots: ["taunt_c038_defaulttaunt", "taunt_c038_defaulttaunt", "taunt_c038_defaulttaunt", "taunt_c038_defaulttaunt"],
+      },
+      character_C029: {
+        TauntSlots: ["taunt_c029_defaulttaunt", "taunt_c029_defaulttaunt", "taunt_c029_defaulttaunt", "taunt_c029_defaulttaunt"],
+      },
+    },
+    AnnouncerPack: "announcer_pack_c034",
+    Banner: "banner_foretold_champion_rare",
+    StatTrackers: {
+      StatTrackerSlots: [
+        "stattracking_ranked_seasonfive_charactersingold_1v1",
+        "stat_tracking_bundle_ranked_season_two_wins_1v1",
+        "stat_tracking_bundle_default",
+      ],
+    },
+    RingoutVfx: "ring_out_vfx_default",
+    Gems: { GemSlots: ["", "", ""] },
+  };
+
+  const message = {
+    body: {
+      EquippedCosmetcis
     },
     metadata: null,
     return_code: 0,
-  });
+  };
+
+  //redisSaveEquippedComsetics(account.id, EquippedCosmetcis);
+  res.send(message);
 }
 
 export async function handleSsc_invoke_get_gm_leaderboards(req: Request<{}, {}, {}, {}>, res: Response) {
@@ -59283,25 +59297,26 @@ export interface Ssc_invoke_perks_lock_REQUEST {
 export async function handleSsc_invoke_perks_lock(req: Request<{}, {}, Ssc_invoke_perks_lock_REQUEST, {}>, res: Response) {
   const account = req.token;
   await redisLockPerks({ containerMatchId: req.body.ContainerMatchId, playerId: account.id, perks: req.body.Perks });
-  //await redisClient.set(`match:${req.body.ContainerMatchId}:perks:${account.id}`, JSON.stringify(req.body.Perks),{EX:1255});
 
   // Check if all players have locked their perks
   // If all players have locked their perks, publich the event
   const match = await redisGetMatch(req.body.ContainerMatchId);
   if (match && match.status !== "locked") {
-    const playersIds = match.tickets.flatMap((ticket) => ticket.players.map((player) => player.id)).filter((id) => id !== account.id);
+    const playersIds = match.tickets.flatMap((ticket) => ticket.players.map((player) => player.id));
     const playersPerks = await Promise.all(
-      playersIds.map(async (playerId) => {
-        const perks = await redisGetPlayerPerk(req.body.ContainerMatchId, playerId);
-        if (perks) {
-          return true;
-        }
-        return false;
-      })
+      playersIds
+        .filter((id) => id !== account.id)
+        .map(async (playerId) => {
+          const perks = await redisGetPlayerPerk(req.body.ContainerMatchId, playerId);
+          if (perks) {
+            return true;
+          }
+          return false;
+        })
     );
     const allPerksLocked = playersPerks.every((perk) => perk === true);
     if (allPerksLocked) {
-      await redisPublishAllPerksLocked(req.body.ContainerMatchId);
+      await redisPublishAllPerksLocked(req.body.ContainerMatchId, playersIds);
     }
   }
 

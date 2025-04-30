@@ -1,10 +1,10 @@
 import express, { Request, Response } from "express";
 import { MVSQueries } from "../interfaces/queries_types";
-import { onMatchmakerStarted } from "../websocket_handlers/websocket_handler";
 import ObjectID from "bson-objectid";
 import { randomUUID } from "crypto";
 import { MVSTime } from "../utils/date";
 import env from "../env/env";
+import { MATCH_TYPES, queueMatch } from "../services/matchmakingService";
 
 export async function handleMatches_id(req: Request<{}, {}, {}, {}>, res: Response) {
   const account = req.token;
@@ -356,5 +356,5 @@ export async function handleMatches_matchmaking_1v1_retail_request(
     id: ObjectID().toHexString(),
   };
   res.send(data);
-  onMatchmakerStarted({ MatchmakingRequestId: data.id, partyId: data.from_match });
+  await queueMatch([account.id], data.from_match, data.id, MATCH_TYPES.ONE_V_ONE);
 }

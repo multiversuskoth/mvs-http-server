@@ -5,11 +5,29 @@ import { HydraDecoder, HydraEncoder } from "mvs-dump";
 import { buffer } from "stream/consumers";
 import { decodeToken } from "./middleware/auth";
 import { AccountToken } from "./handlers";
-import { ALL_PERKS_LOCK_NOTIFICATION, ALL_PERKS_LOCKED_CHANNEL, initRedisSubscriber, MATCH_FOUND_NOTIFICATION, MATCH_NOTIFICATION_CHANNEL, PARTY_QUEUED_CHANNEL, PARTY_QUEUED_NOTIFICATION, redisClient, RedisPlayerConfig } from "./config/redis";
+import {
+  ALL_PERKS_LOCK_NOTIFICATION,
+  ALL_PERKS_LOCKED_CHANNEL,
+  initRedisSubscriber,
+  MATCH_FOUND_NOTIFICATION,
+  ON_GAMEPLAY_CONFIG_NOTIFIED_CHANNEL,
+  GAME_SERVER_INSTANCE_READY_CHANNEL,
+  ON_MATCH_MAKER_STARTED_CHANNEL,
+  ON_MATCH_MAKER_STARTED_NOTIFICATION,
+  redisClient,
+  redisGetPlayerPerk,
+  RedisPlayerConfig,
+  RedisGameServerInstanceReadyNotification,
+  RedisClient,
+  redisGetAllPlayersEquippedComsetics,
+  redisGetPlayers,
+} from "./config/redis";
 import { Server } from "https";
 import { GAME_SERVER_PORT } from "./game/udp";
 import { logger } from "./config/logger";
 import { MVSTime } from "./utils/date";
+import ObjectID from "bson-objectid";
+import { RedisClientType } from "@redis/client";
 
 export class WebSocketPlayer {
   init: boolean = false;
@@ -17,6 +35,7 @@ export class WebSocketPlayer {
   deleted?: boolean;
   account: AccountToken | undefined;
   matchTick: NodeJS.Timeout | undefined;
+  matchConfig?: GameNotification;
 
   constructor(_ws: WebSocket) {
     this.ws = _ws;
@@ -37,6 +56,71 @@ export class WebSocketPlayer {
   }
 }
 
+interface MatchData {
+  MatchId: string;
+  GameplayConfig: GameplayConfig;
+  template_id: string;
+}
+
+interface GameplayConfig {
+  ArenaModeInfo: null | string;
+  RiftNodeId: string;
+  ScoreEvaluationRule: string;
+  bIsPvP: boolean;
+  ScoreAttributionRule: string;
+  MatchDurationSeconds: number;
+  Created: {
+    _hydra_unix_date: number;
+  };
+  EventQueueSlug: string;
+  bModeGrantsProgress: boolean;
+  TeamData: any[];
+  Spectators: object;
+  bIsRanked: boolean;
+  bIsCustomGame: boolean;
+  Players: { [key: string]: PlayerConfig };
+  CustomGameSettings: CustomGameSettings;
+  HudSettings: HudSettings;
+  bIsCasualSpecial: boolean;
+  bAllowMapHazards: boolean;
+  RiftNodeAttunement: string;
+  CountdownDisplay: string;
+  Cluster: string;
+  WorldBuffs: any[];
+  bIsTutorial: boolean;
+  MatchId: string;
+  bIsOnlineMatch: boolean;
+  ModeString: string;
+  Map: string;
+  bIsRift: boolean;
+}
+
+interface CustomGameSettings {
+  bHazardsEnabled: boolean;
+  bShieldsEnabled: boolean;
+  MatchTime: number;
+  NumRingouts: number;
+}
+
+interface HudSettings {
+  bDisplayPortraits: boolean;
+  bDisplayStocks: boolean;
+  bDisplayTimer: boolean;
+}
+
+interface Payload {
+  match: {
+    id: string;
+  };
+  custom_notification: string;
+}
+
+interface GameNotification {
+  data: MatchData;
+  payload: Payload;
+  header: string;
+  cmd: string;
+}
 
 export interface PlayerConfig {
   Taunts: string[];
@@ -69,17 +153,15 @@ export interface PlayerConfig {
   BotDifficultyMin: number;
 }
 
-const redisSub = initRedisSubscriber();
-
 const PING_BUFFER = Buffer.from([0x0c]);
-
-
 
 export class WebSocketService {
   private ws: WebSocketServer;
   clients: Map<string, WebSocketPlayer> = new Map();
+  redisSub: RedisClient;
 
   constructor(server: Server) {
+    this.redisSub = initRedisSubscriber();
     this.ws = new WebSocketServer({ server });
     this.setupSocketHandlers();
     this.setupRedisSubscription();
@@ -146,7 +228,7 @@ export class WebSocketService {
     }
   }
 
-  handlePartyQueued(notification: PARTY_QUEUED_NOTIFICATION) {
+  handlePartyQueued(notification: ON_MATCH_MAKER_STARTED_NOTIFICATION) {
     for (const playerId of notification.playerIds) {
       const client = this.clients.get(playerId);
       if (client) {
@@ -169,7 +251,7 @@ export class WebSocketService {
     }
   }
 
-  handleMatchTick(client: WebSocketPlayer, notification: PARTY_QUEUED_NOTIFICATION) {
+  handleMatchTick(client: WebSocketPlayer, notification: ON_MATCH_MAKER_STARTED_NOTIFICATION) {
     setInterval(() => {
       client.send({
         data: {},
@@ -213,40 +295,25 @@ export class WebSocketService {
   }
 
   async handleSendGamePlayConfig(notification: MATCH_FOUND_NOTIFICATION) {
-    const multi = redisClient.multi();
     const MatchTime = 420;
     const NumRingouts = 3;
 
     // Get the player configs from redis
-    for (const player of notification.players) {
-      multi.hGetAll(`playerConfig:${player.playerId}`);
-    }
-
-    const results = await multi.exec();
-    if (results.some((result) => result === null)) {
-      logger.error(`Failed to retrieve player configs for players: ${notification.players.map((p) => p.playerId).join(", ")}`);
-      // Handle the error as needed, e.g., send an error message to the players
-      for (const player of notification.players) {
-        const client = this.clients.get(player.playerId);
-        if (client) {
-          // TODO Send dequeued message
-          logger.info(`Sent dequeued message to player ${player.playerId} for match ${notification.matchId}`);
-        }
-      }
-      return;
-    }
+    const playerIds = notification.players.map((p) => p.playerId);
+    const playerConfigs = await redisGetAllPlayersEquippedComsetics(playerIds);
+    const playerLoadouts = await redisGetPlayers(playerIds);
 
     // Get the player configs from redis
 
-    const playerConfigs = results.map((reply) => reply as unknown as RedisPlayerConfig);
     const Players: { [key: string]: PlayerConfig } = {};
 
     for (let i = 0; i < notification.players.length; i++) {
       const player = notification.players[i];
       const playerConfig = playerConfigs[i];
+      const playerLoadout = playerLoadouts[i];
       Players[player.playerId] = {
         AccountId: player.playerId,
-        Taunts: playerConfig.taunts,
+        Taunts: playerConfig.Taunts[playerLoadout.character].TauntSlots,
         BotBehaviorOverride: "",
         bAutoPartyPreference: true,
         Gems: [],
@@ -263,21 +330,21 @@ export class WebSocketService {
         RankedTier: null,
         Handicap: 0,
         RingoutVfx: playerConfig.RingoutVfx,
-        Character: playerConfig.Character,
+        Character: playerLoadout.character,
         Banner: playerConfig.Banner,
-        StatTrackers: playerConfig.StatTrackers,
+        StatTrackers: playerConfig.StatTrackers.StatTrackerSlots.map((s) => [s, 1]), // TODO: We should get this from database?
         Perks: [],
         PlayerIndex: player.playerIndex,
         PartyId: player.partyId,
         Username: {},
         Buffs: [],
-        Skin: playerConfig.Character,
+        Skin: playerLoadout.character,
         BotDifficultyMin: 0,
       };
     }
 
     // Create the message to send to the players
-    const message = {
+    const message: GameNotification = {
       data: {
         MatchId: notification.matchId,
         GameplayConfig: {
@@ -338,39 +405,83 @@ export class WebSocketService {
       const client = this.clients.get(player.playerId);
       if (client) {
         client.send(message);
-        logger.info(`Sent gameplay config to player ${player.playerId} for match ${notification.matchId}`);
+        client.matchConfig = message;
+        logger.info(`Sent gameplay config to player ${client.account?.id} for match ${notification.matchId}`);
       }
     }
   }
 
-  handleAllPerksLocked(notification: ALL_PERKS_LOCK_NOTIFICATION) {
-        // Send the message to each player in the match
-        for (const playerId of notification.playersIds) {
-          const client = this.clients.get(playerId);
-          if (client) {
-            client.send(message);
-            logger.info(`Sent gameplay config to player ${playerId.playerId} for match ${notification.matchId}`);
+  async handleAllPerksLocked(notification: ALL_PERKS_LOCK_NOTIFICATION) {
+    // Send the message to each player in the match
+    for (const playerId of notification.playersIds) {
+      const client = this.clients.get(playerId);
+      if (client) {
+        if (client.matchConfig) {
+          const playerPerk = await redisGetPlayerPerk(notification.matchId, playerId);
+          if (playerPerk) {
+            client.matchConfig.data.GameplayConfig.Players[playerId].Perks = playerPerk;
+            client.matchConfig.data.template_id = "PerksLockedNotification";
+          } else {
+            logger.error("Match Perks are incomplete!!! This should not really happen");
           }
         }
+      }
+    }
+    for (const playerId of notification.playersIds) {
+      const client = this.clients.get(playerId);
+      if (client && client.matchConfig) {
+        client.send(client.matchConfig);
+        logger.info(`Sent all perks lock to player ${playerId} for match ${notification.matchId}`);
+      }
+    }
   }
 
-  handlePlayerDequeued() {}
+  async handleGameServerInstanceReady(notification: RedisGameServerInstanceReadyNotification) {
+    for (const playerId of notification.playerIds) {
+      const client = this.clients.get(playerId);
+      const message = {
+        data: {},
+        payload: {
+          game_server_instance: {
+            game_server_type_slug: "multiplay",
+            port: GAME_SERVER_PORT,
+            owner_id: notification.containerMatchId,
+            host: "127.0.0.1",
+            id: notification.resultId,
+          },
+          proxied_data: null,
+        },
+        header: "Your game server is ready to join.",
+        cmd: "game-server-instance-ready",
+      };
+      if (client) {
+        client.send(message);
+      }
+    }
+  }
+
+  handleMatchMakingComplete() {}
 
   private setupRedisSubscription() {
     // Subscribe to channels
-    redisSub.subscribe(MATCH_NOTIFICATION_CHANNEL, (message) => {
+    this.redisSub.subscribe(ON_GAMEPLAY_CONFIG_NOTIFIED_CHANNEL, (message) => {
       const notification = JSON.parse(message) as MATCH_FOUND_NOTIFICATION;
       this.handleMatchFound(notification);
     });
 
-    redisSub.subscribe(ALL_PERKS_LOCKED_CHANNEL, (message) => {
+    this.redisSub.subscribe(ALL_PERKS_LOCKED_CHANNEL, (message) => {
       const notification = JSON.parse(message) as ALL_PERKS_LOCK_NOTIFICATION;
       this.handleAllPerksLocked(notification);
     });
 
-    redisSub.subscribe(PARTY_QUEUED_CHANNEL, (message) => {
-      const notification = JSON.parse(message) as PARTY_QUEUED_NOTIFICATION;
+    this.redisSub.subscribe(ON_MATCH_MAKER_STARTED_CHANNEL, (message) => {
+      const notification = JSON.parse(message) as ON_MATCH_MAKER_STARTED_NOTIFICATION;
       this.handlePartyQueued(notification);
+    });
+
+    this.redisSub.subscribe(GAME_SERVER_INSTANCE_READY_CHANNEL, (message) => {
+      const notification = JSON.parse(message) as RedisGameServerInstanceReadyNotification;
+      this.handleGameServerInstanceReady(notification);
     });
   }
 }

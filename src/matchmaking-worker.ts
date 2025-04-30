@@ -1,8 +1,23 @@
-import { redisClient, QUEUE_KEY_1V1, QUEUE_KEY_2V2, RedisMatchTicket, MATCH_NOTIFICATION_CHANNEL, MATCHMAKING_COMPLETE_CHANNEL, RedisMatch, RedisTeamEntry, MATCH_FOUND_NOTIFICATION, MATCHMAKING_COMPLETE_NOTIFICATION } from "./config/redis";
+import {
+  redisClient,
+  RedisMatchTicket,
+  ON_GAMEPLAY_CONFIG_NOTIFIED_CHANNEL,
+  MATCHMAKING_COMPLETE_CHANNEL,
+  RedisMatch,
+  RedisTeamEntry,
+  MATCH_FOUND_NOTIFICATION,
+  redisGameServerInstanceReady,
+  redisMatchMakingComplete,
+  redisPopMatchTicketsFromQueue,
+  redisGetPlayer,
+  redisUpdateMatch,
+  redisOnGameplayConfigNotified,
+  redisGetMatchTickets,
+} from "./config/redis";
 import { logger } from "./config/logger";
 import ObjectID from "bson-objectid";
-import { QueuedPlayer } from "./types/match";
 import { randomBytes } from "crypto";
+import { MATCH_TYPES } from "./services/matchmakingService";
 
 const CHECK_INTERVAL_MS = 1000;
 
@@ -19,17 +34,7 @@ const MATCH_RULES = {
   },
 };
 
-// Redis connection event handlers
-redisClient.on("connect", () => {
-  logger.info("Connected to Redis");
-  startWorker();
-});
-
-redisClient.on("error", (err) => {
-  logger.error(`Redis error: ${err}`);
-});
-
-function startWorker(): void {
+export function startMatchMakingWorker(): void {
   logger.info("Starting matchmaking worker...");
 
   // Run the first check immediately
@@ -45,29 +50,24 @@ function startWorker(): void {
 async function process1v1Queue(): Promise<boolean> {
   try {
     // Get all tickets in the queue
-    const ticketsStr = await redisClient.lRange(QUEUE_KEY_1V1, 0, -1);
+    const tickets = await redisGetMatchTickets(MATCH_TYPES.ONE_V_ONE);
 
-    if (!ticketsStr || ticketsStr.length < MATCH_RULES["1v1"].teamsRequired) {
+    if (tickets.length < MATCH_RULES["1v1"].teamsRequired) {
       return false; // Not enough tickets to make a match
     }
 
-    logger.info(`Found ${ticketsStr.length} tickets in 1v1 queue, attempting to create a match`);
+    logger.info(`Found ${tickets.length} tickets in 1v1 queue, attempting to create a match`);
 
     // Parse ticket data from queue
-    const tickets: RedisMatchTicket[] = [];
-    for (const ticketStr of ticketsStr) {
+    const matchedTickets: RedisMatchTicket[] = [];
+    for (const ticket of tickets) {
       try {
-        const ticket = JSON.parse(ticketStr) as RedisMatchTicket;
-
-        // Verify all players in ticket are still valid
-        const allValid = await verifyTicketPlayers(ticket);
-
-        if (allValid && ticket.party_size === 1) {
+        if (ticket.party_size === 1) {
           // For 1v1, we only want solo players
-          tickets.push(ticket);
+          matchedTickets.push(ticket);
 
           // If we have enough tickets, stop looking
-          if (tickets.length === MATCH_RULES["1v1"].teamsRequired) {
+          if (matchedTickets.length === MATCH_RULES["1v1"].teamsRequired) {
             break;
           }
         }
@@ -78,92 +78,19 @@ async function process1v1Queue(): Promise<boolean> {
     }
 
     // Check if we have enough tickets for a match
-    if (tickets.length === MATCH_RULES["1v1"].teamsRequired) {
+    if (matchedTickets.length === MATCH_RULES["1v1"].teamsRequired) {
       // Remove matched tickets from queue
-      for (const ticket of tickets) {
-        const ticketStr = JSON.stringify(ticket);
-        await redisClient.lRem(QUEUE_KEY_1V1, 0, ticketStr);
-        logger.info(`Removed ticket ${ticket.partyId} from 1v1 queue for match`);
-      }
+      await redisPopMatchTicketsFromQueue(MATCH_TYPES.ONE_V_ONE, matchedTickets);
 
       // Create a match with these tickets
-      await createMatch(tickets, "1v1");
+      await createMatch(matchedTickets, "1v1");
       return true;
     }
 
-    logger.info(`Not enough valid tickets for a 1v1 match (need ${MATCH_RULES["1v1"].teamsRequired}, found ${tickets.length})`);
+    logger.info(`Not enough valid tickets for a 1v1 match (need ${MATCH_RULES["1v1"].teamsRequired}, found ${matchedTickets.length})`);
     return false;
   } catch (error) {
     logger.error(`Error processing 1v1 queue: ${error}`);
-    return false;
-  }
-}
-
-// Process 2v2 matchmaking queue
-async function process2v2Queue(): Promise<boolean> {
-  try {
-    // Get all tickets in the queue
-    const ticketsStr = await redisClient.lRange(QUEUE_KEY_2V2, 0, -1);
-
-    if (!ticketsStr || ticketsStr.length === 0) {
-      return false; // No tickets in queue
-    }
-
-    logger.info(`Found ${ticketsStr.length} tickets in 2v2 queue, attempting to create a match`);
-
-    // Parse ticket data from queue
-    const validTickets: RedisMatchTicket[] = [];
-    let totalPlayers = 0;
-
-    for (const ticketStr of ticketsStr) {
-      try {
-        const ticket = JSON.parse(ticketStr) as RedisMatchTicket;
-
-        // Verify all players in ticket are still valid
-        const allValid = await verifyTicketPlayers(ticket);
-
-        if (allValid) {
-          validTickets.push(ticket);
-          totalPlayers += ticket.party_size;
-
-          // If we have enough players, stop looking
-          if (totalPlayers >= MATCH_RULES["2v2"].totalPlayersRequired) {
-            break;
-          }
-        }
-      } catch (error) {
-        logger.error(`Error parsing ticket in 2v2 queue: ${error}`);
-        // Continue to next ticket
-      }
-    }
-
-    // In 2v2, we need to find a combination of tickets that gives us exactly the right number of players
-    // and forms exactly two teams
-    // For now, we'll use a simple approach: just get exactly 2 teams of 2 players each
-
-    // Check if we have enough players for a 2v2 match
-    if (totalPlayers >= MATCH_RULES["2v2"].totalPlayersRequired) {
-      // Try to form a match with these tickets
-      const matchTickets = findTicketsForMatch(validTickets, MATCH_RULES["2v2"].totalPlayersRequired);
-
-      if (matchTickets) {
-        // Remove matched tickets from queue
-        for (const ticket of matchTickets) {
-          const ticketStr = JSON.stringify(ticket);
-          await redisClient.lRem(QUEUE_KEY_2V2, 0, ticketStr);
-          logger.info(`Removed ticket ${ticket.partyId} from 2v2 queue for match`);
-        }
-
-        // Create a match with these tickets
-        await createMatch(matchTickets, "2v2");
-        return true;
-      }
-    }
-
-    logger.info(`Not enough valid players for a 2v2 match (need ${MATCH_RULES["2v2"].totalPlayersRequired}, found ${totalPlayers})`);
-    return false;
-  } catch (error) {
-    logger.error(`Error processing 2v2 queue: ${error}`);
     return false;
   }
 }
@@ -198,14 +125,12 @@ function findTicketsForMatch(tickets: RedisMatchTicket[], requiredPlayers: numbe
 // Verify that all players in a ticket are still valid and queued
 async function verifyTicketPlayers(ticket: RedisMatchTicket): Promise<boolean> {
   for (const player of ticket.players) {
-    const playerData = await redisClient.get(`player:${player.id}`);
+    const redisPlayer = await redisGetPlayer(player.id);
 
-    if (!playerData) {
+    if (!redisPlayer) {
       return false; // Player no longer exists
     }
-
-    const playerObj = JSON.parse(playerData) as QueuedPlayer;
-    if (playerObj.status !== "queued") {
+    if (redisPlayer.status !== "queued") {
       return false; // Player no longer queued
     }
   }
@@ -292,19 +217,8 @@ async function createMatch(tickets: RedisMatchTicket[], matchType: string): Prom
       }))
     );
 
-    // Update player statuses
-    for (const player of players) {
-      const playerData = await redisClient.get(`player:${player.playerId}`);
-      if (playerData) {
-        const player = JSON.parse(playerData);
-        player.status = "in_match";
-        player.currentMatchId = match.resultId;
-        await redisClient.set(`player:${player.id}`, JSON.stringify(player));
-      }
-    }
-
     // Store match data
-    await redisClient.set(`match:${match.resultId}`, JSON.stringify(match));
+    await redisUpdateMatch(match.matchId, match);
 
     const notification: MATCH_FOUND_NOTIFICATION = {
       players: createTeams(tickets),
@@ -314,16 +228,17 @@ async function createMatch(tickets: RedisMatchTicket[], matchType: string): Prom
       mode: matchType,
     };
 
+    const playerIds = players.map((p) => p.playerId);
     // Notify about the match creation
-    await redisClient.publish(MATCH_NOTIFICATION_CHANNEL, JSON.stringify(notification));
+    await redisOnGameplayConfigNotified(notification);
     // Notify about the matchmaking complete
     for (const ticket of tickets) {
-      const matchmakingComplete: MATCHMAKING_COMPLETE_NOTIFICATION = {
-        resultId,
+      await redisMatchMakingComplete(
         matchId,
-        matchmakingRequestId: ticket.matchmakingRequestId,
-      };
-      await redisClient.publish(MATCHMAKING_COMPLETE_CHANNEL, JSON.stringify(matchmakingComplete));
+        ticket.matchmakingRequestId,
+        ticket.players.map((p) => p.id)
+      );
+      await redisGameServerInstanceReady(matchId, playerIds);
     }
 
     logger.info(`Created ${matchType} match ${match.resultId} with ${totalPlayers} players across ${tickets.length} tickets`);
@@ -339,10 +254,10 @@ async function checkQueues(): Promise<void> {
     const made1v1Match = await process1v1Queue();
 
     // Then try to make 2v2 matches
-    const made2v2Match = await process2v2Queue();
+    //const made2v2Match = await process2v2Queue();
 
-    if (made1v1Match || made2v2Match) {
-      logger.info(`Successfully created matches in this cycle: 1v1=${made1v1Match}, 2v2=${made2v2Match}`);
+    if (made1v1Match) {
+      logger.info(`Successfully created matches in this cycle: 1v1=${made1v1Match}`);
     }
   } catch (error) {
     logger.error(`Error checking queue: ${error}`);
