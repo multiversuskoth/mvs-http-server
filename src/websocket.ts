@@ -289,9 +289,9 @@ export class WebSocketService {
         };
         player.send(message);
         logger.info(`Sent match notification to player ${matchPlayer} for match ${notification.matchId}`);
-        this.handleSendGamePlayConfig(notification);
       }
     }
+    this.handleSendGamePlayConfig(notification);
   }
 
   async handleSendGamePlayConfig(notification: MATCH_FOUND_NOTIFICATION) {

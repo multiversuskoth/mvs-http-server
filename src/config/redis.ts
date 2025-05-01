@@ -212,6 +212,10 @@ export async function redisPopMatchTicketsFromQueue(queueType: string, tickets: 
   await multi.exec();
 }
 
+export async function redisUpdatePlayerLoadout(playerId: string, character: string, skin: string) {
+  await redisClient.hSet(`player:${playerId}`, { character, skin });
+}
+
 export async function redisUpdatePlayerStatus(playerId: string, status: string) {
   await redisClient.hSet(`player:${playerId}`, { status: status });
 }

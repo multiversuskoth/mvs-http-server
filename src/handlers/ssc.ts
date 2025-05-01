@@ -10,6 +10,7 @@ import {
   redisLockPerks,
   redisPublishAllPerksLocked,
   redisSaveEquippedComsetics,
+  redisUpdatePlayerLoadout,
 } from "../config/redis";
 
 export async function handleSsc_invoke_attempt_daily_refresh(req: Request<{}, {}, {}, {}>, res: Response) {
@@ -1464,6 +1465,8 @@ export async function handleSsc_invoke_claim_mission_rewards(req: Request<{}, {}
 
 export async function handleSsc_invoke_create_party_lobby(req: Request<{}, {}, {}, {}>, res: Response) {
   const account = req.token;
+  const loadout = { Character: "character_supershaggy", Skin: "supershaggy" };
+  redisUpdatePlayerLoadout(account.id, loadout.Character, loadout.Skin);
   res.send({
     body: {
       lobby: {
@@ -1508,7 +1511,7 @@ export async function handleSsc_invoke_create_party_lobby(req: Request<{}, {}, {
             MultiplayRegionId: "19c465a7-f21f-11ea-a5e3-0954f48c5682",
           },
         },
-        LockedLoadouts: { [account.id]: { Character: "character_wonder_woman", Skin: "skin_wonder_woman_default" } },
+        LockedLoadouts: { [account.id]: { Character: loadout.Character, Skin: loadout.Skin } },
         ModeString: "1v1",
         IsLobbyJoinable: true,
         MatchID: ObjectID().toHexString(),
@@ -1778,6 +1781,7 @@ export async function handleSsc_invoke_get_equipped_cosmetics(req: Request<{}, {
 
   const EquippedCosmetcis = {
     Taunts: {
+      character_supershaggy: { TauntSlots: ["taunt_supershaggy_default"] },
       character_Jason: { TauntSlots: ["taunt_jason_default", "emote_pass_the_salt", "taunt_jason_default", "taunt_jason_default"] },
       character_wonder_woman: {
         TauntSlots: [
@@ -1854,13 +1858,13 @@ export async function handleSsc_invoke_get_equipped_cosmetics(req: Request<{}, {
 
   const message = {
     body: {
-      EquippedCosmetcis
+      EquippedCosmetcis,
     },
     metadata: null,
     return_code: 0,
   };
 
-  //redisSaveEquippedComsetics(account.id, EquippedCosmetcis);
+  redisSaveEquippedComsetics(account.id, EquippedCosmetcis);
   res.send(message);
 }
 
