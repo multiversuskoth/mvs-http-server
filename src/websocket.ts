@@ -6,7 +6,6 @@ import { buffer } from "stream/consumers";
 import { decodeToken } from "./middleware/auth";
 import { AccountToken } from "./handlers";
 import {
-  ALL_PERKS_LOCK_NOTIFICATION,
   ALL_PERKS_LOCKED_CHANNEL,
   initRedisSubscriber,
   MATCH_FOUND_NOTIFICATION,
@@ -21,6 +20,9 @@ import {
   RedisClient,
   redisGetAllPlayersEquippedComsetics,
   redisGetPlayers,
+  RedisAllPerksLockedNotification,
+  MATCHMAKING_COMPLETE_CHANNEL,
+  RedisMatchMakingCompleteNotification,
 } from "./config/redis";
 import { Server } from "https";
 import { GAME_SERVER_PORT } from "./game/udp";
@@ -288,7 +290,7 @@ export class WebSocketService {
           cmd: "update",
         };
         player.send(message);
-        logger.info(`Sent match notification to player ${matchPlayer} for match ${notification.matchId}`);
+        logger.info(`Sent match notification to player ${matchPlayer.playerId} for match ${notification.matchId}`);
       }
     }
     this.handleSendGamePlayConfig(notification);
@@ -411,13 +413,13 @@ export class WebSocketService {
     }
   }
 
-  async handleAllPerksLocked(notification: ALL_PERKS_LOCK_NOTIFICATION) {
+  async handleAllPerksLocked(notification: RedisAllPerksLockedNotification) {
     // Send the message to each player in the match
-    for (const playerId of notification.playersIds) {
+    for (const playerId of notification.playerIds) {
       const client = this.clients.get(playerId);
       if (client) {
         if (client.matchConfig) {
-          const playerPerk = await redisGetPlayerPerk(notification.matchId, playerId);
+          const playerPerk = await redisGetPlayerPerk(notification.containerMatchId, playerId);
           if (playerPerk) {
             client.matchConfig.data.GameplayConfig.Players[playerId].Perks = playerPerk;
             client.matchConfig.data.template_id = "PerksLockedNotification";
@@ -427,11 +429,11 @@ export class WebSocketService {
         }
       }
     }
-    for (const playerId of notification.playersIds) {
+    for (const playerId of notification.playerIds) {
       const client = this.clients.get(playerId);
       if (client && client.matchConfig) {
         client.send(client.matchConfig);
-        logger.info(`Sent all perks lock to player ${playerId} for match ${notification.matchId}`);
+        logger.info(`Sent all perks lock to player ${playerId} for match ${notification.containerMatchId}`);
       }
     }
   }
@@ -460,7 +462,29 @@ export class WebSocketService {
     }
   }
 
-  handleMatchMakingComplete() {}
+  handleMatchMakingComplete(notification: RedisMatchMakingCompleteNotification) {
+    for (const playerId of notification.playerIds) {
+      const client = this.clients.get(playerId);
+      const message = {
+        data: {},
+        payload: {
+          result: {
+            id: notification.resultId,
+          },
+          match: {
+            id: notification.containerMatchId,
+          },
+          id: notification.matchmakingRequestId,
+          state: 2,
+        },
+        header: "Matchmaking request completed!",
+        cmd: "matchmaking-complete",
+      };
+      if (client) {
+        client.send(message);
+      }
+    }
+  }
 
   private setupRedisSubscription() {
     // Subscribe to channels
@@ -470,7 +494,7 @@ export class WebSocketService {
     });
 
     this.redisSub.subscribe(ALL_PERKS_LOCKED_CHANNEL, (message) => {
-      const notification = JSON.parse(message) as ALL_PERKS_LOCK_NOTIFICATION;
+      const notification = JSON.parse(message) as RedisAllPerksLockedNotification;
       this.handleAllPerksLocked(notification);
     });
 
@@ -482,6 +506,11 @@ export class WebSocketService {
     this.redisSub.subscribe(GAME_SERVER_INSTANCE_READY_CHANNEL, (message) => {
       const notification = JSON.parse(message) as RedisGameServerInstanceReadyNotification;
       this.handleGameServerInstanceReady(notification);
+    });
+
+    this.redisSub.subscribe(MATCHMAKING_COMPLETE_CHANNEL, (message) => {
+      const notification = JSON.parse(message) as RedisMatchMakingCompleteNotification;
+      this.handleMatchMakingComplete(notification);
     });
   }
 }

@@ -101,10 +101,7 @@ export interface MATCH_FOUND_NOTIFICATION extends MVS_NOTIFICATION {
   map: string;
   mode: string;
 }
-export interface ALL_PERKS_LOCK_NOTIFICATION extends MVS_NOTIFICATION {
-  playersIds: string[];
-  matchId: string;
-}
+
 
 type RedisStatTrackerEntry = [statKey: string, statValue: number];
 
@@ -282,6 +279,7 @@ export async function redisGameServerInstanceReady(containerMatchId: string, pla
 export async function redisPublishAllPerksLocked(containerMatchId: string, playerIds: string[]) {
   const notification: RedisAllPerksLockedNotification = { containerMatchId, playerIds };
   await redisClient.publish(ALL_PERKS_LOCKED_CHANNEL, JSON.stringify(notification));
+  logger.info(`All perks locked ${containerMatchId}, players, (${playerIds.join(",")})`);
 }
 
 export async function redisGetPlayerPerk(containerMatchId: string, playerId: string) {
