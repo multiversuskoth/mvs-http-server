@@ -25,6 +25,7 @@ import {
   RedisMatchMakingCompleteNotification,
 } from "./config/redis";
 import { Server } from "https";
+import { Server as HttpServer} from "http";
 import { GAME_SERVER_PORT } from "./game/udp";
 import { logger } from "./config/logger";
 import { MVSTime } from "./utils/date";
@@ -162,7 +163,7 @@ export class WebSocketService {
   clients: Map<string, WebSocketPlayer> = new Map();
   redisSub: RedisClient;
 
-  constructor(server: Server) {
+  constructor(server: Server | HttpServer ) {
     this.redisSub = initRedisSubscriber();
     this.ws = new WebSocketServer({ server });
     this.setupSocketHandlers();

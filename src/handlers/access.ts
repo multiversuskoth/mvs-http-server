@@ -42,7 +42,7 @@ function generateStaticAccess() {
         "default-cluster": "ec2-us-east-1-dokken",
         servers: {
           "ec2-us-east-1-dokken": {
-            "dokken-realtime-5/2": { ws: "ws://52.72.177.178:8102", wss: "wss://prod-network-api.wbagora.com", udp: "0.0.0.0:0" },
+            "mvsi-realtime": { ws: "ws://127.0.0.1:3000",  udp: "0.0.0.0:0" },
           },
         },
       },

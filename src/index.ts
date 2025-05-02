@@ -6,7 +6,7 @@ import { MVSHTTPServer, start } from "./server";
 import { WebSocketService } from "./websocket";
 startRedis().then(() => {
   start();
-  const websocket = new WebSocketService(MVSHTTPServer);
+  //const websocket = new WebSocketService(MVSHTTPServer);
   startMatchMakingWorker();
 });
 
