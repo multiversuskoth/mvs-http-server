@@ -1,3 +1,4 @@
+import {ServerConfiguration} from "../config/serverConfiguration";
 import Characters from "../enums/characters";
 import {PartialRecord} from "../utils/partialRecord";
 
@@ -23898,219 +23899,220 @@ export namespace MVSResponses {
     expires_in: number;
     mfa_required: boolean;
     sdk: {
-      realtime: {
-        /**
-         *
-         * ec2-us-east-1-prod-network
-         *
-         */
-        "default-cluster": string;
-        enabled: boolean;
-        servers: {
-          "ec2-us-east-1-prod-network": {
-            "prod-network-realtime-1/1": {
-              /**
-               *
-               * 0.0.0.0:0
-               *
-               */
-              udp: string;
-              /**
-               *
-               * ws://3.82.168.122:8101
-               *
-               */
-              ws: string;
-              /**
-               *
-               * wss://us-east-1-prod-network-realtime-1.wbagora.com:9101
-               *
-               */
-              wss: string;
-            };
-            "prod-network-realtime-1/2": {
-              /**
-               *
-               * 0.0.0.0:0
-               *
-               */
-              udp: string;
-              /**
-               *
-               * ws://3.82.168.122:8102
-               *
-               */
-              ws: string;
-              /**
-               *
-               * wss://us-east-1-prod-network-realtime-1.wbagora.com:9102
-               *
-               */
-              wss: string;
-            };
-            "prod-network-realtime-2/1": {
-              /**
-               *
-               * 0.0.0.0:0
-               *
-               */
-              udp: string;
-              /**
-               *
-               * ws://3.212.5.165:8101
-               *
-               */
-              ws: string;
-              /**
-               *
-               * wss://us-east-1-prod-network-realtime-2.wbagora.com:9101
-               *
-               */
-              wss: string;
-            };
-            "prod-network-realtime-2/2": {
-              /**
-               *
-               * 0.0.0.0:0
-               *
-               */
-              udp: string;
-              /**
-               *
-               * ws://3.212.5.165:8102
-               *
-               */
-              ws: string;
-              /**
-               *
-               * wss://us-east-1-prod-network-realtime-2.wbagora.com:9102
-               *
-               */
-              wss: string;
-            };
-            "prod-network-realtime-3/1": {
-              /**
-               *
-               * 0.0.0.0:0
-               *
-               */
-              udp: string;
-              /**
-               *
-               * ws://54.175.211.158:8101
-               *
-               */
-              ws: string;
-              /**
-               *
-               * wss://us-east-1-prod-network-realtime-3.wbagora.com:9101
-               *
-               */
-              wss: string;
-            };
-            "prod-network-realtime-5/2": {
-              /**
-               *
-               * 0.0.0.0:0
-               *
-               */
-              udp: string;
-              /**
-               *
-               * ws://107.22.28.83:8102
-               *
-               */
-              ws: string;
-              /**
-               *
-               * wss://us-east-1-prod-network-realtime-5.wbagora.com:9102
-               *
-               */
-              wss: string;
-            };
-            "prod-network-realtime-6/1": {
-              /**
-               *
-               * 0.0.0.0:0
-               *
-               */
-              udp: string;
-              /**
-               *
-               * ws://3.86.158.46:8101
-               *
-               */
-              ws: string;
-              /**
-               *
-               * wss://us-east-1-prod-network-realtime-6.wbagora.com:9101
-               *
-               */
-              wss: string;
-            };
-            "prod-network-realtime-6/2": {
-              /**
-               *
-               * 0.0.0.0:0
-               *
-               */
-              udp: string;
-              /**
-               *
-               * ws://3.86.158.46:8102
-               *
-               */
-              ws: string;
-              /**
-               *
-               * wss://us-east-1-prod-network-realtime-6.wbagora.com:9102
-               *
-               */
-              wss: string;
-            };
-            "prod-network-realtime-7/1": {
-              /**
-               *
-               * 0.0.0.0:0
-               *
-               */
-              udp: string;
-              /**
-               *
-               * ws://44.202.240.184:8101
-               *
-               */
-              ws: string;
-              /**
-               *
-               * wss://us-east-1-prod-network-realtime-7.wbagora.com:9101
-               *
-               */
-              wss: string;
-            };
-            "prod-network-realtime-8/1": {
-              /**
-               *
-               * 0.0.0.0:0
-               *
-               */
-              udp: string;
-              /**
-               *
-               * ws://18.212.34.2:8101
-               *
-               */
-              ws: string;
-              /**
-               *
-               * wss://us-east-1-prod-network-realtime-8.wbagora.com:9101
-               *
-               */
-              wss: string;
-            };
-          };
-        };
-      };
+      // realtime: {
+      //   /**
+      //    *
+      //    * ec2-us-east-1-prod-network
+      //    *
+      //    */
+      //   "default-cluster": string;
+      //   enabled: boolean;
+      //   servers: {
+      //     "ec2-us-east-1-prod-network": {
+      //       "prod-network-realtime-1/1": {
+      //         /**
+      //          *
+      //          * 0.0.0.0:0
+      //          *
+      //          */
+      //         udp: string;
+      //         /**
+      //          *
+      //          * ws://3.82.168.122:8101
+      //          *
+      //          */
+      //         ws: string;
+      //         /**
+      //          *
+      //          * wss://us-east-1-prod-network-realtime-1.wbagora.com:9101
+      //          *
+      //          */
+      //         wss: string;
+      //       };
+      //       "prod-network-realtime-1/2": {
+      //         /**
+      //          *
+      //          * 0.0.0.0:0
+      //          *
+      //          */
+      //         udp: string;
+      //         /**
+      //          *
+      //          * ws://3.82.168.122:8102
+      //          *
+      //          */
+      //         ws: string;
+      //         /**
+      //          *
+      //          * wss://us-east-1-prod-network-realtime-1.wbagora.com:9102
+      //          *
+      //          */
+      //         wss: string;
+      //       };
+      //       "prod-network-realtime-2/1": {
+      //         /**
+      //          *
+      //          * 0.0.0.0:0
+      //          *
+      //          */
+      //         udp: string;
+      //         /**
+      //          *
+      //          * ws://3.212.5.165:8101
+      //          *
+      //          */
+      //         ws: string;
+      //         /**
+      //          *
+      //          * wss://us-east-1-prod-network-realtime-2.wbagora.com:9101
+      //          *
+      //          */
+      //         wss: string;
+      //       };
+      //       "prod-network-realtime-2/2": {
+      //         /**
+      //          *
+      //          * 0.0.0.0:0
+      //          *
+      //          */
+      //         udp: string;
+      //         /**
+      //          *
+      //          * ws://3.212.5.165:8102
+      //          *
+      //          */
+      //         ws: string;
+      //         /**
+      //          *
+      //          * wss://us-east-1-prod-network-realtime-2.wbagora.com:9102
+      //          *
+      //          */
+      //         wss: string;
+      //       };
+      //       "prod-network-realtime-3/1": {
+      //         /**
+      //          *
+      //          * 0.0.0.0:0
+      //          *
+      //          */
+      //         udp: string;
+      //         /**
+      //          *
+      //          * ws://54.175.211.158:8101
+      //          *
+      //          */
+      //         ws: string;
+      //         /**
+      //          *
+      //          * wss://us-east-1-prod-network-realtime-3.wbagora.com:9101
+      //          *
+      //          */
+      //         wss: string;
+      //       };
+      //       "prod-network-realtime-5/2": {
+      //         /**
+      //          *
+      //          * 0.0.0.0:0
+      //          *
+      //          */
+      //         udp: string;
+      //         /**
+      //          *
+      //          * ws://107.22.28.83:8102
+      //          *
+      //          */
+      //         ws: string;
+      //         /**
+      //          *
+      //          * wss://us-east-1-prod-network-realtime-5.wbagora.com:9102
+      //          *
+      //          */
+      //         wss: string;
+      //       };
+      //       "prod-network-realtime-6/1": {
+      //         /**
+      //          *
+      //          * 0.0.0.0:0
+      //          *
+      //          */
+      //         udp: string;
+      //         /**
+      //          *
+      //          * ws://3.86.158.46:8101
+      //          *
+      //          */
+      //         ws: string;
+      //         /**
+      //          *
+      //          * wss://us-east-1-prod-network-realtime-6.wbagora.com:9101
+      //          *
+      //          */
+      //         wss: string;
+      //       };
+      //       "prod-network-realtime-6/2": {
+      //         /**
+      //          *
+      //          * 0.0.0.0:0
+      //          *
+      //          */
+      //         udp: string;
+      //         /**
+      //          *
+      //          * ws://3.86.158.46:8102
+      //          *
+      //          */
+      //         ws: string;
+      //         /**
+      //          *
+      //          * wss://us-east-1-prod-network-realtime-6.wbagora.com:9102
+      //          *
+      //          */
+      //         wss: string;
+      //       };
+      //       "prod-network-realtime-7/1": {
+      //         /**
+      //          *
+      //          * 0.0.0.0:0
+      //          *
+      //          */
+      //         udp: string;
+      //         /**
+      //          *
+      //          * ws://44.202.240.184:8101
+      //          *
+      //          */
+      //         ws: string;
+      //         /**
+      //          *
+      //          * wss://us-east-1-prod-network-realtime-7.wbagora.com:9101
+      //          *
+      //          */
+      //         wss: string;
+      //       };
+      //       "prod-network-realtime-8/1": {
+      //         /**
+      //          *
+      //          * 0.0.0.0:0
+      //          *
+      //          */
+      //         udp: string;
+      //         /**
+      //          *
+      //          * ws://18.212.34.2:8101
+      //          *
+      //          */
+      //         ws: string;
+      //         /**
+      //          *
+      //          * wss://us-east-1-prod-network-realtime-8.wbagora.com:9101
+      //          *
+      //          */
+      //         wss: string;
+      //       };
+      //     };
+      //   };
+      // };
+      realtime: ServerConfiguration["realtime"]
     };
   }
 

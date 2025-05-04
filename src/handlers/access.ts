@@ -4,11 +4,10 @@ import { MVSRequests } from "../interfaces/requests_types";
 import { MVSResponses } from "../interfaces/responses_types";
 import { Request, Response } from "express";
 import serverConfiguration from "../config/serverConfiguration";
-import * as jwt from "jsonwebtoken";
-import env from "../env/env";
 import { Player, playerModel } from "../database/Player";
 import { IdToString } from "../utils/objectId";
 import { MapToRecord } from "../utils/mapToRecord";
+import createJwtToken from "../utils/createJWTToken";
 
 export async function handleAccess(
   req: Request<{}, MVSResponses.Access_RESPONSE, MVSRequests.Access_REQUEST, {}>,
@@ -26,12 +25,7 @@ export async function handleAccess(
 
   const now = new Date();
 
-  const jwtToken = jwt.sign(
-    {
-      steam: appSteamTicket.steamID,
-    },
-    env.JWT_SECRET,
-  );
+  const jwtToken = createJwtToken(appSteamTicket.steamID);
 
   const updatedAccount = await accountModel.findOneAndUpdate(
     {

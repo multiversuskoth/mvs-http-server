@@ -1,4 +1,4 @@
-interface ServerConfiguration {
+export interface ServerConfiguration {
   gcm: {
     enabled: null;
 
