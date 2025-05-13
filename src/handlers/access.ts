@@ -3,6 +3,8 @@ import { MVSQueries } from "../interfaces/queries_types";
 import ObjectID from "bson-objectid";
 import * as jwt from "jsonwebtoken";
 import { SECRET } from "../middleware/auth";
+import ky from "ky";
+import { HydraDecoder } from "mvs-dump";
 
 let USERNAME_COUNT = 0;
 const USERNAME = () => `MVSI_TESTER_${USERNAME_COUNT}`;
@@ -42,7 +44,7 @@ function generateStaticAccess() {
         "default-cluster": "ec2-us-east-1-dokken",
         servers: {
           "ec2-us-east-1-dokken": {
-            "mvsi-realtime": { ws: "ws://127.0.0.1:3000",  udp: "0.0.0.0:0" },
+            "mvsi-realtime": { ws: "ws://localhost:3000", udp: "0.0.0.0:0" },
           },
         },
       },
@@ -169,6 +171,7 @@ function generateStaticAccess() {
             character_finn: { LastSelectedPage: 0, PerkPages: [{ PageName: "CUSTOM 1", PerkSlugs: ["", "", "", ""] }] },
             character_C018: { LastSelectedPage: 0, PerkPages: [{ PageName: "CUSTOM 1", PerkSlugs: ["", "", "", ""] }] },
             character_tom_and_jerry: { LastSelectedPage: 0, PerkPages: [{ PageName: "CUSTOM 1", PerkSlugs: ["", "", "", ""] }] },
+            character_wonder_woman: { LastSelectedPage: 0, PerkPages: [{ PageName: "CUSTOM 1", PerkSlugs: ["", "", "", ""] }] },
           },
         },
         HasCompletedFirstMatch: true,
@@ -750,5 +753,18 @@ function generateStaticAccess() {
 }
 
 export async function handleAccess(req: Request<{}, {}, {}, {}>, res: Response) {
+/*   delete req.headers["content-length"];
+  delete req.headers["content-type"];
+  let request = ky.post("https://dokken-api.wbagora.com/access", {
+    // @ts-ignore
+    headers: {
+      ...req.headers,
+      "content-type": "application/json", // Adjust content type if needed
+    },
+    // @ts-ignore
+    json:req.body
+  });
+
+  let response = await request.json(); */
   res.send(generateStaticAccess());
 }

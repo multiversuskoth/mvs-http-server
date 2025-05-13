@@ -9,9 +9,9 @@ interface MVSParams {
 }
 
 const router = express.Router();
-router.post("/access", (req: Request<{}, {}, {}, {}>, res: Response) => {
+router.post("/access", async (req: Request<{}, {}, {}, {}>, res: Response) => {
   // @ts-ignore TODO : implementation. Remove comment once implemented`
-  h.handleAccess(req, res);
+  await h.handleAccess(req, res);
 });
 
 router.put("/accounts/wb_network/bulk", (req: Request<{}, {}, {}, MVSQueries.Accounts_wb_network_bulk_QUERY>, res: Response) => {

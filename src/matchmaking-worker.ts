@@ -139,7 +139,7 @@ async function verifyTicketPlayers(ticket: RedisMatchTicket): Promise<boolean> {
 }
 
 // ChatGPT came up with this o.o
-export function createTeams(tickets: RedisMatchTicket[]): RedisTeamEntry[] {
+export async function createTeams(tickets: RedisMatchTicket[]): Promise<RedisTeamEntry[]> {
   // 1. total number of players
   const totalPlayers = tickets.reduce((sum, t) => sum + t.players.length, 0);
   if (totalPlayers % 2 !== 0) {
@@ -168,6 +168,8 @@ export function createTeams(tickets: RedisMatchTicket[]): RedisTeamEntry[] {
     }
   }
 
+  const randomHost = Math.floor(Math.random() * totalPlayers);
+
   // 4. flatten into per-player entries
   const result: RedisTeamEntry[] = [];
   for (const teamIndex of [0, 1] as const) {
@@ -176,11 +178,14 @@ export function createTeams(tickets: RedisMatchTicket[]): RedisTeamEntry[] {
       if (assignment.get(party) !== teamIndex) continue;
       for (const player of party.players) {
         const playerIndex = teamIndex * slotsPerTeam + idxInTeam;
+        const isHost = playerIndex === randomHost;
         result.push({
           playerId: player.id,
           partyId: party.partyId,
           playerIndex,
           teamIndex,
+          isHost: isHost,
+          ip: (await redisGetPlayer(player.id)).ip,
         });
         idxInTeam++;
       }
@@ -221,7 +226,7 @@ async function createMatch(tickets: RedisMatchTicket[], matchType: string): Prom
     await redisUpdateMatch(match.matchId, match);
 
     const notification: MATCH_FOUND_NOTIFICATION = {
-      players: createTeams(tickets),
+      players: await createTeams(tickets),
       matchId,
       matchKey: randomBytes(32).toString("base64"),
       map: "M016_V3",

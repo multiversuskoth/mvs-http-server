@@ -5,4 +5,8 @@
     "[typescript]": {
         "editor.defaultFormatter": "esbenp.prettier-vscode"
     },
+    "files.associations": {
+        "valarray": "cpp",
+        "filesystem": "cpp"
+    },
 }

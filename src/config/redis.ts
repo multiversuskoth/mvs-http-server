@@ -84,6 +84,8 @@ export interface RedisTeamEntry {
   partyId: string;
   playerIndex: number;
   teamIndex: 0 | 1;
+  isHost: boolean;
+  ip: string;
 }
 
 export interface MVS_NOTIFICATION {}
@@ -101,7 +103,6 @@ export interface MATCH_FOUND_NOTIFICATION extends MVS_NOTIFICATION {
   map: string;
   mode: string;
 }
-
 
 type RedisStatTrackerEntry = [statKey: string, statValue: number];
 
@@ -136,6 +137,7 @@ export interface RedisPlayer {
   status: string;
   character: string;
   skin: string;
+  ip: string;
 }
 
 export interface RedisEquippedCosmetics {
@@ -209,13 +211,14 @@ export async function redisPopMatchTicketsFromQueue(queueType: string, tickets: 
   await multi.exec();
 }
 
-export async function redisUpdatePlayerLoadout(playerId: string, character: string, skin: string) {
-  await redisClient.hSet(`player:${playerId}`, { character, skin });
+export async function redisUpdatePlayerLoadout(playerId: string, character: string, skin: string, ip: string) {
+  await redisClient.hSet(`player:${playerId}`, { character, skin, ip });
 }
 
 export async function redisUpdatePlayerStatus(playerId: string, status: string) {
   await redisClient.hSet(`player:${playerId}`, { status: status });
 }
+
 
 export async function redisPushTicketToQueue(queueKey: string, data: RedisMatchTicket) {
   await redisClient.lPush(queueKey, JSON.stringify(data));
@@ -231,7 +234,13 @@ export async function redisOnMatchMakerStarted(matchmakingRequestId: string, par
 }
 
 export async function redisOnGameplayConfigNotified(notification: MATCH_FOUND_NOTIFICATION) {
+  await redisClient.set(notification.matchId, JSON.stringify(notification));
   await redisClient.publish(ON_GAMEPLAY_CONFIG_NOTIFIED_CHANNEL, JSON.stringify(notification));
+}
+
+export async function redisGetMatchConfig(matchId: string) {
+  const res = await redisClient.get(matchId);
+  return JSON.parse(res as string) as MATCH_FOUND_NOTIFICATION;
 }
 
 export async function redisGetPlayer(playerId: string) {

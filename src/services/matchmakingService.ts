@@ -2,6 +2,7 @@ import {
   ON_MATCH_MAKER_STARTED_CHANNEL,
   ON_MATCH_MAKER_STARTED_NOTIFICATION,
   redisClient,
+  redisGetPlayer,
   RedisMatchTicket,
   redisOnMatchMakerStarted,
   redisPushTicketToQueue,
@@ -24,13 +25,17 @@ export async function queueMatch(playerIds: string[], partyId: string, matchmaki
       matchmakingRequestId,
       partyId,
       party_size: playerIds.length,
-      players: playerIds.map((p) => {
-        return {
-          id: p,
-          region: "MVSI",
-          skill: 0,
-        };
-      }),
+      players: await Promise.all(
+        playerIds.map(async (p) => {
+          const playerConfig = await redisGetPlayer(p);
+          return {
+            id: p,
+            region: "MVSI",
+            skill: 0,
+            ip: playerConfig.ip,
+          };
+        })
+      ),
     };
 
     // Add ticket to the matchmaking queue

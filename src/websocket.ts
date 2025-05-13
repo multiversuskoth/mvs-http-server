@@ -341,10 +341,12 @@ export class WebSocketService {
         PartyId: player.partyId,
         Username: {},
         Buffs: [],
-        Skin: playerLoadout.character,
+        Skin: playerLoadout.skin,
         BotDifficultyMin: 0,
       };
     }
+
+    console.log(Players)
 
     // Create the message to send to the players
     const message: GameNotification = {

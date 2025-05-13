@@ -1465,8 +1465,13 @@ export async function handleSsc_invoke_claim_mission_rewards(req: Request<{}, {}
 
 export async function handleSsc_invoke_create_party_lobby(req: Request<{}, {}, {}, {}>, res: Response) {
   const account = req.token;
-  const loadout = { Character: "character_supershaggy", Skin: "supershaggy" };
-  redisUpdatePlayerLoadout(account.id, loadout.Character, loadout.Skin);
+  const loadout = { Character: "character_supershaggy", Skin: "skin_c035_s01" };
+  let ip = req.ip!.replace(/^::ffff:/, '');
+  if(ip ==="127.0.0.1") {
+    ip = "IPPPPPP"
+  }
+  console.log(ip)
+  redisUpdatePlayerLoadout(account.id, loadout.Character, loadout.Skin, ip);
   res.send({
     body: {
       lobby: {
