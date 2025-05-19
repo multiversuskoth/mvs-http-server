@@ -159,10 +159,7 @@ export interface RedisEquippedCosmetics {
 }
 
 const MATCH_KEY = (containerMatchId: string) => `match:${containerMatchId}`;
-const MATCH_PERKS_KEY = (containerMatchId: string) => `${MATCH_KEY(containerMatchId)}:perks`;
 const MATCH_PERKS_PLAYER_KEY = (containerMatchId: string, playerId: string) => `${MATCH_KEY(containerMatchId)}:perks:${playerId}`;
-
-export async function redisCreatePartyLobby() {}
 
 export async function redisSaveEquippedComsetics(playerId: string, data: RedisEquippedCosmetics) {
   await redisClient.set(`cosmetics:${playerId}`, JSON.stringify(data));
@@ -300,24 +297,7 @@ export async function redisGetPlayerPerk(containerMatchId: string, playerId: str
   return null;
 }
 
-export async function redisGetAllLockedPerks(containerMatchId: string) {
-  const matchStr = await redisClient.get(MATCH_KEY(containerMatchId));
-  if (matchStr) {
-    const redisMatch = JSON.parse(matchStr) as RedisMatch;
-    const multi = redisClient.multi();
-
-    const playersIds = redisMatch.tickets.flatMap((ticket) => ticket.players.map((player) => player.id));
-    for (const playerId of playersIds) {
-      multi.get(MATCH_PERKS_PLAYER_KEY(containerMatchId, playerId));
-    }
-    const results = await multi.exec();
-    if (results) {
-      let playerIndex = 0;
-      const perks = results.map((reply) => {
-        return { playerId: playersIds[playerIndex++], perks: JSON.parse(reply as string) as string[] };
-      });
-      return perks;
-    }
-  }
-  throw new Error("Unable To Get All Player Perks");
+export async function redisClearPlayer(playerId: string) {
+  await redisClient.del(`player:${playerId}`);
+  await redisClient.del(`cosmetics:${playerId}`);
 }

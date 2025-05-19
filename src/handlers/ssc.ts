@@ -59304,7 +59304,7 @@ export async function handleSsc_invoke_perks_lock(req: Request<{}, {}, Ssc_invok
   await redisLockPerks({ containerMatchId: req.body.ContainerMatchId, playerId: account.id, perks: req.body.Perks });
 
   // Check if all players have locked their perks
-  // If all players have locked their perks, publich the event
+  // If all players have locked their perks, publish the event
   const match = await redisGetMatch(req.body.ContainerMatchId);
   if (match && match.status !== "locked") {
     const playersIds = match.tickets.flatMap((ticket) => ticket.players.map((player) => player.id));

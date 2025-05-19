@@ -1,36 +1,30 @@
-import { WebSocket, WebSocketServer } from "ws";
-import { MVSHTTPServer } from "./server";
-import { randomUUID } from "crypto";
+import { Server as HttpServer } from "http";
+import { Server } from "https";
 import { HydraDecoder, HydraEncoder } from "mvs-dump";
-import { buffer } from "stream/consumers";
-import { decodeToken } from "./middleware/auth";
-import { AccountToken } from "./handlers";
+import { WebSocket, WebSocketServer } from "ws";
+import { logger } from "./config/logger";
 import {
   ALL_PERKS_LOCKED_CHANNEL,
+  GAME_SERVER_INSTANCE_READY_CHANNEL,
   initRedisSubscriber,
   MATCH_FOUND_NOTIFICATION,
+  MATCHMAKING_COMPLETE_CHANNEL,
   ON_GAMEPLAY_CONFIG_NOTIFIED_CHANNEL,
-  GAME_SERVER_INSTANCE_READY_CHANNEL,
   ON_MATCH_MAKER_STARTED_CHANNEL,
   ON_MATCH_MAKER_STARTED_NOTIFICATION,
-  redisClient,
-  redisGetPlayerPerk,
-  RedisPlayerConfig,
-  RedisGameServerInstanceReadyNotification,
-  RedisClient,
-  redisGetAllPlayersEquippedComsetics,
-  redisGetPlayers,
   RedisAllPerksLockedNotification,
-  MATCHMAKING_COMPLETE_CHANNEL,
-  RedisMatchMakingCompleteNotification,
+  redisClearPlayer,
+  RedisClient,
+  RedisGameServerInstanceReadyNotification,
+  redisGetAllPlayersEquippedComsetics,
+  redisGetPlayerPerk,
+  redisGetPlayers,
+  RedisMatchMakingCompleteNotification
 } from "./config/redis";
-import { Server } from "https";
-import { Server as HttpServer} from "http";
 import { GAME_SERVER_PORT } from "./game/udp";
-import { logger } from "./config/logger";
+import { AccountToken } from "./handlers";
+import { decodeToken } from "./middleware/auth";
 import { MVSTime } from "./utils/date";
-import ObjectID from "bson-objectid";
-import { RedisClientType } from "@redis/client";
 
 export class WebSocketPlayer {
   init: boolean = false;
@@ -163,7 +157,7 @@ export class WebSocketService {
   clients: Map<string, WebSocketPlayer> = new Map();
   redisSub: RedisClient;
 
-  constructor(server: Server | HttpServer ) {
+  constructor(server: Server | HttpServer) {
     this.redisSub = initRedisSubscriber();
     this.ws = new WebSocketServer({ server });
     this.setupSocketHandlers();
@@ -197,6 +191,8 @@ export class WebSocketService {
     if (playerWS && playerWS.account) {
       playerWS.deleted = true;
       this.clients.delete(playerWS.account.id);
+      this.stopMatchTick(playerWS);
+      redisClearPlayer(playerWS.account.id);
       console.log(`Player ${playerWS.account.id} disconnected from websocket`);
     }
   }
@@ -335,7 +331,8 @@ export class WebSocketService {
         RingoutVfx: playerConfig.RingoutVfx,
         Character: playerLoadout.character,
         Banner: playerConfig.Banner,
-        StatTrackers: playerConfig.StatTrackers.StatTrackerSlots.map((s) => [s, 1]), // TODO: We should get this from database?
+        // TODO: We should get this from database?
+        StatTrackers: playerConfig.StatTrackers.StatTrackerSlots.map((s) => [s, 1]), 
         Perks: [],
         PlayerIndex: player.playerIndex,
         PartyId: player.partyId,
@@ -346,7 +343,7 @@ export class WebSocketService {
       };
     }
 
-    console.log(Players)
+    console.log(Players);
 
     // Create the message to send to the players
     const message: GameNotification = {
