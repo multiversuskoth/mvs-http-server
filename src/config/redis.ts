@@ -2,13 +2,14 @@ import ObjectID from "bson-objectid";
 import redis, { createClient } from "redis";
 import type { RedisClientType } from "redis";
 import { logger } from "./logger";
+import env from "../env/env";
 
 const redisConfig = {
-  username: "default",
-  password: "CjBT1Zx0aIuF3zYe5sivhoqVaIXFTSqQ",
+  username: env.REDIS_USERNAME,
+  password: env.REDIS_PASSWORD,
   socket: {
-    host: "redis-17157.c263.us-east-1-2.ec2.redns.redis-cloud.com",
-    port: 17157,
+    host: env.REDIS_HOST,
+    port: env.REDIS_PORT,
   },
 };
 
@@ -218,7 +219,6 @@ export async function redisUpdatePlayerLoadout(playerId: string, character: stri
 export async function redisUpdatePlayerStatus(playerId: string, status: string) {
   await redisClient.hSet(`player:${playerId}`, { status: status });
 }
-
 
 export async function redisPushTicketToQueue(queueKey: string, data: RedisMatchTicket) {
   await redisClient.lPush(queueKey, JSON.stringify(data));

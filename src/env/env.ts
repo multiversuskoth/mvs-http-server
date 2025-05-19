@@ -1,5 +1,5 @@
 import { configDotenv } from "dotenv";
-import { cleanEnv, str } from "envalid";
+import { cleanEnv, str, num } from "envalid";
 
 configDotenv({ path: ".env" });
 
@@ -9,6 +9,10 @@ const env = cleanEnv(process.env, {
   GAME_VERSION: str(),
   GAME_DOMAIN: str(),
   WB_DOMAIN: str(),
+  REDIS_HOST: str(),
+  REDIS_PORT: num(),
+  REDIS_PASSWORD: str(),
+  REDIS_USERNAME: str(),
 });
 
 export default env;

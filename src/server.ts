@@ -28,18 +28,11 @@ const options = {
 
 app.use(express.json());
 
-app.get("/hello", (req, res, next) => {
-  console.log("HMM");
-  res.send("HELLO")
-});
-
 app.get("/global_configuration_types/eula/global_configurations/en-US", (req, res, next) => {
-  console.log("HMM");
   res.json(200);
 });
 
 app.post("/mvsi_register", async (req, res, next) => {
-  console.log("GET REGISTRY");
   const body = req.body;
   const config = await redisGetMatchConfig(body.matchId);
   console.log(config);
@@ -47,29 +40,15 @@ app.post("/mvsi_register", async (req, res, next) => {
     return {
       player_index: p.playerIndex,
       ip: p.ip,
-      is_host: p.ip === "IPPPPPP" ? true : false,
+      is_host: p.isHost,
     };
   });
   res.json({
-    max_players: 2,
+    max_players: config.players.length,
+    // TODO: fix duration
     match_duration: 36000,
     players,
   });
-});
-
-app.post("/mvsi_match_players", async (req, res, next) => {
-  console.log("GET mvsi_match_players");
-  const body = req.body;
-  const config = await redisGetMatchConfig(body.matchId);
-
-  const data = config.players.map((p) => {
-    return {
-      player_index: p.playerIndex,
-      ip: p.ip,
-      is_host: p.ip === "IPPPPPP" ? true : false,
-    };
-  });
-  res.json(data);
 });
 
 app.use(hydraDecoderMiddleware);
@@ -77,8 +56,7 @@ app.use(hydraTokenMiddleware);
 
 app.use(router);
 app.get("/ssc/invoke/hiss_amalgamation", (req, res, next) => {
-  console.log("GETTING  hiss.bin");
-
+  console.log("hiss_amalgamation_get");
   res.send(hiss_amalgamation_get);
 });
 
@@ -88,8 +66,7 @@ app.use((req, res, next) => {
 });
 
 //export const MVSHTTPServer = http.createServer(app);
-export const MVSHTTPServer = https.createServer(options,app);
-
+export const MVSHTTPServer = https.createServer(options, app);
 
 export async function start() {
   await connect();
