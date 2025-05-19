@@ -1,5 +1,5 @@
 import { Player, playerModel } from "../database/Player";
-import { infer, z } from "zod";
+import { z } from "zod";
 import { StatusCodes } from "http-status-codes";
 import { Request, Response } from "express";
 import { MVSResponses } from "../interfaces/responses_types";
@@ -15,14 +15,14 @@ const PutProfilesQueryParams = z.object({
 
 export async function handleProfiles_bulk(
   req: Request<{}, MVSResponses.Profiles_bulk_RESPONSE, MVSRequests.Profiles_bulk_REQUEST, {}>,
-  res: Response
+  res: Response,
 ) {
   let includeAccount = false;
 
-  let responseObject: Array<any> = [];
+  const responseObject: Array<any> = [];
   let requestBody;
   {
-    let parseQueryFields = PutProfilesRequest.safeParse(req.body);
+    const parseQueryFields = PutProfilesRequest.safeParse(req.body);
     if (!parseQueryFields.success) {
       res.sendStatus(StatusCodes.BAD_REQUEST);
       return;
@@ -32,7 +32,7 @@ export async function handleProfiles_bulk(
 
   let queryFields;
   {
-    let parseQueryFields = PutProfilesQueryParams.safeParse(req.query);
+    const parseQueryFields = PutProfilesQueryParams.safeParse(req.query);
     if (!parseQueryFields.success) {
       res.sendStatus(StatusCodes.BAD_REQUEST);
       return;
@@ -40,7 +40,7 @@ export async function handleProfiles_bulk(
     queryFields = parseQueryFields.data;
   }
 
-  let includeFields = new Set([
+  const includeFields = new Set([
     "inventory",
     "points",
     "account_id",
@@ -54,15 +54,15 @@ export async function handleProfiles_bulk(
     "id",
   ]);
 
-  let selectSettings: Record<string, number> = {};
-  for (let includeField of includeFields) {
+  const selectSettings: Record<string, number> = {};
+  for (const includeField of includeFields) {
     selectSettings[includeField] = 1;
   }
   if (queryFields.account_fields != null) {
     if (!Array.isArray(queryFields.account_fields)) {
       queryFields.account_fields = Array(queryFields.account_fields);
     }
-    for (let queryField of queryFields.account_fields) {
+    for (const queryField of queryFields.account_fields) {
       selectSettings[queryField] = 1;
       if (queryField == "presence") {
         includeAccount = true;
@@ -75,13 +75,13 @@ export async function handleProfiles_bulk(
   if (includeAccount) {
     playersQuery = playersQuery.populate("account");
   }
-  let players = await playersQuery;
-  let mapAccountIdToPlayer: Map<string, (typeof players)[0]> = new Map();
+  const players = await playersQuery;
+  const mapAccountIdToPlayer: Map<string, (typeof players)[0]> = new Map();
   players.map((doc) => {
-    mapAccountIdToPlayer.set(doc.account_id._id.toHexString(), doc);
+    mapAccountIdToPlayer.set(doc.account_id, doc);
   });
-  for (let accountId of requestBody.ids) {
-    let player = mapAccountIdToPlayer.get(accountId);
+  for (const accountId of requestBody.ids) {
+    const player = mapAccountIdToPlayer.get(accountId);
     if (player != undefined) {
       responseObject.push(Player.flatten(player.toJSON()));
     } else {
