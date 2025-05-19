@@ -1,5 +1,17 @@
+import {ServerConfiguration} from "../config/serverConfiguration";
+import Characters from "../enums/characters";
+import {PartialRecord} from "../utils/partialRecord";
+
 //* AUTO GENERATED */
 export namespace MVSResponses {
+  enum SeasonalName {
+    season1 = "Season:SeasonOne",
+    season2 = "Season:SeasonTwo",
+    season3 = "Season:SeasonThree",
+    season4 = "Season:SeasonFour",
+    season5 = "Season:SeasonFive",
+  }
+
   export interface Access_RESPONSE {
     account: {
       auth: {
@@ -9,7 +21,7 @@ export namespace MVSResponses {
            * 2023-01-23T21:17:48.000Z
            *
            */
-          created_at: string;
+          created_at: number;
           /**
            *
            * pafd8d7950aa1484ea791d06662fa75ce
@@ -72,7 +84,7 @@ export namespace MVSResponses {
        * 2023-01-23T21:17:48.000Z
        *
        */
-      created_at: string;
+      created_at: number;
       data: {
         /**
          *
@@ -137,10 +149,10 @@ export namespace MVSResponses {
              *
              */
             username: string;
-          }[];
+          } | null;
           wb_network: {
             avatar: string | null;
-            email?: string | null;
+            email: string | null;
             /**
              *
              * pafd8d7950aa1484ea791d06662fa75ce
@@ -153,14 +165,14 @@ export namespace MVSResponses {
              *
              */
             username: string;
-          }[];
+          } | null;
         };
         /**
          *
          * https://s3.amazonaws.com/wb-agora-hydra-ugc-dokken/identicons/identicon.584.png
          *
          */
-        avatar: string;
+        avatar: string | null;
         /**
          *
          * steam
@@ -207,7 +219,7 @@ export namespace MVSResponses {
         wbplay_optin: boolean;
       };
       orphaned: boolean;
-      orphaned_reason: null;
+      orphaned_reason: string | null;
       /**
        *
        * 0
@@ -279,7 +291,7 @@ export namespace MVSResponses {
          * 2025-03-14T12:00:00.000Z
          *
          */
-        LastDailyRefresh: string;
+        LastDailyRefresh: number;
         /**
          *
          * 0
@@ -297,13 +309,13 @@ export namespace MVSResponses {
          * Tue Mar 14 2023 00:14:29 GMT+0000 (Coordinated Universal Time)
          *
          */
-        LastLoginTime: string;
+        LastLoginTime: number;
         /**
          *
          * 2023-03-14T17:44:29.198Z
          *
          */
-        LastLogoutTime: string;
+        LastLogoutTime: number;
         /**
          *
          * evt_battlepass_season_five
@@ -321,7 +333,7 @@ export namespace MVSResponses {
          * 2025-03-11T12:00:00.000Z
          *
          */
-        LastWeeklyRefresh: string;
+        LastWeeklyRefresh: number;
         OpenBeta: boolean;
         ProfileIcon: {
           /**
@@ -348,49 +360,49 @@ export namespace MVSResponses {
          * 2024-06-24T16:24:37.000Z
          *
          */
-        RetroactiveRiftBattlepassPayoutTime: string;
+        RetroactiveRiftBattlepassPayoutTime: number;
         Transforms: {
-          BannerKnightSlugFixed: boolean;
+          BannerKnightSlugFixed?: boolean;
           /**
            *
            * 2024-11-12T19:37:33.000Z
            *
            */
-          CharacterCurrencyRoundUp: string;
-          FixRankedCharactersInGold: boolean;
-          GoldStatTracker: boolean;
-          MmrSeason4: boolean;
-          OpenBetaFreebies: boolean;
-          Season2CharactersInMasterCalculated: boolean;
-          Season3PrestigeFix: boolean;
-          Season4FighterRoadPromo: boolean;
-          Season4FixRolloverRp: boolean;
-          Season4Promo: boolean;
-          Season4RankedRewardCatchup: boolean;
+          CharacterCurrencyRoundUp?: number;
+          FixRankedCharactersInGold?: boolean;
+          GoldStatTracker?: boolean;
+          MmrSeason4?: boolean;
+          OpenBetaFreebies?: boolean;
+          Season2CharactersInMasterCalculated?: boolean;
+          Season3PrestigeFix?: boolean;
+          Season4FighterRoadPromo?: boolean;
+          Season4FixRolloverRp?: boolean;
+          Season4Promo?: boolean;
+          Season4RankedRewardCatchup?: boolean;
           /**
            *
            * 2024-12-13T15:39:16.000Z
            *
            */
-          SeasonFourAcademiaMakeGood: string;
+          SeasonFourAcademiaMakeGood?: number;
           /**
            *
            * 0
            *
            */
-          SeasonFourAcademiaMakeGoodScoreGranted: number;
+          SeasonFourAcademiaMakeGoodScoreGranted?: number;
           /**
            *
            * 2024-11-15T23:28:01.000Z
            *
            */
-          ShaggySkinMakeGoodS4: string;
+          ShaggySkinMakeGoodS4?: number;
           /**
            *
            * 2024-08-07T01:07:34.000Z
            *
            */
-          UpgradeWarMakeGood_8_5_2024: string;
+          UpgradeWarMakeGood_8_5_2024?: number;
         };
       };
       server_owner_data: {};
@@ -406,16 +418,16 @@ export namespace MVSResponses {
        * 2025-03-14T16:43:53.000Z
        *
        */
-      updated_at: string;
+      updated_at: number;
       wb_account: {
         /**
          *
          * adult
          *
          */
-        age_category: string;
+        age_category?: string;
         completed: boolean;
-        email_verified: boolean;
+        email_verified?: boolean;
       };
       wbplay_data_synced: boolean;
       wbplay_identity: null;
@@ -423,7 +435,7 @@ export namespace MVSResponses {
     achievements: any[];
     configuration: {
       apns: {
-        enabled: null;
+        enabled: boolean | null;
         environment: null;
         sha1: null;
       };
@@ -446,8 +458,8 @@ export namespace MVSResponses {
         "default-cluster": string;
         enabled: boolean;
         servers: {
-          "ec2-us-east-1-dokken": {
-            "dokken-realtime-1/1": {
+          [key: string]: {
+            [key: string]: {
               /**
                *
                * 0.0.0.0:0
@@ -463,186 +475,6 @@ export namespace MVSResponses {
               /**
                *
                * wss://us-east-1-dokken-realtime-1.wbagora.com:9101
-               *
-               */
-              wss: string;
-            };
-            "dokken-realtime-1/2": {
-              /**
-               *
-               * 0.0.0.0:0
-               *
-               */
-              udp: string;
-              /**
-               *
-               * ws://52.73.198.117:8102
-               *
-               */
-              ws: string;
-              /**
-               *
-               * wss://us-east-1-dokken-realtime-1.wbagora.com:9102
-               *
-               */
-              wss: string;
-            };
-            "dokken-realtime-2/1": {
-              /**
-               *
-               * 0.0.0.0:0
-               *
-               */
-              udp: string;
-              /**
-               *
-               * ws://54.91.137.166:8101
-               *
-               */
-              ws: string;
-              /**
-               *
-               * wss://us-east-1-dokken-realtime-2.wbagora.com:9101
-               *
-               */
-              wss: string;
-            };
-            "dokken-realtime-2/2": {
-              /**
-               *
-               * 0.0.0.0:0
-               *
-               */
-              udp: string;
-              /**
-               *
-               * ws://54.91.137.166:8102
-               *
-               */
-              ws: string;
-              /**
-               *
-               * wss://us-east-1-dokken-realtime-2.wbagora.com:9102
-               *
-               */
-              wss: string;
-            };
-            "dokken-realtime-3/1": {
-              /**
-               *
-               * 0.0.0.0:0
-               *
-               */
-              udp: string;
-              /**
-               *
-               * ws://54.144.160.165:8101
-               *
-               */
-              ws: string;
-              /**
-               *
-               * wss://us-east-1-dokken-realtime-3.wbagora.com:9101
-               *
-               */
-              wss: string;
-            };
-            "dokken-realtime-3/2": {
-              /**
-               *
-               * 0.0.0.0:0
-               *
-               */
-              udp: string;
-              /**
-               *
-               * ws://54.144.160.165:8102
-               *
-               */
-              ws: string;
-              /**
-               *
-               * wss://us-east-1-dokken-realtime-3.wbagora.com:9102
-               *
-               */
-              wss: string;
-            };
-            "dokken-realtime-4/1": {
-              /**
-               *
-               * 0.0.0.0:0
-               *
-               */
-              udp: string;
-              /**
-               *
-               * ws://35.170.47.9:8101
-               *
-               */
-              ws: string;
-              /**
-               *
-               * wss://us-east-1-dokken-realtime-4.wbagora.com:9101
-               *
-               */
-              wss: string;
-            };
-            "dokken-realtime-4/2": {
-              /**
-               *
-               * 0.0.0.0:0
-               *
-               */
-              udp: string;
-              /**
-               *
-               * ws://35.170.47.9:8102
-               *
-               */
-              ws: string;
-              /**
-               *
-               * wss://us-east-1-dokken-realtime-4.wbagora.com:9102
-               *
-               */
-              wss: string;
-            };
-            "dokken-realtime-5/1": {
-              /**
-               *
-               * 0.0.0.0:0
-               *
-               */
-              udp: string;
-              /**
-               *
-               * ws://52.72.177.178:8101
-               *
-               */
-              ws: string;
-              /**
-               *
-               * wss://us-east-1-dokken-realtime-5.wbagora.com:9101
-               *
-               */
-              wss: string;
-            };
-            "dokken-realtime-5/2": {
-              /**
-               *
-               * 0.0.0.0:0
-               *
-               */
-              udp: string;
-              /**
-               *
-               * ws://52.72.177.178:8102
-               *
-               */
-              ws: string;
-              /**
-               *
-               * wss://us-east-1-dokken-realtime-5.wbagora.com:9102
                *
                */
               wss: string;
@@ -739,7 +571,7 @@ export namespace MVSResponses {
        * 2023-01-23T21:17:48.000Z
        *
        */
-      created_at: string;
+      created_at: number;
       cross_match_results: {};
       data: {
         HasCompletedFTUE: boolean;
@@ -753,160 +585,167 @@ export namespace MVSResponses {
         MostRecentlyViewedCurrentRiftSeason: string;
         PerkPreferences: {
           Characters: {
-            character_C018: {
-              /**
-               *
-               * 0
-               *
-               */
+            [K in Characters]?: {
               LastSelectedPage: number;
               PerkPages: {
-                /**
-                 *
-                 * CUSTOM 1
-                 *
-                 */
                 PageName: string;
-                /**
-                 *
-                 *
-                 *
-                 */
                 PerkSlugs: string[];
               }[];
             };
-            character_arya: {
-              /**
-               *
-               * 0
-               *
-               */
-              LastSelectedPage: number;
-              PerkPages: {
-                /**
-                 *
-                 * CUSTOM 1
-                 *
-                 */
-                PageName: string;
-                /**
-                 *
-                 *
-                 *
-                 */
-                PerkSlugs: string[];
-              }[];
-            };
-            character_finn: {
-              /**
-               *
-               * 0
-               *
-               */
-              LastSelectedPage: number;
-              PerkPages: {
-                /**
-                 *
-                 * CUSTOM 1
-                 *
-                 */
-                PageName: string;
-                /**
-                 *
-                 *
-                 *
-                 */
-                PerkSlugs: string[];
-              }[];
-            };
-            character_garnet: {
-              /**
-               *
-               * 0
-               *
-               */
-              LastSelectedPage: number;
-              PerkPages: {
-                /**
-                 *
-                 * CUSTOM 1
-                 *
-                 */
-                PageName: string;
-                /**
-                 *
-                 *
-                 *
-                 */
-                PerkSlugs: string[];
-              }[];
-            };
-            character_jake: {
-              /**
-               *
-               * 0
-               *
-               */
-              LastSelectedPage: number;
-              PerkPages: {
-                /**
-                 *
-                 * CUSTOM 1
-                 *
-                 */
-                PageName: string;
-                /**
-                 *
-                 *
-                 *
-                 */
-                PerkSlugs: string[];
-              }[];
-            };
-            character_superman: {
-              /**
-               *
-               * 0
-               *
-               */
-              LastSelectedPage: number;
-              PerkPages: {
-                /**
-                 *
-                 * CUSTOM 1
-                 *
-                 */
-                PageName: string;
-                /**
-                 *
-                 *
-                 *
-                 */
-                PerkSlugs: string[];
-              }[];
-            };
-            character_tom_and_jerry: {
-              /**
-               *
-               * 0
-               *
-               */
-              LastSelectedPage: number;
-              PerkPages: {
-                /**
-                 *
-                 * CUSTOM 1
-                 *
-                 */
-                PageName: string;
-                /**
-                 *
-                 *
-                 *
-                 */
-                PerkSlugs: string[];
-              }[];
-            };
+            // character_C018: {
+            //   /**
+            //    *
+            //    * 0
+            //    *
+            //    */
+            //   LastSelectedPage: number;
+            //   PerkPages: {
+            //     /**
+            //      *
+            //      * CUSTOM 1
+            //      *
+            //      */
+            //     PageName: string;
+            //     /**
+            //      *
+            //      *
+            //      *
+            //      */
+            //     PerkSlugs: string[];
+            //   }[];
+            // };
+            // character_arya: {
+            //   /**
+            //    *
+            //    * 0
+            //    *
+            //    */
+            //   LastSelectedPage: number;
+            //   PerkPages: {
+            //     /**
+            //      *
+            //      * CUSTOM 1
+            //      *
+            //      */
+            //     PageName: string;
+            //     /**
+            //      *
+            //      *
+            //      *
+            //      */
+            //     PerkSlugs: string[];
+            //   }[];
+            // };
+            // character_finn: {
+            //   /**
+            //    *
+            //    * 0
+            //    *
+            //    */
+            //   LastSelectedPage: number;
+            //   PerkPages: {
+            //     /**
+            //      *
+            //      * CUSTOM 1
+            //      *
+            //      */
+            //     PageName: string;
+            //     /**
+            //      *
+            //      *
+            //      *
+            //      */
+            //     PerkSlugs: string[];
+            //   }[];
+            // };
+            // character_garnet: {
+            //   /**
+            //    *
+            //    * 0
+            //    *
+            //    */
+            //   LastSelectedPage: number;
+            //   PerkPages: {
+            //     /**
+            //      *
+            //      * CUSTOM 1
+            //      *
+            //      */
+            //     PageName: string;
+            //     /**
+            //      *
+            //      *
+            //      *
+            //      */
+            //     PerkSlugs: string[];
+            //   }[];
+            // };
+            // character_jake: {
+            //   /**
+            //    *
+            //    * 0
+            //    *
+            //    */
+            //   LastSelectedPage: number;
+            //   PerkPages: {
+            //     /**
+            //      *
+            //      * CUSTOM 1
+            //      *
+            //      */
+            //     PageName: string;
+            //     /**
+            //      *
+            //      *
+            //      *
+            //      */
+            //     PerkSlugs: string[];
+            //   }[];
+            // };
+            // character_superman: {
+            //   /**
+            //    *
+            //    * 0
+            //    *
+            //    */
+            //   LastSelectedPage: number;
+            //   PerkPages: {
+            //     /**
+            //      *
+            //      * CUSTOM 1
+            //      *
+            //      */
+            //     PageName: string;
+            //     /**
+            //      *
+            //      *
+            //      *
+            //      */
+            //     PerkSlugs: string[];
+            //   }[];
+            // };
+            // character_tom_and_jerry: {
+            //   /**
+            //    *
+            //    * 0
+            //    *
+            //    */
+            //   LastSelectedPage: number;
+            //   PerkPages: {
+            //     /**
+            //      *
+            //      * CUSTOM 1
+            //      *
+            //      */
+            //     PageName: string;
+            //     /**
+            //      *
+            //      *
+            //      *
+            //      */
+            //     PerkSlugs: string[];
+            //   }[];
+            // };
           };
         };
       };
@@ -918,298 +757,302 @@ export namespace MVSResponses {
        */
       id: string;
       inventory: {
-        "battlepass-season-1": {
-          /**
-           *
-           * 1
-           *
-           */
+        // "battlepass-season-1": {
+        //   /**
+        //    *
+        //    * 1
+        //    *
+        //    */
+        //   count: number;
+        //   /**
+        //    *
+        //    * 2024-05-30T15:50:02.000Z
+        //    *
+        //    */
+        //   created_at: string;
+        // };
+        [K in Characters | Battlepass]?: {
           count: number;
-          /**
-           *
-           * 2024-05-30T15:50:02.000Z
-           *
-           */
-          created_at: string;
+          created_at?: number;
         };
-        character_BananaGuard: {
-          /**
-           *
-           * 1
-           *
-           */
-          count: number;
-          /**
-           *
-           * 2024-06-05T21:32:11.000Z
-           *
-           */
-          created_at: string;
-        };
-        character_C020: {
-          /**
-           *
-           * 1
-           *
-           */
-          count: number;
-          /**
-           *
-           * 2025-03-10T15:52:09.000Z
-           *
-           */
-          created_at: string;
-        };
-        character_C029: {
-          /**
-           *
-           * 1
-           *
-           */
-          count: number;
-          /**
-           *
-           * 2025-02-08T02:54:17.000Z
-           *
-           */
-          created_at: string;
-        };
-        character_Jason: {
-          /**
-           *
-           * 1
-           *
-           */
-          count: number;
-          /**
-           *
-           * 2024-07-02T20:53:29.000Z
-           *
-           */
-          created_at: string;
-        };
-        character_batman: {
-          /**
-           *
-           * 1
-           *
-           */
-          count: number;
-          /**
-           *
-           * 2024-11-15T16:40:38.000Z
-           *
-           */
-          created_at: string;
-        };
-        character_bugs_bunny: {
-          /**
-           *
-           * 1
-           *
-           */
-          count: number;
-          /**
-           *
-           * 2024-11-15T16:40:51.000Z
-           *
-           */
-          created_at: string;
-        };
-        character_c019: {
-          /**
-           *
-           * 1
-           *
-           */
-          count: number;
-          /**
-           *
-           * 2025-01-05T02:52:25.000Z
-           *
-           */
-          created_at: string;
-        };
-        character_c024: {
-          /**
-           *
-           * 1
-           *
-           */
-          count: number;
-          /**
-           *
-           * 2024-08-24T16:18:33.000Z
-           *
-           */
-          created_at: string;
-        };
-        character_c038: {
-          /**
-           *
-           * 1
-           *
-           */
-          count: number;
-          /**
-           *
-           * 2025-03-10T15:55:29.000Z
-           *
-           */
-          created_at: string;
-        };
-        character_c16: {
-          /**
-           *
-           * 1
-           *
-           */
-          count: number;
-          /**
-           *
-           * 2025-01-22T03:32:47.000Z
-           *
-           */
-          created_at: string;
-        };
-        character_currency: {
-          /**
-           *
-           * 18000
-           *
-           */
-          count: number;
-          created_at: null;
-        };
-        character_finn: {
-          /**
-           *
-           * 1
-           *
-           */
-          count: number;
-          /**
-           *
-           * 2024-12-06T04:03:57.000Z
-           *
-           */
-          created_at: string;
-        };
-        character_garnet: {
-          /**
-           *
-           * 1
-           *
-           */
-          count: number;
-          /**
-           *
-           * 2024-11-25T23:01:11.000Z
-           *
-           */
-          created_at: string;
-        };
-        character_jake: {
-          /**
-           *
-           * 1
-           *
-           */
-          count: number;
-          /**
-           *
-           * 2024-11-25T23:01:08.000Z
-           *
-           */
-          created_at: string;
-        };
-        character_shaggy: {
-          /**
-           *
-           * 1
-           *
-           */
-          count: number;
-        };
-        character_steven: {
-          /**
-           *
-           * 1
-           *
-           */
-          count: number;
-          /**
-           *
-           * 2025-01-30T23:12:48.000Z
-           *
-           */
-          created_at: string;
-        };
-        character_superman: {
-          /**
-           *
-           * 1
-           *
-           */
-          count: number;
-          /**
-           *
-           * 2025-01-05T02:52:07.000Z
-           *
-           */
-          created_at: string;
-        };
-        character_tom_and_jerry: {
-          /**
-           *
-           * 1
-           *
-           */
-          count: number;
-          /**
-           *
-           * 2024-11-25T23:01:03.000Z
-           *
-           */
-          created_at: string;
-        };
-        character_wonder_woman: {
-          /**
-           *
-           * 1
-           *
-           */
-          count: number;
-          /**
-           *
-           * 2024-11-12T19:38:27.000Z
-           *
-           */
-          created_at: string;
-        };
-        skin_c034_s01: {
-          /**
-           *
-           * 1
-           *
-           */
-          count: number;
-          /**
-           *
-           * 2024-07-05T21:05:46.000Z
-           *
-           */
-          created_at: string;
-        };
+        // character_BananaGuard: {
+        //   /**
+        //    *
+        //    * 1
+        //    *
+        //    */
+        //   count: number;
+        //   /**
+        //    *
+        //    * 2024-06-05T21:32:11.000Z
+        //    *
+        //    */
+        //   created_at: string;
+        // };
+        // character_C020: {
+        //   /**
+        //    *
+        //    * 1
+        //    *
+        //    */
+        //   count: number;
+        //   /**
+        //    *
+        //    * 2025-03-10T15:52:09.000Z
+        //    *
+        //    */
+        //   created_at: string;
+        // };
+        // character_C029: {
+        //   /**
+        //    *
+        //    * 1
+        //    *
+        //    */
+        //   count: number;
+        //   /**
+        //    *
+        //    * 2025-02-08T02:54:17.000Z
+        //    *
+        //    */
+        //   created_at: string;
+        // };
+        // character_Jason: {
+        //   /**
+        //    *
+        //    * 1
+        //    *
+        //    */
+        //   count: number;
+        //   /**
+        //    *
+        //    * 2024-07-02T20:53:29.000Z
+        //    *
+        //    */
+        //   created_at: string;
+        // };
+        // character_batman: {
+        //   /**
+        //    *
+        //    * 1
+        //    *
+        //    */
+        //   count: number;
+        //   /**
+        //    *
+        //    * 2024-11-15T16:40:38.000Z
+        //    *
+        //    */
+        //   created_at: string;
+        // };
+        // character_bugs_bunny: {
+        //   /**
+        //    *
+        //    * 1
+        //    *
+        //    */
+        //   count: number;
+        //   /**
+        //    *
+        //    * 2024-11-15T16:40:51.000Z
+        //    *
+        //    */
+        //   created_at: string;
+        // };
+        // character_c019: {
+        //   /**
+        //    *
+        //    * 1
+        //    *
+        //    */
+        //   count: number;
+        //   /**
+        //    *
+        //    * 2025-01-05T02:52:25.000Z
+        //    *
+        //    */
+        //   created_at: string;
+        // };
+        // character_c024: {
+        //   /**
+        //    *
+        //    * 1
+        //    *
+        //    */
+        //   count: number;
+        //   /**
+        //    *
+        //    * 2024-08-24T16:18:33.000Z
+        //    *
+        //    */
+        //   created_at: string;
+        // };
+        // character_c038: {
+        //   /**
+        //    *
+        //    * 1
+        //    *
+        //    */
+        //   count: number;
+        //   /**
+        //    *
+        //    * 2025-03-10T15:55:29.000Z
+        //    *
+        //    */
+        //   created_at: string;
+        // };
+        // character_c16: {
+        //   /**
+        //    *
+        //    * 1
+        //    *
+        //    */
+        //   count: number;
+        //   /**
+        //    *
+        //    * 2025-01-22T03:32:47.000Z
+        //    *
+        //    */
+        //   created_at: string;
+        // };
+        // character_currency: {
+        //   /**
+        //    *
+        //    * 18000
+        //    *
+        //    */
+        //   count: number;
+        //   created_at: null;
+        // };
+        // character_finn: {
+        //   /**
+        //    *
+        //    * 1
+        //    *
+        //    */
+        //   count: number;
+        //   /**
+        //    *
+        //    * 2024-12-06T04:03:57.000Z
+        //    *
+        //    */
+        //   created_at: string;
+        // };
+        // character_garnet: {
+        //   /**
+        //    *
+        //    * 1
+        //    *
+        //    */
+        //   count: number;
+        //   /**
+        //    *
+        //    * 2024-11-25T23:01:11.000Z
+        //    *
+        //    */
+        //   created_at: string;
+        // };
+        // character_jake: {
+        //   /**
+        //    *
+        //    * 1
+        //    *
+        //    */
+        //   count: number;
+        //   /**
+        //    *
+        //    * 2024-11-25T23:01:08.000Z
+        //    *
+        //    */
+        //   created_at: string;
+        // };
+        // character_shaggy: {
+        //   /**
+        //    *
+        //    * 1
+        //    *
+        //    */
+        //   count: number;
+        // };
+        // character_steven: {
+        //   /**
+        //    *
+        //    * 1
+        //    *
+        //    */
+        //   count: number;
+        //   /**
+        //    *
+        //    * 2025-01-30T23:12:48.000Z
+        //    *
+        //    */
+        //   created_at: string;
+        // };
+        // character_superman: {
+        //   /**
+        //    *
+        //    * 1
+        //    *
+        //    */
+        //   count: number;
+        //   /**
+        //    *
+        //    * 2025-01-05T02:52:07.000Z
+        //    *
+        //    */
+        //   created_at: string;
+        // };
+        // character_tom_and_jerry: {
+        //   /**
+        //    *
+        //    * 1
+        //    *
+        //    */
+        //   count: number;
+        //   /**
+        //    *
+        //    * 2024-11-25T23:01:03.000Z
+        //    *
+        //    */
+        //   created_at: number;
+        // };
+        // character_wonder_woman: {
+        //   /**
+        //    *
+        //    * 1
+        //    *
+        //    */
+        //   count: number;
+        //   /**
+        //    *
+        //    * 2024-11-12T19:38:27.000Z
+        //    *
+        //    */
+        //   created_at: string;
+        // };
+        // skin_c034_s01: {
+        //   /**
+        //    *
+        //    * 1
+        //    *
+        //    */
+        //   count: number;
+        //   /**
+        //    *
+        //    * 2024-07-05T21:05:46.000Z
+        //    *
+        //    */
+        //   created_at: number;
+        // };
       };
       /**
        *
        * 2025-03-14T16:43:53.000Z
        *
        */
-      last_login: string;
+      last_login: number;
       matches: {
-        "1v1_container": {
+        "1v1_container"?: {
           /**
            *
            * 0
@@ -1259,7 +1102,7 @@ export namespace MVSResponses {
            */
           win_streak: number;
         };
-        "1v1_container_bot": {
+        "1v1_container_bot"?: {
           /**
            *
            * 0
@@ -1309,7 +1152,7 @@ export namespace MVSResponses {
            */
           win_streak: number;
         };
-        "2v2_container": {
+        "2v2_container"?: {
           /**
            *
            * 0
@@ -1359,7 +1202,7 @@ export namespace MVSResponses {
            */
           win_streak: number;
         };
-        arena_container_four_player: {
+        arena_container_four_player?: {
           /**
            *
            * 0
@@ -1409,7 +1252,7 @@ export namespace MVSResponses {
            */
           win_streak: number;
         };
-        custom_container_one_player: {
+        custom_container_one_player?: {
           /**
            *
            * 0
@@ -1459,7 +1302,7 @@ export namespace MVSResponses {
            */
           win_streak: number;
         };
-        custom_container_one_player_online: {
+        custom_container_one_player_online?: {
           /**
            *
            * 0
@@ -1509,7 +1352,7 @@ export namespace MVSResponses {
            */
           win_streak: number;
         };
-        custom_container_two_player: {
+        custom_container_two_player?: {
           /**
            *
            * 0
@@ -1559,7 +1402,7 @@ export namespace MVSResponses {
            */
           win_streak: number;
         };
-        ffa_container: {
+        ffa_container?: {
           /**
            *
            * 0
@@ -1609,7 +1452,7 @@ export namespace MVSResponses {
            */
           win_streak: number;
         };
-        rift_container_one_player: {
+        rift_container_one_player?: {
           /**
            *
            * 0
@@ -1661,7 +1504,7 @@ export namespace MVSResponses {
         };
       };
       notifications: {};
-      points: null;
+      points: number | null;
       /**
        *
        * 0.25115115419482414
@@ -1730,31 +1573,11 @@ export namespace MVSResponses {
         NumOwnedFighters: number;
         OpenBeta: boolean;
         SeasonalData: {
-          "Season:SeasonFive": {
-            /**
-             *
-             * 2025-03-14T00:00:00.000Z
-             *
-             */
-            LastLoginDay: string;
-            /**
-             *
-             * 18
-             *
-             */
-            NumDaysLoggedIn: number;
-            /**
-             *
-             * 179
-             *
-             */
-            NumLogins: number;
-            Ranked: {
-              /**
-               *
-               * D17B128B40B9A1A73A8602A9D25A1A3A
-               *
-               */
+          [K in SeasonalName]?: {
+            LastLoginDay?: number;
+            NumDaysLoggedIn?: number;
+            NumLogins?: number;
+            Ranked?: {
               ClaimedRewards: string[];
               DataByMode: {
                 "1v1": {
@@ -1782,7 +1605,7 @@ export namespace MVSResponses {
                      * 2025-02-08T02:53:45.000Z
                      *
                      */
-                    LastUpdateTimestamp: string;
+                    LastUpdateTimestamp: number;
                     /**
                      *
                      * 2179
@@ -1796,8 +1619,8 @@ export namespace MVSResponses {
                      */
                     SetsPlayed: number;
                   };
-                  DataByCharacter: {
-                    character_Jason: {
+                  DataByCharacter: PartialRecord<Characters,
+                  {
                       /**
                        *
                        * 2137
@@ -1839,7 +1662,7 @@ export namespace MVSResponses {
                        * 2025-03-02T08:15:12.000Z
                        *
                        */
-                      LastUpdateTimestamp: string;
+                      LastUpdateTimestamp: number;
                       /**
                        *
                        * 79
@@ -1870,8 +1693,7 @@ export namespace MVSResponses {
                        *
                        */
                       Wins: number;
-                    };
-                  };
+                    }>;
                   /**
                    *
                    * 371
@@ -1883,7 +1705,7 @@ export namespace MVSResponses {
                    * 2025-03-02T08:15:12.000Z
                    *
                    */
-                  LastUpdateTimestamp: string;
+                  LastUpdateTimestamp: number;
                   /**
                    *
                    * 160
@@ -1894,757 +1716,921 @@ export namespace MVSResponses {
               };
             };
           };
-          "Season:SeasonFour": {
-            /**
-             *
-             * 2025-01-31T00:00:00.000Z
-             *
-             */
-            LastLoginDay: string;
-            /**
-             *
-             * 27
-             *
-             */
-            NumDaysLoggedIn: number;
-            /**
-             *
-             * 45
-             *
-             */
-            NumLogins: number;
-            Ranked: {
-              /**
-               *
-               * B67EDC654607F8583E06978841798205
-               *
-               */
-              ClaimedRewards: string[];
-              DataByMode: {
-                "1v1": {
-                  BestCharacter: {
-                    /**
-                     *
-                     * character_Jason
-                     *
-                     */
-                    CharacterSlug: string;
-                    /**
-                     *
-                     * 2457
-                     *
-                     */
-                    CurrentPoints: number;
-                    /**
-                     *
-                     * 1189
-                     *
-                     */
-                    GamesPlayed: number;
-                    /**
-                     *
-                     * 2024-11-13T15:47:31.000Z
-                     *
-                     */
-                    LastUpdateTimestamp: string;
-                    /**
-                     *
-                     * 2605
-                     *
-                     */
-                    MaxPoints: number;
-                    /**
-                     *
-                     * 493
-                     *
-                     */
-                    SetsPlayed: number;
-                  };
-                  DataByCharacter: {
-                    character_Jason: {
-                      /**
-                       *
-                       * 2457
-                       *
-                       */
-                      CurrentPoints: number;
-                      /**
-                       *
-                       * 361469
-                       *
-                       */
-                      DamageDealt: number;
-                      /**
-                       *
-                       * 379378
-                       *
-                       */
-                      DamageTaken: number;
-                      /**
-                       *
-                       * 2780
-                       *
-                       */
-                      Deaths: number;
-                      /**
-                       *
-                       * 1189
-                       *
-                       */
-                      GamesPlayed: number;
-                      /**
-                       *
-                       * 0
-                       *
-                       */
-                      LastDecayMs: number;
-                      /**
-                       *
-                       * 2025-01-31T20:44:58.000Z
-                       *
-                       */
-                      LastUpdateTimestamp: string;
-                      /**
-                       *
-                       * 239
-                       *
-                       */
-                      Losses: number;
-                      /**
-                       *
-                       * 2605
-                       *
-                       */
-                      MaxPoints: number;
-                      /**
-                       *
-                       * 2713
-                       *
-                       */
-                      Ringouts: number;
-                      /**
-                       *
-                       * 493
-                       *
-                       */
-                      SetsPlayed: number;
-                      /**
-                       *
-                       * 238
-                       *
-                       */
-                      Wins: number;
-                    };
-                  };
-                  /**
-                   *
-                   * 694
-                   *
-                   */
-                  FinalLeaderboardRank: number;
-                  /**
-                   *
-                   * 1189
-                   *
-                   */
-                  GamesPlayed: number;
-                  /**
-                   *
-                   * 2025-01-31T20:44:58.000Z
-                   *
-                   */
-                  LastUpdateTimestamp: string;
-                  /**
-                   *
-                   * 493
-                   *
-                   */
-                  SetsPlayed: number;
-                };
-              };
-              bEndOfSeasonRewardsGranted: boolean;
-            };
-          };
-          "Season:SeasonThree": {
-            Ranked: {
-              /**
-               *
-               * B67EDC654607F8583E06978841798205
-               *
-               */
-              ClaimedRewards: string[];
-              DataByMode: {
-                "1v1": {
-                  BestCharacter: {
-                    /**
-                     *
-                     * character_Jason
-                     *
-                     */
-                    CharacterSlug: string;
-                    /**
-                     *
-                     * 2858
-                     *
-                     */
-                    CurrentPoints: number;
-                    /**
-                     *
-                     * 1591
-                     *
-                     */
-                    GamesPlayed: number;
-                    /**
-                     *
-                     * 2024-09-18T01:39:41.000Z
-                     *
-                     */
-                    LastUpdateTimestamp: string;
-                    /**
-                     *
-                     * 2929
-                     *
-                     */
-                    MaxPoints: number;
-                    /**
-                     *
-                     * 672
-                     *
-                     */
-                    SetsPlayed: number;
-                  };
-                  DataByCharacter: {
-                    character_Jason: {
-                      /**
-                       *
-                       * 2858
-                       *
-                       */
-                      CurrentPoints: number;
-                      /**
-                       *
-                       * 376835
-                       *
-                       */
-                      DamageDealt: number;
-                      /**
-                       *
-                       * 481079
-                       *
-                       */
-                      DamageTaken: number;
-                      /**
-                       *
-                       * 3411
-                       *
-                       */
-                      Deaths: number;
-                      /**
-                       *
-                       * 1591
-                       *
-                       */
-                      GamesPlayed: number;
-                      /**
-                       *
-                       * 0
-                       *
-                       */
-                      LastDecayMs: number;
-                      /**
-                       *
-                       * 2024-11-11T23:10:40.000Z
-                       *
-                       */
-                      LastUpdateTimestamp: string;
-                      /**
-                       *
-                       * 403
-                       *
-                       */
-                      Losses: number;
-                      /**
-                       *
-                       * 2929
-                       *
-                       */
-                      MaxPoints: number;
-                      /**
-                       *
-                       * 3929
-                       *
-                       */
-                      Ringouts: number;
-                      /**
-                       *
-                       * 672
-                       *
-                       */
-                      SetsPlayed: number;
-                      /**
-                       *
-                       * 404
-                       *
-                       */
-                      Wins: number;
-                    };
-                  };
-                  /**
-                   *
-                   * 857
-                   *
-                   */
-                  FinalLeaderboardRank: number;
-                  /**
-                   *
-                   * 1591
-                   *
-                   */
-                  GamesPlayed: number;
-                  /**
-                   *
-                   * 2024-11-11T23:10:40.000Z
-                   *
-                   */
-                  LastUpdateTimestamp: string;
-                  /**
-                   *
-                   * 672
-                   *
-                   */
-                  SetsPlayed: number;
-                };
-                "2v2": {
-                  BestCharacter: {
-                    /**
-                     *
-                     * character_Jason
-                     *
-                     */
-                    CharacterSlug: string;
-                    /**
-                     *
-                     * 35
-                     *
-                     */
-                    CurrentPoints: number;
-                    /**
-                     *
-                     * 0
-                     *
-                     */
-                    GamesPlayed: number;
-                    /**
-                     *
-                     * 2024-09-18T01:39:41.000Z
-                     *
-                     */
-                    LastUpdateTimestamp: string;
-                    /**
-                     *
-                     * 35
-                     *
-                     */
-                    MaxPoints: number;
-                    /**
-                     *
-                     * 1
-                     *
-                     */
-                    SetsPlayed: number;
-                  };
-                  DataByCharacter: {
-                    character_Jason: {
-                      /**
-                       *
-                       * 35
-                       *
-                       */
-                      CurrentPoints: number;
-                      /**
-                       *
-                       * 0
-                       *
-                       */
-                      DamageDealt: number;
-                      /**
-                       *
-                       * 0
-                       *
-                       */
-                      DamageTaken: number;
-                      /**
-                       *
-                       * 0
-                       *
-                       */
-                      Deaths: number;
-                      /**
-                       *
-                       * 0
-                       *
-                       */
-                      GamesPlayed: number;
-                      /**
-                       *
-                       * 0
-                       *
-                       */
-                      LastDecayMs: number;
-                      /**
-                       *
-                       * 2024-09-18T01:39:41.000Z
-                       *
-                       */
-                      LastUpdateTimestamp: string;
-                      /**
-                       *
-                       * 0
-                       *
-                       */
-                      Losses: number;
-                      /**
-                       *
-                       * 35
-                       *
-                       */
-                      MaxPoints: number;
-                      /**
-                       *
-                       * 0
-                       *
-                       */
-                      Ringouts: number;
-                      /**
-                       *
-                       * 0
-                       *
-                       */
-                      SetsPlayed: number;
-                      /**
-                       *
-                       * 0
-                       *
-                       */
-                      Wins: number;
-                    };
-                  };
-                  /**
-                   *
-                   * 129774
-                   *
-                   */
-                  FinalLeaderboardRank: number;
-                  /**
-                   *
-                   * 0
-                   *
-                   */
-                  GamesPlayed: number;
-                  /**
-                   *
-                   * 0
-                   *
-                   */
-                  SetsPlayed: number;
-                };
-              };
-              bEndOfSeasonRewardsGranted: boolean;
-            };
-          };
-          "Season:SeasonTwo": {
-            Ranked: {
-              /**
-               *
-               * EC1B6F59453B11272D24DD94189FC209
-               *
-               */
-              ClaimedRewards: string[];
-              DataByMode: {
-                "1v1": {
-                  BestCharacter: {
-                    /**
-                     *
-                     * character_Jason
-                     *
-                     */
-                    CharacterSlug: string;
-                    /**
-                     *
-                     * 2709
-                     *
-                     */
-                    CurrentPoints: number;
-                    /**
-                     *
-                     * 2270
-                     *
-                     */
-                    GamesPlayed: number;
-                    /**
-                     *
-                     * 2024-07-26T04:35:44.000Z
-                     *
-                     */
-                    LastUpdateTimestamp: string;
-                    /**
-                     *
-                     * 2745
-                     *
-                     */
-                    MaxPoints: number;
-                    /**
-                     *
-                     * 1317
-                     *
-                     */
-                    SetsPlayed: number;
-                  };
-                  DataByCharacter: {
-                    character_Jason: {
-                      /**
-                       *
-                       * 2709
-                       *
-                       */
-                      CurrentPoints: number;
-                      /**
-                       *
-                       * 518935
-                       *
-                       */
-                      DamageDealt: number;
-                      /**
-                       *
-                       * 670230
-                       *
-                       */
-                      DamageTaken: number;
-                      /**
-                       *
-                       * 4941
-                       *
-                       */
-                      Deaths: number;
-                      /**
-                       *
-                       * 2270
-                       *
-                       */
-                      GamesPlayed: number;
-                      /**
-                       *
-                       * 0
-                       *
-                       */
-                      LastDecayMs: number;
-                      /**
-                       *
-                       * 2024-09-17T05:37:40.000Z
-                       *
-                       */
-                      LastUpdateTimestamp: string;
-                      /**
-                       *
-                       * 752
-                       *
-                       */
-                      Losses: number;
-                      /**
-                       *
-                       * 2745
-                       *
-                       */
-                      MaxPoints: number;
-                      /**
-                       *
-                       * 5496
-                       *
-                       */
-                      Ringouts: number;
-                      /**
-                       *
-                       * 1317
-                       *
-                       */
-                      SetsPlayed: number;
-                      /**
-                       *
-                       * 753
-                       *
-                       */
-                      Wins: number;
-                    };
-                  };
-                  /**
-                   *
-                   * 745
-                   *
-                   */
-                  FinalLeaderboardRank: number;
-                  /**
-                   *
-                   * 2272
-                   *
-                   */
-                  GamesPlayed: number;
-                  /**
-                   *
-                   * 2024-09-17T05:37:40.000Z
-                   *
-                   */
-                  LastUpdateTimestamp: string;
-                  /**
-                   *
-                   * 1318
-                   *
-                   */
-                  SetsPlayed: number;
-                };
-                "2v2": {
-                  BestCharacter: {
-                    /**
-                     *
-                     * character_Jason
-                     *
-                     */
-                    CharacterSlug: string;
-                    /**
-                     *
-                     * 1035
-                     *
-                     */
-                    CurrentPoints: number;
-                    /**
-                     *
-                     * 107
-                     *
-                     */
-                    GamesPlayed: number;
-                    /**
-                     *
-                     * 2024-08-20T02:02:32.000Z
-                     *
-                     */
-                    LastUpdateTimestamp: string;
-                    /**
-                     *
-                     * 1047
-                     *
-                     */
-                    MaxPoints: number;
-                    /**
-                     *
-                     * 48
-                     *
-                     */
-                    SetsPlayed: number;
-                  };
-                  DataByCharacter: {
-                    character_Jason: {
-                      /**
-                       *
-                       * 1035
-                       *
-                       */
-                      CurrentPoints: number;
-                      /**
-                       *
-                       * 18082
-                       *
-                       */
-                      DamageDealt: number;
-                      /**
-                       *
-                       * 26826
-                       *
-                       */
-                      DamageTaken: number;
-                      /**
-                       *
-                       * 177
-                       *
-                       */
-                      Deaths: number;
-                      /**
-                       *
-                       * 107
-                       *
-                       */
-                      GamesPlayed: number;
-                      /**
-                       *
-                       * 0
-                       *
-                       */
-                      LastDecayMs: number;
-                      /**
-                       *
-                       * 2024-08-24T16:45:00.000Z
-                       *
-                       */
-                      LastUpdateTimestamp: string;
-                      /**
-                       *
-                       * 26
-                       *
-                       */
-                      Losses: number;
-                      /**
-                       *
-                       * 1047
-                       *
-                       */
-                      MaxPoints: number;
-                      /**
-                       *
-                       * 193
-                       *
-                       */
-                      Ringouts: number;
-                      /**
-                       *
-                       * 48
-                       *
-                       */
-                      SetsPlayed: number;
-                      /**
-                       *
-                       * 25
-                       *
-                       */
-                      Wins: number;
-                    };
-                  };
-                  /**
-                   *
-                   * 37414
-                   *
-                   */
-                  FinalLeaderboardRank: number;
-                  /**
-                   *
-                   * 107
-                   *
-                   */
-                  GamesPlayed: number;
-                  /**
-                   *
-                   * 2024-08-24T16:45:00.000Z
-                   *
-                   */
-                  LastUpdateTimestamp: string;
-                  /**
-                   *
-                   * 48
-                   *
-                   */
-                  SetsPlayed: number;
-                };
-              };
-              bEndOfSeasonRewardsGranted: boolean;
-            };
-          };
+          // "Season:SeasonFive": {
+          //   /**
+          //    *
+          //    * 2025-03-14T00:00:00.000Z
+          //    *
+          //    */
+          //   LastLoginDay: string;
+          //   /**
+          //    *
+          //    * 18
+          //    *
+          //    */
+          //   NumDaysLoggedIn: number;
+          //   /**
+          //    *
+          //    * 179
+          //    *
+          //    */
+          //   NumLogins: number;
+          //   Ranked: {
+          //     /**
+          //      *
+          //      * D17B128B40B9A1A73A8602A9D25A1A3A
+          //      *
+          //      */
+          //     ClaimedRewards: string[];
+          //     DataByMode: {
+          //       "1v1": {
+          //         BestCharacter: {
+          //           /**
+          //            *
+          //            * character_Jason
+          //            *
+          //            */
+          //           CharacterSlug: string;
+          //           /**
+          //            *
+          //            * 2137
+          //            *
+          //            */
+          //           CurrentPoints: number;
+          //           /**
+          //            *
+          //            * 371
+          //            *
+          //            */
+          //           GamesPlayed: number;
+          //           /**
+          //            *
+          //            * 2025-02-08T02:53:45.000Z
+          //            *
+          //            */
+          //           LastUpdateTimestamp: string;
+          //           /**
+          //            *
+          //            * 2179
+          //            *
+          //            */
+          //           MaxPoints: number;
+          //           /**
+          //            *
+          //            * 160
+          //            *
+          //            */
+          //           SetsPlayed: number;
+          //         };
+          //         DataByCharacter: {
+          //           character_Jason: {
+          //             /**
+          //              *
+          //              * 2137
+          //              *
+          //              */
+          //             CurrentPoints: number;
+          //             /**
+          //              *
+          //              * 109764
+          //              *
+          //              */
+          //             DamageDealt: number;
+          //             /**
+          //              *
+          //              * 120253
+          //              *
+          //              */
+          //             DamageTaken: number;
+          //             /**
+          //              *
+          //              * 856
+          //              *
+          //              */
+          //             Deaths: number;
+          //             /**
+          //              *
+          //              * 371
+          //              *
+          //              */
+          //             GamesPlayed: number;
+          //             /**
+          //              *
+          //              * 0
+          //              *
+          //              */
+          //             LastDecayMs: number;
+          //             /**
+          //              *
+          //              * 2025-03-02T08:15:12.000Z
+          //              *
+          //              */
+          //             LastUpdateTimestamp: string;
+          //             /**
+          //              *
+          //              * 79
+          //              *
+          //              */
+          //             Losses: number;
+          //             /**
+          //              *
+          //              * 2179
+          //              *
+          //              */
+          //             MaxPoints: number;
+          //             /**
+          //              *
+          //              * 837
+          //              *
+          //              */
+          //             Ringouts: number;
+          //             /**
+          //              *
+          //              * 160
+          //              *
+          //              */
+          //             SetsPlayed: number;
+          //             /**
+          //              *
+          //              * 80
+          //              *
+          //              */
+          //             Wins: number;
+          //           };
+          //         };
+          //         /**
+          //          *
+          //          * 371
+          //          *
+          //          */
+          //         GamesPlayed: number;
+          //         /**
+          //          *
+          //          * 2025-03-02T08:15:12.000Z
+          //          *
+          //          */
+          //         LastUpdateTimestamp: string;
+          //         /**
+          //          *
+          //          * 160
+          //          *
+          //          */
+          //         SetsPlayed: number;
+          //       };
+          //     };
+          //   };
+          // };
+          // "Season:SeasonFour": {
+          //   /**
+          //    *
+          //    * 2025-01-31T00:00:00.000Z
+          //    *
+          //    */
+          //   LastLoginDay: string;
+          //   /**
+          //    *
+          //    * 27
+          //    *
+          //    */
+          //   NumDaysLoggedIn: number;
+          //   /**
+          //    *
+          //    * 45
+          //    *
+          //    */
+          //   NumLogins: number;
+          //   Ranked: {
+          //     /**
+          //      *
+          //      * B67EDC654607F8583E06978841798205
+          //      *
+          //      */
+          //     ClaimedRewards: string[];
+          //     DataByMode: {
+          //       "1v1": {
+          //         BestCharacter: {
+          //           /**
+          //            *
+          //            * character_Jason
+          //            *
+          //            */
+          //           CharacterSlug: string;
+          //           /**
+          //            *
+          //            * 2457
+          //            *
+          //            */
+          //           CurrentPoints: number;
+          //           /**
+          //            *
+          //            * 1189
+          //            *
+          //            */
+          //           GamesPlayed: number;
+          //           /**
+          //            *
+          //            * 2024-11-13T15:47:31.000Z
+          //            *
+          //            */
+          //           LastUpdateTimestamp: string;
+          //           /**
+          //            *
+          //            * 2605
+          //            *
+          //            */
+          //           MaxPoints: number;
+          //           /**
+          //            *
+          //            * 493
+          //            *
+          //            */
+          //           SetsPlayed: number;
+          //         };
+          //         DataByCharacter: {
+          //           character_Jason: {
+          //             /**
+          //              *
+          //              * 2457
+          //              *
+          //              */
+          //             CurrentPoints: number;
+          //             /**
+          //              *
+          //              * 361469
+          //              *
+          //              */
+          //             DamageDealt: number;
+          //             /**
+          //              *
+          //              * 379378
+          //              *
+          //              */
+          //             DamageTaken: number;
+          //             /**
+          //              *
+          //              * 2780
+          //              *
+          //              */
+          //             Deaths: number;
+          //             /**
+          //              *
+          //              * 1189
+          //              *
+          //              */
+          //             GamesPlayed: number;
+          //             /**
+          //              *
+          //              * 0
+          //              *
+          //              */
+          //             LastDecayMs: number;
+          //             /**
+          //              *
+          //              * 2025-01-31T20:44:58.000Z
+          //              *
+          //              */
+          //             LastUpdateTimestamp: string;
+          //             /**
+          //              *
+          //              * 239
+          //              *
+          //              */
+          //             Losses: number;
+          //             /**
+          //              *
+          //              * 2605
+          //              *
+          //              */
+          //             MaxPoints: number;
+          //             /**
+          //              *
+          //              * 2713
+          //              *
+          //              */
+          //             Ringouts: number;
+          //             /**
+          //              *
+          //              * 493
+          //              *
+          //              */
+          //             SetsPlayed: number;
+          //             /**
+          //              *
+          //              * 238
+          //              *
+          //              */
+          //             Wins: number;
+          //           };
+          //         };
+          //         /**
+          //          *
+          //          * 694
+          //          *
+          //          */
+          //         FinalLeaderboardRank: number;
+          //         /**
+          //          *
+          //          * 1189
+          //          *
+          //          */
+          //         GamesPlayed: number;
+          //         /**
+          //          *
+          //          * 2025-01-31T20:44:58.000Z
+          //          *
+          //          */
+          //         LastUpdateTimestamp: string;
+          //         /**
+          //          *
+          //          * 493
+          //          *
+          //          */
+          //         SetsPlayed: number;
+          //       };
+          //     };
+          //     bEndOfSeasonRewardsGranted: boolean;
+          //   };
+          // };
+          // "Season:SeasonThree": {
+          //   Ranked: {
+          //     /**
+          //      *
+          //      * B67EDC654607F8583E06978841798205
+          //      *
+          //      */
+          //     ClaimedRewards: string[];
+          //     DataByMode: {
+          //       "1v1": {
+          //         BestCharacter: {
+          //           /**
+          //            *
+          //            * character_Jason
+          //            *
+          //            */
+          //           CharacterSlug: string;
+          //           /**
+          //            *
+          //            * 2858
+          //            *
+          //            */
+          //           CurrentPoints: number;
+          //           /**
+          //            *
+          //            * 1591
+          //            *
+          //            */
+          //           GamesPlayed: number;
+          //           /**
+          //            *
+          //            * 2024-09-18T01:39:41.000Z
+          //            *
+          //            */
+          //           LastUpdateTimestamp: string;
+          //           /**
+          //            *
+          //            * 2929
+          //            *
+          //            */
+          //           MaxPoints: number;
+          //           /**
+          //            *
+          //            * 672
+          //            *
+          //            */
+          //           SetsPlayed: number;
+          //         };
+          //         DataByCharacter: {
+          //           character_Jason: {
+          //             /**
+          //              *
+          //              * 2858
+          //              *
+          //              */
+          //             CurrentPoints: number;
+          //             /**
+          //              *
+          //              * 376835
+          //              *
+          //              */
+          //             DamageDealt: number;
+          //             /**
+          //              *
+          //              * 481079
+          //              *
+          //              */
+          //             DamageTaken: number;
+          //             /**
+          //              *
+          //              * 3411
+          //              *
+          //              */
+          //             Deaths: number;
+          //             /**
+          //              *
+          //              * 1591
+          //              *
+          //              */
+          //             GamesPlayed: number;
+          //             /**
+          //              *
+          //              * 0
+          //              *
+          //              */
+          //             LastDecayMs: number;
+          //             /**
+          //              *
+          //              * 2024-11-11T23:10:40.000Z
+          //              *
+          //              */
+          //             LastUpdateTimestamp: string;
+          //             /**
+          //              *
+          //              * 403
+          //              *
+          //              */
+          //             Losses: number;
+          //             /**
+          //              *
+          //              * 2929
+          //              *
+          //              */
+          //             MaxPoints: number;
+          //             /**
+          //              *
+          //              * 3929
+          //              *
+          //              */
+          //             Ringouts: number;
+          //             /**
+          //              *
+          //              * 672
+          //              *
+          //              */
+          //             SetsPlayed: number;
+          //             /**
+          //              *
+          //              * 404
+          //              *
+          //              */
+          //             Wins: number;
+          //           };
+          //         };
+          //         /**
+          //          *
+          //          * 857
+          //          *
+          //          */
+          //         FinalLeaderboardRank: number;
+          //         /**
+          //          *
+          //          * 1591
+          //          *
+          //          */
+          //         GamesPlayed: number;
+          //         /**
+          //          *
+          //          * 2024-11-11T23:10:40.000Z
+          //          *
+          //          */
+          //         LastUpdateTimestamp: string;
+          //         /**
+          //          *
+          //          * 672
+          //          *
+          //          */
+          //         SetsPlayed: number;
+          //       };
+          //       "2v2": {
+          //         BestCharacter: {
+          //           /**
+          //            *
+          //            * character_Jason
+          //            *
+          //            */
+          //           CharacterSlug: string;
+          //           /**
+          //            *
+          //            * 35
+          //            *
+          //            */
+          //           CurrentPoints: number;
+          //           /**
+          //            *
+          //            * 0
+          //            *
+          //            */
+          //           GamesPlayed: number;
+          //           /**
+          //            *
+          //            * 2024-09-18T01:39:41.000Z
+          //            *
+          //            */
+          //           LastUpdateTimestamp: string;
+          //           /**
+          //            *
+          //            * 35
+          //            *
+          //            */
+          //           MaxPoints: number;
+          //           /**
+          //            *
+          //            * 1
+          //            *
+          //            */
+          //           SetsPlayed: number;
+          //         };
+          //         DataByCharacter: {
+          //           character_Jason: {
+          //             /**
+          //              *
+          //              * 35
+          //              *
+          //              */
+          //             CurrentPoints: number;
+          //             /**
+          //              *
+          //              * 0
+          //              *
+          //              */
+          //             DamageDealt: number;
+          //             /**
+          //              *
+          //              * 0
+          //              *
+          //              */
+          //             DamageTaken: number;
+          //             /**
+          //              *
+          //              * 0
+          //              *
+          //              */
+          //             Deaths: number;
+          //             /**
+          //              *
+          //              * 0
+          //              *
+          //              */
+          //             GamesPlayed: number;
+          //             /**
+          //              *
+          //              * 0
+          //              *
+          //              */
+          //             LastDecayMs: number;
+          //             /**
+          //              *
+          //              * 2024-09-18T01:39:41.000Z
+          //              *
+          //              */
+          //             LastUpdateTimestamp: string;
+          //             /**
+          //              *
+          //              * 0
+          //              *
+          //              */
+          //             Losses: number;
+          //             /**
+          //              *
+          //              * 35
+          //              *
+          //              */
+          //             MaxPoints: number;
+          //             /**
+          //              *
+          //              * 0
+          //              *
+          //              */
+          //             Ringouts: number;
+          //             /**
+          //              *
+          //              * 0
+          //              *
+          //              */
+          //             SetsPlayed: number;
+          //             /**
+          //              *
+          //              * 0
+          //              *
+          //              */
+          //             Wins: number;
+          //           };
+          //         };
+          //         /**
+          //          *
+          //          * 129774
+          //          *
+          //          */
+          //         FinalLeaderboardRank: number;
+          //         /**
+          //          *
+          //          * 0
+          //          *
+          //          */
+          //         GamesPlayed: number;
+          //         /**
+          //          *
+          //          * 0
+          //          *
+          //          */
+          //         SetsPlayed: number;
+          //       };
+          //     };
+          //     bEndOfSeasonRewardsGranted: boolean;
+          //   };
+          // };
+          // "Season:SeasonTwo": {
+          //   Ranked: {
+          //     /**
+          //      *
+          //      * EC1B6F59453B11272D24DD94189FC209
+          //      *
+          //      */
+          //     ClaimedRewards: string[];
+          //     DataByMode: {
+          //       "1v1": {
+          //         BestCharacter: {
+          //           /**
+          //            *
+          //            * character_Jason
+          //            *
+          //            */
+          //           CharacterSlug: string;
+          //           /**
+          //            *
+          //            * 2709
+          //            *
+          //            */
+          //           CurrentPoints: number;
+          //           /**
+          //            *
+          //            * 2270
+          //            *
+          //            */
+          //           GamesPlayed: number;
+          //           /**
+          //            *
+          //            * 2024-07-26T04:35:44.000Z
+          //            *
+          //            */
+          //           LastUpdateTimestamp: string;
+          //           /**
+          //            *
+          //            * 2745
+          //            *
+          //            */
+          //           MaxPoints: number;
+          //           /**
+          //            *
+          //            * 1317
+          //            *
+          //            */
+          //           SetsPlayed: number;
+          //         };
+          //         DataByCharacter: {
+          //           character_Jason: {
+          //             /**
+          //              *
+          //              * 2709
+          //              *
+          //              */
+          //             CurrentPoints: number;
+          //             /**
+          //              *
+          //              * 518935
+          //              *
+          //              */
+          //             DamageDealt: number;
+          //             /**
+          //              *
+          //              * 670230
+          //              *
+          //              */
+          //             DamageTaken: number;
+          //             /**
+          //              *
+          //              * 4941
+          //              *
+          //              */
+          //             Deaths: number;
+          //             /**
+          //              *
+          //              * 2270
+          //              *
+          //              */
+          //             GamesPlayed: number;
+          //             /**
+          //              *
+          //              * 0
+          //              *
+          //              */
+          //             LastDecayMs: number;
+          //             /**
+          //              *
+          //              * 2024-09-17T05:37:40.000Z
+          //              *
+          //              */
+          //             LastUpdateTimestamp: string;
+          //             /**
+          //              *
+          //              * 752
+          //              *
+          //              */
+          //             Losses: number;
+          //             /**
+          //              *
+          //              * 2745
+          //              *
+          //              */
+          //             MaxPoints: number;
+          //             /**
+          //              *
+          //              * 5496
+          //              *
+          //              */
+          //             Ringouts: number;
+          //             /**
+          //              *
+          //              * 1317
+          //              *
+          //              */
+          //             SetsPlayed: number;
+          //             /**
+          //              *
+          //              * 753
+          //              *
+          //              */
+          //             Wins: number;
+          //           };
+          //         };
+          //         /**
+          //          *
+          //          * 745
+          //          *
+          //          */
+          //         FinalLeaderboardRank: number;
+          //         /**
+          //          *
+          //          * 2272
+          //          *
+          //          */
+          //         GamesPlayed: number;
+          //         /**
+          //          *
+          //          * 2024-09-17T05:37:40.000Z
+          //          *
+          //          */
+          //         LastUpdateTimestamp: string;
+          //         /**
+          //          *
+          //          * 1318
+          //          *
+          //          */
+          //         SetsPlayed: number;
+          //       };
+          //       "2v2": {
+          //         BestCharacter: {
+          //           /**
+          //            *
+          //            * character_Jason
+          //            *
+          //            */
+          //           CharacterSlug: string;
+          //           /**
+          //            *
+          //            * 1035
+          //            *
+          //            */
+          //           CurrentPoints: number;
+          //           /**
+          //            *
+          //            * 107
+          //            *
+          //            */
+          //           GamesPlayed: number;
+          //           /**
+          //            *
+          //            * 2024-08-20T02:02:32.000Z
+          //            *
+          //            */
+          //           LastUpdateTimestamp: string;
+          //           /**
+          //            *
+          //            * 1047
+          //            *
+          //            */
+          //           MaxPoints: number;
+          //           /**
+          //            *
+          //            * 48
+          //            *
+          //            */
+          //           SetsPlayed: number;
+          //         };
+          //         DataByCharacter: {
+          //           character_Jason: {
+          //             /**
+          //              *
+          //              * 1035
+          //              *
+          //              */
+          //             CurrentPoints: number;
+          //             /**
+          //              *
+          //              * 18082
+          //              *
+          //              */
+          //             DamageDealt: number;
+          //             /**
+          //              *
+          //              * 26826
+          //              *
+          //              */
+          //             DamageTaken: number;
+          //             /**
+          //              *
+          //              * 177
+          //              *
+          //              */
+          //             Deaths: number;
+          //             /**
+          //              *
+          //              * 107
+          //              *
+          //              */
+          //             GamesPlayed: number;
+          //             /**
+          //              *
+          //              * 0
+          //              *
+          //              */
+          //             LastDecayMs: number;
+          //             /**
+          //              *
+          //              * 2024-08-24T16:45:00.000Z
+          //              *
+          //              */
+          //             LastUpdateTimestamp: string;
+          //             /**
+          //              *
+          //              * 26
+          //              *
+          //              */
+          //             Losses: number;
+          //             /**
+          //              *
+          //              * 1047
+          //              *
+          //              */
+          //             MaxPoints: number;
+          //             /**
+          //              *
+          //              * 193
+          //              *
+          //              */
+          //             Ringouts: number;
+          //             /**
+          //              *
+          //              * 48
+          //              *
+          //              */
+          //             SetsPlayed: number;
+          //             /**
+          //              *
+          //              * 25
+          //              *
+          //              */
+          //             Wins: number;
+          //           };
+          //         };
+          //         /**
+          //          *
+          //          * 37414
+          //          *
+          //          */
+          //         FinalLeaderboardRank: number;
+          //         /**
+          //          *
+          //          * 107
+          //          *
+          //          */
+          //         GamesPlayed: number;
+          //         /**
+          //          *
+          //          * 2024-08-24T16:45:00.000Z
+          //          *
+          //          */
+          //         LastUpdateTimestamp: string;
+          //         /**
+          //          *
+          //          * 48
+          //          *
+          //          */
+          //         SetsPlayed: number;
+          //       };
+          //     };
+          //     bEndOfSeasonRewardsGranted: boolean;
+          //   };
+          // };
         };
         /**
          *
@@ -2653,11 +2639,7 @@ export namespace MVSResponses {
          */
         TotalPrestige: number;
         Transforms: {
-          currency_conversion_errored: {
-            Version_1: boolean;
-            Version_2: boolean;
-            Version_3: boolean;
-          };
+          currency_conversion_errored: {};
           welcome_back: boolean;
         };
         checked_grants: {
@@ -2991,8 +2973,8 @@ export namespace MVSResponses {
              *
              */
             character_wonder_woman: number;
-          };
-          season1: {
+          };} &
+          PartialRecord<"season1"|"season2"|"season3"|"season4"|"season5",{
             /**
              *
              * 131.25
@@ -3042,531 +3024,530 @@ export namespace MVSResponses {
                *
                */
               character_shaggy: number;
-            };
-          };
-          season2: {
-            /**
-             *
-             * 546.0574951171875
-             *
-             */
-            HighestDamageDealt: number;
-            /**
-             *
-             * 32
-             *
-             */
-            TotalAssists: number;
-            /**
-             *
-             * 19596
-             *
-             */
-            TotalAttacksDodged: number;
-            /**
-             *
-             * 6
-             *
-             */
-            TotalDoubleRingouts: number;
-            /**
-             *
-             * 12
-             *
-             */
-            TotalRingoutLeader: number;
-            /**
-             *
-             * 5774
-             *
-             */
-            TotalRingouts: number;
-            /**
-             *
-             * 1349
-             *
-             */
-            TotalWins: number;
-            character_highest_damage_dealt: {
-              /**
-               *
-               * 546.0574951171875
-               *
-               */
-              character_Jason: number;
-            };
-            character_matches: {
-              /**
-               *
-               * 2409
-               *
-               */
-              character_Jason: number;
-            };
-            character_ringouts: {
-              /**
-               *
-               * 5774
-               *
-               */
-              character_Jason: number;
-            };
-            character_total_damage_dealt: {
-              /**
-               *
-               * 545648.9259185791
-               *
-               */
-              character_Jason: number;
-            };
-            character_wins: {
-              /**
-               *
-               * 1349
-               *
-               */
-              character_Jason: number;
-            };
-            ranked: {
-              "1v1": {
-                /**
-                 *
-                 * 1
-                 *
-                 */
-                CharactersInGold: number;
-                /**
-                 *
-                 * 779
-                 *
-                 */
-                Wins: number;
-              };
-              "2v2": {
-                /**
-                 *
-                 * 1
-                 *
-                 */
-                CharactersInGold: number;
-              };
-            };
-          };
-          season3: {
-            /**
-             *
-             * 591
-             *
-             */
-            HighestDamageDealt: number;
-            /**
-             *
-             * 12501
-             *
-             */
-            TotalAttacksDodged: number;
-            /**
-             *
-             * 7
-             *
-             */
-            TotalDoubleRingouts: number;
-            /**
-             *
-             * 3
-             *
-             */
-            TotalRingoutLeader: number;
-            /**
-             *
-             * 3957
-             *
-             */
-            TotalRingouts: number;
-            /**
-             *
-             * 920
-             *
-             */
-            TotalWins: number;
-            character_highest_damage_dealt: {
-              /**
-               *
-               * 591
-               *
-               */
-              character_Jason: number;
-            };
-            character_matches: {
-              /**
-               *
-               * 1600
-               *
-               */
-              character_Jason: number;
-            };
-            character_ringouts: {
-              /**
-               *
-               * 3957
-               *
-               */
-              character_Jason: number;
-            };
-            character_total_damage_dealt: {
-              /**
-               *
-               * 379634
-               *
-               */
-              character_Jason: number;
-            };
-            character_wins: {
-              /**
-               *
-               * 920
-               *
-               */
-              character_Jason: number;
-            };
-            ranked: {
-              "1v1": {
-                /**
-                 *
-                 * 1
-                 *
-                 */
-                CharactersInGold: number;
-                /**
-                 *
-                 * 404
-                 *
-                 */
-                Wins: number;
-              };
-            };
-          };
-          season4: {
-            /**
-             *
-             * 643
-             *
-             */
-            HighestDamageDealt: number;
-            /**
-             *
-             * 2
-             *
-             */
-            TotalAssists: number;
-            /**
-             *
-             * 10418
-             *
-             */
-            TotalAttacksDodged: number;
-            /**
-             *
-             * 1
-             *
-             */
-            TotalDoubleRingouts: number;
-            /**
-             *
-             * 1
-             *
-             */
-            TotalRingoutLeader: number;
-            /**
-             *
-             * 2785
-             *
-             */
-            TotalRingouts: number;
-            /**
-             *
-             * 599
-             *
-             */
-            TotalWins: number;
-            character_highest_damage_dealt: {
-              /**
-               *
-               * 167
-               *
-               */
-              character_C018: number;
-              /**
-               *
-               * 643
-               *
-               */
-              character_Jason: number;
-            };
-            character_matches: {
-              /**
-               *
-               * 2
-               *
-               */
-              character_C018: number;
-              /**
-               *
-               * 1217
-               *
-               */
-              character_Jason: number;
-            };
-            character_ringouts: {
-              /**
-               *
-               * 3
-               *
-               */
-              character_C018: number;
-              /**
-               *
-               * 2782
-               *
-               */
-              character_Jason: number;
-            };
-            character_total_damage_dealt: {
-              /**
-               *
-               * 295
-               *
-               */
-              character_C018: number;
-              /**
-               *
-               * 370542
-               *
-               */
-              character_Jason: number;
-            };
-            character_wins: {
-              /**
-               *
-               * 1
-               *
-               */
-              character_C018: number;
-              /**
-               *
-               * 598
-               *
-               */
-              character_Jason: number;
-            };
-            ranked: {
-              "1v1": {
-                /**
-                 *
-                 * 1
-                 *
-                 */
-                CharactersInGold: number;
-                /**
-                 *
-                 * 242
-                 *
-                 */
-                Wins: number;
-              };
-            };
-          };
-          season5: {
-            /**
-             *
-             * 656
-             *
-             */
-            HighestDamageDealt: number;
-            /**
-             *
-             * 14
-             *
-             */
-            TotalAssists: number;
-            /**
-             *
-             * 3680
-             *
-             */
-            TotalAttacksDodged: number;
-            /**
-             *
-             * 4
-             *
-             */
-            TotalDoubleRingouts: number;
-            /**
-             *
-             * 4
-             *
-             */
-            TotalRingoutLeader: number;
-            /**
-             *
-             * 923
-             *
-             */
-            TotalRingouts: number;
-            /**
-             *
-             * 251
-             *
-             */
-            TotalWins: number;
-            character_highest_damage_dealt: {
-              /**
-               *
-               * 656
-               *
-               */
-              character_Jason: number;
-              /**
-               *
-               * 310
-               *
-               */
-              character_c16: number;
-              /**
-               *
-               * 459
-               *
-               */
-              character_shaggy: number;
-              /**
-               *
-               * 524
-               *
-               */
-              character_wonder_woman: number;
-            };
-            character_matches: {
-              /**
-               *
-               * 382
-               *
-               */
-              character_Jason: number;
-              /**
-               *
-               * 1
-               *
-               */
-              character_c16: number;
-              /**
-               *
-               * 65
-               *
-               */
-              character_shaggy: number;
-              /**
-               *
-               * 9
-               *
-               */
-              character_wonder_woman: number;
-            };
-            character_ringouts: {
-              /**
-               *
-               * 855
-               *
-               */
-              character_Jason: number;
-              /**
-               *
-               * 3
-               *
-               */
-              character_c16: number;
-              /**
-               *
-               * 40
-               *
-               */
-              character_shaggy: number;
-              /**
-               *
-               * 25
-               *
-               */
-              character_wonder_woman: number;
-            };
-            character_total_damage_dealt: {
-              /**
-               *
-               * 111475
-               *
-               */
-              character_Jason: number;
-              /**
-               *
-               * 310
-               *
-               */
-              character_c16: number;
-              /**
-               *
-               * 3908
-               *
-               */
-              character_shaggy: number;
-              /**
-               *
-               * 3285
-               *
-               */
-              character_wonder_woman: number;
-            };
-            character_wins: {
-              /**
-               *
-               * 186
-               *
-               */
-              character_Jason: number;
-              /**
-               *
-               * 1
-               *
-               */
-              character_c16: number;
-              /**
-               *
-               * 57
-               *
-               */
-              character_shaggy: number;
-              /**
-               *
-               * 7
-               *
-               */
-              character_wonder_woman: number;
-            };
-            ranked: {
-              "1v1": {
-                /**
-                 *
-                 * 1
-                 *
-                 */
-                CharactersInGold: number;
-                /**
-                 *
-                 * 80
-                 *
-                 */
-                Wins: number;
-              };
-            };
-          };
-        };
+            }}>
+        //   season2: {
+        //     /**
+        //      *
+        //      * 546.0574951171875
+        //      *
+        //      */
+        //     HighestDamageDealt: number;
+        //     /**
+        //      *
+        //      * 32
+        //      *
+        //      */
+        //     TotalAssists: number;
+        //     /**
+        //      *
+        //      * 19596
+        //      *
+        //      */
+        //     TotalAttacksDodged: number;
+        //     /**
+        //      *
+        //      * 6
+        //      *
+        //      */
+        //     TotalDoubleRingouts: number;
+        //     /**
+        //      *
+        //      * 12
+        //      *
+        //      */
+        //     TotalRingoutLeader: number;
+        //     /**
+        //      *
+        //      * 5774
+        //      *
+        //      */
+        //     TotalRingouts: number;
+        //     /**
+        //      *
+        //      * 1349
+        //      *
+        //      */
+        //     TotalWins: number;
+        //     character_highest_damage_dealt: {
+        //       /**
+        //        *
+        //        * 546.0574951171875
+        //        *
+        //        */
+        //       character_Jason: number;
+        //     };
+        //     character_matches: {
+        //       /**
+        //        *
+        //        * 2409
+        //        *
+        //        */
+        //       character_Jason: number;
+        //     };
+        //     character_ringouts: {
+        //       /**
+        //        *
+        //        * 5774
+        //        *
+        //        */
+        //       character_Jason: number;
+        //     };
+        //     character_total_damage_dealt: {
+        //       /**
+        //        *
+        //        * 545648.9259185791
+        //        *
+        //        */
+        //       character_Jason: number;
+        //     };
+        //     character_wins: {
+        //       /**
+        //        *
+        //        * 1349
+        //        *
+        //        */
+        //       character_Jason: number;
+        //     };
+        //     ranked: {
+        //       "1v1": {
+        //         /**
+        //          *
+        //          * 1
+        //          *
+        //          */
+        //         CharactersInGold: number;
+        //         /**
+        //          *
+        //          * 779
+        //          *
+        //          */
+        //         Wins: number;
+        //       };
+        //       "2v2": {
+        //         /**
+        //          *
+        //          * 1
+        //          *
+        //          */
+        //         CharactersInGold: number;
+        //       };
+        //     };
+        //   };
+        //   season3: {
+        //     /**
+        //      *
+        //      * 591
+        //      *
+        //      */
+        //     HighestDamageDealt: number;
+        //     /**
+        //      *
+        //      * 12501
+        //      *
+        //      */
+        //     TotalAttacksDodged: number;
+        //     /**
+        //      *
+        //      * 7
+        //      *
+        //      */
+        //     TotalDoubleRingouts: number;
+        //     /**
+        //      *
+        //      * 3
+        //      *
+        //      */
+        //     TotalRingoutLeader: number;
+        //     /**
+        //      *
+        //      * 3957
+        //      *
+        //      */
+        //     TotalRingouts: number;
+        //     /**
+        //      *
+        //      * 920
+        //      *
+        //      */
+        //     TotalWins: number;
+        //     character_highest_damage_dealt: {
+        //       /**
+        //        *
+        //        * 591
+        //        *
+        //        */
+        //       character_Jason: number;
+        //     };
+        //     character_matches: {
+        //       /**
+        //        *
+        //        * 1600
+        //        *
+        //        */
+        //       character_Jason: number;
+        //     };
+        //     character_ringouts: {
+        //       /**
+        //        *
+        //        * 3957
+        //        *
+        //        */
+        //       character_Jason: number;
+        //     };
+        //     character_total_damage_dealt: {
+        //       /**
+        //        *
+        //        * 379634
+        //        *
+        //        */
+        //       character_Jason: number;
+        //     };
+        //     character_wins: {
+        //       /**
+        //        *
+        //        * 920
+        //        *
+        //        */
+        //       character_Jason: number;
+        //     };
+        //     ranked: {
+        //       "1v1": {
+        //         /**
+        //          *
+        //          * 1
+        //          *
+        //          */
+        //         CharactersInGold: number;
+        //         /**
+        //          *
+        //          * 404
+        //          *
+        //          */
+        //         Wins: number;
+        //       };
+        //     };
+        //   };
+        //   season4: {
+        //     /**
+        //      *
+        //      * 643
+        //      *
+        //      */
+        //     HighestDamageDealt: number;
+        //     /**
+        //      *
+        //      * 2
+        //      *
+        //      */
+        //     TotalAssists: number;
+        //     /**
+        //      *
+        //      * 10418
+        //      *
+        //      */
+        //     TotalAttacksDodged: number;
+        //     /**
+        //      *
+        //      * 1
+        //      *
+        //      */
+        //     TotalDoubleRingouts: number;
+        //     /**
+        //      *
+        //      * 1
+        //      *
+        //      */
+        //     TotalRingoutLeader: number;
+        //     /**
+        //      *
+        //      * 2785
+        //      *
+        //      */
+        //     TotalRingouts: number;
+        //     /**
+        //      *
+        //      * 599
+        //      *
+        //      */
+        //     TotalWins: number;
+        //     character_highest_damage_dealt: {
+        //       /**
+        //        *
+        //        * 167
+        //        *
+        //        */
+        //       character_C018: number;
+        //       /**
+        //        *
+        //        * 643
+        //        *
+        //        */
+        //       character_Jason: number;
+        //     };
+        //     character_matches: {
+        //       /**
+        //        *
+        //        * 2
+        //        *
+        //        */
+        //       character_C018: number;
+        //       /**
+        //        *
+        //        * 1217
+        //        *
+        //        */
+        //       character_Jason: number;
+        //     };
+        //     character_ringouts: {
+        //       /**
+        //        *
+        //        * 3
+        //        *
+        //        */
+        //       character_C018: number;
+        //       /**
+        //        *
+        //        * 2782
+        //        *
+        //        */
+        //       character_Jason: number;
+        //     };
+        //     character_total_damage_dealt: {
+        //       /**
+        //        *
+        //        * 295
+        //        *
+        //        */
+        //       character_C018: number;
+        //       /**
+        //        *
+        //        * 370542
+        //        *
+        //        */
+        //       character_Jason: number;
+        //     };
+        //     character_wins: {
+        //       /**
+        //        *
+        //        * 1
+        //        *
+        //        */
+        //       character_C018: number;
+        //       /**
+        //        *
+        //        * 598
+        //        *
+        //        */
+        //       character_Jason: number;
+        //     };
+        //     ranked: {
+        //       "1v1": {
+        //         /**
+        //          *
+        //          * 1
+        //          *
+        //          */
+        //         CharactersInGold: number;
+        //         /**
+        //          *
+        //          * 242
+        //          *
+        //          */
+        //         Wins: number;
+        //       };
+        //     };
+        //   };
+        //   season5: {
+        //     /**
+        //      *
+        //      * 656
+        //      *
+        //      */
+        //     HighestDamageDealt: number;
+        //     /**
+        //      *
+        //      * 14
+        //      *
+        //      */
+        //     TotalAssists: number;
+        //     /**
+        //      *
+        //      * 3680
+        //      *
+        //      */
+        //     TotalAttacksDodged: number;
+        //     /**
+        //      *
+        //      * 4
+        //      *
+        //      */
+        //     TotalDoubleRingouts: number;
+        //     /**
+        //      *
+        //      * 4
+        //      *
+        //      */
+        //     TotalRingoutLeader: number;
+        //     /**
+        //      *
+        //      * 923
+        //      *
+        //      */
+        //     TotalRingouts: number;
+        //     /**
+        //      *
+        //      * 251
+        //      *
+        //      */
+        //     TotalWins: number;
+        //     character_highest_damage_dealt: {
+        //       /**
+        //        *
+        //        * 656
+        //        *
+        //        */
+        //       character_Jason: number;
+        //       /**
+        //        *
+        //        * 310
+        //        *
+        //        */
+        //       character_c16: number;
+        //       /**
+        //        *
+        //        * 459
+        //        *
+        //        */
+        //       character_shaggy: number;
+        //       /**
+        //        *
+        //        * 524
+        //        *
+        //        */
+        //       character_wonder_woman: number;
+        //     };
+        //     character_matches: {
+        //       /**
+        //        *
+        //        * 382
+        //        *
+        //        */
+        //       character_Jason: number;
+        //       /**
+        //        *
+        //        * 1
+        //        *
+        //        */
+        //       character_c16: number;
+        //       /**
+        //        *
+        //        * 65
+        //        *
+        //        */
+        //       character_shaggy: number;
+        //       /**
+        //        *
+        //        * 9
+        //        *
+        //        */
+        //       character_wonder_woman: number;
+        //     };
+        //     character_ringouts: {
+        //       /**
+        //        *
+        //        * 855
+        //        *
+        //        */
+        //       character_Jason: number;
+        //       /**
+        //        *
+        //        * 3
+        //        *
+        //        */
+        //       character_c16: number;
+        //       /**
+        //        *
+        //        * 40
+        //        *
+        //        */
+        //       character_shaggy: number;
+        //       /**
+        //        *
+        //        * 25
+        //        *
+        //        */
+        //       character_wonder_woman: number;
+        //     };
+        //     character_total_damage_dealt: {
+        //       /**
+        //        *
+        //        * 111475
+        //        *
+        //        */
+        //       character_Jason: number;
+        //       /**
+        //        *
+        //        * 310
+        //        *
+        //        */
+        //       character_c16: number;
+        //       /**
+        //        *
+        //        * 3908
+        //        *
+        //        */
+        //       character_shaggy: number;
+        //       /**
+        //        *
+        //        * 3285
+        //        *
+        //        */
+        //       character_wonder_woman: number;
+        //     };
+        //     character_wins: {
+        //       /**
+        //        *
+        //        * 186
+        //        *
+        //        */
+        //       character_Jason: number;
+        //       /**
+        //        *
+        //        * 1
+        //        *
+        //        */
+        //       character_c16: number;
+        //       /**
+        //        *
+        //        * 57
+        //        *
+        //        */
+        //       character_shaggy: number;
+        //       /**
+        //        *
+        //        * 7
+        //        *
+        //        */
+        //       character_wonder_woman: number;
+        //     };
+        //     ranked: {
+        //       "1v1": {
+        //         /**
+        //          *
+        //          * 1
+        //          *
+        //          */
+        //         CharactersInGold: number;
+        //         /**
+        //          *
+        //          * 80
+        //          *
+        //          */
+        //         Wins: number;
+        //       };
+        //     };
+        //   };
+        // };
       };
       server_owner_data: {};
       /**
@@ -3574,7 +3555,7 @@ export namespace MVSResponses {
        * 2025-03-14T16:43:54.000Z
        *
        */
-      updated_at: string;
+      updated_at: number;
       /**
        *
        * test-user-segment
@@ -23918,219 +23899,220 @@ export namespace MVSResponses {
     expires_in: number;
     mfa_required: boolean;
     sdk: {
-      realtime: {
-        /**
-         *
-         * ec2-us-east-1-prod-network
-         *
-         */
-        "default-cluster": string;
-        enabled: boolean;
-        servers: {
-          "ec2-us-east-1-prod-network": {
-            "prod-network-realtime-1/1": {
-              /**
-               *
-               * 0.0.0.0:0
-               *
-               */
-              udp: string;
-              /**
-               *
-               * ws://3.82.168.122:8101
-               *
-               */
-              ws: string;
-              /**
-               *
-               * wss://us-east-1-prod-network-realtime-1.wbagora.com:9101
-               *
-               */
-              wss: string;
-            };
-            "prod-network-realtime-1/2": {
-              /**
-               *
-               * 0.0.0.0:0
-               *
-               */
-              udp: string;
-              /**
-               *
-               * ws://3.82.168.122:8102
-               *
-               */
-              ws: string;
-              /**
-               *
-               * wss://us-east-1-prod-network-realtime-1.wbagora.com:9102
-               *
-               */
-              wss: string;
-            };
-            "prod-network-realtime-2/1": {
-              /**
-               *
-               * 0.0.0.0:0
-               *
-               */
-              udp: string;
-              /**
-               *
-               * ws://3.212.5.165:8101
-               *
-               */
-              ws: string;
-              /**
-               *
-               * wss://us-east-1-prod-network-realtime-2.wbagora.com:9101
-               *
-               */
-              wss: string;
-            };
-            "prod-network-realtime-2/2": {
-              /**
-               *
-               * 0.0.0.0:0
-               *
-               */
-              udp: string;
-              /**
-               *
-               * ws://3.212.5.165:8102
-               *
-               */
-              ws: string;
-              /**
-               *
-               * wss://us-east-1-prod-network-realtime-2.wbagora.com:9102
-               *
-               */
-              wss: string;
-            };
-            "prod-network-realtime-3/1": {
-              /**
-               *
-               * 0.0.0.0:0
-               *
-               */
-              udp: string;
-              /**
-               *
-               * ws://54.175.211.158:8101
-               *
-               */
-              ws: string;
-              /**
-               *
-               * wss://us-east-1-prod-network-realtime-3.wbagora.com:9101
-               *
-               */
-              wss: string;
-            };
-            "prod-network-realtime-5/2": {
-              /**
-               *
-               * 0.0.0.0:0
-               *
-               */
-              udp: string;
-              /**
-               *
-               * ws://107.22.28.83:8102
-               *
-               */
-              ws: string;
-              /**
-               *
-               * wss://us-east-1-prod-network-realtime-5.wbagora.com:9102
-               *
-               */
-              wss: string;
-            };
-            "prod-network-realtime-6/1": {
-              /**
-               *
-               * 0.0.0.0:0
-               *
-               */
-              udp: string;
-              /**
-               *
-               * ws://3.86.158.46:8101
-               *
-               */
-              ws: string;
-              /**
-               *
-               * wss://us-east-1-prod-network-realtime-6.wbagora.com:9101
-               *
-               */
-              wss: string;
-            };
-            "prod-network-realtime-6/2": {
-              /**
-               *
-               * 0.0.0.0:0
-               *
-               */
-              udp: string;
-              /**
-               *
-               * ws://3.86.158.46:8102
-               *
-               */
-              ws: string;
-              /**
-               *
-               * wss://us-east-1-prod-network-realtime-6.wbagora.com:9102
-               *
-               */
-              wss: string;
-            };
-            "prod-network-realtime-7/1": {
-              /**
-               *
-               * 0.0.0.0:0
-               *
-               */
-              udp: string;
-              /**
-               *
-               * ws://44.202.240.184:8101
-               *
-               */
-              ws: string;
-              /**
-               *
-               * wss://us-east-1-prod-network-realtime-7.wbagora.com:9101
-               *
-               */
-              wss: string;
-            };
-            "prod-network-realtime-8/1": {
-              /**
-               *
-               * 0.0.0.0:0
-               *
-               */
-              udp: string;
-              /**
-               *
-               * ws://18.212.34.2:8101
-               *
-               */
-              ws: string;
-              /**
-               *
-               * wss://us-east-1-prod-network-realtime-8.wbagora.com:9101
-               *
-               */
-              wss: string;
-            };
-          };
-        };
-      };
+      // realtime: {
+      //   /**
+      //    *
+      //    * ec2-us-east-1-prod-network
+      //    *
+      //    */
+      //   "default-cluster": string;
+      //   enabled: boolean;
+      //   servers: {
+      //     "ec2-us-east-1-prod-network": {
+      //       "prod-network-realtime-1/1": {
+      //         /**
+      //          *
+      //          * 0.0.0.0:0
+      //          *
+      //          */
+      //         udp: string;
+      //         /**
+      //          *
+      //          * ws://3.82.168.122:8101
+      //          *
+      //          */
+      //         ws: string;
+      //         /**
+      //          *
+      //          * wss://us-east-1-prod-network-realtime-1.wbagora.com:9101
+      //          *
+      //          */
+      //         wss: string;
+      //       };
+      //       "prod-network-realtime-1/2": {
+      //         /**
+      //          *
+      //          * 0.0.0.0:0
+      //          *
+      //          */
+      //         udp: string;
+      //         /**
+      //          *
+      //          * ws://3.82.168.122:8102
+      //          *
+      //          */
+      //         ws: string;
+      //         /**
+      //          *
+      //          * wss://us-east-1-prod-network-realtime-1.wbagora.com:9102
+      //          *
+      //          */
+      //         wss: string;
+      //       };
+      //       "prod-network-realtime-2/1": {
+      //         /**
+      //          *
+      //          * 0.0.0.0:0
+      //          *
+      //          */
+      //         udp: string;
+      //         /**
+      //          *
+      //          * ws://3.212.5.165:8101
+      //          *
+      //          */
+      //         ws: string;
+      //         /**
+      //          *
+      //          * wss://us-east-1-prod-network-realtime-2.wbagora.com:9101
+      //          *
+      //          */
+      //         wss: string;
+      //       };
+      //       "prod-network-realtime-2/2": {
+      //         /**
+      //          *
+      //          * 0.0.0.0:0
+      //          *
+      //          */
+      //         udp: string;
+      //         /**
+      //          *
+      //          * ws://3.212.5.165:8102
+      //          *
+      //          */
+      //         ws: string;
+      //         /**
+      //          *
+      //          * wss://us-east-1-prod-network-realtime-2.wbagora.com:9102
+      //          *
+      //          */
+      //         wss: string;
+      //       };
+      //       "prod-network-realtime-3/1": {
+      //         /**
+      //          *
+      //          * 0.0.0.0:0
+      //          *
+      //          */
+      //         udp: string;
+      //         /**
+      //          *
+      //          * ws://54.175.211.158:8101
+      //          *
+      //          */
+      //         ws: string;
+      //         /**
+      //          *
+      //          * wss://us-east-1-prod-network-realtime-3.wbagora.com:9101
+      //          *
+      //          */
+      //         wss: string;
+      //       };
+      //       "prod-network-realtime-5/2": {
+      //         /**
+      //          *
+      //          * 0.0.0.0:0
+      //          *
+      //          */
+      //         udp: string;
+      //         /**
+      //          *
+      //          * ws://107.22.28.83:8102
+      //          *
+      //          */
+      //         ws: string;
+      //         /**
+      //          *
+      //          * wss://us-east-1-prod-network-realtime-5.wbagora.com:9102
+      //          *
+      //          */
+      //         wss: string;
+      //       };
+      //       "prod-network-realtime-6/1": {
+      //         /**
+      //          *
+      //          * 0.0.0.0:0
+      //          *
+      //          */
+      //         udp: string;
+      //         /**
+      //          *
+      //          * ws://3.86.158.46:8101
+      //          *
+      //          */
+      //         ws: string;
+      //         /**
+      //          *
+      //          * wss://us-east-1-prod-network-realtime-6.wbagora.com:9101
+      //          *
+      //          */
+      //         wss: string;
+      //       };
+      //       "prod-network-realtime-6/2": {
+      //         /**
+      //          *
+      //          * 0.0.0.0:0
+      //          *
+      //          */
+      //         udp: string;
+      //         /**
+      //          *
+      //          * ws://3.86.158.46:8102
+      //          *
+      //          */
+      //         ws: string;
+      //         /**
+      //          *
+      //          * wss://us-east-1-prod-network-realtime-6.wbagora.com:9102
+      //          *
+      //          */
+      //         wss: string;
+      //       };
+      //       "prod-network-realtime-7/1": {
+      //         /**
+      //          *
+      //          * 0.0.0.0:0
+      //          *
+      //          */
+      //         udp: string;
+      //         /**
+      //          *
+      //          * ws://44.202.240.184:8101
+      //          *
+      //          */
+      //         ws: string;
+      //         /**
+      //          *
+      //          * wss://us-east-1-prod-network-realtime-7.wbagora.com:9101
+      //          *
+      //          */
+      //         wss: string;
+      //       };
+      //       "prod-network-realtime-8/1": {
+      //         /**
+      //          *
+      //          * 0.0.0.0:0
+      //          *
+      //          */
+      //         udp: string;
+      //         /**
+      //          *
+      //          * ws://18.212.34.2:8101
+      //          *
+      //          */
+      //         ws: string;
+      //         /**
+      //          *
+      //          * wss://us-east-1-prod-network-realtime-8.wbagora.com:9101
+      //          *
+      //          */
+      //         wss: string;
+      //       };
+      //     };
+      //   };
+      // };
+      realtime: ServerConfiguration["realtime"]
     };
   }
 
