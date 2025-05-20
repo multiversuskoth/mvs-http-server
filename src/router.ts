@@ -44,7 +44,7 @@ router.post(
   (req: Request<{}, {}, {}, MVSQueries.Datarouter_api_v1_public_data_clients_QUERY>, res: Response) => {
     // @ts-ignore TODO : implementation. Remove comment once implemented`
     h.handleDatarouter_api_v1_public_data_clients(req, res);
-  }
+  },
 );
 
 router.put("/drives/multiversus/sync", (req: Request<{}, {}, {}, {}>, res: Response) => {
@@ -127,7 +127,7 @@ router.get(
   (req: Request<{}, {}, {}, MVSQueries.Global_configuration_types_calendarflags_global_configurations_QUERY>, res: Response) => {
     // @ts-ignore TODO : implementation. Remove comment once implemented`
     h.handleGlobal_configuration_types_calendarflags_global_configurations(req, res);
-  }
+  },
 );
 
 router.get(
@@ -135,7 +135,7 @@ router.get(
   (req: Request<{}, {}, {}, MVSQueries.Global_configuration_types_wwshopconfiguration_global_configurations_QUERY>, res: Response) => {
     // @ts-ignore TODO : implementation. Remove comment once implemented`
     h.handleGlobal_configuration_types_wwshopconfiguration_global_configurations(req, res);
-  }
+  },
 );
 
 router.get(
@@ -143,7 +143,7 @@ router.get(
   (req: Request<MVSParams, {}, {}, MVSQueries.Layout_dokken_layout_type_personalized_account_cosmetics_variant_id_QUERY>, res: Response) => {
     // @ts-ignore TODO : implementation. Remove comment once implemented`
     h.handleLayout_dokken_layout_type_personalized_account_cosmetics_variant_id(req, res);
-  }
+  },
 );
 
 router.get(
@@ -151,7 +151,7 @@ router.get(
   (req: Request<MVSParams, {}, {}, MVSQueries.Layout_dokken_layout_type_personalized_battlepass_variant_id_QUERY>, res: Response) => {
     // @ts-ignore TODO : implementation. Remove comment once implemented`
     h.handleLayout_dokken_layout_type_personalized_battlepass_variant_id(req, res);
-  }
+  },
 );
 
 router.get(
@@ -159,7 +159,7 @@ router.get(
   (req: Request<MVSParams, {}, {}, MVSQueries.Layout_dokken_layout_type_personalized_currency_variant_id_QUERY>, res: Response) => {
     // @ts-ignore TODO : implementation. Remove comment once implemented`
     h.handleLayout_dokken_layout_type_personalized_currency_variant_id(req, res);
-  }
+  },
 );
 
 router.get(
@@ -167,7 +167,7 @@ router.get(
   (req: Request<MVSParams, {}, {}, MVSQueries.Layout_dokken_layout_type_personalized_fighter_road_layout_id_QUERY>, res: Response) => {
     // @ts-ignore TODO : implementation. Remove comment once implemented`
     h.handleLayout_dokken_layout_type_personalized_fighter_road_layout_id(req, res);
-  }
+  },
 );
 
 router.get(
@@ -175,7 +175,7 @@ router.get(
   (req: Request<MVSParams, {}, {}, MVSQueries.Layout_dokken_layout_type_personalized_fighter_variant_id_QUERY>, res: Response) => {
     // @ts-ignore TODO : implementation. Remove comment once implemented`
     h.handleLayout_dokken_layout_type_personalized_fighter_variant_id(req, res);
-  }
+  },
 );
 
 router.get(
@@ -183,7 +183,7 @@ router.get(
   (req: Request<MVSParams, {}, {}, MVSQueries.Layout_dokken_layout_type_personalized_main_variant_id_QUERY>, res: Response) => {
     // @ts-ignore TODO : implementation. Remove comment once implemented`
     h.handleLayout_dokken_layout_type_personalized_main_variant_id(req, res);
-  }
+  },
 );
 
 router.get(
@@ -191,7 +191,7 @@ router.get(
   (req: Request<MVSParams, {}, {}, MVSQueries.Layout_dokken_layout_type_personalized_prestige_variant_id_QUERY>, res: Response) => {
     // @ts-ignore TODO : implementation. Remove comment once implemented`
     h.handleLayout_dokken_layout_type_personalized_prestige_variant_id(req, res);
-  }
+  },
 );
 
 router.get(
@@ -199,7 +199,7 @@ router.get(
   (req: Request<MVSParams, {}, {}, MVSQueries.Layout_dokken_layout_type_personalized_rift_variant_id_QUERY>, res: Response) => {
     // @ts-ignore TODO : implementation. Remove comment once implemented`
     h.handleLayout_dokken_layout_type_personalized_rift_variant_id(req, res);
-  }
+  },
 );
 
 router.get(
@@ -207,7 +207,7 @@ router.get(
   (req: Request<MVSParams, {}, {}, MVSQueries.Layout_dokken_layout_type_personalized_skin_variant_id_QUERY>, res: Response) => {
     // @ts-ignore TODO : implementation. Remove comment once implemented`
     h.handleLayout_dokken_layout_type_personalized_skin_variant_id(req, res);
-  }
+  },
 );
 
 router.put("/matches/:id", (req: Request<MVSParams, {}, {}, {}>, res: Response) => {

@@ -13,6 +13,7 @@ const env = cleanEnv(process.env, {
   REDIS_PORT: num(),
   REDIS_PASSWORD: str(),
   REDIS_USERNAME: str(),
+  JWT_SECRET: str(),
 });
 
 export default env;

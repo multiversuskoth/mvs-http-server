@@ -1,5 +1,5 @@
-enum BattlePassScoreTypeClass{
-  "current_value"
+enum BattlePassScoreTypeClass {
+  "current_value",
 }
 
 export default BattlePassScoreTypeClass;

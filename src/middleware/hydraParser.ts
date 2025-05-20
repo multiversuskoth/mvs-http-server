@@ -1,4 +1,5 @@
 import { NextFunction, Request, Response } from "express";
+import { StatusCodes } from "http-status-codes";
 
 import { HydraDecoder, HydraEncoder } from "mvs-dump";
 
@@ -50,7 +51,7 @@ export const hydraDecoderMiddleware = <T>(req: Request, res: Response, next: Nex
       return res;
     };
   } else {
-    next();
+    res.sendStatus(StatusCodes.BAD_REQUEST);
   }
 };
 

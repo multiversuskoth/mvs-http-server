@@ -1,6 +1,8 @@
-import express, { Request, Response } from "express";
+import { Request, Response } from "express";
 import { MVSQueries } from "../interfaces/queries_types";
 
+// TODO: This is a mock function, it should be replaced with the actual implementation
+// THIS A WB PROD ENDPOINT and we might need to re implement it and we can't figure out how to obtain a token from them
 export async function handleSessions_auth_token(req: Request<{}, {}, {}, MVSQueries.Sessions_auth_token_QUERY>, res: Response) {
   res.send({
     access_token:
@@ -73,7 +75,7 @@ export async function handleSessions_auth_token(req: Request<{}, {}, {}, MVSQuer
       email_verified: false,
       password_set: false,
       mfa_active: false,
-      username: "MultiVersusKOTH",
+      username: "MVSI",
       can_change_username: true,
       age_category: "adult",
       child_age_gate: null,
