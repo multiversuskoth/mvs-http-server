@@ -15,11 +15,11 @@ const PutProfilesQueryParams = z.object({
 
 export async function handleProfiles_bulk(
   req: Request<{}, MVSResponses.Profiles_bulk_RESPONSE, MVSRequests.Profiles_bulk_REQUEST, {}>,
-  res: Response,
+  res: Response<MVSResponses.Profiles_bulk_RESPONSE[]>,
 ) {
   let includeAccount = false;
 
-  const responseObject: Array<any> = [];
+  const playersDB: Player[] = [];
   let requestBody;
   {
     const parseQueryFields = PutProfilesRequest.safeParse(req.body);
@@ -75,7 +75,7 @@ export async function handleProfiles_bulk(
   if (includeAccount) {
     playersQuery = playersQuery.populate("account");
   }
-  const players = await playersQuery;
+  const players = await playersQuery.lean().exec();
   const mapAccountIdToPlayer: Map<string, (typeof players)[0]> = new Map();
   players.map((doc) => {
     mapAccountIdToPlayer.set(doc.account_id, doc);
@@ -83,11 +83,24 @@ export async function handleProfiles_bulk(
   for (const accountId of requestBody.ids) {
     const player = mapAccountIdToPlayer.get(accountId);
     if (player != undefined) {
-      responseObject.push(Player.flatten(player.toJSON()));
-    } else {
-      responseObject.push(null);
+      playersDB.push(Player.flatten(player));
     }
   }
 
-  res.send(responseObject);
+  const response = playersDB.map((player) => {
+    const res: MVSResponses.Profiles_bulk_RESPONSE = {
+      id: player.id,
+      account_id: player.account_id,
+      created_at: new Date(player.created_at).toISOString(),
+      updated_at: new Date(player.updated_at).toISOString(),
+      last_login: new Date(player.last_login).toISOString(),
+      random_distribution: player.random_distribution,
+      user_segments: player.user_segments,
+      points: player.points,
+      account: player.account,
+    };
+    return res;
+  });
+
+  res.send(response);
 }

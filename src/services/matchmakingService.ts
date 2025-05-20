@@ -1,13 +1,4 @@
-import {
-  ON_MATCH_MAKER_STARTED_CHANNEL,
-  ON_MATCH_MAKER_STARTED_NOTIFICATION,
-  redisClient,
-  redisGetPlayer,
-  RedisMatchTicket,
-  redisOnMatchMakerStarted,
-  redisPushTicketToQueue,
-  redisUpdatePlayerStatus,
-} from "../config/redis";
+import { redisGetPlayer, RedisMatchTicket, redisOnMatchMakerStarted, redisPushTicketToQueue, redisUpdatePlayerStatus } from "../config/redis";
 import { logger } from "../config/logger";
 import { MVSTime } from "../utils/date";
 
@@ -34,7 +25,7 @@ export async function queueMatch(playerIds: string[], partyId: string, matchmaki
             skill: 0,
             ip: playerConfig.ip,
           };
-        })
+        }),
       ),
     };
 

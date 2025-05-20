@@ -19,7 +19,7 @@ import {
   redisGetAllPlayersEquippedComsetics,
   redisGetPlayerPerk,
   redisGetPlayers,
-  RedisMatchMakingCompleteNotification
+  RedisMatchMakingCompleteNotification,
 } from "./config/redis";
 import { GAME_SERVER_PORT } from "./game/udp";
 import { AccountToken } from "./handlers";
@@ -38,7 +38,7 @@ export class WebSocketPlayer {
     this.ws = _ws;
   }
 
-  send(data: Object) {
+  send(data: object) {
     const encoder = new HydraEncoder(true);
     encoder.encodeValue(data);
     if (!this.deleted) {
@@ -168,7 +168,7 @@ export class WebSocketService {
   handleHandshake(playerWS: WebSocketPlayer, message: Buffer) {
     const decodedBody = parseInitHydraWebsocketMessage(message);
     // Send ID, hard coded for now
-    let buffer = Buffer.from([
+    const buffer = Buffer.from([
       0x09, 0x01, 0x00, 0x24, 0x39, 0x35, 0x34, 0x65, 0x37, 0x37, 0x36, 0x30, 0x2d, 0x35, 0x33, 0x39, 0x62, 0x2d, 0x34, 0x33, 0x36, 0x63, 0x2d, 0x61,
       0x35, 0x37, 0x64, 0x2d, 0x62, 0x35, 0x36, 0x32, 0x33, 0x66, 0x36, 0x37, 0x61, 0x37, 0x34, 0x64,
     ]);
@@ -332,7 +332,7 @@ export class WebSocketService {
         Character: playerLoadout.character,
         Banner: playerConfig.Banner,
         // TODO: We should get this from database?
-        StatTrackers: playerConfig.StatTrackers.StatTrackerSlots.map((s) => [s, 1]), 
+        StatTrackers: playerConfig.StatTrackers.StatTrackerSlots.map((s) => [s, 1]),
         Perks: [],
         PlayerIndex: player.playerIndex,
         PartyId: player.partyId,

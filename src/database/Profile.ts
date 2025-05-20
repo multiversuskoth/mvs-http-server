@@ -1,13 +1,13 @@
 import { getModelForClass, modelOptions, prop } from "@typegoose/typegoose";
-import toJSONVirtualId from "../utils/toJSONVirtualId"; // might be needed?
-import { dateToMVSTime } from "../utils/date";
+
+import { MVSTime } from "../utils/date";
 
 @modelOptions({
   schemaOptions: {
-      _id: true,
-      toJSON: { virtuals: true },
-      toObject: { virtuals: true },
-  }
+    _id: true,
+    toJSON: { virtuals: true },
+    toObject: { virtuals: true },
+  },
 })
 export class Profile {
   @prop({ required: true })
@@ -43,9 +43,9 @@ export interface PerkPage {
   PerkSlugs: string[];
 }
 
-@modelOptions({schemaOptions: {_id: false}})
+@modelOptions({ schemaOptions: { _id: false } })
 export class CharacterPerkPreferences {
-  @prop({default: null, type: Number})
+  @prop({ default: null, type: Number })
   LastSelectedPage: number | null = null;
 
   @prop()
@@ -106,56 +106,55 @@ export interface RankData {
   games_played: number;
 }
 
-@modelOptions({schemaOptions: {_id: false}})
+@modelOptions({ schemaOptions: { _id: false } })
 export class RankedData {
-//   v0Ranked: RankData = {
-//     current_points: 0,
-//     max_points: 0,
-//     games_played: 0
-//   };
-    [season: string] : RankData;
+  //   v0Ranked: RankData = {
+  //     current_points: 0,
+  //     max_points: 0,
+  //     games_played: 0
+  //   };
+  [season: string]: RankData;
 }
 
-@modelOptions({schemaOptions: {_id: false}})
+@modelOptions({ schemaOptions: { _id: false } })
 export class InventoryItem {
-  @prop({required: true})
+  @prop({ required: true })
   count!: number;
-  @prop({required: true, type: Date, get: dateToMVSTime})
+  @prop({ required: true, type: Date, get: MVSTime })
   created_at!: number;
 }
 
-@modelOptions({schemaOptions: {_id: false}})
+@modelOptions({ schemaOptions: { _id: false } })
 export class Inventory {
-  
-  @prop({required:true})
+  @prop({ required: true })
   characters!: { [key: string]: InventoryItem };
 
-  @prop({required:true})
+  @prop({ required: true })
   gleamium!: InventoryItem; // TODO: change name to our own currency
-  
-  @prop({required:true})
-  battlePassSeasons!: { [key: string]: InventoryItem };
-  
-//   @prop()
-//   ringOutVfxDecompiled?: InventoryItem; //TODO: figure out what this is
 
-  @prop({required:true})
+  @prop({ required: true })
+  battlePassSeasons!: { [key: string]: InventoryItem };
+
+  //   @prop()
+  //   ringOutVfxDecompiled?: InventoryItem; //TODO: figure out what this is
+
+  @prop({ required: true })
   characterCurrency!: InventoryItem;
 
-  @prop({required:true})
+  @prop({ required: true })
   skins!: { [key: string]: InventoryItem };
 }
 
 export interface MatchStats {
-    win: number;
-    loss: number;
-    win_streak: number;
-    loss_streak: number;
-    longest_win_streak: number;
-    longest_loss_streak: number;
+  win: number;
+  loss: number;
+  win_streak: number;
+  loss_streak: number;
+  longest_win_streak: number;
+  longest_loss_streak: number;
 }
 
-@modelOptions({schemaOptions: {_id: false}})
+@modelOptions({ schemaOptions: { _id: false } })
 export class MatchHistory {
   @prop()
   v1v1Container: MatchStats = {
@@ -164,7 +163,7 @@ export class MatchHistory {
     win_streak: 0,
     loss_streak: 0,
     longest_win_streak: 0,
-    longest_loss_streak: 0
+    longest_loss_streak: 0,
   };
 
   @prop()
@@ -174,7 +173,7 @@ export class MatchHistory {
     win_streak: 0,
     loss_streak: 0,
     longest_win_streak: 0,
-    longest_loss_streak: 0
+    longest_loss_streak: 0,
   };
 
   @prop()
@@ -184,7 +183,7 @@ export class MatchHistory {
     win_streak: 0,
     loss_streak: 0,
     longest_win_streak: 0,
-    longest_loss_streak: 0
+    longest_loss_streak: 0,
   };
 
   @prop()
@@ -194,7 +193,7 @@ export class MatchHistory {
     win_streak: 0,
     loss_streak: 0,
     longest_win_streak: 0,
-    longest_loss_streak: 0
+    longest_loss_streak: 0,
   };
 
   @prop()
@@ -204,7 +203,7 @@ export class MatchHistory {
     win_streak: 0,
     loss_streak: 0,
     longest_win_streak: 0,
-    longest_loss_streak: 0
+    longest_loss_streak: 0,
   };
 
   @prop()
@@ -214,7 +213,7 @@ export class MatchHistory {
     win_streak: 0,
     loss_streak: 0,
     longest_win_streak: 0,
-    longest_loss_streak: 0
+    longest_loss_streak: 0,
   };
 
   @prop()
@@ -224,7 +223,7 @@ export class MatchHistory {
     win_streak: 0,
     loss_streak: 0,
     longest_win_streak: 0,
-    longest_loss_streak: 0
+    longest_loss_streak: 0,
   };
 
   @prop()
@@ -234,7 +233,7 @@ export class MatchHistory {
     win_streak: 0,
     loss_streak: 0,
     longest_win_streak: 0,
-    longest_loss_streak: 0
+    longest_loss_streak: 0,
   };
 
   @prop()
@@ -244,7 +243,7 @@ export class MatchHistory {
     win_streak: 0,
     loss_streak: 0,
     longest_win_streak: 0,
-    longest_loss_streak: 0
+    longest_loss_streak: 0,
   };
 }
 
@@ -259,15 +258,15 @@ export interface Identity {
   avatar: string | null;
   default_username: boolean;
   alternate: {
-      wb_network: IdentityAlternate[];
-      twitch: IdentityAlternate[];
-      discord: IdentityAlternate[];
-      google: IdentityAlternate[];
-      nintendo: IdentityAlternate[];
-      xb1: IdentityAlternate[];
-      steam?: IdentityAlternate[];
-      ps4?: IdentityAlternate[];
-      epic?: IdentityAlternate[];
+    wb_network: IdentityAlternate[];
+    twitch: IdentityAlternate[];
+    discord: IdentityAlternate[];
+    google: IdentityAlternate[];
+    nintendo: IdentityAlternate[];
+    xb1: IdentityAlternate[];
+    steam?: IdentityAlternate[];
+    ps4?: IdentityAlternate[];
+    epic?: IdentityAlternate[];
   };
 }
 
@@ -281,8 +280,8 @@ export interface Account {
   public_id: string;
   identity: Identity;
   wb_account: {
-      completed: boolean;
-      email_verified: boolean;
+    completed: boolean;
+    email_verified: boolean;
   };
   points: number;
   state: string;
@@ -292,8 +291,8 @@ export interface Account {
 }
 
 export interface StatTrackers {
-    character_wins?: { [character: string] : number }
-    [key: string]: number | {[key: string]: number} | undefined
+  character_wins?: { [character: string]: number };
+  [key: string]: number | { [key: string]: number } | undefined;
 }
 
 export interface OwnedPerks {
@@ -302,9 +301,7 @@ export interface OwnedPerks {
   };
 }
 
-
 export const profileModel = getModelForClass(Profile);
-
 
 /**
  * The interfaces and classes below represent certain structures/objects that could be derived from the profiles dump, but I still need to figure out,
@@ -348,7 +345,6 @@ export const profileModel = getModelForClass(Profile);
 //   @prop({required: true})
 //   data!: { [seasonElementKey: string]: SeasonData };
 // }
-
 
 // @modelOptions({schemaOptions: {_id: false}})
 // export class GameData {
@@ -416,7 +412,7 @@ export const profileModel = getModelForClass(Profile);
 //       win_streak_ranked_2v2?: number;
 //       loss_streak_ranked_2v2?: number;
 //   };
-  
+
 //   @prop()
 //   data?: {
 //       "2v2_prompt_shown"?: number;

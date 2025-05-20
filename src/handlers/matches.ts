@@ -1,4 +1,4 @@
-import express, { Request, Response } from "express";
+import { Request, Response } from "express";
 import { MVSQueries } from "../interfaces/queries_types";
 import ObjectID from "bson-objectid";
 import { randomUUID } from "crypto";
@@ -206,7 +206,7 @@ export interface Matches_matchmaking_1v1_retail_request_REQUEST {
 
 export async function handleMatches_matchmaking_1v1_retail_request(
   req: Request<{}, {}, Matches_matchmaking_1v1_retail_request_REQUEST, {}>,
-  res: Response
+  res: Response,
 ) {
   const account = req.token;
   const data = {

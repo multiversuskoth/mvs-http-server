@@ -7,7 +7,7 @@ import { Matches } from "./Matches";
 import UserSegment from "../enums/user_segment";
 import { Account } from "./Account";
 import toJSONVirtualId from "../utils/toJSONVirtualId";
-import { dateToMVSTime } from "../utils/date";
+import { MVSTime } from "../utils/date";
 import { MapToRecord } from "../utils/mapToRecord";
 import Characters from "../enums/characters";
 import characterKeysValidator from "../utils/characterKeysValidator";
@@ -109,15 +109,15 @@ export class Player {
     localField: "account_id",
     justOne: true,
   })
-  account?: Account;
+  account!: Account;
 
-  @prop({ type: Date, required: true, get: dateToMVSTime })
+  @prop({ type: Date, required: true, get: MVSTime })
   updated_at!: number;
   @prop({ required: true, ref: () => Account })
   account_id!: string;
-  @prop({ type: Date, required: true, get: dateToMVSTime })
+  @prop({ type: Date, required: true, get: MVSTime })
   created_at!: number;
-  @prop({ type: Date, required: true, get: dateToMVSTime })
+  @prop({ type: Date, required: true, get: MVSTime })
   last_login!: number;
 
   points = null;
@@ -154,7 +154,7 @@ export class Player {
   @prop({ required: true })
   matches!: Matches;
 
-  public static flatten(player: MapToRecord<Player>, result: Record<any, any> = {}): Record<any, any> {
+  public static flatten(player: MapToRecord<Player>, result: Record<any, any> = {}) {
     for (const [key, value] of Object.entries(player) as Entries<Player>) {
       if (!["inventory", "server_data", "matches"].includes(key)) {
         result[key] = value;
@@ -170,7 +170,7 @@ export class Player {
       result.account = {};
       Account.flatten(player.account, result.account);
     }
-    return result;
+    return result as Player;
   }
 }
 
