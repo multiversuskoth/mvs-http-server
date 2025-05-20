@@ -219,7 +219,7 @@ async function createMatch(tickets: RedisMatchTicket[], matchType: string): Prom
       ticket.players.map((player) => ({
         playerId: player.id,
         partyId: ticket.partyId,
-      }))
+      })),
     );
 
     // Store match data
@@ -241,7 +241,7 @@ async function createMatch(tickets: RedisMatchTicket[], matchType: string): Prom
       await redisMatchMakingComplete(
         matchId,
         ticket.matchmakingRequestId,
-        ticket.players.map((p) => p.id)
+        ticket.players.map((p) => p.id),
       );
       await redisGameServerInstanceReady(matchId, playerIds);
     }

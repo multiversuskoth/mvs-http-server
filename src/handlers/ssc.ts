@@ -1466,7 +1466,7 @@ export async function handleSsc_invoke_claim_mission_rewards(req: Request<{}, {}
 export async function handleSsc_invoke_create_party_lobby(req: Request<{}, {}, {}, {}>, res: Response) {
   const account = req.token;
   const loadout = { Character: "character_shaggy", Skin: "skin_shaggy_default" };
-  let ip = req.ip!.replace(/^::ffff:/, '');
+  let ip = req.ip!.replace(/^::ffff:/, "");
   redisUpdatePlayerLoadout(account.id, loadout.Character, loadout.Skin, ip);
   res.send({
     body: {
@@ -59317,7 +59317,7 @@ export async function handleSsc_invoke_perks_lock(req: Request<{}, {}, Ssc_invok
             return true;
           }
           return false;
-        })
+        }),
     );
     const allPerksLocked = playersPerks.every((perk) => perk === true);
     if (allPerksLocked) {

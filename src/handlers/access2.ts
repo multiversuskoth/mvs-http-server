@@ -753,7 +753,7 @@ function generateStaticAccess() {
 }
 
 export async function handleAccess(req: Request<{}, {}, {}, {}>, res: Response) {
-/*   delete req.headers["content-length"];
+  /*   delete req.headers["content-length"];
   delete req.headers["content-type"];
   let request = ky.post("https://dokken-api.wbagora.com/access", {
     // @ts-ignore

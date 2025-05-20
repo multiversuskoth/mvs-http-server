@@ -97,7 +97,6 @@ export function decompressPacket(compressedBuffer: Buffer | Uint8Array, original
     }
   }
 
-
   // Return only the requested portion
   return outBuf.subarray(0, originalLength);
 }

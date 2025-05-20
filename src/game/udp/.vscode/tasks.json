@@ -1,58 +1,45 @@
 {
-    "version": "2.0.0",
-    "tasks": [
-        {
-            "label": "CMake: configure",
-            "command": "cmake",
-            "type": "shell",
-            "args": [
-                "-DCMAKE_BUILD_TYPE=Debug",
-                "-DCMAKE_TOOLCHAIN_FILE=${env:VCPKG_ROOT}/scripts/buildsystems/vcpkg.cmake",
-                "-B",
-                "${workspaceFolder}/build",
-                "-G",
-                "Visual Studio 17 2022",
-                "."
-            ],
-            "problemMatcher": [],
-            "group": {
-                "kind": "build",
-                "isDefault": false
-            }
-        },
-        {
-            "label": "CMake: build",
-            "command": "cmake",
-            "args": [
-                "--build",
-                "${workspaceFolder}/build",
-                "--config",
-                "Debug",
-                "--parallel"
-            ],
-            "dependsOn": [
-                "CMake: configure"
-            ],
-            "problemMatcher": "$msCompile",
-            "group": {
-                "kind": "build",
-                "isDefault": true
-            }
-        },
-        {
-            "label": "CMake: clean",
-            "command": "cmake",
-            "args": [
-                "--build",
-                "${workspaceFolder}/build",
-                "--target",
-                "clean"
-            ],
-            "problemMatcher": "$msCompile",
-            "group": {
-                "kind": "build",
-                "isDefault": false
-            }
-        }
-    ]
+  "version": "2.0.0",
+  "tasks": [
+    {
+      "label": "CMake: configure",
+      "command": "cmake",
+      "type": "shell",
+      "args": [
+        "-DCMAKE_BUILD_TYPE=Debug",
+        "-DCMAKE_TOOLCHAIN_FILE=${env:VCPKG_ROOT}/scripts/buildsystems/vcpkg.cmake",
+        "-B",
+        "${workspaceFolder}/build",
+        "-G",
+        "Visual Studio 17 2022",
+        "."
+      ],
+      "problemMatcher": [],
+      "group": {
+        "kind": "build",
+        "isDefault": false
+      }
+    },
+    {
+      "label": "CMake: build",
+      "command": "cmake",
+      "args": ["--build", "${workspaceFolder}/build", "--config", "Debug", "--parallel"],
+      "dependsOn": ["CMake: configure"],
+      "problemMatcher": "$msCompile",
+      "group": {
+        "kind": "build",
+        "isDefault": true
+      }
+    },
+    {
+      "label": "CMake: clean",
+      "command": "cmake",
+      "args": ["--build", "${workspaceFolder}/build", "--target", "clean"],
+      "problemMatcher": "$msCompile",
+      "group": {
+        "kind": "build",
+        "isDefault": false
+      }
+    }
+  ]
 }

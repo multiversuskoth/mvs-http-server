@@ -12,7 +12,7 @@ export async function handleFriends_me(req: Request<{}, {}, {}, MVSQueries.Frien
 
 export async function handleFriends_me_invitations_incoming(
   req: Request<{}, {}, {}, MVSQueries.Friends_me_invitations_incoming_QUERY>,
-  res: Response
+  res: Response,
 ) {
   res.send({
     total: 0,
@@ -24,7 +24,7 @@ export async function handleFriends_me_invitations_incoming(
 
 export async function handleFriends_me_invitations_outgoing(
   req: Request<{}, {}, {}, MVSQueries.Friends_me_invitations_outgoing_QUERY>,
-  res: Response
+  res: Response,
 ) {
   res.send({
     total: 0,
