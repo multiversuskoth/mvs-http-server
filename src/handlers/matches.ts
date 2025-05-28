@@ -358,3 +358,250 @@ export async function handleMatches_matchmaking_1v1_retail_request(
   res.send(data);
   await queueMatch([account.id], data.from_match, data.id, MATCH_TYPES.ONE_V_ONE);
 }
+
+export interface Matches_matchmaking_2v2_retail_request_REQUEST {
+  data: {
+    MultiplayParams: {
+      /**
+       *
+       * ec2-us-east-1-dokken
+       *
+       */
+      MultiplayClusterSlug: string;
+      /**
+       *
+       * 1252922
+       *
+       */
+      MultiplayProfileId: string;
+      /**
+       *
+       * 19c465a7-f21f-11ea-a5e3-0954f48c5682
+       *
+       */
+      MultiplayRegionId: string;
+      /**
+       *
+       * 1
+       *
+       */
+      MultiplayRegionSearchId: number;
+    };
+    /**
+     *
+     * All, PC
+     *
+     */
+    crossplay_buckets: string[];
+    /**
+     *
+     * CLIENT:2F322-Retail DATA:4CF442B2 PERKS:1
+     *
+     */
+    version: string;
+  };
+  game_server: {
+    launch_data: {
+      /**
+       *
+       * 1
+       *
+       */
+      id: number;
+      /**
+       *
+       * 1252928
+       *
+       */
+      profile: string;
+    };
+  };
+  /**
+   *
+   * 67bbf0ce5c8a8646987ed4d7
+   *
+   */
+  match: string;
+}
+
+export async function handleMatches_matchmaking_2v2_retail_request(
+  req: Request<{}, {}, Matches_matchmaking_2v2_retail_request_REQUEST, {}>,
+  res: Response
+) {
+  const account = req.token;
+  
+  // Create mock team member ID for this example
+  const teamMemberId = "6220449ade97658e6d8f15ba"; 
+  
+  const data = {
+    id: ObjectID().toHexString(),
+    updated_at: { _hydra_unix_date: MVSTime(new Date()) },
+    requester_account_id: account.id,
+    is_concurrent: false,
+    concurrent_identifier: randomUUID(),
+    created_at: { _hydra_unix_date: MVSTime(new Date()) },
+    data: {
+      MultiplayParams: req.body.data.MultiplayParams,
+      crossplay_buckets: ["All", "PC"],
+      version: env.GAME_VERSION,
+      matchmaking_rating: 724.7928014055103,
+      player_count: 2,
+      double_character_key: req.body.match,
+      rp: 0,
+      allowed_buckets: ["Any"],
+      allowed_buckets_relaxed: ["Any"],
+    },
+    server_data: null,
+    criteria_slug: "2v2-retail",
+    cluster: req.body.data.MultiplayParams.MultiplayClusterSlug,
+    players_connection_info: {
+      [account.id]: {
+        game_server_region_data: [
+          { region_id: "19c465a7-f21f-11ea-a5e3-0954f48c5682", latency: 0.04791003838181496 },
+          { region_id: "19bf18ce-f21f-11ea-b94f-f946c68d5a4f", latency: 0.032452311366796494 },
+          { region_id: "19c714ff-f21f-11ea-b144-4d87911ee195", latency: 0.04194755107164383 },
+          { region_id: "657d35f8-ca5e-11ec-85a7-b6a275757dc0", latency: 0.03818315267562866 },
+          { region_id: "36e4f578-e5de-11ec-9b71-3e51faa28080", latency: 0.057214364409446716 },
+          { region_id: "19cb2fef-f21f-11ea-b925-3d9c90e67151", latency: 0.03817358240485191 },
+          { region_id: "19c5bb72-f21f-11ea-bfec-c59755e2312c", latency: 0.12067092955112457 },
+          { region_id: "19c86c46-f21f-11ea-a140-f58c0daacbb8", latency: 0.12324953079223633 },
+          { region_id: "f04a5e72-2891-11ed-8e82-fe3ccb088dde", latency: 0.011176947504281998 },
+        ],
+      },
+      [teamMemberId]: {
+        game_server_region_data: [
+          { region_id: "19c465a7-f21f-11ea-a5e3-0954f48c5682", latency: 0.047315504401922226 },
+          { region_id: "19bf18ce-f21f-11ea-b94f-f946c68d5a4f", latency: 0.03178314119577408 },
+          { region_id: "19c714ff-f21f-11ea-b144-4d87911ee195", latency: 0.041143469512462616 },
+          { region_id: "657d35f8-ca5e-11ec-85a7-b6a275757dc0", latency: 0.03874913603067398 },
+          { region_id: "36e4f578-e5de-11ec-9b71-3e51faa28080", latency: 0.05779409408569336 },
+          { region_id: "19cb2fef-f21f-11ea-b925-3d9c90e67151", latency: 0.03845618665218353 },
+          { region_id: "19c32880-f21f-11ea-a907-512b3194e649", latency: 0.12239193916320801 },
+          { region_id: "f04a5e72-2891-11ed-8e82-fe3ccb088dde", latency: 0.011610452085733414 },
+        ],
+      },
+    },
+    player_connections: {
+      [account.id]: [randomUUID()],
+      [teamMemberId]: [randomUUID()],
+    },
+    players: {
+      [account.id]: {
+        id: account.profile_id,
+        updated_at: null,
+        account_id: account.id,
+        created_at: null,
+        last_login: null,
+        last_inbox_read: null,
+        points: null,
+        data: {},
+        cross_match_results: {},
+        notifications: {},
+        aggregates: {},
+        calculations: {},
+        files: [],
+        random_distribution: null,
+      },
+      [teamMemberId]: {
+        id: teamMemberId + "b", // Adding 'b' to create a profile ID from account ID (example approach)
+        updated_at: null,
+        account_id: teamMemberId,
+        created_at: null,
+        last_login: null,
+        last_inbox_read: null,
+        points: null,
+        data: {},
+        cross_match_results: {},
+        notifications: {},
+        aggregates: {},
+        calculations: {},
+        files: [],
+        random_distribution: null,
+      },
+    },
+    groups: [2],
+    relationships: [],
+    recently_played: {
+      [account.id]: [],
+      [teamMemberId]: [],
+    },
+    from_match: req.body.match,
+    reuse_match: false,
+    party_id: null,
+    state: 2,
+    user_rule_config: [],
+    game_server: {
+      unique_key: null,
+      backend: "multiplay",
+      launch_configs: [
+        {
+          profile_id: "1252928",
+          fleet_id: "6edd4138-20ef-11ec-a2b7-4a5119a45304",
+          region_id: "19c714ff-f21f-11ea-b144-4d87911ee195",
+          backend: "multiplay",
+        },
+        {
+          profile_id: "1252928",
+          fleet_id: "6edd4138-20ef-11ec-a2b7-4a5119a45304",
+          region_id: "19c465a7-f21f-11ea-a5e3-0954f48c5682",
+          backend: "multiplay",
+        },
+        {
+          profile_id: "1252928",
+          fleet_id: "6edd4138-20ef-11ec-a2b7-4a5119a45304",
+          region_id: "19c32880-f21f-11ea-a907-512b3194e649",
+          backend: "multiplay",
+        },
+        {
+          profile_id: "1252928",
+          fleet_id: "6edd4138-20ef-11ec-a2b7-4a5119a45304",
+          region_id: "19bf18ce-f21f-11ea-b94f-f946c68d5a4f",
+          backend: "multiplay",
+        },
+        {
+          profile_id: "1252928",
+          fleet_id: "6edd4138-20ef-11ec-a2b7-4a5119a45304",
+          region_id: "19c5bb72-f21f-11ea-bfec-c59755e2312c",
+          backend: "multiplay",
+        },
+        {
+          profile_id: "1252928",
+          fleet_id: "6edd4138-20ef-11ec-a2b7-4a5119a45304",
+          region_id: "19c86c46-f21f-11ea-a140-f58c0daacbb8",
+          backend: "multiplay",
+        },
+        {
+          profile_id: "1252928",
+          fleet_id: "6edd4138-20ef-11ec-a2b7-4a5119a45304",
+          region_id: "657d35f8-ca5e-11ec-85a7-b6a275757dc0",
+          backend: "multiplay",
+        },
+        {
+          profile_id: "1252928",
+          fleet_id: "6edd4138-20ef-11ec-a2b7-4a5119a45304",
+          region_id: "36e4f578-e5de-11ec-9b71-3e51faa28080",
+          backend: "multiplay",
+        },
+        {
+          profile_id: "1252928",
+          fleet_id: "6edd4138-20ef-11ec-a2b7-4a5119a45304",
+          region_id: "19cb2fef-f21f-11ea-b925-3d9c90e67151",
+          backend: "multiplay",
+        },
+        {
+          profile_id: "1252928",
+          fleet_id: "6edd4138-20ef-11ec-a2b7-4a5119a45304",
+          region_id: "f04a5e72-2891-11ed-8e82-fe3ccb088dde",
+          backend: "multiplay",
+        },
+      ],
+      optional_launch_config_params: {},
+    },
+    server_submitted: false,
+  };
+  
+  res.send(data);
+  
+  // Queue both players for a 2v2 match
+  await queueMatch([account.id, teamMemberId], data.from_match, data.id, MATCH_TYPES.TWO_V_TWO);
+}
