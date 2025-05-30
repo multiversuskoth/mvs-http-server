@@ -7,6 +7,8 @@
     },
     "files.associations": {
         "valarray": "cpp",
-        "filesystem": "cpp"
+        "filesystem": "cpp",
+        "thread": "cpp",
+        "memory": "cpp"
     },
 }

@@ -15,7 +15,7 @@ const app = express();
 app.disable("x-powered-by");
 
 //const port = 12181;
-const port = 443;
+const port = 8000;
 
 process.on("warning", (e) => {
   console.warn(e.stack);
@@ -30,7 +30,7 @@ app.use(express.json());
 
 app.get("/hello", (req, res, next) => {
   console.log("HMM");
-  res.send("HELLO")
+  res.send("HELLO");
 });
 
 app.get("/global_configuration_types/eula/global_configurations/en-US", (req, res, next) => {
@@ -47,29 +47,15 @@ app.post("/mvsi_register", async (req, res, next) => {
     return {
       player_index: p.playerIndex,
       ip: p.ip,
-      is_host: p.ip === "IPPPPPP" ? true : false,
+      is_host: p.isHost
     };
   });
+  console.log(players);
   res.json({
     max_players: 2,
     match_duration: 36000,
     players,
   });
-});
-
-app.post("/mvsi_match_players", async (req, res, next) => {
-  console.log("GET mvsi_match_players");
-  const body = req.body;
-  const config = await redisGetMatchConfig(body.matchId);
-
-  const data = config.players.map((p) => {
-    return {
-      player_index: p.playerIndex,
-      ip: p.ip,
-      is_host: p.ip === "IPPPPPP" ? true : false,
-    };
-  });
-  res.json(data);
 });
 
 app.use(hydraDecoderMiddleware);
@@ -87,9 +73,8 @@ app.use((req, res, next) => {
   res.send({ body: { Crc: 1167552915, MatchmakingCrc: 1291076274 }, metadata: null, return_code: 200 });
 });
 
-//export const MVSHTTPServer = http.createServer(app);
-export const MVSHTTPServer = https.createServer(options,app);
-
+export const MVSHTTPServer = http.createServer(app);
+//export const MVSHTTPServer = https.createServer(options,app);
 
 export async function start() {
   await connect();

@@ -1,0 +1,73 @@
+    BlendMode : BLEND_Masked
+    HasPerInstanceCustomData : False
+    HasPerInstanceRandom : False
+    HasSceneColor : False
+    HasVertexInterpolator : False
+    MaterialDecalResponse : MDR_ColorNormalRoughness
+    MaterialDomain : MD_Surface
+    ShadingModel : MSM_TwoSidedFoliage
+    ShadingModels : (ShadingModelField=64)
+    StrataBlendMode : SBM_Opaque
+    TranslucencyLightingMode : TLM_VolumetricNonDirectional
+  /SpeedTreeImporter/SpeedTree9/SpeedTreeBranchMotion.SpeedTreeBranchMotion
+    bExposeToLibrary : False
+    CombinedInputTypes : 271
+    CombinedOutputTypes : 15
+    LibraryCategoriesText : (NSLOCTEXT("MaterialExpression", "Misc", "Misc"))
+    MaterialFunctionUsage : Default
+    PreviewBlendMode : BLEND_Opaque
+  /SpeedTreeImporter/SpeedTree9/SpeedTreeCameraFacing.SpeedTreeCameraFacing
+    bExposeToLibrary : True
+    CombinedInputTypes : 260
+    CombinedOutputTypes : 15
+    LibraryCategoriesText : (NSLOCTEXT("", "C717A8D98E49A77641A0F78FACFAE9E3", "SpeedTree"))
+    MaterialFunctionUsage : Default
+    PreviewBlendMode : BLEND_Opaque
+  /SpeedTreeImporter/SpeedTree9/SpeedTreeMaster.SpeedTreeMaster
+    BlendMode : BLEND_Masked
+    HasPerInstanceCustomData : False
+    HasPerInstanceRandom : False
+    HasSceneColor : False
+    HasVertexInterpolator : False
+    MaterialDecalResponse : MDR_ColorNormalRoughness
+    MaterialDomain : MD_Surface
+    ShadingModel : MSM_TwoSidedFoliage
+    ShadingModels : (ShadingModelField=64)
+    StrataBlendMode : SBM_Opaque
+    TranslucencyLightingMode : TLM_VolumetricNonDirectional
+  /SpeedTreeImporter/SpeedTree9/SpeedTreeWind.SpeedTreeWind
+    bExposeToLibrary : True
+    CombinedInputTypes : 271
+    CombinedOutputTypes : 15
+    LibraryCategoriesText : (NSLOCTEXT("", "34A3B4DED34FD06D18BED89CD21B1105", "SpeedTree"))
+    MaterialFunctionUsage : Default
+    PreviewBlendMode : BLEND_Opaque
+  /SpeedTreeImporter/SpeedTree9/SpeedTreeWindMotion.SpeedTreeWindMotion
+    bExposeToLibrary : True
+    CombinedInputTypes : 15
+    CombinedOutputTypes : 15
+    Description : SpeedTree Wind Function
+    LibraryCategoriesText : (NSLOCTEXT("", "E39CBAAA49C11F23C8B2D5B845A9561A", "SpeedTree"))
+    MaterialFunctionUsage : Default
+    PreviewBlendMode : BLEND_Opaque
+  /SpeedTreeImporter/SpeedTree9/UnpackDirection.UnpackDirection
+    bExposeToLibrary : True
+    CombinedInputTypes : 15
+    CombinedOutputTypes : 15
+    LibraryCategoriesText : (NSLOCTEXT("", "205C74EF47178C53C636D9AEF5790C56", "SpeedTree"),"")
+    MaterialFunctionUsage : Default
+    PreviewBlendMode : BLEND_Opaque
+  /SpeedTreeImporter/SpeedTree9/UnpackInteger3.UnpackInteger3
+    bExposeToLibrary : False
+    CombinedInputTypes : 15
+    CombinedOutputTypes : 15
+    LibraryCategoriesText : (NSLOCTEXT("", "52B9769548C9A6AF4D7795AE21A75471", "SpeedTree"))
+    MaterialFunctionUsage : Default
+    PreviewBlendMode : BLEND_Opaque
+--- End AssetTags : 524 entries ---
+--- Begin CachedDependsNodes ---
+--- End CachedDependsNodes : 0 entries ---
+--- Begin CachedPackageData ---
+--- End CachedPackageData : 0 entries ---
+--- Begin AssetBundles ---
+--- End AssetBundles : 0 entries ---

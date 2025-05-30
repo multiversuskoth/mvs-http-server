@@ -1465,12 +1465,12 @@ export async function handleSsc_invoke_claim_mission_rewards(req: Request<{}, {}
 
 export async function handleSsc_invoke_create_party_lobby(req: Request<{}, {}, {}, {}>, res: Response) {
   const account = req.token;
-  const loadout = { Character: "character_supershaggy", Skin: "skin_c035_s01" };
-  let ip = req.ip!.replace(/^::ffff:/, '');
-  if(ip ==="127.0.0.1") {
-    ip = "IPPPPPP"
+  const loadout = { Character: "character_supershaggy", Skin: "supershaggy" };
+  let ip = req.ip!.replace(/^::ffff:/, "");
+  if (ip === "127.0.0.1") {
+    ip = "73.209.44.199";
   }
-  console.log(ip)
+  console.log(ip);
   redisUpdatePlayerLoadout(account.id, loadout.Character, loadout.Skin, ip);
   res.send({
     body: {
@@ -1787,6 +1787,8 @@ export async function handleSsc_invoke_get_equipped_cosmetics(req: Request<{}, {
   const EquippedCosmetcis = {
     Taunts: {
       character_supershaggy: { TauntSlots: ["taunt_supershaggy_default"] },
+      Character_C022: { TauntSlots: [] },
+      character_Meeseeks: { TauntSlots: [] },
       character_Jason: { TauntSlots: ["taunt_jason_default", "emote_pass_the_salt", "taunt_jason_default", "taunt_jason_default"] },
       character_wonder_woman: {
         TauntSlots: [
@@ -3342,8 +3344,8 @@ export async function handleSsc_invoke_get_milestone_reward_tracks(req: Request<
         {
           TrackSlug: "mrt_mastery_jason",
           RewardTrackClass: "MvsCharacterMasteryRewardTrackHsda",
-          CurrentScore: 560973,
-          CurrentTier: 47,
+          CurrentScore: 0,
+          CurrentTier: 0,
           CompletedTiers: [
             "78FFA5974EE943D6FF7A86BA47858270",
             "F4D17FE34575936D75F719884EF973FD",

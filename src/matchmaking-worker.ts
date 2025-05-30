@@ -229,7 +229,7 @@ async function createMatch(tickets: RedisMatchTicket[], matchType: string): Prom
       players: await createTeams(tickets),
       matchId,
       matchKey: randomBytes(32).toString("base64"),
-      map: "M016_V3",
+      map: "M011_V2",
       mode: matchType,
     };
 

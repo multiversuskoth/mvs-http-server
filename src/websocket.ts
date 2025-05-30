@@ -25,7 +25,7 @@ import {
   RedisMatchMakingCompleteNotification,
 } from "./config/redis";
 import { Server } from "https";
-import { Server as HttpServer} from "http";
+import { Server as HttpServer } from "http";
 import { GAME_SERVER_PORT } from "./game/udp";
 import { logger } from "./config/logger";
 import { MVSTime } from "./utils/date";
@@ -39,8 +39,11 @@ export class WebSocketPlayer {
   account: AccountToken | undefined;
   matchTick: NodeJS.Timeout | undefined;
   matchConfig?: GameNotification;
+  ip: string;
 
-  constructor(_ws: WebSocket) {
+  constructor(_ws: WebSocket, ip: string) {
+    this.ip = ip;
+    console.log(ip);
     this.ws = _ws;
   }
 
@@ -163,7 +166,7 @@ export class WebSocketService {
   clients: Map<string, WebSocketPlayer> = new Map();
   redisSub: RedisClient;
 
-  constructor(server: Server | HttpServer ) {
+  constructor(server: Server | HttpServer) {
     this.redisSub = initRedisSubscriber();
     this.ws = new WebSocketServer({ server });
     this.setupSocketHandlers();
@@ -204,7 +207,9 @@ export class WebSocketService {
   setupSocketHandlers() {
     this.ws.on("connection", (ws, request) => {
       console.log("Client connected");
-      const playerWS = new WebSocketPlayer(ws);
+      let ip = request.socket.remoteAddress!.replace(/^::ffff:/, "");
+
+      const playerWS = new WebSocketPlayer(ws, ip!);
       ws.on("message", (message) => {
         if (!playerWS.init) {
           if (Buffer.isBuffer(message)) {
@@ -279,7 +284,7 @@ export class WebSocketService {
             MatchID: notification.matchId,
             Port: GAME_SERVER_PORT,
             template_id: "GameServerReadyNotification",
-            IPAddress: "127.0.0.1",
+            IPAddress: "127.0.0.1"
           },
           payload: {
             match: {
@@ -290,6 +295,7 @@ export class WebSocketService {
           header: "",
           cmd: "update",
         };
+        console.log(message);
         player.send(message);
         logger.info(`Sent match notification to player ${matchPlayer.playerId} for match ${notification.matchId}`);
       }
@@ -346,7 +352,7 @@ export class WebSocketService {
       };
     }
 
-    console.log(Players)
+    console.log(Players);
 
     // Create the message to send to the players
     const message: GameNotification = {

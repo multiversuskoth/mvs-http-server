@@ -7,7 +7,7 @@ import ky from "ky";
 import { HydraDecoder } from "mvs-dump";
 
 let USERNAME_COUNT = 0;
-const USERNAME = () => `MVSI_TESTER_${USERNAME_COUNT}`;
+const USERNAME = () => `MSVI_TESTER_${USERNAME_COUNT}`;
 
 export interface AccountToken {
   public_id: string;
@@ -20,7 +20,15 @@ export interface AccountToken {
 
 export const accounts = new Map<string, AccountToken>();
 
-function generateStaticAccess() {
+function generateStaticAccess(response: any,req :express.Request) {
+
+    let ip = req.ip!.replace(/^::ffff:/, "");
+    let ws = "ws://mvsi-test.com:3000"
+  if (ip === "127.0.0.1") {
+    ws = "ws://mvsi-test.com:3000"
+  } else {
+        ws = "ws://73.209.44.199:3000"
+  }
   const account: AccountToken = {
     id: ObjectID().toHexString(),
     profile_id: ObjectID().toHexString(),
@@ -44,7 +52,7 @@ function generateStaticAccess() {
         "default-cluster": "ec2-us-east-1-dokken",
         servers: {
           "ec2-us-east-1-dokken": {
-            "mvsi-realtime": { ws: "ws://localhost:3000", udp: "0.0.0.0:0" },
+            "mvsi-realtime": { ws: ws, udp: "0.0.0.0:0" },
           },
         },
       },
@@ -748,12 +756,12 @@ function generateStaticAccess() {
     },
     notifications: [],
     maintenance: null,
-    wb_network: { network_token: "I+MPokHx/JkCFmuHpcEias5C57LFnOlyVi+GnqfSwaRdLlr2+2bK+xvZRjkMMZaVrcGlUdOsuew+oFHMwDtsiXSqXfoXsMeTLXvGSNjjQms=" },
+    wb_network: { network_token: response.wb_network.network_token},
   };
 }
 
 export async function handleAccess(req: Request<{}, {}, {}, {}>, res: Response) {
-/*   delete req.headers["content-length"];
+  delete req.headers["content-length"];
   delete req.headers["content-type"];
   let request = ky.post("https://dokken-api.wbagora.com/access", {
     // @ts-ignore
@@ -762,9 +770,9 @@ export async function handleAccess(req: Request<{}, {}, {}, {}>, res: Response) 
       "content-type": "application/json", // Adjust content type if needed
     },
     // @ts-ignore
-    json:req.body
+    json: req.body,
   });
 
-  let response = await request.json(); */
-  res.send(generateStaticAccess());
+  let response = await request.json();
+  res.send(generateStaticAccess(response,req));
 }
