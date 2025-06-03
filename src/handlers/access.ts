@@ -5,6 +5,7 @@ import * as jwt from "jsonwebtoken";
 import { SECRET } from "../middleware/auth";
 import ky from "ky";
 import { HydraDecoder } from "mvs-dump";
+import { parseEncryptedAppTicket } from "steam-appticket";
 
 let USERNAME_COUNT = 0;
 const USERNAME = () => `MSVI_TESTER_${USERNAME_COUNT}`;
@@ -20,14 +21,13 @@ export interface AccountToken {
 
 export const accounts = new Map<string, AccountToken>();
 
-function generateStaticAccess(response: any,req :express.Request) {
-
-    let ip = req.ip!.replace(/^::ffff:/, "");
-    let ws = "ws://mvsi-test.com:3000"
+function generateStaticAccess(req: express.Request) {
+  let ip = req.ip!.replace(/^::ffff:/, "");
+  let ws = "ws://mvsi-test.com:3000";
   if (ip === "127.0.0.1") {
-    ws = "ws://mvsi-test.com:3000"
+    ws = "ws://mvsi-test.com:3000";
   } else {
-        ws = "ws://73.209.44.199:3000"
+    ws = "ws://73.209.44.199:3000";
   }
   const account: AccountToken = {
     id: ObjectID().toHexString(),
@@ -756,23 +756,36 @@ function generateStaticAccess(response: any,req :express.Request) {
     },
     notifications: [],
     maintenance: null,
-    wb_network: { network_token: response.wb_network.network_token},
+    wb_network: { network_token: token },
   };
 }
 
-export async function handleAccess(req: Request<{}, {}, {}, {}>, res: Response) {
-  delete req.headers["content-length"];
-  delete req.headers["content-type"];
-  let request = ky.post("https://dokken-api.wbagora.com/access", {
-    // @ts-ignore
-    headers: {
-      ...req.headers,
-      "content-type": "application/json", // Adjust content type if needed
-    },
-    // @ts-ignore
-    json: req.body,
-  });
+const decryptionKey = Buffer.from([
+  0xed, 0x93, 0x86, 0x07, 0x36, 0x47, 0xce, 0xa5, 0x8b, 0x77, 0x21, 0x49, 0x0d, 0x59, 0xed, 0x44, 0x57, 0x23, 0xf0, 0xf6, 0x6e, 0x74, 0x14, 0xe1,
+  0x53, 0x3b, 0xa3, 0x3c, 0xd8, 0x03, 0xbd, 0xbd,
+]);
 
-  let response = await request.json();
-  res.send(generateStaticAccess(response,req));
+const spaceWarPublicKey = Buffer.from(
+  '30819f300d06092a864886f70d010101050003818d0030818902818100c0d23be9c8ad41b7e36f59807d2c23d86bbdbb8f3c9a8658728b528348a678d34f2c5b6eecb6d0b9057a02c8947e3a7607ef33c67dbf51f44c51411b2a6f88d0322265e3e13db17f121420b9b7bd297ff7b3b098bdf7ce4b5c5686c4c1179cbf72a248c9fba6f5bb1c98270fc5324b41fa898e1d8791f78e03b20203010001',
+  'hex'
+);
+export interface ACCESS_REQ {
+  auth: Auth;
+  metadata: Metadata;
+  options: string[];
+}
+
+export interface Auth {
+  fail_on_missing: boolean;
+  steam: string;
+}
+
+export interface Metadata {
+  Platform: string;
+}
+
+export async function handleAccess(req: Request<{}, {}, ACCESS_REQ, {}>, res: Response) {
+  const ticket = Buffer.from(req.body.auth.steam, "hex");
+  console.log(parseEncryptedAppTicket(ticket, spaceWarPublicKey));
+  res.send(generateStaticAccess(req));
 }

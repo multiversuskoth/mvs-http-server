@@ -10,9 +10,10 @@ import { connect } from "./database/client";
 import { hiss_amalgamation_get } from "./handlers/hiss_amalgation_get";
 import { redisClient, redisGetMatchConfig } from "./config/redis";
 import { GAME_SERVER_PORT } from "./game/udp";
+import { sscRouter } from "./ssc/routes";
 
-const app = express();
-app.disable("x-powered-by");
+export const expressApp = express();
+expressApp.disable("x-powered-by");
 
 //const port = 12181;
 const port = 8000;
@@ -26,19 +27,18 @@ const options = {
   cert: fs.readFileSync(path.join(__dirname, "../dokken-api.wbagora.com.pem")),
 };
 
-app.use(express.json());
+expressApp.use(express.json());
 
-app.get("/hello", (req, res, next) => {
+expressApp.get("/hello", (req, res, next) => {
   console.log("HMM");
   res.send("HELLO");
 });
 
-app.get("/global_configuration_types/eula/global_configurations/en-US", (req, res, next) => {
-  console.log("HMM");
+expressApp.get("/global_configuration_types/eula/global_configurations/en-US", (req, res, next) => {
   res.json(200);
 });
 
-app.post("/mvsi_register", async (req, res, next) => {
+expressApp.post("/mvsi_register", async (req, res, next) => {
   console.log("GET REGISTRY");
   const body = req.body;
   const config = await redisGetMatchConfig(body.matchId);
@@ -58,22 +58,23 @@ app.post("/mvsi_register", async (req, res, next) => {
   });
 });
 
-app.use(hydraDecoderMiddleware);
-app.use(hydraTokenMiddleware);
+expressApp.use(hydraDecoderMiddleware);
+expressApp.use(hydraTokenMiddleware);
 
-app.use(router);
-app.get("/ssc/invoke/hiss_amalgamation", (req, res, next) => {
+expressApp.use(router);
+expressApp.use(sscRouter);
+expressApp.get("/ssc/invoke/hiss_amalgamation", (req, res, next) => {
   console.log("GETTING  hiss.bin");
 
   res.send(hiss_amalgamation_get);
 });
 
-app.use((req, res, next) => {
+expressApp.use((req, res, next) => {
   console.log("UNKNOWN - ", req.method, req.url);
   res.send({ body: { Crc: 1167552915, MatchmakingCrc: 1291076274 }, metadata: null, return_code: 200 });
 });
 
-export const MVSHTTPServer = http.createServer(app);
+export const MVSHTTPServer = http.createServer(expressApp);
 //export const MVSHTTPServer = https.createServer(options,app);
 
 export async function start() {

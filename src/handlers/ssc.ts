@@ -6,6 +6,7 @@ import ObjectID from "bson-objectid";
 import {
   redisClient,
   redisGetMatch,
+  redisGetPlayer,
   redisGetPlayerPerk,
   redisLockPerks,
   redisPublishAllPerksLocked,
@@ -1465,12 +1466,13 @@ export async function handleSsc_invoke_claim_mission_rewards(req: Request<{}, {}
 
 export async function handleSsc_invoke_create_party_lobby(req: Request<{}, {}, {}, {}>, res: Response) {
   const account = req.token;
-  const loadout = { Character: "character_supershaggy", Skin: "supershaggy" };
+  const loadout = { Character: "character_C022", Skin: "C022_Default" };
   let ip = req.ip!.replace(/^::ffff:/, "");
   if (ip === "127.0.0.1") {
     ip = "73.209.44.199";
   }
   console.log(ip);
+  //const player = await redisGetPlayer(account.id)
   redisUpdatePlayerLoadout(account.id, loadout.Character, loadout.Skin, ip);
   res.send({
     body: {
@@ -1787,7 +1789,7 @@ export async function handleSsc_invoke_get_equipped_cosmetics(req: Request<{}, {
   const EquippedCosmetcis = {
     Taunts: {
       character_supershaggy: { TauntSlots: ["taunt_supershaggy_default"] },
-      Character_C022: { TauntSlots: [] },
+      character_C022: { TauntSlots: [] },
       character_Meeseeks: { TauntSlots: [] },
       character_Jason: { TauntSlots: ["taunt_jason_default", "emote_pass_the_salt", "taunt_jason_default", "taunt_jason_default"] },
       character_wonder_woman: {

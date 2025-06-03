@@ -2,11 +2,6 @@
 #include <iostream>
 #include <csignal>
 
-#include <fstream>
-#include <string>
-#include <algorithm>
-#include <cctype>
-
 namespace
 {
     volatile std::sig_atomic_t g_signal_status = 0;
@@ -17,13 +12,7 @@ void signal_handler(int signal)
     g_signal_status = signal;
 }
 
-static inline std::string trim(const std::string& s) {
-    auto ws_front = std::find_if_not(s.begin(), s.end(), [](int c) { return std::isspace(c); });
-    auto ws_back = std::find_if_not(s.rbegin(), s.rend(), [](int c) { return std::isspace(c); }).base();
-    return (ws_front < ws_back ? std::string(ws_front, ws_back) : std::string());
-}
-
-int main2(int argc, char *argv[])
+int main(int argc, char *argv[])
 {
     // Parse command line arguments
     uint16_t port = rollback::GAME_SERVER_PORT;
@@ -64,52 +53,8 @@ int main2(int argc, char *argv[])
 
     try
     {
-
-
-
-        const std::string filename = "MVSI.ini";
-        std::ifstream file(filename);
-        if (!file.is_open()) {
-            std::cerr << "Error: cannot open file " << filename << "\n";
-            return 1;
-        }
-
-        std::string line;
-        std::string serverUrl;
-
-        while (std::getline(file, line)) {
-            // skip empty lines or comments
-            auto t = trim(line);
-            if (t.empty() || t[0] == ';' || t[0] == '#')
-                continue;
-
-            // look for a key=value pattern
-            auto eq = line.find('=');
-            if (eq == std::string::npos)
-                continue;
-
-            std::string key = trim(line.substr(0, eq));
-            std::string value = trim(line.substr(eq + 1));
-
-            if (key == "szServerUrl") {
-                serverUrl = value;
-                break;
-            }
-        }
-
-        if (!serverUrl.empty()) {
-            std::cout << "szServerUrl = " << serverUrl << "\n";
-        }
-        else {
-            std::cerr << "szServerUrl not found in " << filename << "\n";
-            return 2;
-        }
-
-
-
-
         // Create and start server
-        rollback::RollbackServer server(port, maxPlayers, serverUrl + "mvsi_register");
+        rollback::RollbackServer server(port, maxPlayers);
         server.start();
 
         std::cout << "Server running. Press Ctrl+C to stop." << std::endl;

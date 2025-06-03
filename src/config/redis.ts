@@ -219,7 +219,6 @@ export async function redisUpdatePlayerStatus(playerId: string, status: string) 
   await redisClient.hSet(`player:${playerId}`, { status: status });
 }
 
-
 export async function redisPushTicketToQueue(queueKey: string, data: RedisMatchTicket) {
   await redisClient.lPush(queueKey, JSON.stringify(data));
 }
@@ -320,4 +319,25 @@ export async function redisGetAllLockedPerks(containerMatchId: string) {
     }
   }
   throw new Error("Unable To Get All Player Perks");
+}
+export async function redisDeletePlayerKeys(playerId: string): Promise<void> {
+  const pattern = `player:${playerId}*`;
+  let cursor = 0;
+
+  do {
+    const result = await redisClient.scan(cursor, {
+      MATCH: pattern,
+      COUNT: 100,
+    });
+
+    cursor = Number(result.cursor);
+    const keys = result.keys;
+
+    if (keys.length > 0) {
+      await redisClient.del(keys);
+      console.log(`Deleted keys:`, keys);
+    }
+  } while (cursor !== 0);
+
+  console.log(`All keys matching "${pattern}" have been deleted.`);
 }

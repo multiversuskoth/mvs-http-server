@@ -23,6 +23,7 @@ import {
   RedisAllPerksLockedNotification,
   MATCHMAKING_COMPLETE_CHANNEL,
   RedisMatchMakingCompleteNotification,
+  redisDeletePlayerKeys,
 } from "./config/redis";
 import { Server } from "https";
 import { Server as HttpServer } from "http";
@@ -200,6 +201,7 @@ export class WebSocketService {
     if (playerWS && playerWS.account) {
       playerWS.deleted = true;
       this.clients.delete(playerWS.account.id);
+      redisDeletePlayerKeys(playerWS.account.id);
       console.log(`Player ${playerWS.account.id} disconnected from websocket`);
     }
   }
@@ -278,13 +280,14 @@ export class WebSocketService {
       const player = this.clients.get(matchPlayer.playerId);
       if (player) {
         this.stopMatchTick(player);
+        console.log(player.ip);
         const message = {
           data: {
             MatchKey: notification.matchKey,
             MatchID: notification.matchId,
             Port: GAME_SERVER_PORT,
             template_id: "GameServerReadyNotification",
-            IPAddress: "127.0.0.1"
+            IPAddress: "34.201.219.125",
           },
           payload: {
             match: {

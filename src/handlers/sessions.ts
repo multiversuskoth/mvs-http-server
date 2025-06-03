@@ -3,8 +3,8 @@ import { MVSQueries } from "../interfaces/queries_types";
 
 export async function handleSessions_auth_token(req: Request<{}, {}, {}, MVSQueries.Sessions_auth_token_QUERY>, res: Response) {
   res.send({
-    access_token:
-      "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJ2IjoxLCJpc3MiOiJwcm9kLW5ldHdvcmsiLCJlbnYiOiI2MWJhN2YzMDFjNzE5ZTJhNGZlZjRjMzciLCJwaWQiOiJwYWZkOGQ3OTUwYWExNDg0ZWE3OTFkMDY2NjJmYTc1Y2UiLCJleHAiOjE3NDIzNTE2NDEsInNpZCI6ImYwYzUwYjhiLTllZDktNGVkZS1hOTQ4LWI1OTRmMWY4MWExNiJ9.Q9PuA8yU0wsbN0hiuZazdg70SQQURaaNjLSzCAvKLiQ",
+    //@ts-ignore
+    access_token: req.body.code,
     expires_in: 86400,
     mfa_required: false,
     sdk: {
