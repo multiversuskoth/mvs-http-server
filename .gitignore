@@ -3,7 +3,7 @@ node_modules
 dist
 .env
 build
-data
+
 
 packets/
 game.log
