@@ -18,6 +18,7 @@ import { logger } from "./config/logger";
 import ObjectID from "bson-objectid";
 import { randomBytes } from "crypto";
 import { MATCH_TYPES } from "./services/matchmakingService";
+import { getRandomMap1v1 } from "./data/maps";
 
 const CHECK_INTERVAL_MS = 1000;
 
@@ -36,10 +37,8 @@ const MATCH_RULES = {
 
 export function startMatchMakingWorker(): void {
   logger.info("Starting matchmaking worker...");
-
   // Run the first check immediately
   checkQueues();
-
   // Then set up interval to check regularly
   setInterval(checkQueues, CHECK_INTERVAL_MS);
 
@@ -80,7 +79,12 @@ async function process1v1Queue(): Promise<boolean> {
     // Check if we have enough tickets for a match
     if (matchedTickets.length === MATCH_RULES["1v1"].teamsRequired) {
       // Remove matched tickets from queue
-      await redisPopMatchTicketsFromQueue(MATCH_TYPES.ONE_V_ONE, matchedTickets);
+      try {
+        await redisPopMatchTicketsFromQueue(MATCH_TYPES.ONE_V_ONE, matchedTickets);
+      } catch (error) {
+        logger.error(`Error removing matched tickets from queue: ${error}`);
+        return false; // If we can't remove them, we can't proceed
+      }
 
       // Create a match with these tickets
       await createMatch(matchedTickets, "1v1");
@@ -93,49 +97,6 @@ async function process1v1Queue(): Promise<boolean> {
     logger.error(`Error processing 1v1 queue: ${error}`);
     return false;
   }
-}
-
-// Find a combination of tickets that gives the exact player count we need
-function findTicketsForMatch(tickets: RedisMatchTicket[], requiredPlayers: number): RedisMatchTicket[] | null {
-  // For now, we'll use a simple greedy approach:
-  // Take tickets from largest party size to smallest until we get exactly the right number of players
-  // In a real system, you would have more sophisticated matching logic (considering skill, wait time, etc.)
-
-  // Sort tickets by party size (largest first)
-  const sortedTickets = [...tickets].sort((a, b) => b.party_size - a.party_size);
-
-  let selectedTickets: RedisMatchTicket[] = [];
-  let currentCount = 0;
-
-  for (const ticket of sortedTickets) {
-    if (currentCount + ticket.party_size <= requiredPlayers) {
-      selectedTickets.push(ticket);
-      currentCount += ticket.party_size;
-
-      if (currentCount === requiredPlayers) {
-        return selectedTickets;
-      }
-    }
-  }
-
-  // If we get here, we couldn't find an exact match
-  return null;
-}
-
-// Verify that all players in a ticket are still valid and queued
-async function verifyTicketPlayers(ticket: RedisMatchTicket): Promise<boolean> {
-  for (const player of ticket.players) {
-    const redisPlayer = await redisGetPlayer(player.id);
-
-    if (!redisPlayer) {
-      return false; // Player no longer exists
-    }
-    if (redisPlayer.status !== "queued") {
-      return false; // Player no longer queued
-    }
-  }
-
-  return true;
 }
 
 // ChatGPT came up with this o.o
@@ -219,7 +180,7 @@ async function createMatch(tickets: RedisMatchTicket[], matchType: string): Prom
       ticket.players.map((player) => ({
         playerId: player.id,
         partyId: ticket.partyId,
-      }))
+      })),
     );
 
     // Store match data
@@ -229,7 +190,7 @@ async function createMatch(tickets: RedisMatchTicket[], matchType: string): Prom
       players: await createTeams(tickets),
       matchId,
       matchKey: randomBytes(32).toString("base64"),
-      map: "M021",
+      map: getRandomMap1v1(),
       mode: matchType,
     };
 
@@ -241,7 +202,7 @@ async function createMatch(tickets: RedisMatchTicket[], matchType: string): Prom
       await redisMatchMakingComplete(
         matchId,
         ticket.matchmakingRequestId,
-        ticket.players.map((p) => p.id)
+        ticket.players.map((p) => p.id),
       );
       await redisGameServerInstanceReady(matchId, playerIds);
     }

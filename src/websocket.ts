@@ -469,7 +469,10 @@ export class WebSocketService {
         cmd: "game-server-instance-ready",
       };
       if (client) {
+        logger.info(`Sent game server instance ready to player ${playerId} for match ${notification.containerMatchId}`);
         client.send(message);
+      } else {
+        logger.error(`Could not find player ${playerId} to send game server instance ready message for match ${notification.containerMatchId}`);
       }
     }
   }
