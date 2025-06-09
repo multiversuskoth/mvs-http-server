@@ -8,9 +8,11 @@
 #include <iostream>
 #include <format>
 
+#ifdef _WIN32
 #include <windows.h>
 #include <timeapi.h>
 #pragma comment(lib, "winmm.lib")  // Link with winmm.lib for timeBeginPeriod/timeEndPeriod
+#endif
 
 const float TARGET_FRAME_TIME = 1000 / 60;
 // We’ll do a simple EWMA on ping:
@@ -31,6 +33,7 @@ namespace rollback
 
         std::cout << "Initializing rollback server on port " << port << std::endl;
 
+        #ifdef _WIN32
         // Request 1ms timer resolution for more precise timing
         MMRESULT result = timeBeginPeriod(1);
         if (result == TIMERR_NOERROR) {
@@ -39,6 +42,7 @@ namespace rollback
         else {
             std::cerr << "Failed to set timer resolution to 1ms" << std::endl;
         }
+        #endif
     }
 
     RollbackServer::~RollbackServer()

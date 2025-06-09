@@ -12,3 +12,4 @@ dokken-api.wbagora.com-key.pem
 test.json
 udpTest.ts
 vcpkg_installed
+.DS_Store

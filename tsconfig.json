@@ -9,7 +9,7 @@
     "strictNullChecks": true,
     "strictFunctionTypes": true,
     "sourceMap": true,
-    "rootDir": "./src",
+
     "outDir": "./build",
     "experimentalDecorators": true,
     "emitDecoratorMetadata": true,
@@ -17,6 +17,10 @@
     "forceConsistentCasingInFileNames": true,
     "strict": true
   },
+  "include": [
+    "src", // Include all files in the src folder
+    "tests" // Explicitly include the tests folder
+  ],
   "exclude": [
     "node_modules",
     "**/node_modules/*"

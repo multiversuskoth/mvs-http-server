@@ -1,52 +1,43 @@
 cmake_minimum_required(VERSION 3.15)
-project(rollback_server)
+# Enable vcpkg integration if available
+set(CMAKE_TOOLCHAIN_FILE "$ENV{VCPKG_ROOT}/scripts/buildsystems/vcpkg.cmake" CACHE STRING "Vcpkg toolchain file")
 
-# Set C++20 standard
+project(rollback-server LANGUAGES CXX)
+
+# Set C++ standard
 set(CMAKE_CXX_STANDARD 20)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
-# vcpkg integration
-if(DEFINED ENV{VCPKG_ROOT} AND NOT DEFINED CMAKE_TOOLCHAIN_FILE)
-    set(CMAKE_TOOLCHAIN_FILE "$ENV{VCPKG_ROOT}/scripts/buildsystems/vcpkg.cmake" CACHE STRING "")
+
+# Platform-specific options (optional, can be extended)
+if(WIN32)
+    message(STATUS "Configuring for Windows")
+elseif(APPLE)
+    message(STATUS "Configuring for macOS")
+elseif(UNIX)
+    message(STATUS "Configuring for Linux")
 endif()
 
-if(NOT DEFINED CMAKE_TOOLCHAIN_FILE AND EXISTS "${CMAKE_CURRENT_SOURCE_DIR}/vcpkg/scripts/buildsystems/vcpkg.cmake")
-    set(CMAKE_TOOLCHAIN_FILE "${CMAKE_CURRENT_SOURCE_DIR}/vcpkg/scripts/buildsystems/vcpkg.cmake" CACHE STRING "")
-endif()
+message(STATUS "CMAKE_TOOLCHAIN_FILE: ${CMAKE_TOOLCHAIN_FILE}")
+message(STATUS "CMAKE_PREFIX_PATH: ${CMAKE_PREFIX_PATH}")
+message(STATUS "Boost_INCLUDE_DIRS: ${Boost_INCLUDE_DIRS}")
 
-# Find Boost
-find_package(Boost 1.76.0 REQUIRED COMPONENTS system thread)
+# Help CMake find Boost installed by vcpkg
+set(Boost_USE_STATIC_LIBS ON)
+set(Boost_USE_MULTITHREADED ON)
+set(Boost_USE_STATIC_RUNTIME OFF)
+
+# Find Boost (system, thread)
+find_package(Boost REQUIRED COMPONENTS system thread)
 
 # Include directories
-include_directories(
-    ${Boost_INCLUDE_DIRS}
-    ${CMAKE_CURRENT_SOURCE_DIR}/include
-)
+include_directories(${Boost_INCLUDE_DIRS} include)
 
 # Source files
-set(SOURCES
-    src/main.cpp
-    src/rollback_server.cpp
-    src/compression.cpp
-    src/serialization.cpp
-)
-
-# Headers
-set(HEADERS
-    include/message_types.h
-    include/compression.h
-    include/serialization.h
-    include/rollback_server.h
-)
+file(GLOB SOURCES src/*.cpp)
 
 # Create executable
-add_executable(rollback_server ${SOURCES} ${HEADERS})
+add_executable(rollback-server ${SOURCES})
 
-# Link libraries
-target_link_libraries(rollback_server
-    ${Boost_LIBRARIES}
-)
-
-# Windows/MSVC specific options
-target_compile_options(rollback_server PRIVATE /W4 /MP)
-target_compile_definitions(rollback_server PRIVATE _WIN32_WINNT=0x0A00 _CRT_SECURE_NO_WARNINGS)
+# Link Boost libraries
+target_link_libraries(rollback-server PRIVATE Boost::system Boost::thread)
