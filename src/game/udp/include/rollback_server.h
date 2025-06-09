@@ -30,7 +30,7 @@ namespace rollback
         boost::asio::ip::address address;
         uint16_t port;
         std::string matchId;
-        uint8_t playerIndex;
+        uint16_t playerIndex;
         uint32_t lastSeqRecv;
         uint32_t lastSeqSent;
         std::vector<uint32_t> ackedFrames;                    // how many frames of each player this client has acked
@@ -40,8 +40,10 @@ namespace rollback
 
         // === NEW FIELDS for ping‐smoothing and deferred rift calculation ===
         float smoothedPing = 0.0f;   // EWMA‐smoothed ping (ms)
+        float smoothRift = 0.0f;
         bool  pingInitialized = false;  // Did we ever set smoothedPing at least once?
         bool  hasNewPing = false;  // Set to true whenever handlePlayerInputAck does an EWMA update.
+        bool riftInit = false;
 
         int16_t ping = 0;      // (legacy) raw ping; kept for backwards‐compat / logging if needed
 

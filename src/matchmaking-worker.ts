@@ -81,14 +81,14 @@ async function process1v1Queue(): Promise<boolean> {
       // Remove matched tickets from queue
       try {
         await redisPopMatchTicketsFromQueue(MATCH_TYPES.ONE_V_ONE, matchedTickets);
+
+        // Create a match with these tickets
+        await createMatch(matchedTickets, "1v1");
+        return true;
       } catch (error) {
         logger.error(`Error removing matched tickets from queue: ${error}`);
         return false; // If we can't remove them, we can't proceed
       }
-
-      // Create a match with these tickets
-      await createMatch(matchedTickets, "1v1");
-      return true;
     }
 
     logger.info(`Not enough valid tickets for a 1v1 match (need ${MATCH_RULES["1v1"].teamsRequired}, found ${matchedTickets.length})`);
@@ -180,7 +180,7 @@ async function createMatch(tickets: RedisMatchTicket[], matchType: string): Prom
       ticket.players.map((player) => ({
         playerId: player.id,
         partyId: ticket.partyId,
-      })),
+      }))
     );
 
     // Store match data
@@ -202,7 +202,7 @@ async function createMatch(tickets: RedisMatchTicket[], matchType: string): Prom
       await redisMatchMakingComplete(
         matchId,
         ticket.matchmakingRequestId,
-        ticket.players.map((p) => p.id),
+        ticket.players.map((p) => p.id)
       );
       await redisGameServerInstanceReady(matchId, playerIds);
     }

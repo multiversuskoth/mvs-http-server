@@ -316,7 +316,7 @@ namespace rollback
         newPlayer->address = remote.address();
         newPlayer->port = remote.port();
         newPlayer->matchId = matchData.matchId;
-        newPlayer->playerIndex = static_cast<uint8_t>(match->players.size());
+        newPlayer->playerIndex = payload.playerData.playerIndex;
         newPlayer->lastSeqRecv = 0;
         newPlayer->lastSeqSent = 0;
         newPlayer->ackedFrames.resize(max_players_, 0);
@@ -355,6 +355,7 @@ namespace rollback
             std::shared_lock lock(matches_mutex_);
             if (match->players.size() == static_cast<size_t>(max_players_))
             {
+                lock.unlock();
                 startPingPhase(match);
             }
         }
@@ -376,7 +377,7 @@ namespace rollback
             std::shared_ptr<MatchState> match;
             const std::chrono::milliseconds intervalMs{ 50 };
         };
-
+        std::cout << "Starting Ping Phase" << std::endl;
         auto context = std::make_shared<PingContext>();
         context->match = match; // Store a copy of the match
 
@@ -423,7 +424,7 @@ namespace rollback
                 payload.ping = p->ping;
             }            
             payload.packetsLossPercent = 0;
-
+            std::cout << "Sending Ping for " << p->playerIndex << ":" <<p->address << std::endl;
             auto sequence = co_await sendServerMessage(match, p, ServerMessageType::RequestQualityData, payload);
 
             // Record it per player
@@ -436,6 +437,7 @@ namespace rollback
 
     boost::asio::awaitable<void> RollbackServer::broadcastPlayersConfiguration(std::shared_ptr<MatchState> match)
     {
+        std::cout << "broadcastPlayersConfiguration" << std::endl;
         for (const auto &p : match->players)
         {
             PlayersConfigurationDataPayload payload;
@@ -481,7 +483,7 @@ namespace rollback
             int16_t newPing = static_cast<int16_t>(
                 duration_cast<milliseconds>(steady_clock::now() - it->second).count());
 
-            if (newPing > 0)
+            if (newPing > -1)
             {
                 // === EWMA smoothing ===
                 if (!player->pingInitialized)
@@ -776,18 +778,33 @@ namespace rollback
                     float predictedClientFrame = static_cast<float>(player->lastClientFrame) + halfPingFrames;
 
                     // Compute raw rift (client vs. server):
-                    float rawRift = predictedClientFrame - static_cast<float>(match->currentFrame);
-
+                    if (!player->riftInit) {
+                        player->riftInit = true;
+                        float rawRift = predictedClientFrame - static_cast<float>(match->currentFrame);
+             
+                        player->smoothRift = rawRift;
+                    }
+                    else {
+                        float rawRift = predictedClientFrame - static_cast<float>(match->currentFrame);
+                        // EWMA update:
+                        player->smoothRift =
+                            PING_ALPHA * static_cast<float>(rawRift)
+                            + (1.0f - PING_ALPHA) * player->smoothRift;
+                    }
+           
                     // Clamp to ±49 frames (as before)
-                    rawRift = PlayerInfo::clampFloat(rawRift, 8.0f);
+                        player->smoothRift =  PlayerInfo::clampFloat(player->smoothRift, 8.0f);
 
                     // Optionally, you could also apply a small smoothing on rift itself.
                     // For now, we just store rawRift so the client will use that directly:
-                    player->rift = rawRift;
+                    player->rift = player->smoothRift;
+                    player->ping = player->smoothedPing;
 
                     // Reset the “new” flags after using them
                     player->hasNewPing = false;
                     player->hasNewFrame = false;
+
+                    std::cout << "PIndex:" << player->playerIndex << " PING:" << player->ping << " RIFT:" << player->rift << " clientFrame:" << predictedClientFrame << " serverFrame:" << match->currentFrame << std::endl;
                 }
                 // else: keep old player->rift
             }

@@ -356,5 +356,5 @@ export async function handleMatches_matchmaking_1v1_retail_request(
     id: ObjectID().toHexString(),
   };
   res.send(data);
-  await queueMatch([account.id], data.from_match, data.id, MATCH_TYPES.ONE_V_ONE);
+  await queueMatch(account.id, [account.id], data.from_match, data.id, MATCH_TYPES.ONE_V_ONE);
 }

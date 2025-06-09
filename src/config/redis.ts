@@ -3,6 +3,7 @@ import redis, { createClient } from "redis";
 import type { RedisClientType } from "redis";
 import { logger } from "./logger";
 import env from "../env/env";
+import { MATCH_TYPES } from "../services/matchmakingService";
 
 const redisConfig = {
   username: env.REDIS_USERNAME,
@@ -97,6 +98,8 @@ export interface ON_MATCH_MAKER_STARTED_NOTIFICATION extends MVS_NOTIFICATION {
   created_at: number;
   partyId: string;
   matchmakingRequestId: string;
+  matchType: MATCH_TYPES;
+  partyLeaderId: string;
 }
 
 export interface MATCH_FOUND_NOTIFICATION extends MVS_NOTIFICATION {
@@ -231,7 +234,8 @@ export async function redisOnMatchMakerStarted(notification: ON_MATCH_MAKER_STAR
 }
 
 export async function redisOnGameplayConfigNotified(notification: MATCH_FOUND_NOTIFICATION) {
-  await redisClient.set(notification.matchId, JSON.stringify(notification));
+  const EX = 60 * 20;
+  await redisClient.set(notification.matchId, JSON.stringify(notification), { EX });
   await redisClient.publish(ON_GAMEPLAY_CONFIG_NOTIFIED_CHANNEL, JSON.stringify(notification));
 }
 

@@ -24,6 +24,10 @@ import {
   MATCHMAKING_COMPLETE_CHANNEL,
   RedisMatchMakingCompleteNotification,
   redisDeletePlayerKeys,
+  redisPushTicketToQueue,
+  redisUpdatePlayerStatus,
+  redisOnMatchMakerStarted,
+  redisPopMatchTicketsFromQueue,
 } from "./config/redis";
 import { Server } from "https";
 import { Server as HttpServer } from "http";
@@ -32,6 +36,7 @@ import { logger } from "./config/logger";
 import { MVSTime } from "./utils/date";
 import ObjectID from "bson-objectid";
 import { RedisClientType } from "@redis/client";
+import env from "./env/env";
 
 export class WebSocketPlayer {
   init: boolean = false;
@@ -40,6 +45,7 @@ export class WebSocketPlayer {
   account: AccountToken | undefined;
   matchTick: NodeJS.Timeout | undefined;
   matchConfig?: GameNotification;
+  ticket?: ON_MATCH_MAKER_STARTED_NOTIFICATION;
   ip: string;
 
   constructor(_ws: WebSocket, ip: string) {
@@ -200,9 +206,18 @@ export class WebSocketService {
   handleDisconnect(playerWS: WebSocketPlayer) {
     if (playerWS && playerWS.account) {
       playerWS.deleted = true;
+      this.stopMatchTick(playerWS);
+      this.attemptRemoveMatchTicket(playerWS);
       this.clients.delete(playerWS.account.id);
       redisDeletePlayerKeys(playerWS.account.id);
       console.log(`Player ${playerWS.account.id} disconnected from websocket`);
+    }
+  }
+
+  attemptRemoveMatchTicket(playerWS: WebSocketPlayer) {
+    if (playerWS.ticket) {
+      redisPopMatchTicketsFromQueue("1v1", [playerWS.ticket]);
+      redisPopMatchTicketsFromQueue("2v2", [playerWS.ticket]);
     }
   }
 
@@ -234,14 +249,16 @@ export class WebSocketService {
 
   stopMatchTick(player: WebSocketPlayer) {
     if (player.matchTick) {
+      logger.info(`Stopping matchtick for ${player.account?.id}`)
       clearInterval(player.matchTick);
     }
   }
 
-  handlePartyQueued(notification: ON_MATCH_MAKER_STARTED_NOTIFICATION) {
+  async handlePartyQueued(notification: ON_MATCH_MAKER_STARTED_NOTIFICATION) {
     for (const player of notification.players) {
       const client = this.clients.get(player.id);
       if (client) {
+        await redisUpdatePlayerStatus(player.id, "queued");
         client.send({
           data: {
             template_id: "OnMatchmakerStarted",
@@ -256,13 +273,16 @@ export class WebSocketService {
           header: "",
           cmd: "update",
         });
+        client.ticket = notification;
         this.handleMatchTick(client, notification);
       }
     }
+    // Add ticket to the matchmaking queue
+    await redisPushTicketToQueue(notification.matchType, notification);
   }
 
   handleMatchTick(client: WebSocketPlayer, notification: ON_MATCH_MAKER_STARTED_NOTIFICATION) {
-    setInterval(() => {
+    client.matchTick = setInterval(() => {
       client.send({
         data: {},
         payload: {
@@ -280,14 +300,13 @@ export class WebSocketService {
       const player = this.clients.get(matchPlayer.playerId);
       if (player) {
         this.stopMatchTick(player);
-        console.log(player.ip);
         const message = {
           data: {
             MatchKey: notification.matchKey,
             MatchID: notification.matchId,
             Port: GAME_SERVER_PORT,
             template_id: "GameServerReadyNotification",
-            IPAddress: "34.201.219.125",
+            IPAddress: player.ip ==="127.0.0.1" ? "127.0.0.1" : env.LOCAL_PUBLIC_IP,
           },
           payload: {
             match: {
@@ -298,7 +317,7 @@ export class WebSocketService {
           header: "",
           cmd: "update",
         };
-        console.log(message);
+        console.log(player.account?.id,message);
         player.send(message);
         logger.info(`Sent match notification to player ${matchPlayer.playerId} for match ${notification.matchId}`);
       }
@@ -319,12 +338,11 @@ export class WebSocketService {
 
     const Players: { [key: string]: PlayerConfig } = {};
 
-
     for (let i = 0; i < notification.players.length; i++) {
       const player = notification.players[i];
       const playerConfig = playerConfigs[i];
       const playerLoadout = playerLoadouts[i];
-          console.log(`Player ${player.playerId} selected ${playerLoadout.character}`)
+      console.log(`Player ${player.playerId} ${player.playerIndex} selected ${playerLoadout.character}`);
       Players[player.playerId] = {
         AccountId: player.playerId,
         Taunts: playerConfig.Taunts[playerLoadout.character].TauntSlots,
@@ -447,6 +465,7 @@ export class WebSocketService {
       const client = this.clients.get(playerId);
       if (client && client.matchConfig) {
         client.send(client.matchConfig);
+        console.log(client.matchConfig.data.GameplayConfig.Players)
         logger.info(`Sent all perks lock to player ${playerId} for match ${notification.containerMatchId}`);
       }
     }
