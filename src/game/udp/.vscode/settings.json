@@ -1,4 +1,10 @@
 {
+    "search.exclude": {
+        "**/node_modules": true,
+        "**/build": true,
+        "**/vcpkg_installed": true,
+        "**/*.code-search": true
+    },
     "files.associations": {
         "__bit_reference": "cpp",
         "__bits": "cpp",

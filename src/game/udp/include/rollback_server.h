@@ -158,9 +158,7 @@ namespace rollback
         void logPacket(const std::vector<uint8_t>& data, const std::string& type,
             const std::string& direction, const std::string& jsonData = "");
 
-        // Emulation method
-        void emulateP2NewConnection(const NewConnectionPayload& payload);
-
+            
         // Server state
         boost::asio::io_context io_context_;
         udp::socket socket_;
@@ -178,8 +176,6 @@ namespace rollback
         mutable std::shared_mutex players_mutex_;
 
         mutable std::mutex inputs_mutex;
-
-        std::atomic<bool> p2_connected_ = false;
     };
 
 } // namespace rollback

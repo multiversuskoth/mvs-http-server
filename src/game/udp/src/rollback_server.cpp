@@ -11,12 +11,12 @@
 #ifdef _WIN32
 #include <windows.h>
 #include <timeapi.h>
-#pragma comment(lib, "winmm.lib")  // Link with winmm.lib for timeBeginPeriod/timeEndPeriod
+#pragma comment(lib, "winmm.lib") // Link with winmm.lib for timeBeginPeriod/timeEndPeriod
 #endif
 
 const float TARGET_FRAME_TIME = 1000 / 60;
 // We’ll do a simple EWMA on ping:
-static constexpr float PING_ALPHA = 0.1f;  // 0.1 means 10% of the new sample, 90% of the old
+static constexpr float PING_ALPHA = 0.1f; // 0.1 means 10% of the new sample, 90% of the old
 
 namespace rollback
 {
@@ -33,16 +33,18 @@ namespace rollback
 
         std::cout << "Initializing rollback server on port " << port << std::endl;
 
-        #ifdef _WIN32
+#ifdef _WIN32
         // Request 1ms timer resolution for more precise timing
         MMRESULT result = timeBeginPeriod(1);
-        if (result == TIMERR_NOERROR) {
+        if (result == TIMERR_NOERROR)
+        {
             std::cout << "Successfully set timer resolution to 1ms" << std::endl;
         }
-        else {
+        else
+        {
             std::cerr << "Failed to set timer resolution to 1ms" << std::endl;
         }
-        #endif
+#endif
     }
 
     RollbackServer::~RollbackServer()
@@ -147,7 +149,7 @@ namespace rollback
             const auto &sequence = header.sequence;
 
             // Log packet
-            //logPacket(buffer, std::to_string(static_cast<int>(type)), "RECV");
+            // logPacket(buffer, std::to_string(static_cast<int>(type)), "RECV");
 
             // Get the match (if any)
             std::shared_ptr<MatchState> match;
@@ -364,22 +366,17 @@ namespace rollback
             }
         }
 
-        // Emulate P2 if needed
-        if (EMULATE_P2 && !p2_connected_)
-        {
-            p2_connected_ = true;
-            emulateP2NewConnection(payload);
-        }
-
         return newPlayer;
     }
 
-    void RollbackServer::startPingPhase(std::shared_ptr<MatchState> match) {
-        // Create a shared_ptr to a struct that will own the match and remain alive 
+    void RollbackServer::startPingPhase(std::shared_ptr<MatchState> match)
+    {
+        // Create a shared_ptr to a struct that will own the match and remain alive
         // through the entire asynchronous operation
-        struct PingContext {
+        struct PingContext
+        {
             std::shared_ptr<MatchState> match;
-            const std::chrono::milliseconds intervalMs{ 50 };
+            const std::chrono::milliseconds intervalMs{50};
         };
         std::cout << "Starting Ping Phase" << std::endl;
         auto context = std::make_shared<PingContext>();
@@ -387,8 +384,8 @@ namespace rollback
 
         // Create a self-contained coroutine that captures the context by value
         // This ensures the context (and thus the match) stays alive until the coroutine completes
-        boost::asio::co_spawn(io_context_,
-            [this, context]() -> boost::asio::awaitable<void> {
+        boost::asio::co_spawn(io_context_, [this, context]() -> boost::asio::awaitable<void>
+                              {
                 try {
                     // First broadcast immediately
                     co_await broadcastRequestQuality(context->match);
@@ -411,9 +408,7 @@ namespace rollback
                 }
                 catch (const std::exception& e) {
                     std::cerr << "Exception in ping phase: " << e.what() << std::endl;
-                }
-            },
-            boost::asio::detached);
+                } }, boost::asio::detached);
     }
 
     boost::asio::awaitable<void> RollbackServer::broadcastRequestQuality(std::shared_ptr<MatchState> match)
@@ -426,9 +421,9 @@ namespace rollback
             {
                 std::shared_lock lock(players_mutex_);
                 payload.ping = p->ping;
-            }            
+            }
             payload.packetsLossPercent = 0;
-            std::cout << "Sending Ping for " << p->playerIndex << ":" <<p->address << std::endl;
+            std::cout << "Sending Ping for " << p->playerIndex << ":" << p->address << std::endl;
             auto sequence = co_await sendServerMessage(match, p, ServerMessageType::RequestQualityData, payload);
 
             // Record it per player
@@ -449,7 +444,7 @@ namespace rollback
                 std::shared_lock lock(players_mutex_);
                 payload.numPlayers = static_cast<uint8_t>(match->players.size());
             }
-            
+
             payload.configValues.resize(max_players_);
 
             for (int i = 0; i < max_players_; i++)
@@ -467,7 +462,7 @@ namespace rollback
     void RollbackServer::handlePlayerInputAck(
         std::shared_ptr<MatchState> match,
         std::shared_ptr<PlayerInfo> player,
-        const PlayerInputAckPayload& payload)
+        const PlayerInputAckPayload &payload)
     {
         std::shared_lock lock(players_mutex_);
         // Update client's view of acked frames
@@ -500,8 +495,7 @@ namespace rollback
                 {
                     // EWMA update:
                     player->smoothedPing =
-                        PING_ALPHA * static_cast<float>(newPing)
-                        + (1.0f - PING_ALPHA) * player->smoothedPing;
+                        PING_ALPHA * static_cast<float>(newPing) + (1.0f - PING_ALPHA) * player->smoothedPing;
                 }
                 // Store raw ping for backwards‐compat/logging if needed
                 player->ping = newPing;
@@ -553,12 +547,12 @@ namespace rollback
     void RollbackServer::handleClientInput(
         std::shared_ptr<MatchState> match,
         std::shared_ptr<PlayerInfo> player,
-        const InputPayload& payload)
+        const InputPayload &payload)
     {
-        const auto& startFrame = payload.startFrame;
-        const auto& clientFrame = payload.clientFrame;
-        const auto& numFrames = payload.numFrames;
-        const auto& inputPerFrame = payload.inputPerFrame;
+        const auto &startFrame = payload.startFrame;
+        const auto &clientFrame = payload.clientFrame;
+        const auto &numFrames = payload.numFrames;
+        const auto &inputPerFrame = payload.inputPerFrame;
 
         // ----- JUST record the last clientFrame and set hasNewFrame -----
         {
@@ -570,7 +564,7 @@ namespace rollback
         // Store each new input in the map
         {
             std::lock_guard<std::mutex> lk(inputs_mutex);
-            auto& histMap = match->inputs[player->playerIndex];
+            auto &histMap = match->inputs[player->playerIndex];
             for (uint8_t i = 0; i < numFrames && i < inputPerFrame.size(); i++)
             {
                 const uint32_t f = startFrame + i;
@@ -599,9 +593,9 @@ namespace rollback
 
         rift = std::max(-49.0f, std::min(rift, 49.0f));
 
-        
-        if (rift > 1.5 || rift < -1.5) {
-            std::cout 
+        if (rift > 1.5 || rift < -1.5)
+        {
+            std::cout
                 << "playerIndex: " << playerIndex
                 << ", serverFrame: " << serverFrame
                 << ", clientFrame: " << clientFrame
@@ -609,7 +603,6 @@ namespace rollback
                 << ", lastTick: " << lastTickDuration
                 << ", FRAME_ADV: " << rift << std::endl;
         }
-
 
         return rift;
     }
@@ -642,7 +635,8 @@ namespace rollback
     }
 
     // Now update the runTickLoop function to take advantage of this higher resolution:
-    boost::asio::awaitable<void> RollbackServer::runTickLoop(std::shared_ptr<MatchState> match) {
+    boost::asio::awaitable<void> RollbackServer::runTickLoop(std::shared_ptr<MatchState> match)
+    {
         // Convert tick interval to nanoseconds for higher precision
         const auto targetInterval = std::chrono::duration_cast<std::chrono::nanoseconds>(
             std::chrono::duration<double, std::milli>(match->tickIntervalMs));
@@ -650,14 +644,15 @@ namespace rollback
         auto nextTickTime = std::chrono::steady_clock::now() + targetInterval;
 
         // Track accumulated error for drift compensation
-        std::chrono::nanoseconds accumulatedError{ 0 };
+        std::chrono::nanoseconds accumulatedError{0};
 
         // For performance monitoring
         int tickCount = 0;
         auto monitorStart = std::chrono::steady_clock::now();
-        std::chrono::nanoseconds maxDeviation{ 0 };
+        std::chrono::nanoseconds maxDeviation{0};
 
-        while (match->tickRunning && running_) {
+        while (match->tickRunning && running_)
+        {
             // Process the current tick
             co_await tick(match);
 
@@ -668,7 +663,8 @@ namespace rollback
             nextTickTime += targetInterval;
 
             // Apply drift compensation - correct the accumulated error
-            if (accumulatedError != std::chrono::nanoseconds::zero()) {
+            if (accumulatedError != std::chrono::nanoseconds::zero())
+            {
                 // Only correct a portion of the error each tick to avoid overcorrection
                 auto correction = accumulatedError / 4; // With timeBeginPeriod(1), we can be more aggressive
                 nextTickTime -= correction;
@@ -677,22 +673,25 @@ namespace rollback
 
             // Calculate wait time, ensuring we don't wait a negative amount
             auto waitTime = nextTickTime - now;
-            if (waitTime < std::chrono::nanoseconds::zero()) {
+            if (waitTime < std::chrono::nanoseconds::zero())
+            {
                 // We're behind schedule - update accumulatedError and reset wait time
                 accumulatedError += waitTime; // Negative value increases the error
-                nextTickTime = now; // Don't wait, run immediately
+                nextTickTime = now;           // Don't wait, run immediately
 
                 // Limit maximum accumulated error to prevent extreme corrections
                 const auto maxError = targetInterval * 3; // Smaller limit with higher resolution
-                if (accumulatedError < -maxError) {
+                if (accumulatedError < -maxError)
+                {
                     accumulatedError = -maxError;
                 }
 
                 // Log significant drift for debugging
-                if (waitTime < -std::chrono::milliseconds(2)) { // Lower threshold for logging
+                if (waitTime < -std::chrono::milliseconds(2))
+                { // Lower threshold for logging
                     std::cout << "Tick loop running behind schedule by "
-                        << std::chrono::duration_cast<std::chrono::microseconds>(waitTime).count()
-                        << "μs" << std::endl;
+                              << std::chrono::duration_cast<std::chrono::microseconds>(waitTime).count()
+                              << "μs" << std::endl;
                 }
 
                 continue; // Skip waiting, run next tick immediately
@@ -702,10 +701,12 @@ namespace rollback
             boost::asio::steady_timer timer(co_await boost::asio::this_coro::executor);
             timer.expires_at(nextTickTime);
 
-            try {
+            try
+            {
                 co_await timer.async_wait(boost::asio::use_awaitable);
             }
-            catch (const boost::system::system_error& e) {
+            catch (const boost::system::system_error &e)
+            {
                 // Handle timer cancellation or errors
                 std::cerr << "Timer error: " << e.what() << std::endl;
                 break;
@@ -717,7 +718,8 @@ namespace rollback
             auto timerError = actualWaitTime - waitTime;
 
             // Update tracking of maximum deviation
-            if (std::abs(timerError.count()) > std::abs(maxDeviation.count())) {
+            if (std::abs(timerError.count()) > std::abs(maxDeviation.count()))
+            {
                 maxDeviation = timerError;
             }
 
@@ -726,34 +728,34 @@ namespace rollback
 
             // Performance monitoring
             tickCount++;
-            if (tickCount >= 100) { // Report every 100 ticks
+            if (tickCount >= 100)
+            { // Report every 100 ticks
                 auto monitorEnd = std::chrono::steady_clock::now();
                 auto monitorDuration = monitorEnd - monitorStart;
                 auto avgTickTime = monitorDuration / tickCount;
 
                 std::cout << "Timing stats for last " << tickCount << " ticks:" << std::endl;
                 std::cout << "  Average tick interval: "
-                    << std::chrono::duration_cast<std::chrono::microseconds>(avgTickTime).count()
-                    << "μs (target: "
-                    << std::chrono::duration_cast<std::chrono::microseconds>(targetInterval).count()
-                    << "μs)" << std::endl;
+                          << std::chrono::duration_cast<std::chrono::microseconds>(avgTickTime).count()
+                          << "μs (target: "
+                          << std::chrono::duration_cast<std::chrono::microseconds>(targetInterval).count()
+                          << "μs)" << std::endl;
                 std::cout << "  Maximum deviation: "
-                    << std::chrono::duration_cast<std::chrono::microseconds>(maxDeviation).count()
-                    << "μs" << std::endl;
+                          << std::chrono::duration_cast<std::chrono::microseconds>(maxDeviation).count()
+                          << "μs" << std::endl;
                 std::cout << "  Current accumulated error: "
-                    << std::chrono::duration_cast<std::chrono::microseconds>(accumulatedError).count()
-                    << "μs" << std::endl;
+                          << std::chrono::duration_cast<std::chrono::microseconds>(accumulatedError).count()
+                          << "μs" << std::endl;
 
                 // Reset monitoring variables
                 tickCount = 0;
                 monitorStart = monitorEnd;
-                maxDeviation = std::chrono::nanoseconds{ 0 };
+                maxDeviation = std::chrono::nanoseconds{0};
             }
         }
 
         co_return;
     }
-
 
     boost::asio::awaitable<void> RollbackServer::tick(std::shared_ptr<MatchState> match)
     {
@@ -765,12 +767,10 @@ namespace rollback
         }
         match->lastTickTime = now;
 
-
-
-        // === NEW: For each player, recalc rift only if they have both new ping & new frame ===
+        // For each player, recalc rift only if they have both new ping & new frame ===
         {
             std::shared_lock lockPlayers(players_mutex_);
-            for (auto& player : match->players)
+            for (auto &player : match->players)
             {
                 // If we have a freshly smoothed ping AND a freshly received frame stamp:
                 if (player->hasNewPing && player->hasNewFrame)
@@ -782,26 +782,25 @@ namespace rollback
                     float predictedClientFrame = static_cast<float>(player->lastClientFrame) + halfPingFrames;
 
                     // Compute raw rift (client vs. server):
-                    if (!player->riftInit) {
+                    if (!player->riftInit)
+                    {
                         player->riftInit = true;
                         float rawRift = predictedClientFrame - static_cast<float>(match->currentFrame);
-             
+
                         player->smoothRift = rawRift;
                     }
-                    else {
+                    else
+                    {
                         float rawRift = predictedClientFrame - static_cast<float>(match->currentFrame);
                         // EWMA update:
                         player->smoothRift =
-                            PING_ALPHA * static_cast<float>(rawRift)
-                            + (1.0f - PING_ALPHA) * player->smoothRift;
+                            PING_ALPHA * static_cast<float>(rawRift) + (1.0f - PING_ALPHA) * player->smoothRift;
                     }
-           
-                    // Clamp to ±49 frames (as before)
-                        player->smoothRift =  PlayerInfo::clampFloat(player->smoothRift, 8.0f);
 
-                    // Optionally, you could also apply a small smoothing on rift itself.
-                    // For now, we just store rawRift so the client will use that directly:
+                    player->smoothRift = PlayerInfo::clampFloat(player->smoothRift, 8.0f);
+                    // Store the smoothed rift
                     player->rift = player->smoothRift;
+                    // Update the ping to the smoothed value
                     player->ping = player->smoothedPing;
 
                     // Reset the “new” flags after using them
@@ -810,13 +809,12 @@ namespace rollback
 
                     std::cout << "PIndex:" << player->playerIndex << " PING:" << player->ping << " RIFT:" << player->rift << " clientFrame:" << predictedClientFrame << " serverFrame:" << match->currentFrame << std::endl;
                 }
-                // else: keep old player->rift
             }
         }
 
         // Check if we have enough inputs
         bool exit = false;
-        for (const auto& input : match->inputs)
+        for (const auto &input : match->inputs)
         {
             if (input.size() < 10)
             {
@@ -828,7 +826,7 @@ namespace rollback
         if (exit)
         {
             // Let's build up some input first
-            for (const auto& recipient : match->players)
+            for (const auto &recipient : match->players)
             {
                 co_await sendServerMessage(match, recipient, ServerMessageType::StartGame, std::monostate{});
             }
@@ -836,7 +834,7 @@ namespace rollback
         }
 
         // === The rest of this method is unchanged: we build per-client payload and send ===
-        for (const auto& recipient : match->players)
+        for (const auto &recipient : match->players)
         {
             std::vector<uint32_t> startFrame(max_players_, 0);
             std::vector<uint8_t> numFrames(max_players_, 0);
@@ -846,7 +844,7 @@ namespace rollback
             // For each peer, decide what frames to send...
             for (size_t p = 0; p < match->players.size(); p++)
             {
-                const auto& peer = match->players[p];
+                const auto &peer = match->players[p];
 
                 std::map<uint32_t, uint32_t> histMap;
                 {
@@ -907,9 +905,9 @@ namespace rollback
             playerInputPayload.numFrames = numFrames;
             playerInputPayload.numPredictedOverrides = numPredictedOverrides;
             playerInputPayload.numZeroedOverrides = 0;
-            playerInputPayload.ping = recipient->ping;            // raw ping (for legacy), you could also send smoothedPing
+            playerInputPayload.ping = recipient->ping;
             playerInputPayload.packetsLossPercent = 0;
-            playerInputPayload.rift = recipient->rift;           // now we always use the last‐computed rift
+            playerInputPayload.rift = recipient->rift;
             playerInputPayload.checksumAckFrame = 0;
             playerInputPayload.inputPerFrame = inputPerFrame;
 
@@ -947,7 +945,7 @@ namespace rollback
 
         ServerHeader header;
         header.type = type;
-        
+
         {
             std::unique_lock write_lock(matches_mutex_);
             header.sequence = ++match->sequenceCounter;
@@ -960,7 +958,7 @@ namespace rollback
         auto compressedBuf = compressPacket(buf);
 
         // Log packet
-        //logPacket(compressedBuf, std::to_string(static_cast<int>(type)), "SEND");
+        // logPacket(compressedBuf, std::to_string(static_cast<int>(type)), "SEND");
 
         // Send the packet
         boost::asio::ip::address address;
@@ -970,15 +968,14 @@ namespace rollback
             address = player->address;
             port = player->port;
         }
-        
-   
+
         udp::endpoint remote(address, port);
 
         co_await socket_.async_send_to(
             boost::asio::buffer(compressedBuf), remote,
             boost::asio::use_awaitable);
 
-        co_return  header.sequence;
+        co_return header.sequence;
     }
 
     void RollbackServer::logPacket(
@@ -1044,38 +1041,6 @@ namespace rollback
         if (!jsonData.empty())
         {
             std::cout << jsonData << std::endl;
-        }
-    }
-
-    void RollbackServer::emulateP2NewConnection(const NewConnectionPayload &payload)
-    {
-        // Create endpoint for emulated player
-        udp::endpoint remote(boost::asio::ip::address_v4::loopback(), 1434);
-
-        // Modified payload for P2
-        NewConnectionPayload p2Payload = payload;
-        p2Payload.playerData.playerIndex = 1;
-        p2Payload.playerData.teamId = 1;
-
-        // Handle connection
-        std::shared_ptr<PlayerInfo> player = handleNewConnection(p2Payload, remote, true);
-
-        if (player)
-        {
-            std::shared_ptr<MatchState> match;
-            {
-                std::shared_lock lock(matches_mutex_);
-                auto it = matches_.find(player->matchId);
-                if (it != matches_.end())
-                {
-                    match = it->second;
-                }
-            }
-
-            if (!match)
-            {
-                return;
-            }
         }
     }
 
