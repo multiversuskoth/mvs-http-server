@@ -20,7 +20,7 @@ export enum MATCH_TYPES {
 export async function queueMatch(playerIds: string[], partyId: string, matchmakingRequestId: string, matchType: MATCH_TYPES): Promise<void> {
   try {
     // Create a match ticket
-    const ticket: RedisMatchTicket = {
+    const ticket: ON_MATCH_MAKER_STARTED_NOTIFICATION = {
       created_at: MVSTime(new Date()),
       matchmakingRequestId,
       partyId,
@@ -47,9 +47,9 @@ export async function queueMatch(playerIds: string[], partyId: string, matchmaki
     }
 
     // Publish a message that a party has been queued
-    await redisOnMatchMakerStarted(matchmakingRequestId, partyId, playerIds);
+    await redisOnMatchMakerStarted(ticket);
 
-    logger.info(`Party (${partyId}) has been added to ${matchType} matchmaking queue. Players (${playerIds.join(",")})`);
+    logger.info(`Party (${partyId}) matchmakingRequestId(${matchmakingRequestId}) has been added to ${matchType} matchmaking queue. Players (${playerIds.join(",")})`);
   } catch (error) {
     logger.error(`Error queueing player: ${error}`);
     throw error;

@@ -335,6 +335,7 @@ namespace rollback
             std::unique_lock lock2(players_mutex_);
             players_.push_back(newPlayer);
         }
+        std::cout << "Player index " << payload.playerData.playerIndex << " joined" << std::endl;
 
         // Send connection reply
         NewConnectionReplyPayload replyPayload;

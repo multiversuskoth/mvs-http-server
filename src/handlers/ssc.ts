@@ -13,6 +13,10 @@ import {
   redisSaveEquippedComsetics,
   redisUpdatePlayerLoadout,
 } from "../config/redis";
+import { CHARACTER_SLUGS } from "../data/characters";
+import { CRC, MATCHMAKING_CRC } from "../data/config";
+import { hiss_amalgamation_get } from "./hiss_amalgation_get";
+import { logger } from "../config/logger";
 
 export async function handleSsc_invoke_attempt_daily_refresh(req: Request<{}, {}, {}, {}>, res: Response) {
   res.send({
@@ -21,7 +25,7 @@ export async function handleSsc_invoke_attempt_daily_refresh(req: Request<{}, {}
       CurrentSeason: "Season:SeasonFive",
       NextDailyRefreshTime: { _hydra_unix_date: MVSTime(new Date()) + 86400 },
       NextWeeklyRefreshTime: { _hydra_unix_date: MVSTime(new Date()) + 604800 },
-      FreeCharacterRotation: ["character_C020", "character_C017", "character_C027", "character_garnet"],
+      FreeCharacterRotation: CHARACTER_SLUGS,
       ReturnData: {},
       PlayerMissionObject: {
         MissionControllerContainers: {},
@@ -37,7 +41,7 @@ export async function handleSsc_invoke_claim_mission_rewards(req: Request<{}, {}
   res.send({
     body: {
       MissionControllerContainers: {},
-      ClaimLocks: { },
+      ClaimLocks: {},
     },
     metadata: null,
     return_code: 0,
@@ -49,9 +53,10 @@ export async function handleSsc_invoke_create_party_lobby(req: Request<{}, {}, {
   const loadout = { Character: "character_C022", Skin: "C022_Default" };
   let ip = req.ip!.replace(/^::ffff:/, "");
   if (ip === "127.0.0.1") {
-    ip = "73.209.44.199";
+    ip = env.LOCAL_PUBLIC_IP;
   }
-  console.log(ip);
+  const matchLobbyId = ObjectID().toHexString();
+  logger.info(`Creating party lobby for ${account.id} - matchLobbyId:${matchLobbyId}`);
   redisUpdatePlayerLoadout(account.id, loadout.Character, loadout.Skin, ip);
   res.send({
     body: {
@@ -100,7 +105,7 @@ export async function handleSsc_invoke_create_party_lobby(req: Request<{}, {}, {
         LockedLoadouts: { [account.id]: { Character: loadout.Character, Skin: loadout.Skin } },
         ModeString: "1v1",
         IsLobbyJoinable: true,
-        MatchID: ObjectID().toHexString(),
+        MatchID: matchLobbyId,
       },
       Cluster: "ec2-us-east-1-dokken",
     },
@@ -367,7 +372,7 @@ export async function handleSsc_invoke_get_equipped_cosmetics(req: Request<{}, {
 
   const EquippedCosmetcis = {
     Taunts: {
-      character_supershaggy: { TauntSlots: ["taunt_supershaggy_default"] },
+      character_supershaggy: { TauntSlots: [] },
       character_C022: { TauntSlots: [] },
       character_Meeseeks: { TauntSlots: [] },
       character_Jason: { TauntSlots: ["taunt_jason_default", "emote_pass_the_salt", "taunt_jason_default", "taunt_jason_default"] },
@@ -1711,7 +1716,7 @@ export async function handleSsc_invoke_get_milestone_reward_tracks(req: Request<
           TrackSlug: "mrt_mastery_wonder_woman",
           RewardTrackClass: "MvsCharacterMasteryRewardTrackHsda",
           CurrentScore: 1150,
-          CurrentTier: 3,
+          CurrentTier: 13,
           CompletedTiers: ["B5F0E10C485E5538EE7DA590C992CE17", "24DBBA6F4C19293E0621B4B610649E3D", "1C97C46445053C5C1804A7B15C0C7825"],
           ClaimedRewards: [
             "0E1508354299EB355F5A9A8161FA8CF4",
@@ -4868,8 +4873,13 @@ export async function handleSsc_invoke_get_or_create_mission_object(req: Request
   });
 }
 
-export async function handleSsc_invoke_hiss_amalgamation(req: Request<{}, {}, {}, {}>, res: Response) {
-  res.send({ body: { Crc: 1167552915, MatchmakingCrc: 1291076274 }, metadata: null, return_code: 304 });
+export async function handleSsc_invoke_hiss_amalgamation(req: Request<{}, {}, { Crc: number }, {}>, res: Response) {
+  if (req.body.Crc !== CRC) {
+    console.log("Crc: out of date , sending new");
+    res.send(hiss_amalgamation_get);
+  } else {
+    res.send({ body: { Crc: CRC, MatchmakingCrc: MATCHMAKING_CRC }, metadata: null, return_code: 304 });
+  }
 }
 
 export async function handleSsc_invoke_load_rifts(req: Request<{}, {}, {}, {}>, res: Response) {
@@ -57891,7 +57901,7 @@ export async function handleSsc_invoke_perks_lock(req: Request<{}, {}, Ssc_invok
   await redisLockPerks({ containerMatchId: req.body.ContainerMatchId, playerId: account.id, perks: req.body.Perks });
 
   // Check if all players have locked their perks
-  // If all players have locked their perks, publich the event
+  // If all players have locked their perks, publish the event
   const match = await redisGetMatch(req.body.ContainerMatchId);
   if (match && match.status !== "locked") {
     const playersIds = match.tickets.flatMap((ticket) => ticket.players.map((player) => player.id));
@@ -57904,7 +57914,7 @@ export async function handleSsc_invoke_perks_lock(req: Request<{}, {}, Ssc_invok
             return true;
           }
           return false;
-        }),
+        })
     );
     const allPerksLocked = playersPerks.every((perk) => perk === true);
     if (allPerksLocked) {

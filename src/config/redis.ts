@@ -2,12 +2,13 @@ import ObjectID from "bson-objectid";
 import redis, { createClient } from "redis";
 import type { RedisClientType } from "redis";
 import { logger } from "./logger";
+import env from "../env/env";
 
 const redisConfig = {
-  username: "default",
-  password: "CjBT1Zx0aIuF3zYe5sivhoqVaIXFTSqQ",
+  username: env.REDIS_USERNAME,
+  password: env.REDIS_PW,
   socket: {
-    host: "redis-17157.c263.us-east-1-2.ec2.redns.redis-cloud.com",
+    host: env.REDIS,
     port: 17157,
   },
 };
@@ -91,9 +92,11 @@ export interface RedisTeamEntry {
 export interface MVS_NOTIFICATION {}
 
 export interface ON_MATCH_MAKER_STARTED_NOTIFICATION extends MVS_NOTIFICATION {
-  playerIds: string[];
-  matchmakingRequestId: string;
+  party_size: number;
+  players: RedisMatchPlayer[];
+  created_at: number;
   partyId: string;
+  matchmakingRequestId: string;
 }
 
 export interface MATCH_FOUND_NOTIFICATION extends MVS_NOTIFICATION {
@@ -164,13 +167,13 @@ const MATCH_PERKS_PLAYER_KEY = (containerMatchId: string, playerId: string) => `
 export async function redisCreatePartyLobby() {}
 
 export async function redisSaveEquippedComsetics(playerId: string, data: RedisEquippedCosmetics) {
-  await redisClient.set(`cosmetics:${playerId}`, JSON.stringify(data));
+  await redisClient.set(`player:${playerId}:cosmetics`, JSON.stringify(data));
 }
 
 export async function redisGetAllPlayersEquippedComsetics(playerIds: string[]) {
   const multi = redisClient.multi();
   for (const playerId of playerIds) {
-    multi.get(`cosmetics:${playerId}`);
+    multi.get(`player:${playerId}:cosmetics`);
   }
   const cosmeticsStrArray = await multi.exec();
   const comsetics = cosmeticsStrArray.map((str) => JSON.parse(str as string) as RedisEquippedCosmetics);
@@ -189,7 +192,7 @@ export async function redisGetPlayers(playerIds: string[]) {
 }
 
 export async function redisGetEquippedComsetics(playerId: string) {
-  const cosmeticsStr = await redisClient.get(`cosmetics:${playerId}`);
+  const cosmeticsStr = await redisClient.get(`player:${playerId}:cosmetics`);
   if (cosmeticsStr) {
     return JSON.parse(cosmeticsStr) as RedisEquippedCosmetics;
   }
@@ -223,12 +226,7 @@ export async function redisPushTicketToQueue(queueKey: string, data: RedisMatchT
   await redisClient.lPush(queueKey, JSON.stringify(data));
 }
 
-export async function redisOnMatchMakerStarted(matchmakingRequestId: string, partyId: string, playerIds: string[]) {
-  const notification: ON_MATCH_MAKER_STARTED_NOTIFICATION = {
-    matchmakingRequestId,
-    partyId,
-    playerIds,
-  };
+export async function redisOnMatchMakerStarted(notification: ON_MATCH_MAKER_STARTED_NOTIFICATION) {
   await redisClient.publish(ON_MATCH_MAKER_STARTED_CHANNEL, JSON.stringify(notification));
 }
 

@@ -11,9 +11,10 @@ import { hiss_amalgamation_get } from "./handlers/hiss_amalgation_get";
 import { redisClient, redisGetMatchConfig } from "./config/redis";
 import { GAME_SERVER_PORT } from "./game/udp";
 import { sscRouter } from "./ssc/routes";
+import { CRC, MATCHMAKING_CRC } from "./data/config";
 
-export const expressApp = express();
-expressApp.disable("x-powered-by");
+export const app = express();
+app.disable("x-powered-by");
 
 //const port = 12181;
 const port = 8000;
@@ -27,18 +28,12 @@ const options = {
   cert: fs.readFileSync(path.join(__dirname, "../dokken-api.wbagora.com.pem")),
 };
 
-expressApp.use(express.json());
-
-expressApp.get("/hello", (req, res, next) => {
-  console.log("HMM");
-  res.send("HELLO");
-});
-
-expressApp.get("/global_configuration_types/eula/global_configurations/en-US", (req, res, next) => {
+app.use(express.json());
+app.get("/global_configuration_types/eula/global_configurations/*", (req, res, next) => {
   res.json(200);
 });
 
-expressApp.post("/mvsi_register", async (req, res, next) => {
+app.post("/mvsi_register", async (req, res, next) => {
   console.log("GET REGISTRY");
   const body = req.body;
   const config = await redisGetMatchConfig(body.matchId);
@@ -47,7 +42,7 @@ expressApp.post("/mvsi_register", async (req, res, next) => {
     return {
       player_index: p.playerIndex,
       ip: p.ip,
-      is_host: p.isHost
+      is_host: p.isHost,
     };
   });
   console.log(players);
@@ -58,23 +53,22 @@ expressApp.post("/mvsi_register", async (req, res, next) => {
   });
 });
 
-expressApp.use(hydraDecoderMiddleware);
-expressApp.use(hydraTokenMiddleware);
+app.use(hydraDecoderMiddleware);
+app.use(hydraTokenMiddleware);
 
-expressApp.use(router);
-expressApp.use(sscRouter);
-expressApp.get("/ssc/invoke/hiss_amalgamation", (req, res, next) => {
-  console.log("GETTING  hiss.bin");
-
+app.use(router);
+app.use(sscRouter);
+app.get("/ssc/invoke/hiss_amalgamation", (req, res, next) => {
+  console.log("Missing Crc, sending fresh one");
   res.send(hiss_amalgamation_get);
 });
 
-expressApp.use((req, res, next) => {
-  console.log("UNKNOWN - ", req.method, req.url);
-  res.send({ body: { Crc: 1167552915, MatchmakingCrc: 1291076274 }, metadata: null, return_code: 200 });
+app.use((req, res, next) => {
+  console.log("NOT IMPLEMENTED - ", req.method, req.url);
+  res.send({ body: { Crc: CRC, MatchmakingCrc: MATCHMAKING_CRC }, metadata: null, return_code: 200 });
 });
 
-export const MVSHTTPServer = http.createServer(expressApp);
+export const MVSHTTPServer = http.createServer(app);
 //export const MVSHTTPServer = https.createServer(options,app);
 
 export async function start() {

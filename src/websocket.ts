@@ -239,8 +239,8 @@ export class WebSocketService {
   }
 
   handlePartyQueued(notification: ON_MATCH_MAKER_STARTED_NOTIFICATION) {
-    for (const playerId of notification.playerIds) {
-      const client = this.clients.get(playerId);
+    for (const player of notification.players) {
+      const client = this.clients.get(player.id);
       if (client) {
         client.send({
           data: {
@@ -319,10 +319,12 @@ export class WebSocketService {
 
     const Players: { [key: string]: PlayerConfig } = {};
 
+
     for (let i = 0; i < notification.players.length; i++) {
       const player = notification.players[i];
       const playerConfig = playerConfigs[i];
       const playerLoadout = playerLoadouts[i];
+          console.log(`Player ${player.playerId} selected ${playerLoadout.character}`)
       Players[player.playerId] = {
         AccountId: player.playerId,
         Taunts: playerConfig.Taunts[playerLoadout.character].TauntSlots,

@@ -6,6 +6,8 @@ import { SECRET } from "../middleware/auth";
 import ky from "ky";
 import { HydraDecoder } from "mvs-dump";
 import { parseEncryptedAppTicket } from "steam-appticket";
+import env from "../env/env";
+import { logger } from "../config/logger";
 
 let USERNAME_COUNT = 0;
 const USERNAME = () => `MSVI_TESTER_${USERNAME_COUNT}`;
@@ -27,7 +29,7 @@ function generateStaticAccess(req: express.Request) {
   if (ip === "127.0.0.1") {
     ws = "ws://mvsi-test.com:3000";
   } else {
-    ws = "ws://73.209.44.199:3000";
+    ws = `ws://${env.LOCAL_PUBLIC_IP}:3000`;
   }
   const account: AccountToken = {
     id: ObjectID().toHexString(),
@@ -38,7 +40,7 @@ function generateStaticAccess(req: express.Request) {
     username: USERNAME(),
   };
   const token = jwt.sign(account, SECRET);
-
+  logger.info(`Player ${account.id} - ${account.username} connected`);
   return {
     token: token,
     in_queue: false,
@@ -74,8 +76,8 @@ function generateStaticAccess(req: express.Request) {
           wb_network: [{ id: account.wb_network_id, username: account.username, avatar: null, email: null }],
           steam: [
             {
-              id: "76561195177950873",
-              username: "multiversuskoth",
+              id: "76561195177950872",
+              username: account.username,
               avatar: "https://avatars.steamstatic.com/fef49e7fa7e1997310d705b2a6158ff8dc1cdfeb.jpg",
               email: null,
             },
@@ -785,7 +787,7 @@ export interface Metadata {
 }
 
 export async function handleAccess(req: Request<{}, {}, ACCESS_REQ, {}>, res: Response) {
-  const ticket = Buffer.from(req.body.auth.steam, "hex");
-  console.log(parseEncryptedAppTicket(ticket, spaceWarPublicKey));
+  //const ticket = Buffer.from(req.body.auth.steam, "hex");
+  //console.log(parseEncryptedAppTicket(ticket, spaceWarPublicKey));
   res.send(generateStaticAccess(req));
 }

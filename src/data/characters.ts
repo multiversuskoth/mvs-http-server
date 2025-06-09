@@ -41,7 +41,48 @@ export const CHARACTER_SLUGS = [
   "character_C022",
 ];
 
-export function unlockAllCharacters() {
+const perks = ["perk_snowball_effect", "perk_char_HangryMan"];
+
+export function unlockAllPerks(accountId: string) {
+  return perks.map((perk) => {
+    const characterMap = Object.fromEntries(CHARACTER_SLUGS.map((slug) => [slug, true]));
+
+    return {
+      id: ObjectID().toHexString(),
+      count: 1,
+      data: {},
+      actions: [],
+      server_data: {
+        characters: characterMap,
+      },
+      account_id: accountId,
+      item_slug: perk,
+      currency_data: {
+        source_slug: null,
+        total_spent: null,
+        total_earned: null,
+        total_refunded: 0,
+        should_expire: null,
+        expires_at: null,
+        purchase_id: null,
+        source_platform: null,
+      },
+      updated_at: {
+        _hydra_unix_date: 1719953609,
+      },
+      created_at: {
+        _hydra_unix_date: 1719953609,
+      },
+      result_type: "simple",
+    };
+  });
+}
+export function unlockAll(accountId: string) {
+  const all = [...unlockAllCharacters(accountId), ...unlockAllPerks(accountId)];
+  return all;
+}
+
+export function unlockAllCharacters(accountId: string) {
   return CHARACTER_SLUGS.map((slug) => {
     return {
       id: ObjectID().toHexString(),
@@ -50,6 +91,7 @@ export function unlockAllCharacters() {
       actions: [],
       server_data: {},
       item_slug: slug,
+      account_id: accountId,
       currency_data: {
         source_slug: null,
         total_spent: null,

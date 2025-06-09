@@ -9,6 +9,9 @@ const env = cleanEnv(process.env, {
   GAME_VERSION: str(),
   GAME_DOMAIN: str(),
   WB_DOMAIN: str(),
+  REDIS:str(),
+  REDIS_USERNAME:str(),
+  REDIS_PW:str(),
 });
 
 export default env;

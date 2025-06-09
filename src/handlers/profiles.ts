@@ -1,7 +1,7 @@
 import express, { Request, Response } from "express";
 import { MVSQueries } from "../interfaces/queries_types";
 import { GleamiumData } from "../data/gleamium";
-import { unlockAllCharacters } from "../data/characters";
+import { unlockAll, unlockAllCharacters } from "../data/characters";
 
 const profiles: any[] = [
   {
@@ -114,16 +114,18 @@ const profiles: any[] = [
       connections: [],
       presence_state: 1,
       presence: "online",
+      "inventory.character_wonder_woman.count": 1,
     },
   },
 ];
 
 export async function handleProfiles_id_inventory(req: Request<{}, {}, {}, MVSQueries.Profiles_id_inventory_QUERY>, res: Response) {
   const account = req.token;
-  res.send([...unlockAllCharacters(), GleamiumData]);
+  res.send([...unlockAll(account.id), GleamiumData]);
 }
 
 export async function handleProfiles_bulk(req: Request<{}, {}, {}, MVSQueries.Profiles_bulk_QUERY>, res: Response) {
+  const account = req.token;
   if (req.query.account_fields) {
     //@ts-ignore
     const ids = req.body.ids as string[];
@@ -213,7 +215,7 @@ export async function handleProfiles_bulk(req: Request<{}, {}, {}, MVSQueries.Pr
         "bp_s4_conditions",
       ],
       random_distribution: 0.09829278289973609,
-      id: "62dadd1a57a63708ed1cacce",
+      id: account.id,
     },
   ]);
 }
