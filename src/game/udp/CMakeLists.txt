@@ -2,7 +2,7 @@ cmake_minimum_required(VERSION 3.15)
 # Enable vcpkg integration if available
 set(CMAKE_TOOLCHAIN_FILE "$ENV{VCPKG_ROOT}/scripts/buildsystems/vcpkg.cmake" CACHE STRING "Vcpkg toolchain file")
 
-project(rollback-server LANGUAGES CXX)
+project(rollback-server LANGUAGES C CXX)
 
 # Set C++ standard
 set(CMAKE_CXX_STANDARD 20)

@@ -17,6 +17,7 @@
 const float TARGET_FRAME_TIME = 1000 / 60;
 // We’ll do a simple EWMA on ping:
 static constexpr float PING_ALPHA = 0.1f; // 0.1 means 10% of the new sample, 90% of the old
+static constexpr float RIFT_ALPHA = 0.05f; // 0.1 means 10% of the new sample, 90% of the old
 
 namespace rollback
 {
@@ -651,6 +652,8 @@ namespace rollback
         auto monitorStart = std::chrono::steady_clock::now();
         std::chrono::nanoseconds maxDeviation{0};
 
+        const auto startTime = steady_clock::now();
+
         while (match->tickRunning && running_)
         {
             // Process the current tick
@@ -658,6 +661,13 @@ namespace rollback
 
             // Calculate actual time spent in tick processing
             auto now = std::chrono::steady_clock::now();
+            auto elapsed = now - startTime;
+            uint32_t absoluteFrame = static_cast<uint32_t>(elapsed / targetInterval);
+            
+            {
+                std::unique_lock write_lock(matches_mutex_);
+                match->currentFrame = absoluteFrame;
+            }
 
             // Calculate the next tick time with drift compensation
             nextTickTime += targetInterval;
@@ -689,9 +699,7 @@ namespace rollback
                 // Log significant drift for debugging
                 if (waitTime < -std::chrono::milliseconds(2))
                 { // Lower threshold for logging
-                    std::cout << "Tick loop running behind schedule by "
-                              << std::chrono::duration_cast<std::chrono::microseconds>(waitTime).count()
-                              << "μs" << std::endl;
+                    //std::cout << "Tick loop running behind schedule by "<< std::chrono::duration_cast<std::chrono::microseconds>(waitTime).count() << "μs" << std::endl;
                 }
 
                 continue; // Skip waiting, run next tick immediately
@@ -791,23 +799,40 @@ namespace rollback
                     }
                     else
                     {
-                        float rawRift = predictedClientFrame - static_cast<float>(match->currentFrame);
-                        // EWMA update:
-                        player->smoothRift =
-                            PING_ALPHA * static_cast<float>(rawRift) + (1.0f - PING_ALPHA) * player->smoothRift;
+                        float rawRift = predictedClientFrame - float(match->currentFrame);
+                        float absR = fabs(rawRift);
+                        // Store the smoothed rift
+                        player->rift = rawRift;
+
+                        if (absR < 1.0f) {
+                            // blend toward zero instead of toward rawRift
+                            // e.g. kill half of the remaining smoothed error every tick
+                            player->smoothRift *= 0.5f;
+
+                            // (optional) once it's tiny, zero it out completely:
+                            if (fabs(player->smoothRift) < 0.01f)
+                                player->smoothRift = 0.0f;
+                        }
+                        else {
+                            // leave your normal smoothing in place
+                            player->smoothRift =
+                                RIFT_ALPHA * rawRift
+                                + (1.0f - RIFT_ALPHA) * player->smoothRift;
+                        }
                     }
 
-                    player->smoothRift = PlayerInfo::clampFloat(player->smoothRift, 8.0f);
-                    // Store the smoothed rift
-                    player->rift = player->smoothRift;
+                    player->smoothRift = PlayerInfo::clampFloat(player->smoothRift, 20.0f);
+                   
                     // Update the ping to the smoothed value
                     player->ping = player->smoothedPing;
 
                     // Reset the “new” flags after using them
                     player->hasNewPing = false;
                     player->hasNewFrame = false;
-
-                    std::cout << "PIndex:" << player->playerIndex << " PING:" << player->ping << " RIFT:" << player->rift << " clientFrame:" << predictedClientFrame << " serverFrame:" << match->currentFrame << std::endl;
+                    if (player->smoothRift > 1 || player->smoothRift < -1 || player->smoothedPing > 100) {
+                        std::cout << "PIndex:" << player->playerIndex << " PING:" << player->ping << " RIFT:" << player->smoothRift << " RAWRIFT:" << player->rift << " clientFrame:" << predictedClientFrame << " serverFrame:" << match->currentFrame << std::endl;
+                    }
+                    
                 }
             }
         }
@@ -872,6 +897,7 @@ namespace rollback
                 // ... (the rest of your input‐prediction logic is unchanged)
                 else if (peer->missedInputs < 5)
                 {
+            
                     startFrame[p] = lastAck;
                     peer->missedInputs++;
                     const uint32_t lastVal = histMap.find(lastAck) != histMap.end() ? histMap.at(lastAck) : 0;
@@ -880,6 +906,7 @@ namespace rollback
                 }
                 else
                 {
+                    std::cout << "Player:" << peer->playerIndex << " PREDICT Input" << std::endl;
                     startFrame[p] = nextFrame;
                     uint32_t predictedCount = 0;
                     uint32_t f = nextFrame;
@@ -907,7 +934,7 @@ namespace rollback
             playerInputPayload.numZeroedOverrides = 0;
             playerInputPayload.ping = recipient->ping;
             playerInputPayload.packetsLossPercent = 0;
-            playerInputPayload.rift = recipient->rift;
+            playerInputPayload.rift = recipient->smoothRift;
             playerInputPayload.checksumAckFrame = 0;
             playerInputPayload.inputPerFrame = inputPerFrame;
 
@@ -918,7 +945,7 @@ namespace rollback
         }
 
         // Advance the global server frame count
-        match->currentFrame++;
+        //match->currentFrame++;
 
         co_return;
     }
