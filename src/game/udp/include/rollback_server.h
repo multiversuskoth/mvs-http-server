@@ -45,12 +45,12 @@ namespace rollback
         bool  hasNewPing = false;  // Set to true whenever handlePlayerInputAck does an EWMA update.
         bool riftInit = false;
 
-        int16_t ping = 0;      // (legacy) raw ping; kept for backwards‐compat / logging if needed
+        int16_t ping = 0;
 
-        uint32_t lastClientFrame = 0;    // latest frame stamp from client
+        uint32_t lastClientFrame = 0;
         bool     hasNewFrame = false; // Set to true whenever handleClientInput() updates lastClientFrame
 
-        float rift = 0.0f;   // The last‐computed rift (in frames)
+        float rift = 0.0f;
         uint32_t missedInputs = 0;
         std::map<uint32_t, time_point<steady_clock>> pendingPings;
         bool emulated;
@@ -158,7 +158,7 @@ namespace rollback
         void logPacket(const std::vector<uint8_t>& data, const std::string& type,
             const std::string& direction, const std::string& jsonData = "");
 
-            
+
         // Server state
         boost::asio::io_context io_context_;
         udp::socket socket_;

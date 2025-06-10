@@ -16,7 +16,7 @@
 
 const float TARGET_FRAME_TIME = 1000 / 60;
 // We’ll do a simple EWMA on ping:
-static constexpr float PING_ALPHA = 0.1f; // 0.1 means 10% of the new sample, 90% of the old
+static constexpr float PING_ALPHA = 0.1f;  // 0.1 means 10% of the new sample, 90% of the old
 static constexpr float RIFT_ALPHA = 0.05f; // 0.1 means 10% of the new sample, 90% of the old
 
 namespace rollback
@@ -483,6 +483,10 @@ namespace rollback
             int16_t newPing = static_cast<int16_t>(
                 duration_cast<milliseconds>(steady_clock::now() - it->second).count());
 
+                if (newPing > 255) {
+                    newPing = 255; // Cap ping to 255ms;
+                }
+
             if (newPing > -1)
             {
                 // === EWMA smoothing ===
@@ -496,7 +500,7 @@ namespace rollback
                 {
                     // EWMA update:
                     player->smoothedPing =
-                        PING_ALPHA * static_cast<float>(newPing) + (1.0f - PING_ALPHA) * player->smoothedPing;
+                    PlayerInfo::clampFloat(PING_ALPHA * static_cast<float>(newPing) + (1.0f - PING_ALPHA) * player->smoothedPing, 255.0f);
                 }
                 // Store raw ping for backwards‐compat/logging if needed
                 player->ping = newPing;
@@ -555,7 +559,6 @@ namespace rollback
         const auto &numFrames = payload.numFrames;
         const auto &inputPerFrame = payload.inputPerFrame;
 
-        // ----- JUST record the last clientFrame and set hasNewFrame -----
         {
             std::unique_lock lock2(players_mutex_);
             player->lastClientFrame = clientFrame;
@@ -569,17 +572,16 @@ namespace rollback
             for (uint8_t i = 0; i < numFrames && i < inputPerFrame.size(); i++)
             {
                 const uint32_t f = startFrame + i;
+                if (histMap.find(f) != histMap.end())
+                {
+                    // If we already have an input for this frame, skip it
+                    // This happens when the server overwrites an input
+                    std::cout << "Skipping duplicate input for frame " << f << " from player " << player->playerIndex << std::endl;
+                    continue;
+                }
                 histMap[f] = inputPerFrame[i];
             }
         }
-
-        // WE HAVE REMOVED the immediate rift calculation from here.
-        //
-        // The old code was:
-        // const uint32_t serverFrame = match->currentFrame;
-        // player->rift = calcRiftVariableTick(playerIndex, serverFrame, clientFrame, player->ping, match->lastTickDuration);
-        //
-        // We leave that to the tick loop.
     }
 
     float RollbackServer::calcRiftVariableTick(
@@ -663,7 +665,7 @@ namespace rollback
             auto now = std::chrono::steady_clock::now();
             auto elapsed = now - startTime;
             uint32_t absoluteFrame = static_cast<uint32_t>(elapsed / targetInterval);
-            
+
             {
                 std::unique_lock write_lock(matches_mutex_);
                 match->currentFrame = absoluteFrame;
@@ -699,7 +701,7 @@ namespace rollback
                 // Log significant drift for debugging
                 if (waitTime < -std::chrono::milliseconds(2))
                 { // Lower threshold for logging
-                    //std::cout << "Tick loop running behind schedule by "<< std::chrono::duration_cast<std::chrono::microseconds>(waitTime).count() << "μs" << std::endl;
+                  // std::cout << "Tick loop running behind schedule by "<< std::chrono::duration_cast<std::chrono::microseconds>(waitTime).count() << "μs" << std::endl;
                 }
 
                 continue; // Skip waiting, run next tick immediately
@@ -801,38 +803,38 @@ namespace rollback
                     {
                         float rawRift = predictedClientFrame - float(match->currentFrame);
                         float absR = fabs(rawRift);
-                        // Store the smoothed rift
                         player->rift = rawRift;
 
-                        if (absR < 1.0f) {
+                        if (absR < 1.0f)
+                        {
                             // blend toward zero instead of toward rawRift
                             // e.g. kill half of the remaining smoothed error every tick
                             player->smoothRift *= 0.5f;
 
-                            // (optional) once it's tiny, zero it out completely:
+                            // once it's tiny, zero it out completely:
                             if (fabs(player->smoothRift) < 0.01f)
                                 player->smoothRift = 0.0f;
                         }
-                        else {
+                        else
+                        {
                             // leave your normal smoothing in place
                             player->smoothRift =
-                                RIFT_ALPHA * rawRift
-                                + (1.0f - RIFT_ALPHA) * player->smoothRift;
+                                RIFT_ALPHA * rawRift + (1.0f - RIFT_ALPHA) * player->smoothRift;
                         }
                     }
 
                     player->smoothRift = PlayerInfo::clampFloat(player->smoothRift, 20.0f);
-                   
+
                     // Update the ping to the smoothed value
                     player->ping = player->smoothedPing;
 
                     // Reset the “new” flags after using them
                     player->hasNewPing = false;
                     player->hasNewFrame = false;
-                    if (player->smoothRift > 1 || player->smoothRift < -1 || player->smoothedPing > 100) {
+                    if (player->smoothRift > 1 || player->smoothRift < -1 || player->smoothedPing > 100)
+                    {
                         std::cout << "PIndex:" << player->playerIndex << " PING:" << player->ping << " RIFT:" << player->smoothRift << " RAWRIFT:" << player->rift << " clientFrame:" << predictedClientFrame << " serverFrame:" << match->currentFrame << std::endl;
                     }
-                    
                 }
             }
         }
@@ -858,7 +860,7 @@ namespace rollback
             co_return;
         }
 
-        // === The rest of this method is unchanged: we build per-client payload and send ===
+        // build per-client payload and send ===
         for (const auto &recipient : match->players)
         {
             std::vector<uint32_t> startFrame(max_players_, 0);
@@ -867,60 +869,61 @@ namespace rollback
             uint16_t numPredictedOverrides = 0;
 
             // For each peer, decide what frames to send...
-            for (size_t p = 0; p < match->players.size(); p++)
+            for (size_t i = 0; i < match->players.size(); i++)
             {
-                const auto &peer = match->players[p];
+                const auto &peer = match->players[i];
+                size_t idx = peer->playerIndex;
 
                 std::map<uint32_t, uint32_t> histMap;
                 {
                     // grab the lock, copy the map, then immediately release
                     std::lock_guard<std::mutex> lk(inputs_mutex);
-                    histMap = match->inputs[p];
+                    histMap = match->inputs[idx];
                 }
-                const uint32_t lastAck = recipient->ackedFrames[p];
+                const uint32_t lastAck = recipient->ackedFrames[idx];
                 const uint32_t nextFrame = lastAck + 1;
 
                 // If we have the next real input
                 if (histMap.find(nextFrame) != histMap.end())
                 {
-                    startFrame[p] = nextFrame;
+                    startFrame[idx] = nextFrame;
                     // Send everything we actually have
                     uint32_t f = nextFrame;
                     while (histMap.find(f) != histMap.end())
                     {
-                        inputPerFrame[p].push_back(histMap.at(f));
-                        numFrames[p]++;
+                        inputPerFrame[idx].push_back(histMap.at(f));
+                        numFrames[idx]++;
                         f++;
                     }
                     peer->missedInputs = 0; // Reset miss counter
                 }
-                // ... (the rest of your input‐prediction logic is unchanged)
                 else if (peer->missedInputs < 5)
                 {
-            
-                    startFrame[p] = lastAck;
+                    startFrame[idx] = lastAck;
                     peer->missedInputs++;
                     const uint32_t lastVal = histMap.find(lastAck) != histMap.end() ? histMap.at(lastAck) : 0;
-                    inputPerFrame[p].push_back(lastVal);
-                    numFrames[p] = 1;
+                    inputPerFrame[idx].push_back(lastVal);
+                    numFrames[idx] = 1;
                 }
                 else
                 {
                     std::cout << "Player:" << peer->playerIndex << " PREDICT Input" << std::endl;
-                    startFrame[p] = nextFrame;
+                    startFrame[idx] = nextFrame;
                     uint32_t predictedCount = 0;
                     uint32_t f = nextFrame;
                     const uint32_t lastVal = histMap.find(lastAck) != histMap.end() ? histMap.at(lastAck) : 0;
-
-                    while (f < match->currentFrame)
                     {
-                        match->inputs[p][f] = lastVal;
-                        inputPerFrame[p].push_back(lastVal);
-                        predictedCount++;
-                        f++;
+                        std::lock_guard<std::mutex> lk(inputs_mutex);
+                        while (f < match->currentFrame)
+                        {
+                            match->inputs[idx][f] = lastVal;
+                            inputPerFrame[idx].push_back(lastVal);
+                            predictedCount++;
+                            f++;
+                        }
                     }
-
-                    numFrames[p] = static_cast<uint8_t>(predictedCount);
+                    peer->missedInputs = 0; // Reset miss counter
+                    numFrames[idx] = static_cast<uint8_t>(predictedCount);
                     numPredictedOverrides = static_cast<uint16_t>(predictedCount);
                 }
             }
@@ -943,9 +946,6 @@ namespace rollback
             co_await sendPlayerInput(match, recipient, playerInputPayload);
             recipient->pendingPings[match->sequenceCounter] = ts;
         }
-
-        // Advance the global server frame count
-        //match->currentFrame++;
 
         co_return;
     }
