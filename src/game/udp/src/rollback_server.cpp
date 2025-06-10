@@ -163,11 +163,10 @@ namespace rollback
                 player = handleNewConnection(payload, remote);
                 if (player)
                 {
-                    std::shared_lock lock(matches_mutex_);
-                    auto it = matches_.find(player->matchId);
-                    if (it != matches_.end())
+                    auto matchOptional = matches_.find(player->matchId);
+                    if (matchOptional.has_value())
                     {
-                        match = it->second;
+                        match = matchOptional.value();
                     }
                 }
             }
@@ -187,10 +186,10 @@ namespace rollback
                 if (player)
                 {
                     std::shared_lock lock(matches_mutex_);
-                    auto it = matches_.find(player->matchId);
-                    if (it != matches_.end())
+                    auto matchOptional = matches_.find(player->matchId);
+                    if (matchOptional.has_value())
                     {
-                        match = it->second;
+                        match = matchOptional.value();
                     }
                 }
             }
@@ -213,12 +212,13 @@ namespace rollback
                 auto payload = std::get<QualityDataPayload>(clientMsg->payload);
 
                 // Find the matching timestamp in this player's pendingPings
-                auto it = player->pendingPings.find(payload.serverMessageSequenceNumber);
-                if (it != player->pendingPings.end())
+                // auto it = player->pendingPings.find(payload.serverMessageSequenceNumber);
+                auto pendingPingOpt = player->pendingPings.find(payload.serverMessageSequenceNumber);
+                if (pendingPingOpt.has_value())
                 {
                     player->ping = static_cast<int16_t>(
-                        duration_cast<milliseconds>(steady_clock::now() - it->second).count());
-                    player->pendingPings.erase(it);
+                        duration_cast<milliseconds>(steady_clock::now() - pendingPingOpt.value()).count());
+                    player->pendingPings.erase(payload.serverMessageSequenceNumber);
                 }
             }
 
@@ -263,11 +263,12 @@ namespace rollback
         std::shared_ptr<MatchState> match;
 
         {
-            std::shared_lock read_lock(matches_mutex_);
-            auto it = matches_.find(matchData.matchId);
-            if (it != matches_.end())
+            // std::shared_lock read_lock(matches_mutex_);
+            // auto it = matches_.find(matchData.matchId);
+            auto matchOpt = matches_.find(matchData.matchId);
+            if (matchOpt.has_value())
             {
-                match = it->second;
+                match = matchOpt.value();
             }
         }
 
@@ -287,8 +288,9 @@ namespace rollback
             match->sequenceCounter = -1;
             match->tickRunning = false;
 
-            std::unique_lock write_lock(matches_mutex_);
-            matches_[matchData.matchId] = match;
+            // std::unique_lock write_lock(matches_mutex_);
+            // matches_[matchData.matchId] = match;
+            matches_.insert_or_assign(matchData.matchId, match);
         }
 
         {
@@ -429,7 +431,7 @@ namespace rollback
 
             // Record it per player
             std::unique_lock lock(players_mutex_);
-            p->pendingPings[sequence] = ts;
+            p->pendingPings.insert_or_assign(sequence, ts);
         }
 
         co_return;
@@ -477,15 +479,17 @@ namespace rollback
         }
 
         // Compute raw ping (RTT)
-        auto it = player->pendingPings.find(payload.serverMessageSequenceNumber);
-        if (it != player->pendingPings.end())
+        // auto it = player->pendingPings.find(payload.serverMessageSequenceNumber);
+        auto pendingPingOpt = player->pendingPings.find(payload.serverMessageSequenceNumber);
+        if (pendingPingOpt.has_value())
         {
             int16_t newPing = static_cast<int16_t>(
-                duration_cast<milliseconds>(steady_clock::now() - it->second).count());
+                duration_cast<milliseconds>(steady_clock::now() - pendingPingOpt.value()).count());
 
-                if (newPing > 255) {
-                    newPing = 255; // Cap ping to 255ms;
-                }
+            if (newPing > 255)
+            {
+                newPing = 255; // Cap ping to 255ms;
+            }
 
             if (newPing > -1)
             {
@@ -500,7 +504,7 @@ namespace rollback
                 {
                     // EWMA update:
                     player->smoothedPing =
-                    PlayerInfo::clampFloat(PING_ALPHA * static_cast<float>(newPing) + (1.0f - PING_ALPHA) * player->smoothedPing, 255.0f);
+                        PlayerInfo::clampFloat(PING_ALPHA * static_cast<float>(newPing) + (1.0f - PING_ALPHA) * player->smoothedPing, 255.0f);
                 }
                 // Store raw ping for backwards‐compat/logging if needed
                 player->ping = newPing;
@@ -509,7 +513,7 @@ namespace rollback
                 player->hasNewPing = true;
             }
 
-            player->pendingPings.erase(it);
+            player->pendingPings.erase(payload.serverMessageSequenceNumber);
         }
     }
 
@@ -572,14 +576,14 @@ namespace rollback
             for (uint8_t i = 0; i < numFrames && i < inputPerFrame.size(); i++)
             {
                 const uint32_t f = startFrame + i;
-                if (histMap.find(f) != histMap.end())
+                if (histMap.find(f).has_value())
                 {
                     // If we already have an input for this frame, skip it
                     // This happens when the server overwrites an input
                     std::cout << "Skipping duplicate input for frame " << f << " from player " << player->playerIndex << std::endl;
                     continue;
                 }
-                histMap[f] = inputPerFrame[i];
+                histMap.insert_or_assign(f, inputPerFrame[i]);
             }
         }
     }
@@ -878,7 +882,8 @@ namespace rollback
                 {
                     // grab the lock, copy the map, then immediately release
                     std::lock_guard<std::mutex> lk(inputs_mutex);
-                    histMap = match->inputs[idx];
+                    // histMap = match->inputs[idx];
+                    histMap = match->inputs[idx].snapshot();
                 }
                 const uint32_t lastAck = recipient->ackedFrames[idx];
                 const uint32_t nextFrame = lastAck + 1;
@@ -914,9 +919,10 @@ namespace rollback
                     const uint32_t lastVal = histMap.find(lastAck) != histMap.end() ? histMap.at(lastAck) : 0;
                     {
                         std::lock_guard<std::mutex> lk(inputs_mutex);
+                        // while (f < match->currentFrame)
                         while (f < match->currentFrame)
                         {
-                            match->inputs[idx][f] = lastVal;
+                            match->inputs[idx].insert_or_assign(f, lastVal);
                             inputPerFrame[idx].push_back(lastVal);
                             predictedCount++;
                             f++;
@@ -944,7 +950,7 @@ namespace rollback
             // Fire off the personalized PlayerInput
             auto ts = steady_clock::now();
             co_await sendPlayerInput(match, recipient, playerInputPayload);
-            recipient->pendingPings[match->sequenceCounter] = ts;
+            recipient->pendingPings.insert_or_assign(match->sequenceCounter, ts);
         }
 
         co_return;

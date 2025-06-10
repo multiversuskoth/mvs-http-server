@@ -16,6 +16,7 @@
 #include <iostream>
 #include <optional>
 #include <functional>
+#include "threadSafeMap.h"
 
 namespace rollback
 {
@@ -52,7 +53,8 @@ namespace rollback
 
         float rift = 0.0f;
         uint32_t missedInputs = 0;
-        std::map<uint32_t, time_point<steady_clock>> pendingPings;
+        // std::map<uint32_t, time_point<steady_clock>> pendingPings;
+        ThreadSafeMap<uint32_t, time_point<steady_clock>> pendingPings;
         bool emulated;
 
         // --- small helper to clamp a float into ±maxRange ---
@@ -72,7 +74,8 @@ namespace rollback
         uint32_t durationInFrames;
         float tickIntervalMs;
         uint32_t currentFrame;
-        std::vector<std::map<uint32_t, uint32_t>> inputs;     // one map per player: frame → input
+        // std::vector<std::map<uint32_t, uint32_t>> inputs;     // one map per player: frame → input
+        std::vector<ThreadSafeMap<uint32_t, uint32_t>> inputs;     // one map per player: frame → input
         std::optional<time_point<steady_clock>> lastTickTime; // timestamp of the start of the last tick
         float lastTickDuration;                               // ms duration of that tick
 
@@ -169,7 +172,8 @@ namespace rollback
         std::thread tick_thread_;
 
         int max_players_;
-        std::map<std::string, std::shared_ptr<MatchState>> matches_;
+        // std::map<std::string, std::shared_ptr<MatchState>> matches_;
+        ThreadSafeMap<std::string, std::shared_ptr<MatchState>> matches_;
         std::vector<std::shared_ptr<PlayerInfo>> players_;
 
         mutable std::shared_mutex matches_mutex_;
