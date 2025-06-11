@@ -31,6 +31,8 @@ namespace rollback
     // Structure to hold player information
     struct PlayerInfo
     {
+        bool disconnected = false; // true if player has disconnected
+        std::chrono::steady_clock::time_point lastInputTime; // Last time we received input from this player
         mutable std::shared_mutex mutex;
         boost::asio::ip::address address;
         uint16_t port;
@@ -101,6 +103,7 @@ namespace rollback
         void stop();
 
     private:
+        std::vector<std::thread> worker_threads_;
         // Network methods
         std::vector<std::shared_ptr<MatchState>> active_ping_matches_;
         std::mutex active_ping_mutex_;

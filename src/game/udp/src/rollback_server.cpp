@@ -19,6 +19,7 @@ const float TARGET_FRAME_TIME = 1000 / 60;
 static constexpr float PING_ALPHA = 0.1f;  // 0.1 means 10% of the new sample, 90% of the old
 static constexpr float RIFT_ALPHA = 0.05f; // 0.1 means 10% of the new sample, 90% of the old
 constexpr uint8_t MAX_INPUTS_PER_FRAME = 30;
+constexpr uint8_t DISCONECT_TIMEOUT = 10;
 
 namespace rollback
 {
@@ -60,17 +61,19 @@ namespace rollback
             return;
         running_ = true;
 
-        // Start UDP listener thread
-        udp_thread_ = std::thread([this]()
-                                  {
-				try {
-					io_context_.restart();
-					boost::asio::co_spawn(io_context_, runUdpServer(), boost::asio::detached);
-					io_context_.run();
-				}
-				catch (const std::exception& e) {
-					std::cerr << "Exception in UDP thread: " << e.what() << std::endl;
-				} });
+        // Only spawn UDP server; matches will spawn their own tick loops
+        boost::asio::co_spawn(io_context_, runUdpServer(), boost::asio::detached);
+
+        // Launch two threads to run the io_context_
+        for (int i = 0; i < 2; ++i) {
+            worker_threads_.emplace_back([this]() {
+                try {
+                    io_context_.run();
+                } catch (const std::exception& e) {
+                    std::cerr << "Exception in io_context thread: " << e.what() << std::endl;
+                }
+            });
+        }
 
         std::cout << "Rollback server started" << std::endl;
     }
@@ -81,21 +84,13 @@ namespace rollback
             return;
         running_ = false;
 
-        // Stop IO context
         io_context_.stop();
 
-        // Join threads
-        if (udp_thread_.joinable())
-        {
-            udp_thread_.join();
+        for (auto& t : worker_threads_) {
+            if (t.joinable()) t.join();
         }
+        worker_threads_.clear();
 
-        if (tick_thread_.joinable())
-        {
-            tick_thread_.join();
-        }
-
-        // Close socket
         boost::system::error_code ec;
         socket_.close(ec);
 
@@ -242,6 +237,16 @@ namespace rollback
             {
                 auto payload = std::get<InputPayload>(clientMsg->payload);
                 handleClientInput(match, player, payload);
+                break;
+            }
+            case ClientMessageType::Disconnecting:
+            {
+                // Mark player as disconnected
+                {
+                    std::unique_lock lock(player->mutex);
+                    player->disconnected = true;
+                }
+                std::cout << "Player index " << player->playerIndex << " sent Disconnecting message" << std::endl;
                 break;
             }
             default:
@@ -397,6 +402,10 @@ namespace rollback
         for (const auto &p : match->players.snapshot())
         {
             auto player = p.second;
+            {
+                std::shared_lock lock(player->mutex);
+                if (player->disconnected) continue;
+            }
             RequestQualityDataPayload payload;
             {
                 std::shared_lock lock(player->mutex);
@@ -420,6 +429,10 @@ namespace rollback
         for (const auto &p : playersSnapshot)
         {
             auto player = p.second;
+            {
+                std::shared_lock lock(player->mutex);
+                if (player->disconnected) continue;
+            }
             PlayersConfigurationDataPayload payload;
             {
                 payload.numPlayers = static_cast<uint8_t>(playersSnapshot.size());
@@ -547,6 +560,8 @@ namespace rollback
             std::unique_lock lock(player->mutex);
             player->lastClientFrame = clientFrame;
             player->hasNewFrame = true;
+            player->lastInputTime = std::chrono::steady_clock::now(); // Update last input time
+            player->disconnected = false; // Mark as connected on input
         }
 
         // Store each new input in the map
@@ -628,26 +643,11 @@ namespace rollback
 
     void RollbackServer::startTickLoop(std::shared_ptr<MatchState> match)
     {
-        // Already running check
-        {
-            bool expected = false;
-            if (!match->tickRunning.compare_exchange_strong(expected, true))
-            {
-                return; // Already running
-            }
-        }
-
-        // Start tick thread
-        tick_thread_ = std::thread([this, match]()
-                                   {
-				try {
-					boost::asio::io_context tick_io;
-					boost::asio::co_spawn(tick_io, runTickLoop(match), boost::asio::detached);
-					tick_io.run();
-				}
-				catch (const std::exception& e) {
-					std::cerr << "Exception in tick thread: " << e.what() << std::endl;
-				} });
+        bool expected = false;
+        if (!match->tickRunning.compare_exchange_strong(expected, true))
+            return;
+        // Just spawn the coroutine on io_context_
+        boost::asio::co_spawn(io_context_, runTickLoop(match), boost::asio::detached);
     }
 
     // Now update the runTickLoop function to take advantage of this higher resolution:
@@ -778,14 +778,23 @@ namespace rollback
 
     boost::asio::awaitable<void> RollbackServer::tick(std::shared_ptr<MatchState> match)
     {
-
         auto playersSnapshot = match->players.snapshot();
+        auto now = std::chrono::steady_clock::now();
         // For each player, recalc rift only if they have both new ping & new frame ===
         {
 
             for (auto &p : playersSnapshot)
             {
                 auto player = p.second;
+                {
+                    std::shared_lock lock(player->mutex);
+                    if (!player->disconnected && (now - player->lastInputTime > std::chrono::seconds(DISCONECT_TIMEOUT))) {
+                        player->disconnected = true;
+                        std::cout << "Player index " << player->playerIndex << " timed out (no input > 20s)" << std::endl;
+                        continue;
+                    }
+                    if (player->disconnected) continue;
+                }
                 uint32_t serverFrame;
                 {
                     std::shared_lock lock(match->mutex);
@@ -821,6 +830,10 @@ namespace rollback
         for (const auto &r : playersSnapshot)
         {
             auto recipient = r.second;
+            {
+                std::shared_lock lock(recipient->mutex);
+                if (recipient->disconnected) continue;
+            }
             std::vector<uint32_t> startFrame(max_players_, 0);
             std::vector<uint8_t> numFrames(max_players_, 0);
             std::vector<std::vector<uint32_t>> inputPerFrame(max_players_);
@@ -924,15 +937,15 @@ namespace rollback
         if (match->currentFrame % 200 == 0) {
             for (int idx = 0; idx < match->inputs.size(); ++idx) {
                 auto &histMap = match->inputs[idx];
-                if (histMap.size() > 100) {
+                if (histMap.size() > 150) {
                     // Remove all but the last 100 entries (by frame number)
                     std::vector<uint32_t> frames;
                     for (const auto &kv : histMap.snapshot()) {
                         frames.push_back(kv.first);
                     }
-                    if (frames.size() > 100) {
+                    if (frames.size() > 150) {
                         std::sort(frames.begin(), frames.end());
-                        size_t toRemove = frames.size() - 100;
+                        size_t toRemove = frames.size() - 150;
                         for (size_t i = 0; i < toRemove; ++i) {
                             histMap.erase(frames[i]);
                         }
@@ -964,6 +977,9 @@ namespace rollback
         ServerMessageType type,
         const ServerMessageVariant &payload)
     {
+        if (player->disconnected) {
+            co_return 0; // Don't send to disconnected players
+        }
 
         ServerHeader header;
         header.type = type;
@@ -988,7 +1004,13 @@ namespace rollback
 
         udp::endpoint remote(address, port);
 
-        co_await socket_.async_send_to(boost::asio::buffer(compressedBuf), remote, boost::asio::use_awaitable);
+        try {
+            co_await socket_.async_send_to(boost::asio::buffer(compressedBuf), remote, boost::asio::use_awaitable);
+        } catch (const boost::system::system_error& e) {
+            std::cerr << "Send failed for player " << player->playerIndex << ": " << e.what() << std::endl;
+            player->disconnected = true;
+            co_return 0;
+        }
 
         co_return header.sequence;
     }
