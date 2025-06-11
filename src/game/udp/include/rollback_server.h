@@ -1,4 +1,7 @@
 #pragma once
+#ifdef _WIN32
+#define _WIN32_WINNT	0x0601
+#endif
 
 #include "message_types.h"
 #include "serialization.h"
@@ -150,11 +153,6 @@ namespace rollback
             std::shared_ptr<PlayerInfo> player,
             ServerMessageType type,
             const ServerMessageVariant& payload);
-
-        // Utility methods
-        void logPacket(const std::vector<uint8_t>& data, const std::string& type,
-            const std::string& direction, const std::string& jsonData = "");
-
 
         // Server state
         boost::asio::io_context io_context_;

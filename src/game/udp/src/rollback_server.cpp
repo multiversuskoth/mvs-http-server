@@ -292,8 +292,6 @@ namespace rollback
 			match->sequenceCounter = -1;
 			match->tickRunning = false;
 
-			// std::unique_lock write_lock(matches_mutex_);
-			// matches_[matchData.matchId] = match;
 			matches_.insert_or_assign(matchData.matchId, match);
 		}
 
@@ -562,8 +560,7 @@ namespace rollback
 				if (histMap.find(f).has_value())
 				{
 					// If we already have an input for this frame, skip it
-					// This happens when the server overwrites an input
-					//std::cout << "Skipping duplicate input for frame " << f << " from player " << player->playerIndex << std::endl;
+					// This happens when the server overwrites an input or player is sending previous input due to ping
 					continue;
 				}
 				histMap.insert_or_assign(f, inputPerFrame[i]);
@@ -686,11 +683,7 @@ namespace rollback
 			auto now = std::chrono::steady_clock::now();
 			auto elapsed = now - startTime;
 			uint32_t absoluteFrame = static_cast<uint32_t>(elapsed / targetInterval);
-
-			{
-				std::unique_lock write_lock(match->mutex);
-				match->currentFrame = absoluteFrame;
-			}
+			match->currentFrame = absoluteFrame;
 
 			// Calculate the next tick time with drift compensation
 			nextTickTime += targetInterval;
@@ -768,15 +761,15 @@ namespace rollback
 				std::cout << "Timing stats for last " << tickCount << " ticks:" << std::endl;
 				std::cout << "  Average tick interval: "
 					<< std::chrono::duration_cast<std::chrono::microseconds>(avgTickTime).count()
-					<< "μs (target: "
+					<< "us (target: "
 					<< std::chrono::duration_cast<std::chrono::microseconds>(targetInterval).count()
-					<< "μs)" << std::endl;
+					<< "us)" << std::endl;
 				std::cout << "  Maximum deviation: "
 					<< std::chrono::duration_cast<std::chrono::microseconds>(maxDeviation).count()
-					<< "μs" << std::endl;
+					<< "us" << std::endl;
 				std::cout << "  Current accumulated error: "
 					<< std::chrono::duration_cast<std::chrono::microseconds>(accumulatedError).count()
-					<< "μs" << std::endl;
+					<< "us" << std::endl;
 
 				// Reset monitoring variables
 				tickCount = 0;
@@ -959,8 +952,8 @@ namespace rollback
 		header.type = type;
 
 		{
-			std::shared_lock lock(match->mutex);
-			header.sequence = 1 + match->sequenceCounter;
+			std::unique_lock lock(match->mutex);
+			header.sequence = ++match->sequenceCounter;
 		}
 
 		// Serialize the message
@@ -987,72 +980,6 @@ namespace rollback
 			boost::asio::use_awaitable);
 
 		co_return header.sequence;
-	}
-
-	void RollbackServer::logPacket(
-		const std::vector<uint8_t>& data,
-		const std::string& type,
-		const std::string& direction,
-		const std::string& jsonData)
-	{
-
-		std::stringstream ss;
-
-		// Format time
-		auto now = system_clock::now();
-		auto now_time_t = system_clock::to_time_t(now);
-		auto now_ms = duration_cast<milliseconds>(now.time_since_epoch()) % 1000;
-		std::tm now_tm;
-
-#ifdef _WIN32
-		localtime_s(&now_tm, &now_time_t);
-#else
-		localtime_r(&now_time_t, &now_tm);
-#endif
-
-		ss << std::put_time(&now_tm, "%M:%S") << "." << std::setfill('0') << std::setw(3) << now_ms.count() << " ";
-
-		// Format direction and type
-		if (direction == "RECV")
-		{
-			ss << "\033[32m" << direction << "\033[0m "; // Green
-			ss << "\033[32m" << type << "\033[0m ";
-		}
-		else
-		{
-			ss << "\033[33m" << direction << "\033[0m "; // Yellow
-			ss << "\033[33m" << type << "\033[0m ";
-		}
-
-		// Format time (blue)
-		ss << "\033[34m" << std::put_time(&now_tm, "%M:%S") << "." << std::setfill('0') << std::setw(3) << now_ms.count() << "\033[0m ";
-
-		// Format data hex
-		if (!data.empty())
-		{
-			if (direction == "RECV")
-			{
-				ss << "\033[32m"; // Green
-			}
-			else
-			{
-				ss << "\033[33m"; // Yellow
-			}
-
-			for (size_t i = 0; i < std::min(data.size(), size_t(10)); ++i)
-			{
-				ss << std::hex << std::setfill('0') << std::setw(2) << static_cast<int>(data[i]) << " ";
-			}
-
-			ss << "\033[0m";
-		}
-
-		std::cout << ss.str() << std::endl;
-
-		if (!jsonData.empty())
-		{
-			std::cout << jsonData << std::endl;
-		}
 	}
 
 } // namespace rollback
