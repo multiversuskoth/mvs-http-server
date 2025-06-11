@@ -28,6 +28,7 @@ namespace rollback
     // Structure to hold player information
     struct PlayerInfo
     {
+        mutable std::shared_mutex mutex;
         boost::asio::ip::address address;
         uint16_t port;
         std::string matchId;
@@ -52,7 +53,7 @@ namespace rollback
         bool     hasNewFrame = false; // Set to true whenever handleClientInput() updates lastClientFrame
 
         float rift = 0.0f;
-        uint32_t missedInputs = 0;
+        ThreadSafeMap<uint32_t, uint32_t>  missedInputs;
         // std::map<uint32_t, time_point<steady_clock>> pendingPings;
         ThreadSafeMap<uint32_t, time_point<steady_clock>> pendingPings;
         bool emulated;
@@ -69,15 +70,14 @@ namespace rollback
     // Structure to hold match state
     struct MatchState
     {
+        mutable std::shared_mutex mutex;
         std::string matchId;
-        std::vector<std::shared_ptr<PlayerInfo>> players;
+        ThreadSafeMap<std::string, std::shared_ptr<PlayerInfo>> players;
         uint32_t durationInFrames;
         float tickIntervalMs;
         uint32_t currentFrame;
         // std::vector<std::map<uint32_t, uint32_t>> inputs;     // one map per player: frame → input
         std::vector<ThreadSafeMap<uint32_t, uint32_t>> inputs;     // one map per player: frame → input
-        std::optional<time_point<steady_clock>> lastTickTime; // timestamp of the start of the last tick
-        float lastTickDuration;                               // ms duration of that tick
 
         uint32_t sequenceCounter;
         uint32_t pingPhaseCount; // how many pings sent so far
@@ -132,14 +132,9 @@ namespace rollback
             std::shared_ptr<PlayerInfo> player,
             const InputPayload& payload);
 
-        // *** We no longer need calcRiftVariableTick() to be called immediately.
-        // But we’ll keep it (unused) or repurpose it if you like.
-        float calcRiftVariableTick(
-            uint8_t playerIndex,
-            uint32_t serverFrame,
-            uint32_t clientFrame,
-            int16_t ping,
-            float lastTickDuration);
+        void calcRiftVariableTick(
+            std::shared_ptr<PlayerInfo> player,
+            uint32_t serverFrame);
 
         void startTickLoop(std::shared_ptr<MatchState> match);
         boost::asio::awaitable<void> runTickLoop(std::shared_ptr<MatchState> match);
@@ -150,8 +145,7 @@ namespace rollback
             std::shared_ptr<PlayerInfo> player,
             const PlayerInputPayload& payload);
 
-        boost::asio::awaitable<uint32_t
-        > sendServerMessage(
+        boost::asio::awaitable<uint32_t> sendServerMessage(
             std::shared_ptr<MatchState> match,
             std::shared_ptr<PlayerInfo> player,
             ServerMessageType type,
@@ -174,12 +168,8 @@ namespace rollback
         int max_players_;
         // std::map<std::string, std::shared_ptr<MatchState>> matches_;
         ThreadSafeMap<std::string, std::shared_ptr<MatchState>> matches_;
-        std::vector<std::shared_ptr<PlayerInfo>> players_;
+        ThreadSafeMap<std::string, std::shared_ptr<PlayerInfo>> players_;
 
-        mutable std::shared_mutex matches_mutex_;
-        mutable std::shared_mutex players_mutex_;
-
-        mutable std::mutex inputs_mutex;
     };
 
 } // namespace rollback

@@ -16,6 +16,34 @@ public:
     ThreadSafeMap(const ThreadSafeMap&) = delete;
     ThreadSafeMap& operator=(const ThreadSafeMap&) = delete;
 
+    //
+    // --- Moves ---
+    //
+
+    // Move-constructor
+    ThreadSafeMap(ThreadSafeMap&& other) noexcept {
+        // lock only the other’s mutex while we steal its data
+        std::unique_lock lock(other.mutex_);
+        map_ = std::move(other.map_);
+    }
+
+    // Move-assignment
+    ThreadSafeMap& operator=(ThreadSafeMap&& other) noexcept {
+        if (this != &other) {
+            // lock both mutexes without deadlock
+            std::scoped_lock locks(mutex_, other.mutex_);
+            map_ = std::move(other.map_);
+        }
+        return *this;
+    }
+
+    template<typename Fn>
+    void for_each_read(Fn f) const {
+        std::shared_lock lock(mutex_);
+        for (auto const& [k, v] : map_)
+            f(k, v);  // v is a const std::shared_ptr<T>&
+    }
+
     // Insert or update
     void insert_or_assign(const Key& key, const Value& value) {
         std::unique_lock lock(mutex_);

@@ -118,7 +118,7 @@ struct NewConnectionReplyPayload {
     uint8_t matchNumPlayers;
     uint8_t playerIndex;
     uint32_t matchDurationInFrames;
-    uint8_t isDebugMode;
+    uint8_t unknown;
     uint8_t isValidationServerDebugMode;
 };
 

@@ -243,7 +243,7 @@ std::vector<uint8_t> serializeServerMessage(const ServerHeader& header,
             buffer[offset++] = p.playerIndex;
             writeLittleEndian<uint32_t>(buffer, offset, p.matchDurationInFrames);
             offset += 4;
-            buffer[offset++] = p.isDebugMode;
+            buffer[offset++] = 0;
             buffer[offset++] = p.isValidationServerDebugMode;
         }
         else if constexpr (std::is_same_v<T, InputAckPayload>) {
