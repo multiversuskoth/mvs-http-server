@@ -674,6 +674,41 @@ namespace rollback
             // Process the current tick
             co_await tick(match);
 
+            // --- CLEANUP LOGIC START ---
+            // Check if all players are disconnected
+            bool allDisconnected = true;
+            std::vector<std::string> playerKeys;
+            {
+                std::shared_lock lock(match->mutex);
+                for (const auto& p : match->players.snapshot()) {
+                    auto player = p.second;
+                    playerKeys.push_back(p.first);
+                    std::shared_lock plock(player->mutex);
+                    if (!player->disconnected) {
+                        allDisconnected = false;
+                        break;
+                    }
+                }
+            }
+            if (allDisconnected) {
+                match->tickRunning = false;
+                // Remove all players from global players_ map
+                for (const auto& key : playerKeys) {
+                    players_.erase(key);
+                }
+                // Remove all players from match
+                match->players.clear();
+                // Clear all input data
+                for (auto& inputMap : match->inputs) {
+                    inputMap.clear();
+                }
+                // Remove match from matches_ map
+                matches_.erase(match->matchId);
+                std::cout << "Match " << match->matchId << " cleaned up (all players disconnected)" << std::endl;
+                break; // Exit tick loop
+            }
+            // --- CLEANUP LOGIC END ---
+
             // Calculate actual time spent in tick processing
             auto now = std::chrono::steady_clock::now();
             auto elapsed = now - startTime;
