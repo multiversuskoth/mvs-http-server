@@ -249,7 +249,7 @@ export class WebSocketService {
 
   stopMatchTick(player: WebSocketPlayer) {
     if (player.matchTick) {
-      logger.info(`Stopping matchtick for ${player.account?.id}`)
+      logger.info(`Stopping matchtick for ${player.account?.id}`);
       clearInterval(player.matchTick);
     }
   }
@@ -293,6 +293,21 @@ export class WebSocketService {
         cmd: "matchmaking-tick",
       });
     }, 1000);
+
+    setTimeout(() => {
+      this.attemptRemoveMatchTicket(client);
+      clearInterval(client.matchTick);
+      client.matchTick = undefined;
+      client.send({
+        data: {},
+        payload: {
+          id: notification.matchmakingRequestId,
+          state: 3,
+        },
+        header: "Matchmaking request cancelled.",
+        cmd: "matchmaking-cancel",
+      });
+    }, 100_000);
   }
 
   handleMatchFound(notification: MATCH_FOUND_NOTIFICATION) {
@@ -306,7 +321,7 @@ export class WebSocketService {
             MatchID: notification.matchId,
             Port: GAME_SERVER_PORT,
             template_id: "GameServerReadyNotification",
-            IPAddress: player.ip ==="127.0.0.1" ? "127.0.0.1" : env.LOCAL_PUBLIC_IP,
+            IPAddress: env.UDP_SERVER_IP,
           },
           payload: {
             match: {
@@ -317,7 +332,7 @@ export class WebSocketService {
           header: "",
           cmd: "update",
         };
-        console.log(player.account?.id,message);
+        console.log(player.account?.id, message);
         player.send(message);
         logger.info(`Sent match notification to player ${matchPlayer.playerId} for match ${notification.matchId}`);
       }
@@ -465,7 +480,7 @@ export class WebSocketService {
       const client = this.clients.get(playerId);
       if (client && client.matchConfig) {
         client.send(client.matchConfig);
-        console.log(client.matchConfig.data.GameplayConfig.Players)
+        console.log(client.matchConfig.data.GameplayConfig.Players);
         logger.info(`Sent all perks lock to player ${playerId} for match ${notification.containerMatchId}`);
       }
     }

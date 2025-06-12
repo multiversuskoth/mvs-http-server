@@ -19,7 +19,7 @@ const float TARGET_FRAME_TIME = 1000 / 60;
 static constexpr float PING_ALPHA = 0.1f;  // 0.1 means 10% of the new sample, 90% of the old
 static constexpr float RIFT_ALPHA = 0.05f; // 0.1 means 10% of the new sample, 90% of the old
 constexpr uint8_t MAX_INPUTS_PER_FRAME = 30;
-constexpr uint8_t DISCONECT_TIMEOUT = 10;
+constexpr uint8_t DISCONECT_TIMEOUT = 30;
 
 namespace rollback
 {
@@ -624,6 +624,11 @@ namespace rollback
                 {
                     player->smoothRift = RIFT_ALPHA * rawRift + (1.0f - RIFT_ALPHA) * player->smoothRift;
                 }
+
+                if (fabs(rawRift) < fabs(player->smoothRift))
+                {
+                    player->smoothRift = rawRift;
+                }
             }
 
             player->smoothRift = PlayerInfo::clampFloat(player->smoothRift, 20.0f);
@@ -634,7 +639,7 @@ namespace rollback
             // Reset the “new” flags after using them
             player->hasNewPing = false;
             player->hasNewFrame = false;
-            if (player->smoothRift > 1 || player->smoothRift < -1 || player->smoothedPing > 100)
+            if (player->smoothRift > 1 || player->smoothRift < -1 || player->smoothedPing > 254)
             {
                 std::cout << "PIndex:" << player->playerIndex << " PING:" << player->ping << " RIFT:" << player->smoothRift << " RAWRIFT:" << player->rift << " clientFrame:" << predictedClientFrame << " serverFrame:" << serverFrame << std::endl;
             }
@@ -782,24 +787,14 @@ namespace rollback
 
             // Performance monitoring
             tickCount++;
-            if (tickCount >= 100)
+            if (tickCount >= 500)
             { // Report every 100 ticks
                 auto monitorEnd = std::chrono::steady_clock::now();
                 auto monitorDuration = monitorEnd - monitorStart;
                 auto avgTickTime = monitorDuration / tickCount;
 
-                std::cout << "Timing stats for last " << tickCount << " ticks:" << std::endl;
                 std::cout << "  Average tick interval: "
-                          << std::chrono::duration_cast<std::chrono::microseconds>(avgTickTime).count()
-                          << "us (target: "
-                          << std::chrono::duration_cast<std::chrono::microseconds>(targetInterval).count()
-                          << "us)" << std::endl;
-                std::cout << "  Maximum deviation: "
-                          << std::chrono::duration_cast<std::chrono::microseconds>(maxDeviation).count()
-                          << "us" << std::endl;
-                std::cout << "  Current accumulated error: "
-                          << std::chrono::duration_cast<std::chrono::microseconds>(accumulatedError).count()
-                          << "us" << std::endl;
+                    << std::chrono::duration_cast<std::chrono::microseconds>(avgTickTime).count() << std::endl;
 
                 // Reset monitoring variables
                 tickCount = 0;
@@ -821,15 +816,6 @@ namespace rollback
             for (auto &p : playersSnapshot)
             {
                 auto player = p.second;
-                {
-                    std::shared_lock lock(player->mutex);
-                    if (!player->disconnected && (now - player->lastInputTime > std::chrono::seconds(DISCONECT_TIMEOUT))) {
-                        player->disconnected = true;
-                        std::cout << "Player index " << player->playerIndex << " timed out (no input > 20s)" << std::endl;
-                        continue;
-                    }
-                    if (player->disconnected) continue;
-                }
                 uint32_t serverFrame;
                 {
                     std::shared_lock lock(match->mutex);
@@ -865,10 +851,17 @@ namespace rollback
         for (const auto &r : playersSnapshot)
         {
             auto recipient = r.second;
+
             {
                 std::shared_lock lock(recipient->mutex);
+                if (!recipient->disconnected && (now - recipient->lastInputTime > std::chrono::seconds(DISCONECT_TIMEOUT))) {
+                    recipient->disconnected = true;
+                    std::cout << "Player index " << recipient->playerIndex << " timed out (no input > 20s)" << std::endl;
+                    continue;
+                }
                 if (recipient->disconnected) continue;
             }
+
             std::vector<uint32_t> startFrame(max_players_, 0);
             std::vector<uint8_t> numFrames(max_players_, 0);
             std::vector<std::vector<uint32_t>> inputPerFrame(max_players_);
