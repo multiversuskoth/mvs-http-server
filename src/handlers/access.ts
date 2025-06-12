@@ -8,6 +8,7 @@ import { HydraDecoder } from "mvs-dump";
 import { parseEncryptedAppTicket } from "steam-appticket";
 import env from "../env/env";
 import { logger } from "../config/logger";
+import { PlayerTesterModel } from "../database/PlayerTester";
 
 let USERNAME_COUNT = 0;
 const USERNAME = () => `MSVI_TESTER_${USERNAME_COUNT}`;
@@ -23,8 +24,18 @@ export interface AccountToken {
 
 export const accounts = new Map<string, AccountToken>();
 
-function generateStaticAccess(req: express.Request) {
+async function generateStaticAccess(req: express.Request) {
   let ip = req.ip!.replace(/^::ffff:/, "");
+
+   let player = await PlayerTesterModel.findOne({ ip });
+  if (!player) {
+       const randomName = `MSVI_TESTER_${Math.random().toString(36).substring(2, 4)}`;
+    // generate a random name like Player_ab12cd34
+    player = new PlayerTesterModel({ ip, name: randomName });
+    await player.save();
+  }
+  console.log(player.toJSON())
+
   let ws = "ws://mvsi-test.com:3000";
   if (ip === "127.0.0.1") {
     ws = "ws://mvsi-test.com:3000";
@@ -32,12 +43,12 @@ function generateStaticAccess(req: express.Request) {
     ws = `ws://${env.LOCAL_PUBLIC_IP}:3000`;
   }
   const account: AccountToken = {
-    id: ObjectID().toHexString(),
-    profile_id: ObjectID().toHexString(),
-    public_id: "paee40f62bd814a53bf9f4d21e43ea2c1",
+    id: player.id,
+    profile_id: player.profile_id.toHexString(),
+    public_id: player.public_id,
     wb_network_id: "pafd8d7950aa1484ea791d06662fa75ce",
-    hydraUsername: "dark-wild-grass-voice-yrpu2",
-    username: USERNAME(),
+    hydraUsername: player.name,
+    username: player.name,
   };
   const token = jwt.sign(account, SECRET);
   logger.info(`Player ${account.id} - ${account.username} connected`);
@@ -789,5 +800,5 @@ export interface Metadata {
 export async function handleAccess(req: Request<{}, {}, ACCESS_REQ, {}>, res: Response) {
   //const ticket = Buffer.from(req.body.auth.steam, "hex");
   //console.log(parseEncryptedAppTicket(ticket, spaceWarPublicKey));
-  res.send(generateStaticAccess(req));
+  res.send(await generateStaticAccess(req));
 }

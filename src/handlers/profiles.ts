@@ -2,6 +2,7 @@ import express, { Request, Response } from "express";
 import { MVSQueries } from "../interfaces/queries_types";
 import { GleamiumData } from "../data/gleamium";
 import { unlockAll, unlockAllCharacters } from "../data/characters";
+import { PlayerTesterModel } from "../database/PlayerTester";
 
 const profiles: any[] = [
   {
@@ -131,8 +132,19 @@ export async function handleProfiles_bulk(req: Request<{}, {}, {}, MVSQueries.Pr
     const ids = req.body.ids as string[];
     let response = [];
     for (let id of ids) {
+      console.log("ID:",id)
+      let player = await PlayerTesterModel.findById( id );
+      console.log("FOUND PROFILE:", player?.toJSON());
+
       let foundProfile = profiles[0];
       if (foundProfile) {
+        if (player) {
+          try {
+            foundProfile.account["identity.username"]= player.name;
+          } catch (e) {
+            console.log(e);
+          }
+        }
         foundProfile.account_id = id;
         foundProfile.account.id = id;
         console.log("FOUND PROFILE:");

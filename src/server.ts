@@ -12,6 +12,7 @@ import { redisClient, redisGetMatchConfig } from "./config/redis";
 import { GAME_SERVER_PORT } from "./game/udp";
 import { sscRouter } from "./ssc/routes";
 import { CRC, MATCHMAKING_CRC } from "./data/config";
+import { PlayerTesterModel } from "./database/PlayerTester";
 
 export const app = express();
 app.disable("x-powered-by");
@@ -29,8 +30,72 @@ const options = {
 };
 
 app.use(express.json());
+app.use(express.urlencoded())
 app.get("/global_configuration_types/eula/global_configurations/*", (req, res, next) => {
   res.json(200);
+});
+
+app.get("/namechange", async (req, res) => {
+  try {
+    let ip = req.ip!.replace(/^::ffff:/, "");
+    if (typeof ip !== "string") {
+      res.status(400).send("Invalid IP");
+      return;
+    }
+    let player = await PlayerTesterModel.findOne({ ip });
+    // If no player exists, create a new document with empty name
+    if (!player) {
+      player = new PlayerTesterModel({ ip, name: "" });
+      await player.save();
+    }
+    // Render a simple HTML form
+    res.send(`
+      <!DOCTYPE html>
+      <html lang="en">
+      <head>
+        <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <title>Edit Player</title>
+      </head>
+      <body>
+        <h1>Edit Player: ${player.name}</h1>
+        <form action="/namechange" method="POST">
+          <label>
+            Name:
+            <input type="text" id="name" name="name" value="${player.name}" />
+          </label>
+          <button type="submit">Save</button>
+        </form>
+      </body>
+      </html>
+    `);
+  } catch (e) {
+    console.log(e)
+    res.send("");
+  }
+});
+
+// POST /player - update or create player by IP
+app.post("/namechange", async (req, res, next) => {
+  try {
+   let ip = req.ip!.replace(/^::ffff:/, "");
+    console.log(req.body)
+    const { name } = req.body;
+    if (typeof ip !== "string" || typeof name !== "string") {
+      res.json("ERROR");
+      return;
+    }
+console.log('PlayerTesterModel')
+    // Upsert the player's name based on IP
+    await PlayerTesterModel.findOneAndUpdate({ ip }, { name }, { upsert: true, new: true });
+    // Redirect back to the form
+    console.log('redirecting')
+    res.redirect(`/namechange`);
+    console.log("redirected")
+  } catch (e) {
+      console.log(e)
+    res.send("");
+  }
 });
 
 app.post("/mvsi_register", async (req, res, next) => {
