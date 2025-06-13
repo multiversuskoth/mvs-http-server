@@ -585,7 +585,8 @@ namespace rollback
         std::shared_ptr<PlayerInfo> player,
         uint32_t serverFrame)
     {
-
+        if (serverFrame % 60 != 0 && serverFrame > 500)
+            return;
         std::unique_lock lock(player->mutex);
         // If we have a freshly smoothed ping AND a freshly received frame stamp:
         if (player->hasNewPing && player->hasNewFrame)
