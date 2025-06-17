@@ -1,5 +1,5 @@
-import { prop, modelOptions, getModelForClass, Ref } from '@typegoose/typegoose';
-import { PlayerTester } from './PlayerTester';
+import { prop, modelOptions, getModelForClass, Ref } from "@typegoose/typegoose";
+import { PlayerTester } from "./PlayerTester";
 
 export class PerkSet {
   @prop({ required: true })
@@ -15,18 +15,16 @@ export class PerkSet {
 @modelOptions({ schemaOptions: { _id: false } })
 export class CharacterPerkPages {
   // Dynamic keys: "0", "1", ...
-  [setKey: string]: PerkSet | any;
+  [setKey: string]: PerkSet;
 }
 
 @modelOptions({ schemaOptions: { _id: false } })
 export class PerkPages {
   @prop({ required: true, ref: () => PlayerTester })
-  public player_id!: Ref<PlayerTester>;
+  public account_id!: Ref<PlayerTester>;
 
-  @prop({ type: () => Object, required: true })
-  public perk_pages!: {
-    [character: string]: CharacterPerkPages;
-  };
+  @prop({ type: () => CharacterPerkPages, required: true })
+  public perk_pages!: Map<string, CharacterPerkPages[]>;
 }
 
 export const PerkPagesModel = getModelForClass(PerkPages);

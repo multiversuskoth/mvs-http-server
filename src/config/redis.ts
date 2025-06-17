@@ -259,7 +259,8 @@ export async function redisGetMatch(containerMatchId: string) {
 }
 
 export async function redisUpdateMatch(containerMatchId: string, match: RedisMatch) {
-  await redisClient.set(MATCH_KEY(containerMatchId), JSON.stringify(match));
+  const EX = 60 * 20;
+  await redisClient.set(MATCH_KEY(containerMatchId), JSON.stringify(match), { EX });
 }
 
 export async function redisLockPerks(data: RedisLockPerk) {

@@ -19,9 +19,9 @@ router.put("/accounts/wb_network/bulk", (req: Request<{}, {}, {}, MVSQueries.Acc
   h.handleAccounts_wb_network_bulk(req, res);
 });
 
-router.put("/batch", batchMiddleware, (req: Request<{}, {}, {}, {}>, res: Response) => {
+router.put("/batch", batchMiddleware, async (req: Request<{}, {}, {}, {}>, res: Response) => {
   // @ts-ignore TODO : implementation. Remove comment once implemented`
-  h.handleBatch(req, res);
+  await h.handleBatch(req, res);
 });
 
 router.get("/commerce/products", (req: Request<{}, {}, {}, MVSQueries.Commerce_products_QUERY>, res: Response) => {
@@ -313,11 +313,6 @@ router.put("/ssc/invoke/hiss_amalgamation", (req: Request<{}, {}, {}, {}>, res: 
 router.get("/ssc/invoke/load_rifts", (req: Request<{}, {}, {}, {}>, res: Response) => {
   // @ts-ignore TODO : implementation. Remove comment once implemented`
   h.handleSsc_invoke_load_rifts(req, res);
-});
-
-router.get("/ssc/invoke/perks_get_all_pages", (req: Request<{}, {}, {}, {}>, res: Response) => {
-  // @ts-ignore TODO : implementation. Remove comment once implemented`
-  h.handleSsc_invoke_perks_get_all_pages(req, res);
 });
 
 router.put("/ssc/invoke/perks_lock", (req: Request<{}, {}, {}, {}>, res: Response) => {

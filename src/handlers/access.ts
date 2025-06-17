@@ -34,7 +34,6 @@ async function generateStaticAccess(req: express.Request) {
     player = new PlayerTesterModel({ ip, name: randomName });
     await player.save();
   }
-  console.log(player.toJSON())
 
   let ws = "ws://mvsi-test.com:3000";
   if (ip === "127.0.0.1") {

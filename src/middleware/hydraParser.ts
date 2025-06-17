@@ -2,7 +2,7 @@ import { NextFunction, Request, Response } from "express";
 
 import { HydraDecoder, HydraEncoder } from "mvs-dump";
 
-const HYDRA_CONTENT_TYPE = "application/x-ag-binary";
+export const HYDRA_CONTENT_TYPE = "application/x-ag-binary";
 
 export const hydraDecoderMiddleware = <T>(req: Request, res: Response, next: NextFunction) => {
   //@ts-ignore

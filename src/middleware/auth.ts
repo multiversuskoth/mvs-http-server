@@ -12,7 +12,7 @@ declare global {
   }
 }
 
-const HYDRA_ACCESS_TOKEN = "x-hydra-access-token";
+export const HYDRA_ACCESS_TOKEN = "x-hydra-access-token";
 export const SECRET = "SHHHH!!";
 
 export function decodeToken(token: string) {

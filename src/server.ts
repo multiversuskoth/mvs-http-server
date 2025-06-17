@@ -13,6 +13,14 @@ import { GAME_SERVER_PORT } from "./game/udp";
 import { sscRouter } from "./ssc/routes";
 import { CRC, MATCHMAKING_CRC } from "./data/config";
 import { PlayerTesterModel } from "./database/PlayerTester";
+import { RegExpMatcher, TextCensor, englishDataset, englishRecommendedTransformers, asteriskCensorStrategy } from "obscenity";
+
+const matcher = new RegExpMatcher({
+  ...englishDataset.build(),
+  ...englishRecommendedTransformers,
+});
+const censor = new TextCensor();
+censor.setStrategy(asteriskCensorStrategy());
 
 export const app = express();
 app.disable("x-powered-by");
@@ -30,7 +38,7 @@ const options = {
 };
 
 app.use(express.json());
-app.use(express.urlencoded())
+app.use(express.urlencoded());
 app.get("/global_configuration_types/eula/global_configurations/*", (req, res, next) => {
   res.json(200);
 });
@@ -62,7 +70,7 @@ app.get("/namechange", async (req, res) => {
         <form action="/namechange" method="POST">
           <label>
             Name:
-            <input type="text" id="name" name="name" value="${player.name}" />
+            <input maxlength="15" type="text" id="name" name="name" value="${player.name}" />
           </label>
           <button type="submit">Save</button>
         </form>
@@ -70,7 +78,7 @@ app.get("/namechange", async (req, res) => {
       </html>
     `);
   } catch (e) {
-    console.log(e)
+    console.log(e);
     res.send("");
   }
 });
@@ -78,22 +86,22 @@ app.get("/namechange", async (req, res) => {
 // POST /player - update or create player by IP
 app.post("/namechange", async (req, res, next) => {
   try {
-   let ip = req.ip!.replace(/^::ffff:/, "");
-    console.log(req.body)
+    let ip = req.ip!.replace(/^::ffff:/, "");
+    console.log(req.body);
     const { name } = req.body;
     if (typeof ip !== "string" || typeof name !== "string") {
       res.json("ERROR");
       return;
     }
-console.log('PlayerTesterModel')
     // Upsert the player's name based on IP
-    await PlayerTesterModel.findOneAndUpdate({ ip }, { name }, { upsert: true, new: true });
+    const matches = matcher.getAllMatches(name);
+    const filtered = censor.applyTo(name, matches);
+    await PlayerTesterModel.findOneAndUpdate({ ip }, { name: filtered.substring(0, 15) }, { upsert: true, new: true });
     // Redirect back to the form
-    console.log('redirecting')
     res.redirect(`/namechange`);
-    console.log("redirected")
+    console.log("Name Changed");
   } catch (e) {
-      console.log(e)
+    console.log(e);
     res.send("");
   }
 });
@@ -130,6 +138,7 @@ app.get("/ssc/invoke/hiss_amalgamation", (req, res, next) => {
 
 app.use((req, res, next) => {
   console.log("NOT IMPLEMENTED - ", req.method, req.url);
+  console.log(req.body);
   res.send({ body: { Crc: CRC, MatchmakingCrc: MATCHMAKING_CRC }, metadata: null, return_code: 200 });
 });
 

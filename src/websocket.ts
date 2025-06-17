@@ -311,6 +311,8 @@ export class WebSocketService {
   }
 
   handleMatchFound(notification: MATCH_FOUND_NOTIFICATION) {
+    const arr = [env.UDP_SERVER_IP,env.UDP_SERVER_IP2];
+    const randomIndex = Math.floor(Math.random() * arr.length);
     for (const matchPlayer of notification.players) {
       const player = this.clients.get(matchPlayer.playerId);
       if (player) {
@@ -321,7 +323,7 @@ export class WebSocketService {
             MatchID: notification.matchId,
             Port: GAME_SERVER_PORT,
             template_id: "GameServerReadyNotification",
-            IPAddress: env.UDP_SERVER_IP,
+            IPAddress: arr[randomIndex],
           },
           payload: {
             match: {
@@ -414,7 +416,7 @@ export class WebSocketService {
           bIsCustomGame: false,
           Players,
           CustomGameSettings: {
-            bHazardsEnabled: true,
+            bHazardsEnabled: false,
             bShieldsEnabled: true,
             MatchTime,
             NumRingouts,
@@ -425,7 +427,7 @@ export class WebSocketService {
             bDisplayTimer: true,
           },
           bIsCasualSpecial: false,
-          bAllowMapHazards: true,
+          bAllowMapHazards: false,
           RiftNodeAttunement: "Attunements:None",
           CountdownDisplay: "CountdownTypes:XvY",
           Cluster: "ec2-us-east-1-dokken",
