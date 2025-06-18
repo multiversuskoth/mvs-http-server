@@ -87,7 +87,6 @@ export async function perks_set_page(req: Request, res: Response) {
     Description,
     Perks,
   };
-
   // 2. Upsert the specific character/page index
   try {
     const updatedDoc = await PerkPagesModel.findOneAndUpdate(
@@ -99,7 +98,6 @@ export async function perks_set_page(req: Request, res: Response) {
       },
       { upsert: true, new: true }
     ).exec();
-    console.log(updatedDoc.toJSON());
   } catch (err) {
     console.log("Error saving perks", err);
   }
@@ -119,7 +117,6 @@ export async function handleSsc_invoke_perks_get_all_pages(req: Request<{}, {}, 
     .lean()
     .exec()
     .then((doc) => {
-      console.log(doc)
       res.send({
         body: {
           perk_pages: doc?.perk_pages || {},

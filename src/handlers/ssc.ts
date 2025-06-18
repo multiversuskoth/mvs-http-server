@@ -13,7 +13,6 @@ import {
   redisSaveEquippedComsetics,
   redisUpdatePlayerLoadout,
 } from "../config/redis";
-import { CHARACTER_SLUGS } from "../data/characters";
 import { CRC, MATCHMAKING_CRC } from "../data/config";
 import { hiss_amalgamation_get } from "./hiss_amalgation_get";
 import { logger } from "../config/logger";
@@ -27,7 +26,7 @@ export async function handleSsc_invoke_attempt_daily_refresh(req: Request<{}, {}
       CurrentSeason: "Season:SeasonFive",
       NextDailyRefreshTime: { _hydra_unix_date: MVSTime(new Date()) + 86400 },
       NextWeeklyRefreshTime: { _hydra_unix_date: MVSTime(new Date()) + 604800 },
-      FreeCharacterRotation: CHARACTER_SLUGS,
+      FreeCharacterRotation: [],
       ReturnData: {},
       PlayerMissionObject: {
         MissionControllerContainers: {},

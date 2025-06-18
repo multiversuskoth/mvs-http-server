@@ -1,4 +1,4 @@
-import { prop, modelOptions, getModelForClass, Ref } from "@typegoose/typegoose";
+import { prop, modelOptions, getModelForClass, Ref, Severity } from "@typegoose/typegoose";
 import { PlayerTester } from "./PlayerTester";
 
 export class PerkSet {
@@ -18,13 +18,17 @@ export class CharacterPerkPages {
   [setKey: string]: PerkSet;
 }
 
-@modelOptions({ schemaOptions: { _id: false } })
+@modelOptions({ schemaOptions: { _id: false }, options: { allowMixed: Severity.ALLOW } })
 export class PerkPages {
   @prop({ required: true, ref: () => PlayerTester })
   public account_id!: Ref<PlayerTester>;
 
-  @prop({ type: () => CharacterPerkPages, required: true })
-  public perk_pages!: Map<string, CharacterPerkPages[]>;
+  @prop({ type: () => Object, required: true })
+  public perk_pages!: {
+    [character: string]: {
+      [pageIndex: string]: PerkSet;
+    };
+  };
 }
 
 export const PerkPagesModel = getModelForClass(PerkPages);
