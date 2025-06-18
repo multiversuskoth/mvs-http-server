@@ -42,25 +42,3 @@ jobs:
           platforms: linux/arm64
           push: true
           tags: ghcr.io/${{ github.repository_owner }}/mvs-http-server:latest
-          build-args: |
-            GAME_DOMAIN=${{ secrets.GAME_DOMAIN }}
-            GAME_VERSION=${{ secrets.GAME_VERSION }}
-            LOCAL_PUBLIC_IP=${{ secrets.LOCAL_PUBLIC_IP }}
-            MONGODB_URI=${{ secrets.MONGODB_URI }}
-            REDIS=${{ secrets.REDIS }}
-            REDIS_PW=${{ secrets.REDIS_PW }}
-            REDIS_USERNAME=${{ secrets.REDIS_USERNAME }}
-            UDP_SERVER_IP=${{ secrets.UDP_SERVER_IP }}
-            UDP_SERVER_IP2=${{ secrets.UDP_SERVER_IP2 }}
-            WB_DOMAIN=${{ secrets.WB_DOMAIN }}
-    env:
-      GAME_DOMAIN: ${{ secrets.GAME_DOMAIN }}
-      GAME_VERSION: ${{ secrets.GAME_VERSION }}
-      LOCAL_PUBLIC_IP: ${{ secrets.LOCAL_PUBLIC_IP }}
-      MONGODB_URI: ${{ secrets.MONGODB_URI }}
-      REDIS: ${{ secrets.REDIS }}
-      REDIS_PW: ${{ secrets.REDIS_PW }}
-      REDIS_USERNAME: ${{ secrets.REDIS_USERNAME }}
-      UDP_SERVER_IP: ${{ secrets.UDP_SERVER_IP }}
-      UDP_SERVER_IP2: ${{ secrets.UDP_SERVER_IP2 }}
-      WB_DOMAIN: ${{ secrets.WB_DOMAIN }}
