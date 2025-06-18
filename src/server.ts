@@ -32,11 +32,6 @@ process.on("warning", (e) => {
   console.warn(e.stack);
 });
 
-const options = {
-  key: fs.readFileSync(path.join(__dirname, "../dokken-api.wbagora.com-key.pem")),
-  cert: fs.readFileSync(path.join(__dirname, "../dokken-api.wbagora.com.pem")),
-};
-
 app.use(express.json());
 app.use(express.urlencoded());
 app.get("/global_configuration_types/eula/global_configurations/*", (req, res, next) => {
