@@ -37,7 +37,7 @@ jobs:
           file: ./Dockerfile
           platforms: linux/arm64
           push: true
-          tags: ghcr.io/${{ github.repository_owner }}/${{ secrets.GHCR_IMAGE_NAME }}:latest
+          tags: ghcr.io/${{ github.repository_owner }}/mvs-http-server:latest
           build-args: |
             GAME_DOMAIN=${{ secrets.GAME_DOMAIN }}
             GAME_VERSION=${{ secrets.GAME_VERSION }}
