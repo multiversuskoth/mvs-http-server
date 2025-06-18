@@ -1,5 +1,5 @@
 # syntax=docker/dockerfile:1
-FROM --platform=linux/arm64 arm64v8/node:24
+FROM arm64v8/node:24
 
 WORKDIR /app
 
