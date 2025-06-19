@@ -7,7 +7,7 @@ import { WebSocketService } from "./websocket";
 startRedis().then(() => {
   start();
   //const websocket = new WebSocketService(MVSHTTPServer);
-  startMatchMakingWorker();
+  //startMatchMakingWorker();
 });
 
 //const gameServer = new RollbackServer();

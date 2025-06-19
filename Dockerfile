@@ -11,7 +11,8 @@ RUN npm ci --omit=dev
 COPY build ./build
 
 # Expose port (change if your app uses a different port)
-EXPOSE 3000
+EXPOSE 3000 8000
 
-# Start the application (env vars will be set at runtime)
-CMD ["node", "build/src/index.js"]
+# Set the entrypoint to node and command to build/src/index.js
+ENTRYPOINT ["node"]
+CMD ["build/src/index.js"]
