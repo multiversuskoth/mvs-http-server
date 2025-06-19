@@ -5,11 +5,6 @@ import * as http from "http";
 import * as fs from "fs";
 import path from "path";
 
-// Create HTTP server
-const options = {
-  key: fs.readFileSync(path.join(__dirname, "../dokken-api.wbagora.com-key.pem")),
-  cert: fs.readFileSync(path.join(__dirname, "../dokken-api.wbagora.com.pem")),
-};
 const server = http.createServer((req, res) => {
   res.writeHead(200, { "Content-Type": "text/plain" });
   res.end("HTTP server is running\n");
