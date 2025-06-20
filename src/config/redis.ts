@@ -212,7 +212,7 @@ export async function redisPopMatchTicketsFromQueue(queueType: string, tickets: 
   const multi = redisClient.multi();
   for (const ticket of tickets) {
     multi.lRem(queueType, 0, JSON.stringify(ticket));
-    logger.info(`Removed ticket ${ticket.partyId} from 1v1 queue for match`);
+    logger.info(`Removed ticket ${ticket.partyId} from ${queueType} queue for match`);
   }
   await multi.exec();
 }

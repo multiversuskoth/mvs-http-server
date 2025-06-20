@@ -20,7 +20,7 @@ import { randomBytes } from "crypto";
 import { MATCH_TYPES } from "./services/matchmakingService";
 import { getRandomMap1v1 } from "./data/maps";
 
-const CHECK_INTERVAL_MS = 1000;
+const CHECK_INTERVAL_MS = 2000;
 
 const MATCH_RULES = {
   "1v1": {
@@ -95,6 +95,60 @@ async function process1v1Queue(): Promise<boolean> {
     return false;
   } catch (error) {
     logger.error(`Error processing 1v1 queue: ${error}`);
+    return false;
+  }
+}
+
+// Process 1v1 matchmaking queue
+async function process2v2Queue(): Promise<boolean> {
+  try {
+    // Get all tickets in the queue
+    const tickets = await redisGetMatchTickets(MATCH_TYPES.TWO_V_TWO);
+
+    if (tickets.length < MATCH_RULES["2v2"].totalPlayersRequired) {
+      return false; // Not enough tickets to make a match
+    }
+
+    logger.info(`Found ${tickets.length} tickets in 2v2 queue, attempting to create a match`);
+
+    // Parse ticket data from queue
+    const matchedTickets: RedisMatchTicket[] = [];
+    for (const ticket of tickets) {
+      try {
+        if (ticket.party_size === 1) {
+          // Only solo tickets
+          matchedTickets.push(ticket);
+
+          // If we have enough tickets, stop looking
+          if (matchedTickets.length === MATCH_RULES["2v2"].totalPlayersRequired) {
+            break;
+          }
+        }
+      } catch (error) {
+        logger.error(`Error parsing ticket in 2v2 queue: ${error}`);
+        // Continue to next ticket
+      }
+    }
+
+    // Check if we have enough tickets for a match
+    if (matchedTickets.length === MATCH_RULES["2v2"].totalPlayersRequired) {
+      // Remove matched tickets from queue
+      try {
+        await redisPopMatchTicketsFromQueue(MATCH_TYPES.TWO_V_TWO, matchedTickets);
+
+        // Create a match with these tickets
+        await createMatch(matchedTickets, "2v2");
+        return true;
+      } catch (error) {
+        logger.error(`Error removing matched tickets from queue: ${error}`);
+        return false; // If we can't remove them, we can't proceed
+      }
+    }
+
+    logger.info(`Not enough valid tickets for a 2v2 match (need ${MATCH_RULES["2v2"].totalPlayersRequired}, found ${matchedTickets.length})`);
+    return false;
+  } catch (error) {
+    logger.error(`Error processing 2v2 queue: ${error}`);
     return false;
   }
 }
