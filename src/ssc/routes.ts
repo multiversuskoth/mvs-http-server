@@ -1,7 +1,7 @@
 
 
 import express, { Request, Response } from "express";
-import { handleSsc_invoke_perks_get_all_pages, perks_set_page, set_lock_lobby_loadout, set_perks_absent } from "./ssc";
+import { handle_ssc_set_lobby_mode, handleSsc_invoke_perks_get_all_pages, perks_set_page, set_lock_lobby_loadout, set_perks_absent } from "./ssc";
 import { app } from "../server";
 export const sscRouter = express.Router();
 
@@ -22,4 +22,9 @@ sscRouter.put("/ssc/invoke/perks_set_character_page", (req: Request<{}, {}, {}, 
 sscRouter.get("/ssc/invoke/perks_get_all_pages", async (req: Request<{}, {}, {}, {}>, res: Response) => {
   // @ts-ignore TODO : implementation. Remove comment once implemented`
   await handleSsc_invoke_perks_get_all_pages(req, res);
+});
+
+sscRouter.put("/ssc/invoke/set_mode_for_lobby", async (req: Request<{}, {}, {}, {}>, res: Response) => {
+  // @ts-ignore TODO : implementation. Remove comment once implemented`
+  await handle_ssc_set_lobby_mode(req, res);
 });

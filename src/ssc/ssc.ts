@@ -136,3 +136,17 @@ export async function handleSsc_invoke_perks_get_all_pages(req: Request<{}, {}, 
       });
     });
 }
+
+export interface SET_LOBBY_MODE_REQ {
+  AutoPartyPreference: boolean;
+  CrossplayPreference: number;
+  GameplayPreferences: number;
+  HissCrc: number;
+  LobbyId: string;
+  LobbyTemplate: string;
+  ModeString: string;
+  Platform: string;
+  Version: string;
+}
+
+export async function handle_ssc_set_lobby_mode(req: Request<{}, {}, SET_LOBBY_MODE_REQ, {}>, res: Response) {}
