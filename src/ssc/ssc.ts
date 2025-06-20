@@ -3,6 +3,8 @@ import { redisUpdatePlayerLoadout } from "../config/redis";
 import env from "../env/env";
 import { PerkPagesModel } from "../database/PerkPages";
 import { Types } from "mongoose";
+import { changeLobbyMode, createLobby, LOBBY_MODES } from "../services/lobbyService";
+import { MVSTime } from "../utils/date";
 
 interface Lock_Lobby_Loadout_REQ {
   AutoPartyPreference: boolean;
@@ -109,6 +111,73 @@ export async function perks_set_page(req: Request, res: Response) {
   });
 }
 
+export async function handleSsc_invoke_create_party_lobby(req: Request<{}, {}, {}, {}>, res: Response) {
+  const account = req.token;
+  const loadout = { Character: "character_C022", Skin: "C022_Default" };
+  let ip = req.ip!.replace(/^::ffff:/, "");
+  if (ip === "127.0.0.1") {
+    ip = env.LOCAL_PUBLIC_IP;
+  }
+  const lobbyMode = LOBBY_MODES.ONE_V_ONE; // Default mode, can be changed later;
+  const newLobby = await createLobby(account.id, lobbyMode);
+
+  await redisUpdatePlayerLoadout(account.id, loadout.Character, loadout.Skin, ip);
+  res.send({
+    body: {
+      lobby: {
+        Teams: [
+          {
+            TeamIndex: 0,
+            Players: {
+              [account.id]: {
+                Account: { id: account.id },
+                JoinedAt: { _hydra_unix_date: MVSTime(new Date()) },
+                BotSettingSlug: "",
+                LobbyPlayerIndex: 0,
+                CrossplayPreference: 1,
+              },
+            },
+            Length: 1,
+          },
+          { TeamIndex: 1, Players: {}, Length: 0 },
+          { TeamIndex: 2, Players: {}, Length: 0 },
+          { TeamIndex: 3, Players: {}, Length: 0 },
+          { TeamIndex: 4, Players: {}, Length: 0 },
+        ],
+        LeaderID: account.id,
+        LobbyType: 0,
+        ReadyPlayers: {},
+        PlayerGameplayPreferences: { [account.id]: 544 },
+        PlayerAutoPartyPreferences: { [account.id]: true },
+        GameVersion: env.GAME_VERSION,
+        HissCrc: 1167552915,
+        Platforms: { [account.id]: "PC" },
+        AllMultiplayParams: {
+          "1": { MultiplayClusterSlug: "ec2-us-east-1-dokken", MultiplayProfileId: "1252499", MultiplayRegionId: "" },
+          "2": {
+            MultiplayClusterSlug: "ec2-us-east-1-dokken",
+            MultiplayProfileId: "1252922",
+            MultiplayRegionId: "19c465a7-f21f-11ea-a5e3-0954f48c5682",
+          },
+          "3": { MultiplayClusterSlug: "", MultiplayProfileId: "1252925", MultiplayRegionId: "" },
+          "4": {
+            MultiplayClusterSlug: "ec2-us-east-1-dokken",
+            MultiplayProfileId: "1252928",
+            MultiplayRegionId: "19c465a7-f21f-11ea-a5e3-0954f48c5682",
+          },
+        },
+        LockedLoadouts: { [account.id]: { Character: loadout.Character, Skin: loadout.Skin } },
+        ModeString: lobbyMode.toString(),
+        IsLobbyJoinable: true,
+        MatchID: newLobby.id,
+      },
+      Cluster: "ec2-us-east-1-dokken",
+    },
+    metadata: null,
+    return_code: 0,
+  });
+}
+
 export async function handleSsc_invoke_perks_get_all_pages(req: Request<{}, {}, {}, {}>, res: Response) {
   const accountId = req.token.id;
 
@@ -149,4 +218,12 @@ export interface SET_LOBBY_MODE_REQ {
   Version: string;
 }
 
-export async function handle_ssc_set_lobby_mode(req: Request<{}, {}, SET_LOBBY_MODE_REQ, {}>, res: Response) {}
+export async function handle_ssc_set_lobby_mode(req: Request<{}, {}, SET_LOBBY_MODE_REQ, {}>, res: Response) {
+  const account = req.token;
+  await changeLobbyMode(account.id, req.body.LobbyId, LOBBY_MODES[req.body.ModeString as keyof typeof LOBBY_MODES]);
+  res.send({
+    body: {},
+    metadata: null,
+    return_code: 0,
+  });
+}

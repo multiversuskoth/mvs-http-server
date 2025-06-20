@@ -260,11 +260,6 @@ router.post("/ssc/invoke/claim_mission_rewards", (req: Request<{}, {}, {}, {}>, 
   h.handleSsc_invoke_claim_mission_rewards(req, res);
 });
 
-router.put("/ssc/invoke/create_party_lobby", (req: Request<{}, {}, {}, {}>, res: Response) => {
-  // @ts-ignore TODO : implementation. Remove comment once implemented`
-  h.handleSsc_invoke_create_party_lobby(req, res);
-});
-
 router.put("/ssc/invoke/game_launch_event", (req: Request<{}, {}, {}, {}>, res: Response) => {
   // @ts-ignore TODO : implementation. Remove comment once implemented`
   h.handleSsc_invoke_game_launch_event(req, res);

@@ -18,6 +18,7 @@ import { hiss_amalgamation_get } from "./hiss_amalgation_get";
 import { logger } from "../config/logger";
 import { Types } from "mongoose";
 import { PerkPagesModel } from "../database/PerkPages";
+import { createLobby, LOBBY_MODES } from "../services/lobbyService";
 
 export async function handleSsc_invoke_attempt_daily_refresh(req: Request<{}, {}, {}, {}>, res: Response) {
   res.send({
@@ -49,71 +50,7 @@ export async function handleSsc_invoke_claim_mission_rewards(req: Request<{}, {}
   });
 }
 
-export async function handleSsc_invoke_create_party_lobby(req: Request<{}, {}, {}, {}>, res: Response) {
-  const account = req.token;
-  const loadout = { Character: "character_C022", Skin: "C022_Default" };
-  let ip = req.ip!.replace(/^::ffff:/, "");
-  if (ip === "127.0.0.1") {
-    ip = env.LOCAL_PUBLIC_IP;
-  }
-  const matchLobbyId = ObjectID().toHexString();
-  logger.info(`Creating party lobby for ${account.id} - matchLobbyId:${matchLobbyId}`);
-  redisUpdatePlayerLoadout(account.id, loadout.Character, loadout.Skin, ip);
-  res.send({
-    body: {
-      lobby: {
-        Teams: [
-          {
-            TeamIndex: 0,
-            Players: {
-              [account.id]: {
-                Account: { id: account.id },
-                JoinedAt: { _hydra_unix_date: MVSTime(new Date()) },
-                BotSettingSlug: "",
-                LobbyPlayerIndex: 0,
-                CrossplayPreference: 1,
-              },
-            },
-            Length: 1,
-          },
-          { TeamIndex: 1, Players: {}, Length: 0 },
-          { TeamIndex: 2, Players: {}, Length: 0 },
-          { TeamIndex: 3, Players: {}, Length: 0 },
-          { TeamIndex: 4, Players: {}, Length: 0 },
-        ],
-        LeaderID: account.id,
-        LobbyType: 0,
-        ReadyPlayers: {},
-        PlayerGameplayPreferences: { [account.id]: 544 },
-        PlayerAutoPartyPreferences: { [account.id]: true },
-        GameVersion: env.GAME_VERSION,
-        HissCrc: 1167552915,
-        Platforms: { [account.id]: "PC" },
-        AllMultiplayParams: {
-          "1": { MultiplayClusterSlug: "ec2-us-east-1-dokken", MultiplayProfileId: "1252499", MultiplayRegionId: "" },
-          "2": {
-            MultiplayClusterSlug: "ec2-us-east-1-dokken",
-            MultiplayProfileId: "1252922",
-            MultiplayRegionId: "19c465a7-f21f-11ea-a5e3-0954f48c5682",
-          },
-          "3": { MultiplayClusterSlug: "", MultiplayProfileId: "1252925", MultiplayRegionId: "" },
-          "4": {
-            MultiplayClusterSlug: "ec2-us-east-1-dokken",
-            MultiplayProfileId: "1252928",
-            MultiplayRegionId: "19c465a7-f21f-11ea-a5e3-0954f48c5682",
-          },
-        },
-        LockedLoadouts: { [account.id]: { Character: loadout.Character, Skin: loadout.Skin } },
-        ModeString: "1v1",
-        IsLobbyJoinable: true,
-        MatchID: matchLobbyId,
-      },
-      Cluster: "ec2-us-east-1-dokken",
-    },
-    metadata: null,
-    return_code: 0,
-  });
-}
+
 
 export async function handleSsc_invoke_game_launch_event(req: Request<{}, {}, {}, {}>, res: Response) {
   res.send("");
@@ -57867,42 +57804,42 @@ export function handleSsc_invoke_perks_get_all_pages(req: Request<{}, {}, {}, {}
     .lean()
     .exec()
     .then((doc) => {
-    console.log("perk pages send success");
-res.send({
-      body: {
-        perk_pages: {
-          character_Jason: {
-            "0": {
-              DisplayName: "Custom Set 1",
-              Description: "",
-              Perks: ["perk_gen_boxer", "perk_gen_collateral_damage", "perk_snowball_effect", "perk_jason_monstrous_side_step"],
+      console.log("perk pages send success");
+      res.send({
+        body: {
+          perk_pages: {
+            character_Jason: {
+              "0": {
+                DisplayName: "Custom Set 1",
+                Description: "",
+                Perks: ["perk_gen_boxer", "perk_gen_collateral_damage", "perk_snowball_effect", "perk_jason_monstrous_side_step"],
+              },
+              "1": {
+                DisplayName: "Custom Set 2",
+                Description: "",
+                Perks: ["perk_gen_boxer", "perk_platform_from_dodge", "perk_snowball_effect", "perk_jason_resurrectionist"],
+              },
+              "2": {
+                DisplayName: "Custom Set 3",
+                Description: "",
+                Perks: ["perk_gen_boxer", "perk_team_speed_force_assist", "perk_purest_of_motivations", "perk_gen_well_rounded"],
+              },
             },
-            "1": {
-              DisplayName: "Custom Set 2",
-              Description: "",
-              Perks: ["perk_gen_boxer", "perk_platform_from_dodge", "perk_snowball_effect", "perk_jason_resurrectionist"],
-            },
-            "2": {
-              DisplayName: "Custom Set 3",
-              Description: "",
-              Perks: ["perk_gen_boxer", "perk_team_speed_force_assist", "perk_purest_of_motivations", "perk_gen_well_rounded"],
-            },
-          },
-          character_harleyquinn: {
-            "0": {
-              DisplayName: "Custom Set 1",
-              Description: "",
-              Perks: ["perk_gen_boxer", "perk_team_speed_force_assist", "perk_purest_of_motivations", "perk_C008_smoothmoves"],
+            character_harleyquinn: {
+              "0": {
+                DisplayName: "Custom Set 1",
+                Description: "",
+                Perks: ["perk_gen_boxer", "perk_team_speed_force_assist", "perk_purest_of_motivations", "perk_C008_smoothmoves"],
+              },
             },
           },
         },
-      },
-      metadata: null,
-      return_code: 0,
-    });
+        metadata: null,
+        return_code: 0,
+      });
     })
     .catch((e) => {
-      console.log("----------EREREROERE")
+      console.log("----------EREREROERE");
       console.log(e);
       res.send({
         body: {
