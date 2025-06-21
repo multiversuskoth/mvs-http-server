@@ -1,5 +1,5 @@
 import ObjectID from "bson-objectid";
-import { redisClient } from "../config/redis";
+import { ON_LOBBY_MODE_UPDATED, redisClient, RedisOnGameModeUpdatedNotification } from "../config/redis";
 import { logger } from "../config/logger";
 
 export enum LOBBY_MODES {
@@ -47,7 +47,13 @@ export async function changeLobbyMode(ownerId: string, lobbyId: string, newMode:
     throw new Error("You are not the owner of this lobby");
   }
 
-  await redisClient.hSet(`lobby:${lobbyId}`, { mode: newMode });
+  await redisClient.hSet(`player:${ownerId}:lobby:${lobbyId}`, { mode: newMode });
+  const notification: RedisOnGameModeUpdatedNotification = {
+    lobbyId: lobbyId,
+    playersIds: [ownerId],
+    modeString: newMode,
+  };
+  await redisClient.publish(ON_LOBBY_MODE_UPDATED, JSON.stringify(notification));
   logger.trace(`Changing party lobby for ${lobbyId} - to ${newMode}`);
   return lobby;
 }

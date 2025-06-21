@@ -8,7 +8,7 @@
     // "jsx": "react",
     "strictNullChecks": true,
     "strictFunctionTypes": true,
-    "sourceMap": false,
+    "sourceMap": true,
 
     "outDir": "./build",
     "experimentalDecorators": true,

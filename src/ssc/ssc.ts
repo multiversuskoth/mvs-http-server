@@ -220,7 +220,7 @@ export interface SET_LOBBY_MODE_REQ {
 
 export async function handle_ssc_set_lobby_mode(req: Request<{}, {}, SET_LOBBY_MODE_REQ, {}>, res: Response) {
   const account = req.token;
-  await changeLobbyMode(account.id, req.body.LobbyId, LOBBY_MODES[req.body.ModeString as keyof typeof LOBBY_MODES]);
+  await changeLobbyMode(account.id, req.body.LobbyId, req.body.ModeString as LOBBY_MODES);
   res.send({
     body: {},
     metadata: null,

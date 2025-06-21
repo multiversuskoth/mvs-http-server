@@ -225,6 +225,15 @@ router.post("/matches/matchmaking/1v1-retail/request", (req: Request<{}, {}, {},
   h.handleMatches_matchmaking_1v1_retail_request(req, res);
 });
 
+router.post("/matches/matchmaking/2v2-retail/request", (req: Request<{}, {}, {}, {}>, res: Response) => {
+  // @ts-ignore TODO : implementation. Remove comment once implemented`
+  h.handleMatches_matchmaking_2v2_retail_request(req, res);
+});
+
+router.post("/matches/matchmaking/request/:id/cancel", async (req: Request<{ id: string }>, res: Response) => {
+  await h.handle_cancel_matchmaking(req, res);
+});
+
 router.get("/objects/preferences/unique/:id/:id1", (req: Request<MVSParams, {}, {}, {}>, res: Response) => {
   // @ts-ignore TODO : implementation. Remove comment once implemented`
   h.handleObjects_preferences_unique_id_id1(req, res);

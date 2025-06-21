@@ -115,14 +115,12 @@ async function process2v2Queue(): Promise<boolean> {
     const matchedTickets: RedisMatchTicket[] = [];
     for (const ticket of tickets) {
       try {
-        if (ticket.party_size === 1) {
-          // Only solo tickets
-          matchedTickets.push(ticket);
+        // Only solo tickets
+        matchedTickets.push(ticket);
 
-          // If we have enough tickets, stop looking
-          if (matchedTickets.length === MATCH_RULES["2v2"].totalPlayersRequired) {
-            break;
-          }
+        // If we have enough tickets, stop looking
+        if (matchedTickets.length === MATCH_RULES["2v2"].totalPlayersRequired) {
+          break;
         }
       } catch (error) {
         logger.error(`Error parsing ticket in 2v2 queue: ${error}`);
@@ -274,10 +272,14 @@ async function checkQueues(): Promise<void> {
     const made1v1Match = await process1v1Queue();
 
     // Then try to make 2v2 matches
-    //const made2v2Match = await process2v2Queue();
+    const made2v2Match = await process2v2Queue();
 
     if (made1v1Match) {
       logger.info(`Successfully created matches in this cycle: 1v1=${made1v1Match}`);
+    }
+
+    if (made2v2Match) {
+      logger.info(`Successfully created matches in this cycle: 2v2=${made1v1Match}`);
     }
   } catch (error) {
     logger.error(`Error checking queue: ${error}`);

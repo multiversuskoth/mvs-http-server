@@ -28,6 +28,10 @@ import {
   redisUpdatePlayerStatus,
   redisOnMatchMakerStarted,
   redisPopMatchTicketsFromQueue,
+  ON_LOBBY_MODE_UPDATED,
+  RedisOnGameModeUpdatedNotification as RedisOnLobbyModeUpdatedNotification,
+  ON_CANCEL_MATCHMAKING,
+  RedisCancelMatchMakingNotification,
 } from "./config/redis";
 import { Server } from "https";
 import { Server as HttpServer } from "http";
@@ -295,23 +299,30 @@ export class WebSocketService {
     }, 1000);
 
     setTimeout(() => {
-      this.attemptRemoveMatchTicket(client);
-      clearInterval(client.matchTick);
-      client.matchTick = undefined;
-      client.send({
-        data: {},
-        payload: {
-          id: notification.matchmakingRequestId,
-          state: 3,
-        },
-        header: "Matchmaking request cancelled.",
-        cmd: "matchmaking-cancel",
-      });
+      this.cancelMatchMaking(client, notification.matchmakingRequestId);
     }, 100_000);
   }
 
+  cancelMatchMaking(client: WebSocketPlayer, matchmakingRequestId: string) {
+    const message = {
+      data: {},
+      payload: {
+        id: matchmakingRequestId,
+        state: 3,
+      },
+      header: "Matchmaking request cancelled.",
+      cmd: "matchmaking-cancel",
+    };
+
+    this.attemptRemoveMatchTicket(client);
+    clearInterval(client.matchTick);
+    client.matchTick = undefined;
+    client.send(message);
+    logger.trace(`Canceling matchmaking - ${client.account?.id}`);
+  }
+
   handleMatchFound(notification: MATCH_FOUND_NOTIFICATION) {
-    const arr = [env.UDP_SERVER_IP,env.UDP_SERVER_IP2];
+    const arr = [env.UDP_SERVER_IP, env.UDP_SERVER_IP2];
     const randomIndex = Math.floor(Math.random() * arr.length);
     for (const matchPlayer of notification.players) {
       const player = this.clients.get(matchPlayer.playerId);
@@ -515,6 +526,38 @@ export class WebSocketService {
     }
   }
 
+  handleOnLobbyModeChanged(notification: RedisOnLobbyModeUpdatedNotification) {
+    for (const playerId of notification.playersIds) {
+      const client = this.clients.get(playerId);
+      const message = {
+        data: {
+          template_id: "OnLobbyModeUpdated",
+          LobbyId: notification.lobbyId,
+          ModeString: notification.modeString,
+        },
+        payload: {
+          custom_notification: "realtime",
+        },
+        header: "",
+        cmd: "update",
+      };
+      if (client) {
+        logger.trace(`OnLobbyModeUpdated send to ${playerId}`);
+        client.send(message);
+      }
+    }
+  }
+
+  handleCancelMatchMaking(notification: RedisCancelMatchMakingNotification) {
+    for (const playerId of notification.playersIds) {
+      const client = this.clients.get(playerId);
+
+      if (client) {
+        this.cancelMatchMaking(client, notification.matchmakingId);
+      }
+    }
+  }
+
   handleMatchMakingComplete(notification: RedisMatchMakingCompleteNotification) {
     for (const playerId of notification.playerIds) {
       const client = this.clients.get(playerId);
@@ -564,6 +607,16 @@ export class WebSocketService {
     this.redisSub.subscribe(MATCHMAKING_COMPLETE_CHANNEL, (message) => {
       const notification = JSON.parse(message) as RedisMatchMakingCompleteNotification;
       this.handleMatchMakingComplete(notification);
+    });
+
+    this.redisSub.subscribe(ON_LOBBY_MODE_UPDATED, (message) => {
+      const notification = JSON.parse(message) as RedisOnLobbyModeUpdatedNotification;
+      this.handleOnLobbyModeChanged(notification);
+    });
+
+    this.redisSub.subscribe(ON_CANCEL_MATCHMAKING, (message) => {
+      const notification = JSON.parse(message) as RedisCancelMatchMakingNotification;
+      this.handleCancelMatchMaking(notification);
     });
   }
 }

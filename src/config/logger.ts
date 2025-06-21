@@ -8,3 +8,4 @@ export const logger = pino({
     }
   },
 });
+logger.level = "trace";

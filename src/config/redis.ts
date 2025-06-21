@@ -6,11 +6,9 @@ import env from "../env/env";
 import { MATCH_TYPES } from "../services/matchmakingService";
 
 const redisConfig = {
-  username: env.REDIS_USERNAME,
-  password: env.REDIS_PW,
   socket: {
     host: env.REDIS,
-    port: 17157,
+    port: env.REDIS_PORT,
   },
 };
 
@@ -18,7 +16,9 @@ export const ON_GAMEPLAY_CONFIG_NOTIFIED_CHANNEL = "match:notifications";
 export const ALL_PERKS_LOCKED_CHANNEL = "perks:notifications";
 export const GAME_SERVER_INSTANCE_READY_CHANNEL = "game_server_ready:notifications";
 export const MATCHMAKING_COMPLETE_CHANNEL = "matchmaking:complete";
+export const ON_LOBBY_MODE_UPDATED = "OnLobbyModeUpdated";
 export const ON_MATCH_MAKER_STARTED_CHANNEL = "party:queued";
+export const ON_CANCEL_MATCHMAKING = "matchmaking:cancel";
 
 export type RedisClient = RedisClientType<redis.RedisModules, redis.RedisFunctions, redis.RedisScripts>;
 
@@ -161,6 +161,17 @@ export interface RedisEquippedCosmetics {
   Gems: {
     GemSlots: string[];
   };
+}
+
+export interface RedisOnGameModeUpdatedNotification {
+  lobbyId: string;
+  playersIds: string[];
+  modeString: string;
+}
+
+export interface RedisCancelMatchMakingNotification {
+  playersIds : string[];
+  matchmakingId: string;
 }
 
 const MATCH_KEY = (containerMatchId: string) => `match:${containerMatchId}`;

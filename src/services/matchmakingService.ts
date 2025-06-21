@@ -1,6 +1,8 @@
 import {
+  ON_CANCEL_MATCHMAKING,
   ON_MATCH_MAKER_STARTED_CHANNEL,
   ON_MATCH_MAKER_STARTED_NOTIFICATION,
+  RedisCancelMatchMakingNotification,
   redisClient,
   redisGetPlayer,
   RedisMatchTicket,
@@ -57,4 +59,12 @@ export async function queueMatch(
     logger.error(`Error queueing player: ${error}`);
     throw error;
   }
+}
+
+export async function cancelMatchmaking(accountId: string, matchmakingId: string) {
+  const notification: RedisCancelMatchMakingNotification = {
+    playersIds: [accountId],
+    matchmakingId,
+  };
+  await redisClient.publish(ON_CANCEL_MATCHMAKING, JSON.stringify(notification));
 }
