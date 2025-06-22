@@ -8,6 +8,9 @@
 #include <iostream>
 #include <format>
 
+#include <curl/curl.h>
+#include <nlohmann/json.hpp>
+
 #ifdef _WIN32
 #include <windows.h>
 #include <timeapi.h>
@@ -30,12 +33,11 @@ namespace rollback
         : io_context_(),
           socket_(io_context_, udp::endpoint(udp::v4(), port)),
           remote_endpoint_(std::make_shared<udp::endpoint>()),
-          running_(false),
-          max_players_(maxPlayers)
+          running_(false)
     {
 
         std::cout << "Initializing rollback server on port " << port << std::endl;
-
+        curl_global_init(CURL_GLOBAL_DEFAULT);
 #ifdef _WIN32
         // Request 1ms timer resolution for more precise timing
         MMRESULT result = timeBeginPeriod(1);
@@ -53,6 +55,7 @@ namespace rollback
     RollbackServer::~RollbackServer()
     {
         stop();
+        curl_global_cleanup();
     }
 
     void RollbackServer::start()
@@ -65,14 +68,15 @@ namespace rollback
         boost::asio::co_spawn(io_context_, runUdpServer(), boost::asio::detached);
 
         // Launch two threads to run the io_context_
-        for (int i = 0; i < 2; ++i) {
-            worker_threads_.emplace_back([this]() {
+        for (int i = 0; i < 2; ++i)
+        {
+            worker_threads_.emplace_back([this]()
+                                         {
                 try {
                     io_context_.run();
                 } catch (const std::exception& e) {
                     std::cerr << "Exception in io_context thread: " << e.what() << std::endl;
-                }
-            });
+                } });
         }
 
         std::cout << "Rollback server started" << std::endl;
@@ -86,8 +90,10 @@ namespace rollback
 
         io_context_.stop();
 
-        for (auto& t : worker_threads_) {
-            if (t.joinable()) t.join();
+        for (auto &t : worker_threads_)
+        {
+            if (t.joinable())
+                t.join();
         }
         worker_threads_.clear();
 
@@ -271,11 +277,11 @@ namespace rollback
 
         const auto &matchData = payload.matchData;
         std::shared_ptr<MatchState> match;
-
+        std::unique_lock match_lock(matches_.mutex_);
         {
             // std::shared_lock read_lock(matches_mutex_);
             // auto it = matches_.find(matchData.matchId);
-            auto matchOpt = matches_.find(matchData.matchId);
+            auto matchOpt = matches_.find(matchData.matchId, true);
             if (matchOpt.has_value())
             {
                 match = matchOpt.value();
@@ -284,20 +290,28 @@ namespace rollback
 
         if (!match)
         {
-            // Create new match
+            // --- New logic: Fetch match config from HTTP server ---
+            auto configOpt = fetchMatchConfigFromServer(matchData.matchId, matchData.key);
+            if (!configOpt.has_value()) {
+                std::cerr << "Failed to fetch match config from server" << std::endl;
+                return nullptr;
+            }
+            const auto& config = configOpt.value();
+            // Create new match using config
             match = std::make_shared<MatchState>();
             match->matchId = matchData.matchId;
-            match->durationInFrames = 36000;
+            match->durationInFrames = config.match_duration;
             match->tickIntervalMs = 1000.0f / 60.0f;
             match->currentFrame = 0;
-            match->inputs.resize(max_players_);
+            match->inputs.resize(config.max_players);
             match->pingPhaseCount = 0;
             match->pingPhaseTotal = 20;
             match->sequenceCounter = -1;
             match->tickRunning = false;
-
+            match->max_players_ = config.max_players;
             matches_.insert_or_assign(matchData.matchId, match);
         }
+        match_lock.unlock();
 
         auto existingPlayer = players_.find(key);
         if (existingPlayer.has_value())
@@ -313,7 +327,7 @@ namespace rollback
         newPlayer->playerIndex = payload.playerData.playerIndex;
         newPlayer->lastSeqRecv = 0;
         newPlayer->lastSeqSent = 0;
-        newPlayer->ackedFrames.resize(max_players_, 0);
+        newPlayer->ackedFrames.resize(match->max_players_, 0);
         newPlayer->ping = 0;
         newPlayer->ready = debug;
         newPlayer->lastClientFrame = 0;
@@ -344,7 +358,7 @@ namespace rollback
         // Start ping phase if all players have connected
         {
 
-            if (match->players.size() == static_cast<size_t>(max_players_))
+            if (match->players.size() == static_cast<size_t>(match->max_players_))
             {
                 startPingPhase(match);
             }
@@ -404,7 +418,8 @@ namespace rollback
             auto player = p.second;
             {
                 std::shared_lock lock(player->mutex);
-                if (player->disconnected) continue;
+                if (player->disconnected)
+                    continue;
             }
             RequestQualityDataPayload payload;
             {
@@ -431,16 +446,17 @@ namespace rollback
             auto player = p.second;
             {
                 std::shared_lock lock(player->mutex);
-                if (player->disconnected) continue;
+                if (player->disconnected)
+                    continue;
             }
             PlayersConfigurationDataPayload payload;
             {
                 payload.numPlayers = static_cast<uint8_t>(playersSnapshot.size());
             }
 
-            payload.configValues.resize(max_players_);
+            payload.configValues.resize(match->max_players_);
 
-            for (int i = 0; i < max_players_; i++)
+            for (int i = 0; i < match->max_players_; i++)
             {
                 const std::array<uint16_t, 4> PlayerConfigValues = {0, 257, 512, 769};
                 payload.configValues[i] = PlayerConfigValues[i % PlayerConfigValues.size()];
@@ -561,7 +577,7 @@ namespace rollback
             player->lastClientFrame = clientFrame;
             player->hasNewFrame = true;
             player->lastInputTime = std::chrono::steady_clock::now(); // Update last input time
-            player->disconnected = false; // Mark as connected on input
+            player->disconnected = false;                             // Mark as connected on input
         }
 
         // Store each new input in the map
@@ -686,26 +702,31 @@ namespace rollback
             std::vector<std::string> playerKeys;
             {
                 std::shared_lock lock(match->mutex);
-                for (const auto& p : match->players.snapshot()) {
+                for (const auto &p : match->players.snapshot())
+                {
                     auto player = p.second;
                     playerKeys.push_back(p.first);
                     std::shared_lock plock(player->mutex);
-                    if (!player->disconnected) {
+                    if (!player->disconnected)
+                    {
                         allDisconnected = false;
                         break;
                     }
                 }
             }
-            if (allDisconnected) {
+            if (allDisconnected)
+            {
                 match->tickRunning = false;
                 // Remove all players from global players_ map
-                for (const auto& key : playerKeys) {
+                for (const auto &key : playerKeys)
+                {
                     players_.erase(key);
                 }
                 // Remove all players from match
                 match->players.clear();
                 // Clear all input data
-                for (auto& inputMap : match->inputs) {
+                for (auto &inputMap : match->inputs)
+                {
                     inputMap.clear();
                 }
                 // Remove match from matches_ map
@@ -795,7 +816,7 @@ namespace rollback
                 auto avgTickTime = monitorDuration / tickCount;
 
                 std::cout << "  Average tick interval: "
-                    << std::chrono::duration_cast<std::chrono::microseconds>(avgTickTime).count() << std::endl;
+                          << std::chrono::duration_cast<std::chrono::microseconds>(avgTickTime).count() << std::endl;
 
                 // Reset monitoring variables
                 tickCount = 0;
@@ -855,17 +876,19 @@ namespace rollback
 
             {
                 std::shared_lock lock(recipient->mutex);
-                if (!recipient->disconnected && (now - recipient->lastInputTime > std::chrono::seconds(DISCONECT_TIMEOUT))) {
+                if (!recipient->disconnected && (now - recipient->lastInputTime > std::chrono::seconds(DISCONECT_TIMEOUT)))
+                {
                     recipient->disconnected = true;
                     std::cout << "Player index " << recipient->playerIndex << " timed out (no input > 20s)" << std::endl;
                     continue;
                 }
-                if (recipient->disconnected) continue;
+                if (recipient->disconnected)
+                    continue;
             }
 
-            std::vector<uint32_t> startFrame(max_players_, 0);
-            std::vector<uint8_t> numFrames(max_players_, 0);
-            std::vector<std::vector<uint32_t>> inputPerFrame(max_players_);
+            std::vector<uint32_t> startFrame(match->max_players_, 0);
+            std::vector<uint8_t> numFrames(match->max_players_, 0);
+            std::vector<std::vector<uint32_t>> inputPerFrame(match->max_players_);
             uint16_t numPredictedOverrides = 0;
 
             std::vector<uint32_t> ackedFrames;
@@ -963,19 +986,25 @@ namespace rollback
         }
 
         // === Cleanup histMap every 200 frames ===
-        if (match->currentFrame % 200 == 0) {
-            for (int idx = 0; idx < match->inputs.size(); ++idx) {
+        if (match->currentFrame % 200 == 0)
+        {
+            for (int idx = 0; idx < match->inputs.size(); ++idx)
+            {
                 auto &histMap = match->inputs[idx];
-                if (histMap.size() > 150) {
+                if (histMap.size() > 150)
+                {
                     // Remove all but the last 100 entries (by frame number)
                     std::vector<uint32_t> frames;
-                    for (const auto &kv : histMap.snapshot()) {
+                    for (const auto &kv : histMap.snapshot())
+                    {
                         frames.push_back(kv.first);
                     }
-                    if (frames.size() > 150) {
+                    if (frames.size() > 150)
+                    {
                         std::sort(frames.begin(), frames.end());
                         size_t toRemove = frames.size() - 150;
-                        for (size_t i = 0; i < toRemove; ++i) {
+                        for (size_t i = 0; i < toRemove; ++i)
+                        {
                             histMap.erase(frames[i]);
                         }
                     }
@@ -1006,7 +1035,8 @@ namespace rollback
         ServerMessageType type,
         const ServerMessageVariant &payload)
     {
-        if (player->disconnected) {
+        if (player->disconnected)
+        {
             co_return 0; // Don't send to disconnected players
         }
 
@@ -1019,7 +1049,7 @@ namespace rollback
         }
 
         // Serialize the message
-        auto buf = serializeServerMessage(header, payload, max_players_);
+        auto buf = serializeServerMessage(header, payload, match->max_players_);
 
         // Compress the buffer
         auto compressedBuf = compressPacket(buf);
@@ -1033,15 +1063,78 @@ namespace rollback
 
         udp::endpoint remote(address, port);
 
-        try {
+        try
+        {
             co_await socket_.async_send_to(boost::asio::buffer(compressedBuf), remote, boost::asio::use_awaitable);
-        } catch (const boost::system::system_error& e) {
+        }
+        catch (const boost::system::system_error &e)
+        {
             std::cerr << "Send failed for player " << player->playerIndex << ": " << e.what() << std::endl;
             player->disconnected = true;
             co_return 0;
         }
 
         co_return header.sequence;
+    }
+
+    std::optional<MVSIMatchConfig> RollbackServer::fetchMatchConfigFromServer(const std::string& matchId, const std::string& key)
+    {
+        std::string base_url;
+        if (const char* env_p = std::getenv("mvsi_server")) {
+            base_url = env_p;
+        } else {
+            std::cerr << "mvsi_server environment variable not set!" << std::endl;
+            return std::nullopt;
+        }
+        std::string url = base_url + "/mvsi_register";
+
+        nlohmann::json req_json;
+        req_json["matchId"] = matchId;
+        req_json["key"] = key;
+        std::string req_body = req_json.dump();
+
+        CURL* curl = curl_easy_init();
+        if (!curl) {
+            std::cerr << "Failed to init curl" << std::endl;
+            return std::nullopt;
+        }
+        struct curl_slist* headers = nullptr;
+        headers = curl_slist_append(headers, "Content-Type: application/json");
+        std::string response;
+        curl_easy_setopt(curl, CURLOPT_URL, url.c_str());
+        curl_easy_setopt(curl, CURLOPT_HTTPHEADER, headers);
+        curl_easy_setopt(curl, CURLOPT_POSTFIELDS, req_body.c_str());
+        curl_easy_setopt(curl, CURLOPT_WRITEFUNCTION, +[](char* ptr, size_t size, size_t nmemb, void* userdata) -> size_t {
+            std::string* resp = static_cast<std::string*>(userdata);
+            resp->append(ptr, size * nmemb);
+            return size * nmemb;
+        });
+        curl_easy_setopt(curl, CURLOPT_WRITEDATA, &response);
+        CURLcode res = curl_easy_perform(curl);
+        curl_slist_free_all(headers);
+        curl_easy_cleanup(curl);
+        if (res != CURLE_OK) {
+            std::cerr << "Failed to POST to " << url << ": " << curl_easy_strerror(res) << std::endl;
+            return std::nullopt;
+        }
+        nlohmann::json resp_json = nlohmann::json::parse(response, nullptr, false);
+        if (resp_json.is_discarded()) {
+            std::cerr << "Invalid JSON from mvsi_register" << std::endl;
+            return std::nullopt;
+        }
+        MVSIMatchConfig config;
+        config.max_players = resp_json.value("max_players", 2);
+        config.match_duration = resp_json.value("match_duration", 36000);
+        if (resp_json.contains("players")) {
+            for (const auto& p : resp_json["players"]) {
+                MVSIPlayer player;
+                player.player_index = p.value("player_index", 0);
+                player.ip = p.value("ip", "");
+                player.is_host = p.value("is_host", false);
+                config.players.push_back(player);
+            }
+        }
+        return config;
     }
 
 } // namespace rollback

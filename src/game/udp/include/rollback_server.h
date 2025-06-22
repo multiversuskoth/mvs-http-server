@@ -28,6 +28,19 @@ namespace rollback
     using namespace boost::asio::experimental::awaitable_operators;
     using namespace std::chrono;
 
+    // HTTP match configuration structures
+    struct MVSIPlayer {
+        uint16_t player_index;
+        std::string ip;
+        bool is_host;
+    };
+
+    struct MVSIMatchConfig {
+        uint8_t max_players;
+        uint32_t match_duration;
+        std::vector<MVSIPlayer> players;
+    };
+
     // Structure to hold player information
     struct PlayerInfo
     {
@@ -81,6 +94,7 @@ namespace rollback
         uint32_t durationInFrames;
         float tickIntervalMs;
         uint32_t currentFrame;
+        int max_players_;
         // std::vector<std::map<uint32_t, uint32_t>> inputs;     // one map per player: frame → input
         std::vector<ThreadSafeMap<uint32_t, uint32_t>> inputs;     // one map per player: frame → input
 
@@ -157,6 +171,9 @@ namespace rollback
             ServerMessageType type,
             const ServerMessageVariant& payload);
 
+        // Fetch match config from HTTP server
+        std::optional<MVSIMatchConfig> fetchMatchConfigFromServer(const std::string& matchId, const std::string& key);
+
         // Server state
         boost::asio::io_context io_context_;
         udp::socket socket_;
@@ -165,8 +182,7 @@ namespace rollback
         std::atomic<bool> running_;
         std::thread udp_thread_;
         std::thread tick_thread_;
-
-        int max_players_;
+  
         // std::map<std::string, std::shared_ptr<MatchState>> matches_;
         ThreadSafeMap<std::string, std::shared_ptr<MatchState>> matches_;
         ThreadSafeMap<std::string, std::shared_ptr<PlayerInfo>> players_;
