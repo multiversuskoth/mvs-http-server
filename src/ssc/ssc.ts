@@ -113,7 +113,7 @@ export async function perks_set_page(req: Request, res: Response) {
 
 export async function handleSsc_invoke_create_party_lobby(req: Request<{}, {}, {}, {}>, res: Response) {
   const account = req.token;
-  const loadout = { Character: "character_C022", Skin: "C022_Default" };
+  const loadout = { Character: "character_shaggy", Skin: "skin_shaggy_default" };
   let ip = req.ip!.replace(/^::ffff:/, "");
   if (ip === "127.0.0.1") {
     ip = env.LOCAL_PUBLIC_IP;
