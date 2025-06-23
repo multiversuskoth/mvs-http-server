@@ -90,6 +90,7 @@ namespace rollback
     {
         mutable std::shared_mutex mutex;
         std::string matchId;
+        std::string key;
         ThreadSafeMap<std::string, std::shared_ptr<PlayerInfo>> players;
         uint32_t durationInFrames;
         float tickIntervalMs;
@@ -173,6 +174,9 @@ namespace rollback
 
         // Fetch match config from HTTP server
         std::optional<MVSIMatchConfig> fetchMatchConfigFromServer(const std::string& matchId, const std::string& key);
+
+
+        void sendEndMatch(const std::string& matchId, const std::string& key);
 
         // Server state
         boost::asio::io_context io_context_;

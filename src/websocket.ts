@@ -32,6 +32,8 @@ import {
   RedisOnGameModeUpdatedNotification as RedisOnLobbyModeUpdatedNotification,
   ON_CANCEL_MATCHMAKING,
   RedisCancelMatchMakingNotification,
+  ON_END_OF_MATCH,
+  RedisMatchEndNotification,
 } from "./config/redis";
 import { Server } from "https";
 import { Server as HttpServer } from "http";
@@ -255,6 +257,7 @@ export class WebSocketService {
     if (player.matchTick) {
       logger.info(`Stopping matchtick for ${player.account?.id}`);
       clearInterval(player.matchTick);
+      player.matchTick = undefined;
     }
   }
 
@@ -304,21 +307,22 @@ export class WebSocketService {
   }
 
   cancelMatchMaking(client: WebSocketPlayer, matchmakingRequestId: string) {
-    const message = {
-      data: {},
-      payload: {
-        id: matchmakingRequestId,
-        state: 3,
-      },
-      header: "Matchmaking request cancelled.",
-      cmd: "matchmaking-cancel",
-    };
-
-    this.attemptRemoveMatchTicket(client);
-    clearInterval(client.matchTick);
-    client.matchTick = undefined;
-    client.send(message);
-    logger.trace(`Canceling matchmaking - ${client.account?.id}`);
+    if (client.matchTick) {
+      const message = {
+        data: {},
+        payload: {
+          id: matchmakingRequestId,
+          state: 3,
+        },
+        header: "Matchmaking request cancelled.",
+        cmd: "matchmaking-cancel",
+      };
+      this.attemptRemoveMatchTicket(client);
+      clearInterval(client.matchTick);
+      client.matchTick = undefined;
+      client.send(message);
+      logger.trace(`Canceling matchmaking - ${client.account?.id}`);
+    }
   }
 
   handleMatchFound(notification: MATCH_FOUND_NOTIFICATION) {
@@ -328,13 +332,14 @@ export class WebSocketService {
       const player = this.clients.get(matchPlayer.playerId);
       if (player) {
         this.stopMatchTick(player);
+        console.log(player);
         const message = {
           data: {
             MatchKey: notification.matchKey,
             MatchID: notification.matchId,
             Port: GAME_SERVER_PORT,
             template_id: "GameServerReadyNotification",
-            IPAddress: arr[randomIndex],
+            IPAddress: player.ip === "127.0.0.1" ? "127.0.0.1" : arr[randomIndex],
           },
           payload: {
             match: {
@@ -353,9 +358,19 @@ export class WebSocketService {
     this.handleSendGamePlayConfig(notification);
   }
 
+  getNumRingouts(notification: MATCH_FOUND_NOTIFICATION) {
+    if (notification.mode == "1v1") {
+      return 3;
+    }
+    if (notification.mode == "2v2") {
+      return 4;
+    }
+    return 3;
+  }
+
   async handleSendGamePlayConfig(notification: MATCH_FOUND_NOTIFICATION) {
     const MatchTime = 420;
-    const NumRingouts = 3;
+    const NumRingouts = this.getNumRingouts(notification);
 
     // Get the player configs from redis
     const playerIds = notification.players.map((p) => p.playerId);
@@ -402,8 +417,6 @@ export class WebSocketService {
         BotDifficultyMin: 0,
       };
     }
-
-    console.log(Players);
 
     // Create the message to send to the players
     const message: GameNotification = {
@@ -558,6 +571,56 @@ export class WebSocketService {
     }
   }
 
+  handleOnMatchEnd(notification: RedisMatchEndNotification) {
+    for (const playerId of notification.playersIds) {
+      const client = this.clients.get(playerId);
+
+      if (client) {
+        const data = {
+          data: {
+            GameplayConfig: client.matchConfig?.data.GameplayConfig,
+            template_id: "EndOfMatchPayload",
+            ClientReturnData: {},
+          },
+          payload: {
+            frm: {
+              id: "internal-server",
+              type: "server-api-key",
+            },
+            template: "realtime",
+            account_id: playerId,
+            profile_id: playerId,
+          },
+          header: "",
+          cmd: "profile-notification",
+        };
+        console.log("END OF MATCH WS", data);
+        client.send(data);
+        setTimeout(() => {
+          const data = {
+            data: {
+              AccountId: playerId,
+              MatchId: notification.matchId,
+              template_id: "RematchDeclinedNotification",
+            },
+            payload: {
+              frm: {
+                id: "internal-server",
+                type: "server-api-key",
+              },
+              template: "realtime",
+              account_id: playerId,
+              profile_id: playerId,
+            },
+            header: "",
+            cmd: "profile-notification",
+          };
+          client.send(data);
+        }, 1000);
+      }
+    }
+  }
+
   handleMatchMakingComplete(notification: RedisMatchMakingCompleteNotification) {
     for (const playerId of notification.playerIds) {
       const client = this.clients.get(playerId);
@@ -617,6 +680,11 @@ export class WebSocketService {
     this.redisSub.subscribe(ON_CANCEL_MATCHMAKING, (message) => {
       const notification = JSON.parse(message) as RedisCancelMatchMakingNotification;
       this.handleCancelMatchMaking(notification);
+    });
+
+    this.redisSub.subscribe(ON_END_OF_MATCH, (message) => {
+      const notification = JSON.parse(message) as RedisMatchEndNotification;
+      this.handleOnMatchEnd(notification);
     });
   }
 }

@@ -18,7 +18,7 @@ import { logger } from "./config/logger";
 import ObjectID from "bson-objectid";
 import { randomBytes } from "crypto";
 import { MATCH_TYPES } from "./services/matchmakingService";
-import { getRandomMap1v1 } from "./data/maps";
+import { getRandomMap1v1, getRandomMapByType } from "./data/maps";
 
 const CHECK_INTERVAL_MS = 2000;
 
@@ -242,7 +242,7 @@ async function createMatch(tickets: RedisMatchTicket[], matchType: string): Prom
       players: await createTeams(tickets),
       matchId,
       matchKey: randomBytes(32).toString("base64"),
-      map: getRandomMap1v1(),
+      map: getRandomMapByType(matchType),
       mode: matchType,
     };
 

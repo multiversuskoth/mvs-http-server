@@ -271,18 +271,6 @@ export const LAB_MAPS = {
         Map: "mts003_v3",
         SelectionWeight: 1,
       },
-      {
-        Map: "M021",
-        SelectionWeight: 1,
-      },
-      {
-        Map: "M020",
-        SelectionWeight: 1,
-      },
-      {
-        Map: "M019",
-        SelectionWeight: 1,
-      },
     ],
   },
 };

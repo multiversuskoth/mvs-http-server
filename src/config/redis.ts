@@ -19,6 +19,7 @@ export const MATCHMAKING_COMPLETE_CHANNEL = "matchmaking:complete";
 export const ON_LOBBY_MODE_UPDATED = "OnLobbyModeUpdated";
 export const ON_MATCH_MAKER_STARTED_CHANNEL = "party:queued";
 export const ON_CANCEL_MATCHMAKING = "matchmaking:cancel";
+export const ON_END_OF_MATCH = "match:end";
 
 export type RedisClient = RedisClientType<redis.RedisModules, redis.RedisFunctions, redis.RedisScripts>;
 
@@ -110,6 +111,11 @@ export interface MATCH_FOUND_NOTIFICATION extends MVS_NOTIFICATION {
   mode: string;
 }
 
+export interface RedisMatchEndNotification extends MVS_NOTIFICATION {
+  playersIds: string[];
+  matchId: string;
+}
+
 type RedisStatTrackerEntry = [statKey: string, statValue: number];
 
 export interface RedisPlayerConfig {
@@ -170,7 +176,7 @@ export interface RedisOnGameModeUpdatedNotification {
 }
 
 export interface RedisCancelMatchMakingNotification {
-  playersIds : string[];
+  playersIds: string[];
   matchmakingId: string;
 }
 
@@ -253,6 +259,15 @@ export async function redisOnGameplayConfigNotified(notification: MATCH_FOUND_NO
 export async function redisGetMatchConfig(matchId: string) {
   const res = await redisClient.get(matchId);
   return JSON.parse(res as string) as MATCH_FOUND_NOTIFICATION;
+}
+
+export async function redisPublisdEndOfMatch(playerIds: string[], matchId: string) {
+  const notification: RedisMatchEndNotification = {
+    playersIds: playerIds,
+    matchId,
+  };
+  logger.trace("Publishing ON_END_OF_MATCH");
+  await redisClient.publish(ON_END_OF_MATCH, JSON.stringify(notification));
 }
 
 export async function redisGetPlayer(playerId: string) {

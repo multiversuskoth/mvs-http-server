@@ -72,7 +72,7 @@ public:
     // Find (returns optional)
     std::optional<Value> find(const Key &key, bool lockless = false) const
     {
-        if (lockless)
+        if (!lockless)
         {
             std::shared_lock lock(mutex_);
             auto it = map_.find(key);

@@ -8,7 +8,7 @@ import * as path from "path";
 import { hydraTokenMiddleware } from "./middleware/auth";
 import { connect } from "./database/client";
 import { hiss_amalgamation_get } from "./handlers/hiss_amalgation_get";
-import { redisClient, redisGetMatchConfig } from "./config/redis";
+import { redisClient, redisGetMatchConfig, redisPublisdEndOfMatch } from "./config/redis";
 import { GAME_SERVER_PORT } from "./game/udp";
 import { sscRouter } from "./ssc/routes";
 import { CRC, MATCHMAKING_CRC } from "./data/config";
@@ -105,7 +105,10 @@ app.post("/mvsi_register", async (req, res, next) => {
   console.log("GET REGISTRY");
   const body = req.body;
   const config = await redisGetMatchConfig(body.matchId);
-  console.log(config);
+  if (config.matchKey !== body.key) {
+    res.send("");
+    return;
+  }
   const players = config.players.map((p) => {
     return {
       player_index: p.playerIndex,
@@ -113,12 +116,28 @@ app.post("/mvsi_register", async (req, res, next) => {
       is_host: p.isHost,
     };
   });
-  console.log(players);
   res.json({
-    max_players: 2,
+    max_players: config.players.length,
     match_duration: 36000,
     players,
   });
+});
+
+app.post("/mvsi_end_match", async (req, res, next) => {
+  console.log("mvsi_end_match");
+  const body = req.body;
+  const config = await redisGetMatchConfig(body.matchId);
+  if (config.matchKey !== body.key) {
+    res.send("");
+    return;
+  }
+  if (config) {
+    await redisPublisdEndOfMatch(
+      config.players.map((p) => p.playerId),
+      config.matchId
+    );
+    res.send("");
+  }
 });
 
 app.use(hydraDecoderMiddleware);

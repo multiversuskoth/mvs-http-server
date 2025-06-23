@@ -27,7 +27,7 @@ export async function createLobby(accountId: string, lobbyMode: LOBBY_MODES = LO
     owner: accountId,
     // guest can be set later when a second player joins
   };
-  await redisClient.hSet(`lobby:${lobbyId}`, {
+  await redisClient.hSet(`player:${accountId}:lobby:${lobbyId}`, {
     id: newLobby.id,
     created_at: newLobby.created_at,
     mode: newLobby.mode,
@@ -39,7 +39,7 @@ export async function createLobby(accountId: string, lobbyMode: LOBBY_MODES = LO
 }
 
 export async function changeLobbyMode(ownerId: string, lobbyId: string, newMode: LOBBY_MODES) {
-  const lobby = await redisClient.hGetAll(`lobby:${lobbyId}`);
+  const lobby = await redisClient.hGetAll(`player:${ownerId}:lobby:${lobbyId}`);
   if (!lobby.id) {
     throw new Error("Lobby not found");
   }
