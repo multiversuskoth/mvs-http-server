@@ -15,6 +15,7 @@ const env = cleanEnv(process.env, {
   REDIS_PORT: num(),
   REDIS_USERNAME: str(),
   REDIS_PW: str(),
+  HTTP_PORT: num(),
 });
 
 export default env;

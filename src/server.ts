@@ -14,6 +14,7 @@ import { sscRouter } from "./ssc/routes";
 import { CRC, MATCHMAKING_CRC } from "./data/config";
 import { PlayerTesterModel } from "./database/PlayerTester";
 import { RegExpMatcher, TextCensor, englishDataset, englishRecommendedTransformers, asteriskCensorStrategy } from "obscenity";
+import env from "./env/env";
 
 const matcher = new RegExpMatcher({
   ...englishDataset.build(),
@@ -26,7 +27,7 @@ export const app = express();
 app.disable("x-powered-by");
 
 //const port = 12181;
-const port = 8000;
+const port = env.HTTP_PORT || 8000;
 
 process.on("warning", (e) => {
   console.warn(e.stack);
