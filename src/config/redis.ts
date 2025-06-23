@@ -6,6 +6,8 @@ import env from "../env/env";
 import { MATCH_TYPES } from "../services/matchmakingService";
 
 const redisConfig = {
+  username: env.REDIS_USERNAME,
+  password: env.REDIS_PW,
   socket: {
     host: env.REDIS,
     port: env.REDIS_PORT,
