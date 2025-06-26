@@ -17,8 +17,11 @@ import { CRC, MATCHMAKING_CRC } from "../data/config";
 import { hiss_amalgamation_get } from "./hiss_amalgation_get";
 import { logger } from "../config/logger";
 import { Types } from "mongoose";
-import { PerkPagesModel } from "../database/PerkPages";
+import { PerkPages, PerkPagesModel } from "../database/PerkPages";
 import { createLobby, LOBBY_MODES } from "../services/lobbyService";
+import { StatusCodes } from "http-status-codes";
+import { CosmeticPages, CosmeticsModel } from "../database/Cosmetics";
+import { error } from "console";
 
 export async function handleSsc_invoke_attempt_daily_refresh(req: Request<{}, {}, {}, {}>, res: Response) {
   res.send({
@@ -37,6 +40,144 @@ export async function handleSsc_invoke_attempt_daily_refresh(req: Request<{}, {}
     metadata: null,
     return_code: 0,
   });
+}
+
+interface Profile_Icon_REQ {
+  Slug: string
+}
+
+interface Banner_REQ {
+  BannerSlug: string
+}
+
+interface Ringout_REQ {
+  RingoutVfxSlug: string
+}
+
+interface AnnouncerPack_REQ {
+  AnnouncerPackSlug: string
+}
+
+interface StatTracker_REQ {
+  StatTrackerSlotIndex: string,
+  StatTrackerSlug: string
+}
+
+export async function equip_stat_tracker(req: Request, res: Response) {
+  const account = req.token.id;
+  const body = req.body as StatTracker_REQ;
+  const stat = `StatTrackers.${body.StatTrackerSlotIndex}`
+  try {
+  const updatedDoc = await CosmeticsModel.findOneAndUpdate(
+    { account_id: new Types.ObjectId(account) },
+    {
+        $set: {
+          [stat]: body.StatTrackerSlug,
+        },
+      },
+    { upsert: true, new: true }
+  ).exec()
+  } catch (err) {
+    console.log("Error saving cosmetic", err);
+  }
+  res.sendStatus(StatusCodes.OK)
+ 
+}
+
+export async function equip_announce_pack(req: Request, res: Response) {
+  const account = req.token.id;
+  const body = req.body as AnnouncerPack_REQ;
+  try {
+  const updatedDoc = await CosmeticsModel.findOneAndUpdate(
+    { account_id: new Types.ObjectId(account) },
+    {
+        $set: {
+          AnnouncerPackSlug: body.AnnouncerPackSlug,
+        },
+      },
+    { upsert: true, new: true }
+  ).exec()
+  } catch (err) {
+    console.log("Error saving cosmetic", err);
+  }
+  res.sendStatus(StatusCodes.OK)
+ 
+}
+
+export async function equip_ringout_vfx(req: Request, res: Response) {
+  const account = req.token.id;
+  const body = req.body as Ringout_REQ;
+  try {
+  const updatedDoc = await CosmeticsModel.findOneAndUpdate(
+    { account_id: new Types.ObjectId(account) },
+    {
+        $set: {
+          RingoutVfxSlug: body.RingoutVfxSlug,
+        },
+      },
+    { upsert: true, new: true }
+  ).exec()
+  } catch (err) {
+    console.log("Error saving cosmetic", err);
+  }
+  res.sendStatus(StatusCodes.OK)
+ 
+}
+
+export async function equip_banner(req: Request, res: Response) {
+  const account = req.token.id;
+  const body = req.body as Banner_REQ;
+  try {
+  const updatedDoc = await CosmeticsModel.findOneAndUpdate(
+    { account_id: new Types.ObjectId(account) },
+    {
+        $set: {
+          BannerSlug: body.BannerSlug,
+        },
+      },
+    { upsert: true, new: true }
+  ).exec()
+  } catch (err) {
+    console.log("Error saving cosmetic", err);
+  }
+  res.sendStatus(StatusCodes.OK)
+ 
+}
+
+
+export async function set_profile_icon(req: Request, res: Response) {
+  const account = req.token.id;
+  const body = req.body as Profile_Icon_REQ;
+  console.log(body.Slug)
+  console.log(account)
+  const pageKey = `cosmetics`;
+  const AccountId = account
+  const Cosmetic = "profile_icon"
+  const CosmeticId = body.Slug
+  let Slug = body.Slug
+  const updateValue = {
+    //account_id,
+    //BannerSlug,
+    Slug
+    //RingoutVfxSlug,
+    //AnnouncerPackSlug,
+    //StatTrackers
+  };
+  try {
+  const updatedDoc = await CosmeticsModel.findOneAndUpdate(
+    { account_id: new Types.ObjectId(account) },
+    {
+        $set: {
+          Slug: body.Slug,
+        },
+      },
+    { upsert: true, new: true }
+  ).exec()
+  } catch (err) {
+    console.log("Error saving cosmetic", err);
+  }
+  res.sendStatus(StatusCodes.OK)
+ 
 }
 
 export async function handleSsc_invoke_claim_mission_rewards(req: Request<{}, {}, {}, {}>, res: Response) {
@@ -307,8 +448,22 @@ export async function handleSsc_invoke_get_country_code(req: Request<{}, {}, {},
 
 export async function handleSsc_invoke_get_equipped_cosmetics(req: Request<{}, {}, {}, {}>, res: Response) {
   const account = req.token;
-
-  const EquippedCosmetcis = {
+  const account_id = req.token.id
+  console.log("GET COSMETICS")
+  try {
+    const cosmeticdata = await CosmeticsModel.findOne({ account_id: new Types.ObjectId(account_id) });
+    //console.log(account)
+    //console.log(cosmeticdata)
+    let banner = cosmeticdata?.BannerSlug
+    let ap = cosmeticdata?.AnnouncerPackSlug
+    let ringout = cosmeticdata?.RingoutVfxSlug
+    let pfp = cosmeticdata?.Slug
+    let badges = cosmeticdata?.StatTrackers
+  
+  
+  
+  
+  const EquippedCosmetics = {
     Taunts: {
       character_supershaggy: { TauntSlots: [] },
       character_C022: { TauntSlots: [] },
@@ -374,29 +529,34 @@ export async function handleSsc_invoke_get_equipped_cosmetics(req: Request<{}, {
         TauntSlots: ["taunt_c029_defaulttaunt", "taunt_c029_defaulttaunt", "taunt_c029_defaulttaunt", "taunt_c029_defaulttaunt"],
       },
     },
-    AnnouncerPack: "announcer_pack_c034",
-    Banner: "banner_foretold_champion_rare",
+    AnnouncerPack: `${ap}`,
+    Banner: `${banner}`,
     StatTrackers: {
       StatTrackerSlots: [
-        "stattracking_ranked_seasonfive_charactersingold_1v1",
-        "stat_tracking_bundle_ranked_season_two_wins_1v1",
-        "stat_tracking_bundle_default",
+        `${badges?.[0]}`,
+        `${badges?.[1]}`,
+        `${badges?.[2]}`,
       ],
     },
-    RingoutVfx: "ring_out_vfx_default",
+    RingoutVfx: `${ringout}`,
     Gems: { GemSlots: ["", "", ""] },
   };
 
   const message = {
     body: {
-      EquippedCosmetcis,
+      EquippedCosmetics,
     },
     metadata: null,
     return_code: 0,
   };
 
-  redisSaveEquippedComsetics(account.id, EquippedCosmetcis);
+  redisSaveEquippedComsetics(account.id, EquippedCosmetics);
   res.send(message);
+
+  } catch (error) {
+    //response.StatusCodes()
+    console.log("ERROR IN GETTING COSMETICS", error)
+  }
 }
 
 export async function handleSsc_invoke_get_gm_leaderboards(req: Request<{}, {}, {}, {}>, res: Response) {
