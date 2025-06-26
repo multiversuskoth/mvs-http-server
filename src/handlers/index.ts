@@ -14,12 +14,3 @@ export * from "./profiles";
 export * from "./sessions";
 export * from "./social";
 export * from "./ssc";
-
-export interface AccountToken {
-  public_id: string;
-  wb_network_id: string;
-  id: string;
-  profile_id: string;
-  username: string;
-  hydraUsername: string;
-}

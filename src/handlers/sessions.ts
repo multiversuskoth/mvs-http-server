@@ -1,12 +1,10 @@
-import { Request, Response } from "express";
+import express, { Request, Response } from "express";
 import { MVSQueries } from "../interfaces/queries_types";
 
-// TODO: This is a mock function, it should be replaced with the actual implementation
-// THIS A WB PROD ENDPOINT and we might need to re implement it and we can't figure out how to obtain a token from them
 export async function handleSessions_auth_token(req: Request<{}, {}, {}, MVSQueries.Sessions_auth_token_QUERY>, res: Response) {
   res.send({
-    access_token:
-      "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJ2IjoxLCJpc3MiOiJwcm9kLW5ldHdvcmsiLCJlbnYiOiI2MWJhN2YzMDFjNzE5ZTJhNGZlZjRjMzciLCJwaWQiOiJwYWZkOGQ3OTUwYWExNDg0ZWE3OTFkMDY2NjJmYTc1Y2UiLCJleHAiOjE3NDIzNTE2NDEsInNpZCI6ImYwYzUwYjhiLTllZDktNGVkZS1hOTQ4LWI1OTRmMWY4MWExNiJ9.Q9PuA8yU0wsbN0hiuZazdg70SQQURaaNjLSzCAvKLiQ",
+    //@ts-ignore
+    access_token: req.body.code,
     expires_in: 86400,
     mfa_required: false,
     sdk: {
@@ -75,7 +73,7 @@ export async function handleSessions_auth_token(req: Request<{}, {}, {}, MVSQuer
       email_verified: false,
       password_set: false,
       mfa_active: false,
-      username: "MVSI",
+      username: "MultiVersusKOTH",
       can_change_username: true,
       age_category: "adult",
       child_age_gate: null,

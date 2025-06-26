@@ -1,106 +1,103 @@
-import { Player, playerModel } from "../database/Player";
-import { z } from "zod";
-import { StatusCodes } from "http-status-codes";
-import { Request, Response } from "express";
-import { MVSResponses } from "../interfaces/responses_types";
-import { MVSRequests } from "../interfaces/requests_types";
+import express, { Request, Response } from "express";
+import { MVSQueries } from "../interfaces/queries_types";
+import { GleamiumData } from "../data/gleamium";
+import { unlockAll, unlockAllCharacters } from "../data/characters";
+import { getProfileForMatch } from "../services/profileService";
 
-const PutProfilesRequest = z.object({
-  ids: z.array(z.string()),
-});
-const PutProfilesQueryParams = z.object({
-  account_fields: z.union([z.array(z.string()), z.string()]).optional(),
-  partial_response: z.number().optional(),
-});
+export async function handleProfiles_id_inventory(req: Request<{}, {}, {}, MVSQueries.Profiles_id_inventory_QUERY>, res: Response) {
+  const account = req.token;
+  res.send([...unlockAll(account.id), GleamiumData]);
+}
 
-export async function handleProfiles_bulk(
-  req: Request<{}, MVSResponses.Profiles_bulk_RESPONSE, MVSRequests.Profiles_bulk_REQUEST, {}>,
-  res: Response<MVSResponses.Profiles_bulk_RESPONSE[]>,
-) {
-  let includeAccount = false;
-
-  const playersDB: Player[] = [];
-  let requestBody;
-  {
-    const parseQueryFields = PutProfilesRequest.safeParse(req.body);
-    if (!parseQueryFields.success) {
-      res.sendStatus(StatusCodes.BAD_REQUEST);
-      return;
-    }
-    requestBody = parseQueryFields.data;
-  }
-
-  let queryFields;
-  {
-    const parseQueryFields = PutProfilesQueryParams.safeParse(req.query);
-    if (!parseQueryFields.success) {
-      res.sendStatus(StatusCodes.BAD_REQUEST);
-      return;
-    }
-    queryFields = parseQueryFields.data;
-  }
-
-  const includeFields = new Set([
-    "inventory",
-    "points",
-    "account_id",
-    "matches",
-    "user_segments",
-    "random_distribution",
-    "last_login",
-    "created_at",
-    "account_id",
-    "updated_at",
-    "id",
-  ]);
-
-  const selectSettings: Record<string, number> = {};
-  for (const includeField of includeFields) {
-    selectSettings[includeField] = 1;
-  }
-  if (queryFields.account_fields != null) {
-    if (!Array.isArray(queryFields.account_fields)) {
-      queryFields.account_fields = Array(queryFields.account_fields);
-    }
-    for (const queryField of queryFields.account_fields) {
-      selectSettings[queryField] = 1;
-      if (queryField == "presence") {
-        includeAccount = true;
+export async function handleProfiles_bulk(req: Request<{}, {}, { ids: string[] }, MVSQueries.Profiles_bulk_QUERY>, res: Response) {
+  const account = req.token;
+  if (req.query.account_fields) {
+    const ids = req.body.ids;
+    let response = [];
+    for (let id of ids) {
+      const profile = await getProfileForMatch(id);
+      if (profile) {
+        response.push(profile);
       }
     }
+    res.send(response);
+    return;
   }
-
-  let playersQuery = playerModel.find({}, selectSettings).where("account_id").in(requestBody.ids);
-
-  if (includeAccount) {
-    playersQuery = playersQuery.populate("account");
-  }
-  const players = await playersQuery.lean().exec();
-  const mapAccountIdToPlayer: Map<string, (typeof players)[0]> = new Map();
-  players.map((doc) => {
-    mapAccountIdToPlayer.set(doc.account_id, doc);
-  });
-  for (const accountId of requestBody.ids) {
-    const player = mapAccountIdToPlayer.get(accountId);
-    if (player != undefined) {
-      playersDB.push(Player.flatten(player));
-    }
-  }
-
-  const response = playersDB.map((player) => {
-    const res: MVSResponses.Profiles_bulk_RESPONSE = {
-      id: player.id,
-      account_id: player.account_id,
-      created_at: new Date(player.created_at).toISOString(),
-      updated_at: new Date(player.updated_at).toISOString(),
-      last_login: new Date(player.last_login).toISOString(),
-      random_distribution: player.random_distribution,
-      user_segments: player.user_segments,
-      points: player.points,
-      account: player.account,
-    };
-    return res;
-  });
-
-  res.send(response);
+  console.log("OTHER_PROFILE");
+  res.send([
+    {
+      updated_at: {
+        _hydra_unix_date: 1738953155,
+      },
+      account_id: "62dadd1a57a63708ed1caccb",
+      created_at: {
+        _hydra_unix_date: 1658510618,
+      },
+      last_login: {
+        _hydra_unix_date: 1738799392,
+      },
+      points: null,
+      "server_data.SeasonalData.Season:SeasonTwo.Ranked.bEndOfSeasonRewardsGranted": true,
+      user_segments: [
+        "test-user-segment",
+        "percentmaintenance",
+        "issteam",
+        "owns_batman",
+        "owns_bugs_bunny",
+        "owns_arya_stark",
+        "owns_velma",
+        "owns_superman",
+        "owns_garnet",
+        "owns_finn_the_human",
+        "owns_tom_and_jerry",
+        "owns_jake_the_dog",
+        "owns_steven_universe",
+        "owns_taz",
+        "owns_harley_quinn",
+        "owns_lebron_james",
+        "owns_the_iron_giant",
+        "returning_user_open_beta",
+        "owns_marvin_the_martian",
+        "owns_morty",
+        "owns_black_adam",
+        "owns_gizmo",
+        "owns_stripe",
+        "owns_reindog",
+        "owns_rick",
+        "owns_wonder_woman",
+        "owns_the_joker",
+        "owns_jason",
+        "Battlepass_level_greater_or_equal_to_60",
+        "bp-score-over-100",
+        "owns_battlepass_s1",
+        "owns_battlepass_s2",
+        "owns_agent_smith",
+        "owns_beetlejuice",
+        "owns_banana_guard",
+        "owns_battlepass_s3",
+        "s3-battlepass-tier-greater-or-equal-to-60",
+        "experimentation-mvs_hydra_segment_test_true",
+        "experimentation-mvs_fighter_affinity_pvp_bugs_alltime",
+        "experimentation-mvs_purchaser_status_purchaser",
+        "experimentation-mvs_fighter_affinity_pvp_taz_today",
+        "lost_samurai_carousel_conditions",
+        "s3-battlepass-tier-greater-or-equal-to-70",
+        "owns_nubia",
+        "nubia_early_access_gleamium_pinned_carousel_conditions",
+        "not-new-player",
+        "s4-battlepass-tier-greater-or-equal-to-45",
+        "owns_raven",
+        "raven_early_access_gleamium_pinned_carousel_conditions",
+        "fighter_store_eligible",
+        "fighter_currency_premium",
+        "owns_marceline",
+        "marceline_early_access_gleamium_pinned_carousel_conditions",
+        "experimentation-mvs_store_organization_experiment-control",
+        "bp_s4_5_conditions",
+        "bp_s4_conditions",
+      ],
+      random_distribution: 0.09829278289973609,
+      id: account.id,
+    },
+  ]);
 }

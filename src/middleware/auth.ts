@@ -7,11 +7,12 @@ declare global {
   namespace Express {
     interface Request {
       token: AccountToken;
+      rawToken : string;
     }
   }
 }
 
-const HYDRA_ACCESS_TOKEN = "x-hydra-access-token";
+export const HYDRA_ACCESS_TOKEN = "x-hydra-access-token";
 export const SECRET = "SHHHH!!";
 
 export function decodeToken(token: string) {
@@ -19,7 +20,7 @@ export function decodeToken(token: string) {
 }
 
 export const hydraTokenMiddleware = (req: Request, res: Response, next: NextFunction): void => {
-  if (req.url === "/access") {
+  if (req.url === "/access" || req.url.includes("/sessions/auth/token")) {
     return next();
   }
 
@@ -29,7 +30,13 @@ export const hydraTokenMiddleware = (req: Request, res: Response, next: NextFunc
   const token = req.headers[HYDRA_ACCESS_TOKEN];
 
   if (typeof token === "string") {
-    req.token = decodeToken(token);
+    try {
+      req.rawToken = token;
+      req.token = decodeToken(token);
+    }
+    catch(e) {
+      console.log(e)
+    }
     return next();
   } else {
     // If the token is missing or invalid (null or undefined), send an unauthorized response

@@ -1,10 +1,10 @@
-import { Request, Response } from "express";
+import express, { Request, Response } from "express";
 import { MVSQueries } from "../interfaces/queries_types";
 import ObjectID from "bson-objectid";
 import { randomUUID } from "crypto";
 import { MVSTime } from "../utils/date";
 import env from "../env/env";
-import { MATCH_TYPES, queueMatch } from "../services/matchmakingService";
+import { cancelMatchmaking, MATCH_TYPES, queueMatch } from "../services/matchmakingService";
 
 export async function handleMatches_id(req: Request<{}, {}, {}, {}>, res: Response) {
   const account = req.token;
@@ -139,75 +139,28 @@ export async function handleMatches_all_id(req: Request<{}, {}, {}, MVSQueries.M
   });
 }
 
-export interface Matches_matchmaking_1v1_retail_request_REQUEST {
+export interface MATCH_MAKING_REQUEST {
   data: {
     MultiplayParams: {
-      /**
-       *
-       * ec2-us-east-1-dokken
-       *
-       */
       MultiplayClusterSlug: string;
-      /**
-       *
-       * 1252922
-       *
-       */
       MultiplayProfileId: string;
-      /**
-       *
-       * 19c465a7-f21f-11ea-a5e3-0954f48c5682
-       *
-       */
       MultiplayRegionId: string;
-      /**
-       *
-       * 1
-       *
-       */
       MultiplayRegionSearchId: number;
     };
-    /**
-     *
-     * All
-     *
-     */
     crossplay_buckets: string[];
-    /**
-     *
-     * CLIENT:2FAE7-Retail DATA:4CF442B2 PERKS:1
-     *
-     */
     version: string;
   };
   game_server: {
     launch_data: {
-      /**
-       *
-       * 1
-       *
-       */
       id: number;
-      /**
-       *
-       * 1252922
-       *
-       */
+
       profile: string;
     };
   };
-  /**
-   *
-   * 67ead64959521e4ff6c1eabb
-   *
-   */
   match: string;
 }
 
-export async function handleMatches_matchmaking_1v1_retail_request(
-  req: Request<{}, {}, Matches_matchmaking_1v1_retail_request_REQUEST, {}>,
-  res: Response,
-) {
+export async function handleMatches_matchmaking_1v1_retail_request(req: Request<{}, {}, MATCH_MAKING_REQUEST, {}>, res: Response) {
   const account = req.token;
   const data = {
     updated_at: { _hydra_unix_date: MVSTime(new Date()) },
@@ -231,19 +184,7 @@ export async function handleMatches_matchmaking_1v1_retail_request(
     cluster: req.body.data.MultiplayParams.MultiplayClusterSlug,
     players_connection_info: {
       [account.id]: {
-        game_server_region_data: [
-          { region_id: "19c465a7-f21f-11ea-a5e3-0954f48c5682", latency: 0.04239736124873161 },
-          { region_id: "19bf18ce-f21f-11ea-b94f-f946c68d5a4f", latency: 0.032917093485593796 },
-          { region_id: "19c714ff-f21f-11ea-b144-4d87911ee195", latency: 0.07239044457674026 },
-          { region_id: "657d35f8-ca5e-11ec-85a7-b6a275757dc0", latency: 0.04306681081652641 },
-          { region_id: "36e4f578-e5de-11ec-9b71-3e51faa28080", latency: 0.06971535831689835 },
-          { region_id: "19cb2fef-f21f-11ea-b925-3d9c90e67151", latency: 0.056540388613939285 },
-          { region_id: "19c32880-f21f-11ea-a907-512b3194e649", latency: 0.11248181760311127 },
-          { region_id: "19cc9701-f21f-11ea-bfb9-5d272145d31d", latency: 0.12218119204044342 },
-          { region_id: "19c5bb72-f21f-11ea-bfec-c59755e2312c", latency: 0.11600212007761002 },
-          { region_id: "19c86c46-f21f-11ea-a140-f58c0daacbb8", latency: 0.12285491079092026 },
-          { region_id: "f04a5e72-2891-11ed-8e82-fe3ccb088dde", latency: 0.050994955003261566 },
-        ],
+        game_server_region_data: [{ region_id: "19c465a7-f21f-11ea-a5e3-0954f48c5682", latency: 0.04239736124873161 }],
       },
     },
     player_connections: { [account.id]: [randomUUID()] },
@@ -289,66 +230,6 @@ export async function handleMatches_matchmaking_1v1_retail_request(
           region_id: "19c714ff-f21f-11ea-b144-4d87911ee195",
           backend: "multiplay",
         },
-        {
-          profile_id: "1252922",
-          fleet_id: "6edd4138-20ef-11ec-a2b7-4a5119a45304",
-          region_id: "19c465a7-f21f-11ea-a5e3-0954f48c5682",
-          backend: "multiplay",
-        },
-        {
-          profile_id: "1252922",
-          fleet_id: "6edd4138-20ef-11ec-a2b7-4a5119a45304",
-          region_id: "19c32880-f21f-11ea-a907-512b3194e649",
-          backend: "multiplay",
-        },
-        {
-          profile_id: "1252922",
-          fleet_id: "6edd4138-20ef-11ec-a2b7-4a5119a45304",
-          region_id: "19bf18ce-f21f-11ea-b94f-f946c68d5a4f",
-          backend: "multiplay",
-        },
-        {
-          profile_id: "1252922",
-          fleet_id: "6edd4138-20ef-11ec-a2b7-4a5119a45304",
-          region_id: "19cc9701-f21f-11ea-bfb9-5d272145d31d",
-          backend: "multiplay",
-        },
-        {
-          profile_id: "1252922",
-          fleet_id: "6edd4138-20ef-11ec-a2b7-4a5119a45304",
-          region_id: "19c5bb72-f21f-11ea-bfec-c59755e2312c",
-          backend: "multiplay",
-        },
-        {
-          profile_id: "1252922",
-          fleet_id: "6edd4138-20ef-11ec-a2b7-4a5119a45304",
-          region_id: "19c86c46-f21f-11ea-a140-f58c0daacbb8",
-          backend: "multiplay",
-        },
-        {
-          profile_id: "1252922",
-          fleet_id: "6edd4138-20ef-11ec-a2b7-4a5119a45304",
-          region_id: "657d35f8-ca5e-11ec-85a7-b6a275757dc0",
-          backend: "multiplay",
-        },
-        {
-          profile_id: "1252922",
-          fleet_id: "6edd4138-20ef-11ec-a2b7-4a5119a45304",
-          region_id: "36e4f578-e5de-11ec-9b71-3e51faa28080",
-          backend: "multiplay",
-        },
-        {
-          profile_id: "1252922",
-          fleet_id: "6edd4138-20ef-11ec-a2b7-4a5119a45304",
-          region_id: "19cb2fef-f21f-11ea-b925-3d9c90e67151",
-          backend: "multiplay",
-        },
-        {
-          profile_id: "1252922",
-          fleet_id: "6edd4138-20ef-11ec-a2b7-4a5119a45304",
-          region_id: "f04a5e72-2891-11ed-8e82-fe3ccb088dde",
-          backend: "multiplay",
-        },
       ],
       optional_launch_config_params: {},
     },
@@ -356,5 +237,91 @@ export async function handleMatches_matchmaking_1v1_retail_request(
     id: ObjectID().toHexString(),
   };
   res.send(data);
-  await queueMatch([account.id], data.from_match, data.id, MATCH_TYPES.ONE_V_ONE);
+  await queueMatch(account.id, [account.id], data.from_match, data.id, MATCH_TYPES.ONE_V_ONE);
+}
+
+export async function handleMatches_matchmaking_2v2_retail_request(req: Request<{}, {}, MATCH_MAKING_REQUEST, {}>, res: Response) {
+  const account = req.token;
+  const newMatchId = ObjectID().toHexString();
+
+  const data = {
+    id: newMatchId,
+    updated_at: { _hydra_unix_date: MVSTime(new Date()) },
+    requester_account_id: account.id,
+    is_concurrent: false,
+    concurrent_identifier: randomUUID(),
+    created_at: { _hydra_unix_date: MVSTime(new Date()) },
+    data: {
+      MultiplayParams: req.body.data.MultiplayParams,
+      crossplay_buckets: ["All", "PC"],
+      version: env.GAME_VERSION,
+      matchmaking_rating: 724.7928014055103,
+      player_count: 1,
+      double_character_key: "character_TODO_SAME_CHAR_IN_SAME_TEAM",
+      rp: 0,
+      allowed_buckets: ["Any"],
+      allowed_buckets_relaxed: ["Any"],
+    },
+    server_data: null,
+    criteria_slug: "2v2-retail",
+    cluster: req.body.data.MultiplayParams.MultiplayClusterSlug,
+    players_connection_info: {
+      [account.id]: {
+        game_server_region_data: [{ region_id: "19c465a7-f21f-11ea-a5e3-0954f48c5682", latency: 0.04791003838181496 }],
+      },
+    },
+    player_connections: {
+      [account.id]: [randomUUID()],
+    },
+    players: {
+      [account.id]: {
+        id: account.profile_id,
+        updated_at: null,
+        account_id: account.id,
+        created_at: null,
+        last_login: null,
+        last_inbox_read: null,
+        points: null,
+        data: {},
+        cross_match_results: {},
+        notifications: {},
+        aggregates: {},
+        calculations: {},
+        files: [],
+        random_distribution: null,
+      },
+    },
+    groups: [1],
+    relationships: [],
+    recently_played: {
+      [account.id]: [],
+    },
+    from_match: req.body.match,
+    reuse_match: false,
+    party_id: null,
+    state: 2,
+    user_rule_config: [],
+    game_server: {
+      unique_key: null,
+      backend: "multiplay",
+      launch_configs: [
+        {
+          profile_id: "1252928",
+          fleet_id: "6edd4138-20ef-11ec-a2b7-4a5119a45304",
+          region_id: "19c714ff-f21f-11ea-b144-4d87911ee195",
+          backend: "multiplay",
+        },
+      ],
+      optional_launch_config_params: {},
+    },
+    server_submitted: false,
+  };
+
+  res.send(data);
+
+  await queueMatch(account.id, [account.id], data.from_match, data.id, MATCH_TYPES.TWO_V_TWO);
+}
+
+export async function handle_cancel_matchmaking(req: Request<{ id: string }, {}, {}, {}>, res: Response) {
+  await cancelMatchmaking(req.token.id, req.params.id);
 }

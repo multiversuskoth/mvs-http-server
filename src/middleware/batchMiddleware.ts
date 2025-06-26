@@ -1,4 +1,6 @@
 import { NextFunction, Request, Response } from "express";
+import { HYDRA_CONTENT_TYPE } from "./hydraParser";
+import { HYDRA_ACCESS_TOKEN } from "./auth";
 
 export interface BatchRequest extends Request {
   requests: {
@@ -42,39 +44,78 @@ export function urlSearchParamsToObject(path: string) {
 }
 
 export const batchMiddleware = (req: Request, res: Response, next: NextFunction) => {
-  const customRes = res as BatchResponse;
-  const send = res.send;
-
-  customRes.batchedRequests = [];
-  // @ts-ignore
-  customRes.send = function (body: any) {
-    if (req.url === "/batch") {
-      send.call(this, body);
-    } else {
-      customRes.batchedRequests.push({
-        body: body,
-        headers: res.getHeaders() as any,
-        status_code: res.statusCode,
-      });
-    }
-  };
   next();
 };
+
+interface BatchResponseItem {
+  status_code: number;
+  headers: Record<string, any>;
+  body: any;
+}
 
 export async function handle_batch_custom(req: Request<{}, {}, {}, {}>, res: Response) {
   const batchBody = req.body as BatchRequest;
   const customRes = res as BatchResponse;
   //@ts-ignore
   req.batch = true;
-  for (let request of batchBody.requests) {
-    res.statusCode = 200;
-    req.url = request.url;
-    req.body = request.body;
-    req.method = request.verb;
-    req.query = urlSearchParamsToObject(req.url);
-    req.app._router.handle(req, res);
-  }
+  const results = await Promise.all(
+    batchBody.requests.map((request) => {
+      return new Promise<BatchResponseItem>((resolve, reject) => {
+        const mockReq = Object.create(req) as Request;
+        mockReq.statusCode = 200;
+        mockReq.url = request.url;
+        mockReq.body = request.body;
+        mockReq.method = request.verb;
+        mockReq.token = req.token;
+        mockReq.rawToken = req.rawToken;
+        mockReq.headers = request.headers;
+        //@ts-ignore
+        mockReq.batch = true;
+        mockReq.headers["content-type"] = HYDRA_CONTENT_TYPE;
+        mockReq.headers[HYDRA_ACCESS_TOKEN] = req.headers[HYDRA_ACCESS_TOKEN];
+        mockReq.query = urlSearchParamsToObject(request.url);
+
+        // fake res
+        const headers: Record<string, any> = {};
+        let status_code = 200;
+        let sentBody: any;
+
+        const mockRes = {
+          status(code: number) {
+            status_code = code;
+            return this;
+          },
+          set(header: string, value: any) {
+            headers[header.toLowerCase()] = value;
+            return this;
+          },
+          get(header: string) {
+            return headers[header.toLowerCase()];
+          },
+          json(body: any) {
+            headers["content-type"] = "application/json";
+            sentBody = body;
+            resolve({ status_code, headers, body: sentBody });
+            return this;
+          },
+          send(body: any) {
+            sentBody = body;
+            resolve({  status_code, headers, body: sentBody });
+            return this;
+          },
+          end(body?: any) {
+            if (body !== undefined) sentBody = body;
+            resolve({  status_code, headers, body: sentBody });
+            return this;
+          },
+        } as unknown as Response;
+
+        req.app._router.handle(mockReq, mockRes);
+      });
+    })
+  );
+
   req.url = "/batch";
   res.statusCode = 200;
-  res.send({ responses: customRes.batchedRequests });
+  res.send({ responses: results });
 }

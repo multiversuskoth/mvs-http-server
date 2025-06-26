@@ -24,48 +24,4 @@ Common hydra headers are also appended to all requests
 
 ## Schema
 
-Database schema are contained inside the database folder and use typegoose models
-
-### Date
-
-For date that is used as number -> set dateToMVSTime as getter
-
-```
-@prop({ type:Date, required: true, get: dateToMVSTime })
-updated_at!: number;
-```
-
-And add `toJSON:{getters: true}` to top-level model, or model that calls toJSON, for example
-
-```
-@modelOptions({
-  schemaOptions: {
-    toJSON: { ...toJSONVirtualId, getters: true },
-  },
-})
-export class Account {
-```
-
-### Nullable
-
-It will appear in MongoDB
-
-```
-@prop({default:null, type: InventoryCharacter})
-garnet: InventoryCharacter|null=null;
-```
-
-Note the type in prop, it is necessary with union type.
-
-Don't use optional field for nullable like `garnet?`
-
-### Undefined
-
-Undefined will not appear in MongoDB unlike null
-
-If a field can be undefined, put question mark at the end of it (better than undefined union type because it can be omitted)
-
-```
-@prop()
-character_BananaGuard?: InventoryItem;
-```
+Databse schema are contained inside the database folder and use typegoose models

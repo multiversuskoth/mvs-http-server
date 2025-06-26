@@ -1,9 +1,8 @@
 import { NextFunction, Request, Response } from "express";
-import { StatusCodes } from "http-status-codes";
 
 import { HydraDecoder, HydraEncoder } from "mvs-dump";
 
-const HYDRA_CONTENT_TYPE = "application/x-ag-binary";
+export const HYDRA_CONTENT_TYPE = "application/x-ag-binary";
 
 export const hydraDecoderMiddleware = <T>(req: Request, res: Response, next: NextFunction) => {
   //@ts-ignore
@@ -12,7 +11,7 @@ export const hydraDecoderMiddleware = <T>(req: Request, res: Response, next: Nex
     next();
     return;
   } else {
-    console.log("URL:", req.url);
+    //console.log("URL:", req.url);
   }
 
   if (req.headers["content-type"] === HYDRA_CONTENT_TYPE) {
@@ -32,6 +31,7 @@ export const hydraDecoderMiddleware = <T>(req: Request, res: Response, next: Nex
         req.body = decodedBody;
       } catch (e) {
         // If parsing fails, handle the error or set req.body to an empty object
+        console.log("Parsing failed")
         req.body = {};
       }
       next(); // Call next to move to the next middleware or route handler
@@ -51,7 +51,7 @@ export const hydraDecoderMiddleware = <T>(req: Request, res: Response, next: Nex
       return res;
     };
   } else {
-    res.sendStatus(StatusCodes.BAD_REQUEST);
+    next();
   }
 };
 

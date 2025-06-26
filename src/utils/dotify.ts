@@ -1,10 +1,15 @@
-export function dotify(obj: any, prefix: string, result: Record<any, any>, firstDepth: boolean) {
+export function dotify(
+  obj: any,
+  prefix: string,
+  result: Record<any, any>,
+  firstDepth: Boolean
+) {
   let delimiter = ".";
   if (firstDepth) {
     delimiter = "";
   }
-  for (const key in obj) {
-    const value = obj[key];
+  for (let key in obj) {
+    let value = obj[key];
     if (isPrimitive(value)) {
       result[prefix + delimiter + key] = value;
     } else {

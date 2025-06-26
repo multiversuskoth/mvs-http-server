@@ -18,8 +18,9 @@ import { logger } from "./config/logger";
 import ObjectID from "bson-objectid";
 import { randomBytes } from "crypto";
 import { MATCH_TYPES } from "./services/matchmakingService";
+import { getRandomMap1v1, getRandomMapByType } from "./data/maps";
 
-const CHECK_INTERVAL_MS = 1000;
+const CHECK_INTERVAL_MS = 2000;
 
 const MATCH_RULES = {
   "1v1": {
@@ -36,10 +37,8 @@ const MATCH_RULES = {
 
 export function startMatchMakingWorker(): void {
   logger.info("Starting matchmaking worker...");
-
   // Run the first check immediately
   checkQueues();
-
   // Then set up interval to check regularly
   setInterval(checkQueues, CHECK_INTERVAL_MS);
 
@@ -80,11 +79,16 @@ async function process1v1Queue(): Promise<boolean> {
     // Check if we have enough tickets for a match
     if (matchedTickets.length === MATCH_RULES["1v1"].teamsRequired) {
       // Remove matched tickets from queue
-      await redisPopMatchTicketsFromQueue(MATCH_TYPES.ONE_V_ONE, matchedTickets);
+      try {
+        await redisPopMatchTicketsFromQueue(MATCH_TYPES.ONE_V_ONE, matchedTickets);
 
-      // Create a match with these tickets
-      await createMatch(matchedTickets, "1v1");
-      return true;
+        // Create a match with these tickets
+        await createMatch(matchedTickets, "1v1");
+        return true;
+      } catch (error) {
+        logger.error(`Error removing matched tickets from queue: ${error}`);
+        return false; // If we can't remove them, we can't proceed
+      }
     }
 
     logger.info(`Not enough valid tickets for a 1v1 match (need ${MATCH_RULES["1v1"].teamsRequired}, found ${matchedTickets.length})`);
@@ -95,47 +99,56 @@ async function process1v1Queue(): Promise<boolean> {
   }
 }
 
-// Find a combination of tickets that gives the exact player count we need
-function findTicketsForMatch(tickets: RedisMatchTicket[], requiredPlayers: number): RedisMatchTicket[] | null {
-  // For now, we'll use a simple greedy approach:
-  // Take tickets from largest party size to smallest until we get exactly the right number of players
-  // In a real system, you would have more sophisticated matching logic (considering skill, wait time, etc.)
+// Process 1v1 matchmaking queue
+async function process2v2Queue(): Promise<boolean> {
+  try {
+    // Get all tickets in the queue
+    const tickets = await redisGetMatchTickets(MATCH_TYPES.TWO_V_TWO);
 
-  // Sort tickets by party size (largest first)
-  const sortedTickets = [...tickets].sort((a, b) => b.party_size - a.party_size);
+    if (tickets.length < MATCH_RULES["2v2"].totalPlayersRequired) {
+      return false; // Not enough tickets to make a match
+    }
 
-  let selectedTickets: RedisMatchTicket[] = [];
-  let currentCount = 0;
+    logger.info(`Found ${tickets.length} tickets in 2v2 queue, attempting to create a match`);
 
-  for (const ticket of sortedTickets) {
-    if (currentCount + ticket.party_size <= requiredPlayers) {
-      selectedTickets.push(ticket);
-      currentCount += ticket.party_size;
+    // Parse ticket data from queue
+    const matchedTickets: RedisMatchTicket[] = [];
+    for (const ticket of tickets) {
+      try {
+        // Only solo tickets
+        matchedTickets.push(ticket);
 
-      if (currentCount === requiredPlayers) {
-        return selectedTickets;
+        // If we have enough tickets, stop looking
+        if (matchedTickets.length === MATCH_RULES["2v2"].totalPlayersRequired) {
+          break;
+        }
+      } catch (error) {
+        logger.error(`Error parsing ticket in 2v2 queue: ${error}`);
+        // Continue to next ticket
       }
     }
-  }
 
-  // If we get here, we couldn't find an exact match
-  return null;
-}
+    // Check if we have enough tickets for a match
+    if (matchedTickets.length === MATCH_RULES["2v2"].totalPlayersRequired) {
+      // Remove matched tickets from queue
+      try {
+        await redisPopMatchTicketsFromQueue(MATCH_TYPES.TWO_V_TWO, matchedTickets);
 
-// Verify that all players in a ticket are still valid and queued
-async function verifyTicketPlayers(ticket: RedisMatchTicket): Promise<boolean> {
-  for (const player of ticket.players) {
-    const redisPlayer = await redisGetPlayer(player.id);
-
-    if (!redisPlayer) {
-      return false; // Player no longer exists
+        // Create a match with these tickets
+        await createMatch(matchedTickets, "2v2");
+        return true;
+      } catch (error) {
+        logger.error(`Error removing matched tickets from queue: ${error}`);
+        return false; // If we can't remove them, we can't proceed
+      }
     }
-    if (redisPlayer.status !== "queued") {
-      return false; // Player no longer queued
-    }
-  }
 
-  return true;
+    logger.info(`Not enough valid tickets for a 2v2 match (need ${MATCH_RULES["2v2"].totalPlayersRequired}, found ${matchedTickets.length})`);
+    return false;
+  } catch (error) {
+    logger.error(`Error processing 2v2 queue: ${error}`);
+    return false;
+  }
 }
 
 // ChatGPT came up with this o.o
@@ -219,7 +232,7 @@ async function createMatch(tickets: RedisMatchTicket[], matchType: string): Prom
       ticket.players.map((player) => ({
         playerId: player.id,
         partyId: ticket.partyId,
-      })),
+      }))
     );
 
     // Store match data
@@ -229,7 +242,7 @@ async function createMatch(tickets: RedisMatchTicket[], matchType: string): Prom
       players: await createTeams(tickets),
       matchId,
       matchKey: randomBytes(32).toString("base64"),
-      map: "M016_V3",
+      map: getRandomMapByType(matchType),
       mode: matchType,
     };
 
@@ -241,7 +254,7 @@ async function createMatch(tickets: RedisMatchTicket[], matchType: string): Prom
       await redisMatchMakingComplete(
         matchId,
         ticket.matchmakingRequestId,
-        ticket.players.map((p) => p.id),
+        ticket.players.map((p) => p.id)
       );
       await redisGameServerInstanceReady(matchId, playerIds);
     }
@@ -259,10 +272,14 @@ async function checkQueues(): Promise<void> {
     const made1v1Match = await process1v1Queue();
 
     // Then try to make 2v2 matches
-    //const made2v2Match = await process2v2Queue();
+    const made2v2Match = await process2v2Queue();
 
     if (made1v1Match) {
       logger.info(`Successfully created matches in this cycle: 1v1=${made1v1Match}`);
+    }
+
+    if (made2v2Match) {
+      logger.info(`Successfully created matches in this cycle: 2v2=${made1v1Match}`);
     }
   } catch (error) {
     logger.error(`Error checking queue: ${error}`);

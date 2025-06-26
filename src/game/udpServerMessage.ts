@@ -188,6 +188,7 @@ export function parseUdpServerMessage(buf: Buffer): UdpServerMessage {
           inputPerFrame[p][f] = buf.readUInt32LE(offset);
           offset += 4;
         }
+  
       }
 
       u = {
@@ -251,7 +252,7 @@ export function parseUdpServerMessage(buf: Buffer): UdpServerMessage {
         const value1 = buf.readUInt16LE(offset);
         offset += 2;
 
-        rawData2.push({ value1 });
+        rawData2.push({ value1,  });
       }
 
       u = { numPlayers, rawData2 };

@@ -3,12 +3,13 @@ import redis, { createClient } from "redis";
 import type { RedisClientType } from "redis";
 import { logger } from "./logger";
 import env from "../env/env";
+import { MATCH_TYPES } from "../services/matchmakingService";
 
 const redisConfig = {
   username: env.REDIS_USERNAME,
-  password: env.REDIS_PASSWORD,
+  password: env.REDIS_PW,
   socket: {
-    host: env.REDIS_HOST,
+    host: env.REDIS,
     port: env.REDIS_PORT,
   },
 };
@@ -17,7 +18,10 @@ export const ON_GAMEPLAY_CONFIG_NOTIFIED_CHANNEL = "match:notifications";
 export const ALL_PERKS_LOCKED_CHANNEL = "perks:notifications";
 export const GAME_SERVER_INSTANCE_READY_CHANNEL = "game_server_ready:notifications";
 export const MATCHMAKING_COMPLETE_CHANNEL = "matchmaking:complete";
+export const ON_LOBBY_MODE_UPDATED = "OnLobbyModeUpdated";
 export const ON_MATCH_MAKER_STARTED_CHANNEL = "party:queued";
+export const ON_CANCEL_MATCHMAKING = "matchmaking:cancel";
+export const ON_END_OF_MATCH = "match:end";
 
 export type RedisClient = RedisClientType<redis.RedisModules, redis.RedisFunctions, redis.RedisScripts>;
 
@@ -92,9 +96,13 @@ export interface RedisTeamEntry {
 export interface MVS_NOTIFICATION {}
 
 export interface ON_MATCH_MAKER_STARTED_NOTIFICATION extends MVS_NOTIFICATION {
-  playerIds: string[];
-  matchmakingRequestId: string;
+  party_size: number;
+  players: RedisMatchPlayer[];
+  created_at: number;
   partyId: string;
+  matchmakingRequestId: string;
+  matchType: MATCH_TYPES;
+  partyLeaderId: string;
 }
 
 export interface MATCH_FOUND_NOTIFICATION extends MVS_NOTIFICATION {
@@ -103,6 +111,11 @@ export interface MATCH_FOUND_NOTIFICATION extends MVS_NOTIFICATION {
   matchKey: string;
   map: string;
   mode: string;
+}
+
+export interface RedisMatchEndNotification extends MVS_NOTIFICATION {
+  playersIds: string[];
+  matchId: string;
 }
 
 type RedisStatTrackerEntry = [statKey: string, statValue: number];
@@ -158,17 +171,31 @@ export interface RedisEquippedCosmetics {
   };
 }
 
+export interface RedisOnGameModeUpdatedNotification {
+  lobbyId: string;
+  playersIds: string[];
+  modeString: string;
+}
+
+export interface RedisCancelMatchMakingNotification {
+  playersIds: string[];
+  matchmakingId: string;
+}
+
 const MATCH_KEY = (containerMatchId: string) => `match:${containerMatchId}`;
+const MATCH_PERKS_KEY = (containerMatchId: string) => `${MATCH_KEY(containerMatchId)}:perks`;
 const MATCH_PERKS_PLAYER_KEY = (containerMatchId: string, playerId: string) => `${MATCH_KEY(containerMatchId)}:perks:${playerId}`;
 
+export async function redisCreatePartyLobby() {}
+
 export async function redisSaveEquippedComsetics(playerId: string, data: RedisEquippedCosmetics) {
-  await redisClient.set(`cosmetics:${playerId}`, JSON.stringify(data));
+  await redisClient.set(`player:${playerId}:cosmetics`, JSON.stringify(data));
 }
 
 export async function redisGetAllPlayersEquippedComsetics(playerIds: string[]) {
   const multi = redisClient.multi();
   for (const playerId of playerIds) {
-    multi.get(`cosmetics:${playerId}`);
+    multi.get(`player:${playerId}:cosmetics`);
   }
   const cosmeticsStrArray = await multi.exec();
   const comsetics = cosmeticsStrArray.map((str) => JSON.parse(str as string) as RedisEquippedCosmetics);
@@ -187,7 +214,7 @@ export async function redisGetPlayers(playerIds: string[]) {
 }
 
 export async function redisGetEquippedComsetics(playerId: string) {
-  const cosmeticsStr = await redisClient.get(`cosmetics:${playerId}`);
+  const cosmeticsStr = await redisClient.get(`player:${playerId}:cosmetics`);
   if (cosmeticsStr) {
     return JSON.parse(cosmeticsStr) as RedisEquippedCosmetics;
   }
@@ -204,7 +231,7 @@ export async function redisPopMatchTicketsFromQueue(queueType: string, tickets: 
   const multi = redisClient.multi();
   for (const ticket of tickets) {
     multi.lRem(queueType, 0, JSON.stringify(ticket));
-    logger.info(`Removed ticket ${ticket.partyId} from 1v1 queue for match`);
+    logger.info(`Removed ticket ${ticket.partyId} from ${queueType} queue for match`);
   }
   await multi.exec();
 }
@@ -221,23 +248,28 @@ export async function redisPushTicketToQueue(queueKey: string, data: RedisMatchT
   await redisClient.lPush(queueKey, JSON.stringify(data));
 }
 
-export async function redisOnMatchMakerStarted(matchmakingRequestId: string, partyId: string, playerIds: string[]) {
-  const notification: ON_MATCH_MAKER_STARTED_NOTIFICATION = {
-    matchmakingRequestId,
-    partyId,
-    playerIds,
-  };
+export async function redisOnMatchMakerStarted(notification: ON_MATCH_MAKER_STARTED_NOTIFICATION) {
   await redisClient.publish(ON_MATCH_MAKER_STARTED_CHANNEL, JSON.stringify(notification));
 }
 
 export async function redisOnGameplayConfigNotified(notification: MATCH_FOUND_NOTIFICATION) {
-  await redisClient.set(notification.matchId, JSON.stringify(notification));
+  const EX = 60 * 20;
+  await redisClient.set(notification.matchId, JSON.stringify(notification), { EX });
   await redisClient.publish(ON_GAMEPLAY_CONFIG_NOTIFIED_CHANNEL, JSON.stringify(notification));
 }
 
 export async function redisGetMatchConfig(matchId: string) {
   const res = await redisClient.get(matchId);
   return JSON.parse(res as string) as MATCH_FOUND_NOTIFICATION;
+}
+
+export async function redisPublisdEndOfMatch(playerIds: string[], matchId: string) {
+  const notification: RedisMatchEndNotification = {
+    playersIds: playerIds,
+    matchId,
+  };
+  logger.trace("Publishing ON_END_OF_MATCH");
+  await redisClient.publish(ON_END_OF_MATCH, JSON.stringify(notification));
 }
 
 export async function redisGetPlayer(playerId: string) {
@@ -255,7 +287,8 @@ export async function redisGetMatch(containerMatchId: string) {
 }
 
 export async function redisUpdateMatch(containerMatchId: string, match: RedisMatch) {
-  await redisClient.set(MATCH_KEY(containerMatchId), JSON.stringify(match));
+  const EX = 60 * 20;
+  await redisClient.set(MATCH_KEY(containerMatchId), JSON.stringify(match), { EX });
 }
 
 export async function redisLockPerks(data: RedisLockPerk) {
@@ -297,7 +330,45 @@ export async function redisGetPlayerPerk(containerMatchId: string, playerId: str
   return null;
 }
 
-export async function redisClearPlayer(playerId: string) {
-  await redisClient.del(`player:${playerId}`);
-  await redisClient.del(`cosmetics:${playerId}`);
+export async function redisGetAllLockedPerks(containerMatchId: string) {
+  const matchStr = await redisClient.get(MATCH_KEY(containerMatchId));
+  if (matchStr) {
+    const redisMatch = JSON.parse(matchStr) as RedisMatch;
+    const multi = redisClient.multi();
+
+    const playersIds = redisMatch.tickets.flatMap((ticket) => ticket.players.map((player) => player.id));
+    for (const playerId of playersIds) {
+      multi.get(MATCH_PERKS_PLAYER_KEY(containerMatchId, playerId));
+    }
+    const results = await multi.exec();
+    if (results) {
+      let playerIndex = 0;
+      const perks = results.map((reply) => {
+        return { playerId: playersIds[playerIndex++], perks: JSON.parse(reply as string) as string[] };
+      });
+      return perks;
+    }
+  }
+  throw new Error("Unable To Get All Player Perks");
+}
+export async function redisDeletePlayerKeys(playerId: string): Promise<void> {
+  const pattern = `player:${playerId}*`;
+  let cursor = 0;
+
+  do {
+    const result = await redisClient.scan(cursor, {
+      MATCH: pattern,
+      COUNT: 100,
+    });
+
+    cursor = Number(result.cursor);
+    const keys = result.keys;
+
+    if (keys.length > 0) {
+      await redisClient.del(keys);
+      console.log(`Deleted keys:`, keys);
+    }
+  } while (cursor !== 0);
+
+  console.log(`All keys matching "${pattern}" have been deleted.`);
 }

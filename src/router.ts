@@ -2,7 +2,6 @@
 import express, { Request, Response } from "express";
 import { MVSQueries } from "./interfaces/queries_types";
 import * as h from "./handlers";
-//import * as ssc from "./ssc";
 import { batchMiddleware } from "./middleware/batchMiddleware";
 
 interface MVSParams {
@@ -10,32 +9,6 @@ interface MVSParams {
 }
 
 const router = express.Router();
-
-router.put("/ssc/invoke/set_profile_icon", (req: Request, res: Response) => {
-  // @ts-ignore TODO : implementation. Remove comment once implemented`
-  h.set_profile_icon(req,res)
-});
-
-router.put("/ssc/invoke/equip_stat_tracker", (req: Request, res: Response) => {
-  // @ts-ignore TODO : implementation. Remove comment once implemented`
-  h.equip_stat_tracker(req,res)
-});
-
-router.put("/ssc/invoke/equip_announcer_pack", (req: Request, res: Response) => {
-  // @ts-ignore TODO : implementation. Remove comment once implemented`
-  h.equip_announce_pack(req,res)
-});
-
-router.put("/ssc/invoke/equip_banner", (req: Request, res: Response) => {
-  // @ts-ignore TODO : implementation. Remove comment once implemented`
-  h.equip_banner(req,res)
-});
-
-router.put("/ssc/invoke/equip_ringout_vfx", (req: Request, res: Response) => {
-  // @ts-ignore TODO : implementation. Remove comment once implemented`
-  h.equip_ringout_vfx(req,res)
-});
-
 router.post("/access", async (req: Request<{}, {}, {}, {}>, res: Response) => {
   // @ts-ignore TODO : implementation. Remove comment once implemented`
   await h.handleAccess(req, res);

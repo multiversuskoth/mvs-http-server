@@ -2,9 +2,10 @@ import pino from "pino";
 
 export const logger = pino({
   transport: {
-    target: "pino-pretty",
+    target: 'pino-pretty',
     options: {
-      ignore: "pid,hostname",
-    },
+      ignore:"pid,hostname"
+    }
   },
 });
+logger.level = "trace";

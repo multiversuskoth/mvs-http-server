@@ -1,0 +1,2 @@
+export const CRC = 1267552931;
+export const MATCHMAKING_CRC = 1391076276;

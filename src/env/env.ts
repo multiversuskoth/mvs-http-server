@@ -6,14 +6,16 @@ configDotenv({ path: ".env" });
 const env = cleanEnv(process.env, {
   MONGODB_URI: str(),
   LOCAL_PUBLIC_IP: str(),
+  UDP_SERVER_IP: str(),
+  UDP_SERVER_IP2: str(),
   GAME_VERSION: str(),
   GAME_DOMAIN: str(),
   WB_DOMAIN: str(),
-  REDIS_HOST: str(),
+  REDIS: str(),
   REDIS_PORT: num(),
-  REDIS_PASSWORD: str(),
   REDIS_USERNAME: str(),
-  JWT_SECRET: str(),
+  REDIS_PW: str(),
+  HTTP_PORT: num(),
 });
 
 export default env;
