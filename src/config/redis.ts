@@ -4,6 +4,7 @@ import type { RedisClientType } from "redis";
 import { logger } from "./logger";
 import env from "../env/env";
 import { MATCH_TYPES } from "../services/matchmakingService";
+import { Cosmetics } from "../database/Cosmetics";
 
 const redisConfig = {
   username: env.REDIS_USERNAME,
@@ -154,22 +155,6 @@ export interface RedisPlayer {
   ip: string;
 }
 
-export interface RedisEquippedCosmetics {
-  Taunts: {
-    [character: string]: {
-      TauntSlots: string[];
-    };
-  };
-  AnnouncerPack: string;
-  Banner: string;
-  StatTrackers: {
-    StatTrackerSlots: string[];
-  };
-  RingoutVfx: string;
-  Gems: {
-    GemSlots: string[];
-  };
-}
 
 export interface RedisOnGameModeUpdatedNotification {
   lobbyId: string;
@@ -188,8 +173,9 @@ const MATCH_PERKS_PLAYER_KEY = (containerMatchId: string, playerId: string) => `
 
 export async function redisCreatePartyLobby() {}
 
-export async function redisSaveEquippedComsetics(playerId: string, data: RedisEquippedCosmetics) {
-  await redisClient.set(`player:${playerId}:cosmetics`, JSON.stringify(data));
+export async function redisSaveEquippedComsetics(playerId: string, data: Cosmetics) {
+  const result = await redisClient.set(`player:${playerId}:cosmetics`, JSON.stringify(data));
+  return result;
 }
 
 export async function redisGetAllPlayersEquippedComsetics(playerIds: string[]) {
@@ -198,7 +184,7 @@ export async function redisGetAllPlayersEquippedComsetics(playerIds: string[]) {
     multi.get(`player:${playerId}:cosmetics`);
   }
   const cosmeticsStrArray = await multi.exec();
-  const comsetics = cosmeticsStrArray.map((str) => JSON.parse(str as string) as RedisEquippedCosmetics);
+  const comsetics = cosmeticsStrArray.map((str) => JSON.parse(str as string) as Cosmetics);
 
   return comsetics;
 }
@@ -216,7 +202,7 @@ export async function redisGetPlayers(playerIds: string[]) {
 export async function redisGetEquippedComsetics(playerId: string) {
   const cosmeticsStr = await redisClient.get(`player:${playerId}:cosmetics`);
   if (cosmeticsStr) {
-    return JSON.parse(cosmeticsStr) as RedisEquippedCosmetics;
+    return JSON.parse(cosmeticsStr) as Cosmetics;
   }
   return null;
 }
