@@ -1,27 +1,16 @@
-import express, { Request, Response } from "express";
-import { MVSQueries } from "../interfaces/queries_types";
-import { MVSTime } from "../utils/date";
-import env from "../env/env";
-import ObjectID from "bson-objectid";
+import { Request, Response } from "express";
+import { Types } from "mongoose";
 import {
-  redisClient,
   redisGetMatch,
-  redisGetPlayer,
   redisGetPlayerPerk,
   redisLockPerks,
-  redisPublishAllPerksLocked,
-  redisSaveEquippedComsetics,
-  redisUpdatePlayerLoadout,
+  redisPublishAllPerksLocked
 } from "../config/redis";
 import { CRC, MATCHMAKING_CRC } from "../data/config";
+import { PerkPagesModel } from "../database/PerkPages";
+import { getEquippedCosmetics } from "../services/cosmeticsService";
+import { MVSTime } from "../utils/date";
 import { hiss_amalgamation_get } from "./hiss_amalgation_get";
-import { logger } from "../config/logger";
-import { Types } from "mongoose";
-import { PerkPages, PerkPagesModel } from "../database/PerkPages";
-import { createLobby, LOBBY_MODES } from "../services/lobbyService";
-import { StatusCodes } from "http-status-codes";
-import { CosmeticPages, CosmeticsModel } from "../database/Cosmetics";
-import { error } from "console";
 
 export async function handleSsc_invoke_attempt_daily_refresh(req: Request<{}, {}, {}, {}>, res: Response) {
   res.send({
@@ -42,143 +31,6 @@ export async function handleSsc_invoke_attempt_daily_refresh(req: Request<{}, {}
   });
 }
 
-interface Profile_Icon_REQ {
-  Slug: string
-}
-
-interface Banner_REQ {
-  BannerSlug: string
-}
-
-interface Ringout_REQ {
-  RingoutVfxSlug: string
-}
-
-interface AnnouncerPack_REQ {
-  AnnouncerPackSlug: string
-}
-
-interface StatTracker_REQ {
-  StatTrackerSlotIndex: string,
-  StatTrackerSlug: string
-}
-
-export async function equip_stat_tracker(req: Request, res: Response) {
-  const account = req.token.id;
-  const body = req.body as StatTracker_REQ;
-  const stat = `StatTrackers.${body.StatTrackerSlotIndex}`
-  try {
-  const updatedDoc = await CosmeticsModel.findOneAndUpdate(
-    { account_id: new Types.ObjectId(account) },
-    {
-        $set: {
-          [stat]: body.StatTrackerSlug,
-        },
-      },
-    { upsert: true, new: true }
-  ).exec()
-  } catch (err) {
-    console.log("Error saving cosmetic", err);
-  }
-  res.sendStatus(StatusCodes.OK)
- 
-}
-
-export async function equip_announce_pack(req: Request, res: Response) {
-  const account = req.token.id;
-  const body = req.body as AnnouncerPack_REQ;
-  try {
-  const updatedDoc = await CosmeticsModel.findOneAndUpdate(
-    { account_id: new Types.ObjectId(account) },
-    {
-        $set: {
-          AnnouncerPackSlug: body.AnnouncerPackSlug,
-        },
-      },
-    { upsert: true, new: true }
-  ).exec()
-  } catch (err) {
-    console.log("Error saving cosmetic", err);
-  }
-  res.sendStatus(StatusCodes.OK)
- 
-}
-
-export async function equip_ringout_vfx(req: Request, res: Response) {
-  const account = req.token.id;
-  const body = req.body as Ringout_REQ;
-  try {
-  const updatedDoc = await CosmeticsModel.findOneAndUpdate(
-    { account_id: new Types.ObjectId(account) },
-    {
-        $set: {
-          RingoutVfxSlug: body.RingoutVfxSlug,
-        },
-      },
-    { upsert: true, new: true }
-  ).exec()
-  } catch (err) {
-    console.log("Error saving cosmetic", err);
-  }
-  res.sendStatus(StatusCodes.OK)
- 
-}
-
-export async function equip_banner(req: Request, res: Response) {
-  const account = req.token.id;
-  const body = req.body as Banner_REQ;
-  try {
-  const updatedDoc = await CosmeticsModel.findOneAndUpdate(
-    { account_id: new Types.ObjectId(account) },
-    {
-        $set: {
-          BannerSlug: body.BannerSlug,
-        },
-      },
-    { upsert: true, new: true }
-  ).exec()
-  } catch (err) {
-    console.log("Error saving cosmetic", err);
-  }
-  res.sendStatus(StatusCodes.OK)
- 
-}
-
-
-export async function set_profile_icon(req: Request, res: Response) {
-  const account = req.token.id;
-  const body = req.body as Profile_Icon_REQ;
-  console.log(body.Slug)
-  console.log(account)
-  const pageKey = `cosmetics`;
-  const AccountId = account
-  const Cosmetic = "profile_icon"
-  const CosmeticId = body.Slug
-  let Slug = body.Slug
-  const updateValue = {
-    //account_id,
-    //BannerSlug,
-    Slug
-    //RingoutVfxSlug,
-    //AnnouncerPackSlug,
-    //StatTrackers
-  };
-  try {
-  const updatedDoc = await CosmeticsModel.findOneAndUpdate(
-    { account_id: new Types.ObjectId(account) },
-    {
-        $set: {
-          Slug: body.Slug,
-        },
-      },
-    { upsert: true, new: true }
-  ).exec()
-  } catch (err) {
-    console.log("Error saving cosmetic", err);
-  }
-  res.sendStatus(StatusCodes.OK)
- 
-}
 
 export async function handleSsc_invoke_claim_mission_rewards(req: Request<{}, {}, {}, {}>, res: Response) {
   res.send({
@@ -190,8 +42,6 @@ export async function handleSsc_invoke_claim_mission_rewards(req: Request<{}, {}
     return_code: 0,
   });
 }
-
-
 
 export async function handleSsc_invoke_game_launch_event(req: Request<{}, {}, {}, {}>, res: Response) {
   res.send("");
@@ -448,114 +298,21 @@ export async function handleSsc_invoke_get_country_code(req: Request<{}, {}, {},
 
 export async function handleSsc_invoke_get_equipped_cosmetics(req: Request<{}, {}, {}, {}>, res: Response) {
   const account = req.token;
-  const account_id = req.token.id
-  console.log("GET COSMETICS")
   try {
-    const cosmeticdata = await CosmeticsModel.findOne({ account_id: new Types.ObjectId(account_id) });
-    //console.log(account)
-    //console.log(cosmeticdata)
-    let banner = cosmeticdata?.BannerSlug
-    let ap = cosmeticdata?.AnnouncerPackSlug
-    let ringout = cosmeticdata?.RingoutVfxSlug
-    let pfp = cosmeticdata?.Slug
-    let badges = cosmeticdata?.StatTrackers
-  
-  
-  
-  
-  const EquippedCosmetics = {
-    Taunts: {
-      character_supershaggy: { TauntSlots: [] },
-      character_C022: { TauntSlots: [] },
-      character_Meeseeks: { TauntSlots: [] },
-      character_Jason: { TauntSlots: ["taunt_jason_default", "emote_pass_the_salt", "taunt_jason_default", "taunt_jason_default"] },
-      character_wonder_woman: {
-        TauntSlots: [
-          "taunt_wonder_woman_hands_on_hips",
-          "taunt_wonder_woman_hands_on_hips",
-          "taunt_wonder_woman_hands_on_hips",
-          "taunt_wonder_woman_hands_on_hips",
-        ],
+    const EquippedCosmetics = await getEquippedCosmetics(account.id)
+    const message = {
+      body: {
+        EquippedCosmetics,
       },
-      character_velma: { TauntSlots: ["taunt_velma_default", "taunt_velma_default", "taunt_velma_default", "taunt_velma_default"] },
-      character_tom_and_jerry: {
-        TauntSlots: ["taunt_tomandjerry_default", "taunt_tomandjerry_default", "taunt_tomandjerry_default", "taunt_tomandjerry_default"],
-      },
-      character_superman: {
-        TauntSlots: ["taunt_superman_crack_neck", "taunt_superman_crack_neck", "taunt_superman_crack_neck", "taunt_superman_crack_neck"],
-      },
-      character_steven: { TauntSlots: ["taunt_steven_default", "taunt_steven_default", "taunt_steven_default", "taunt_steven_default"] },
-      character_shaggy: { TauntSlots: ["taunt_shaggy_default", "taunt_shaggy_default", "taunt_shaggy_default", "taunt_shaggy_default"] },
-      character_jake: { TauntSlots: ["taunt_jake_default", "taunt_jake_default", "taunt_jake_default", "taunt_jake_default"] },
-      character_harleyquinn: { TauntSlots: ["taunt_harley_default", "taunt_harley_default", "taunt_harley_default", "taunt_harley_default"] },
-      character_garnet: { TauntSlots: ["taunt_garnet_default", "taunt_garnet_default", "taunt_garnet_default", "taunt_garnet_default"] },
-      character_finn: {
-        TauntSlots: ["taunt_finn_baby_default", "taunt_finn_baby_default", "taunt_finn_baby_default", "taunt_finn_baby_default"],
-      },
-      character_creature: {
-        TauntSlots: ["taunt_creature_default", "taunt_creature_default", "taunt_creature_default", "taunt_creature_default"],
-      },
-      character_C028: { TauntSlots: ["Taunt_C028_Default", "Taunt_C028_Default", "Taunt_C028_Default", "Taunt_C028_Default"] },
-      character_C023B: { TauntSlots: ["taunt_c023b_default", "taunt_c023b_default", "taunt_c023b_default", "taunt_c023b_default"] },
-      character_C023A: { TauntSlots: ["taunt_c023A_default", "taunt_c023A_default", "taunt_c023A_default", "taunt_c023A_default"] },
-      character_C021: { TauntSlots: ["taunt_c021_default", "taunt_c021_default", "taunt_c021_default", "taunt_c021_default"] },
-      character_C020: { TauntSlots: ["taunt_c020_taunt_0", "taunt_c020_taunt_0", "taunt_c020_taunt_0", "taunt_c020_taunt_0"] },
-      character_c019: { TauntSlots: ["taunt_c019_default", "taunt_c019_default", "taunt_c019_default", "taunt_c019_default"] },
-      character_C018: { TauntSlots: ["taunt_c018_default", "taunt_c018_default", "taunt_c018_default", "taunt_c018_default"] },
-      character_C017: {
-        TauntSlots: ["taunt_irongiant_default", "taunt_irongiant_default", "taunt_irongiant_default", "taunt_irongiant_default"],
-      },
-      character_c16: { TauntSlots: ["taunt_c016_default", "taunt_c016_default", "taunt_c016_default", "taunt_c016_default"] },
-      character_taz: { TauntSlots: ["Taunt_Taz_Default", "Taunt_Taz_Default", "Taunt_Taz_Default", "Taunt_Taz_Default"] },
-      character_bugs_bunny: { TauntSlots: ["taunt_bugs_default", "taunt_bugs_default", "taunt_bugs_default", "taunt_bugs_default"] },
-      character_batman: { TauntSlots: ["taunt_batman_default", "taunt_batman_default", "taunt_batman_default", "taunt_batman_default"] },
-      character_arya: { TauntSlots: ["taunt_arya_default", "taunt_arya_default", "taunt_arya_default", "taunt_arya_default"] },
-      character_BananaGuard: {
-        TauntSlots: ["taunt_bananaguard_default", "taunt_bananaguard_default", "taunt_bananaguard_default", "taunt_bananaguard_default"],
-      },
-      character_c036: { TauntSlots: ["taunt_c036_default", "taunt_c036_default", "taunt_c036_default", "taunt_c036_default"] },
-      character_C030: { TauntSlots: ["taunt_c030_default_01", "taunt_c030_default_01", "taunt_c030_default_01", "taunt_c030_default_01"] },
-      character_C026: { TauntSlots: ["taunt_C026_default", "taunt_C026_default", "taunt_C026_default", "taunt_C026_default"] },
-      character_c024: { TauntSlots: ["taunt_C024_default", "taunt_C024_default", "taunt_C024_default", "taunt_C024_default"] },
-      character_C025: { TauntSlots: ["taunt_c025_default", "taunt_c025_default", "taunt_c025_default", "taunt_c025_default"] },
-      character_C027: { TauntSlots: ["taunt_c027_default", "taunt_c027_default", "taunt_c027_default", "taunt_c027_default"] },
-      character_C031: {
-        TauntSlots: ["taunt_c031_defaulttaunt", "taunt_c031_defaulttaunt", "taunt_c031_defaulttaunt", "taunt_c031_defaulttaunt"],
-      },
-      character_c038: {
-        TauntSlots: ["taunt_c038_defaulttaunt", "taunt_c038_defaulttaunt", "taunt_c038_defaulttaunt", "taunt_c038_defaulttaunt"],
-      },
-      character_C029: {
-        TauntSlots: ["taunt_c029_defaulttaunt", "taunt_c029_defaulttaunt", "taunt_c029_defaulttaunt", "taunt_c029_defaulttaunt"],
-      },
-    },
-    AnnouncerPack: `${ap}`,
-    Banner: `${banner}`,
-    StatTrackers: {
-      StatTrackerSlots: [
-        `${badges?.[0]}`,
-        `${badges?.[1]}`,
-        `${badges?.[2]}`,
-      ],
-    },
-    RingoutVfx: `${ringout}`,
-    Gems: { GemSlots: ["", "", ""] },
-  };
+      metadata: null,
+      return_code: 0,
+    };
 
-  const message = {
-    body: {
-      EquippedCosmetics,
-    },
-    metadata: null,
-    return_code: 0,
-  };
 
-  redisSaveEquippedComsetics(account.id, EquippedCosmetics);
-  res.send(message);
-
+    res.send(message);
   } catch (error) {
     //response.StatusCodes()
-    console.log("ERROR IN GETTING COSMETICS", error)
+    console.log("ERROR IN GETTING COSMETICS", error);
   }
 }
 

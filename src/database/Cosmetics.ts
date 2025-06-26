@@ -1,57 +1,73 @@
 import { prop, modelOptions, getModelForClass, Ref, Severity } from "@typegoose/typegoose";
 import { PlayerTester } from "./PlayerTester";
 
-export class CosmeticSet {
-  @prop({ required: true })
-  public AccountId!: string;
-
-  @prop({ required: true })
-  public Cosmetic!: string;
-
-  @prop({ type: () => [String], required: true })
-  public CosmeticId!: string[];
+export class TauntSlotsClass {
+  @prop({ type: () => [String], default: [] })
+  public TauntSlots!: string[];
 }
 
-@modelOptions({ schemaOptions: { _id: false } })
-export class CharacterCosmeticPages {
-  // Dynamic keys: "0", "1", ...
-  [setKey: string]: CosmeticSet;
+// Subfield for StatTrackers
+class StatTrackersClass {
+  @prop({
+    type: () => [String],
+    default: [],
+  })
+  public StatTrackerSlots!: string[];
 }
 
+// Subfield for Gems
+class GemsClass {
+  @prop({
+    type: () => [String],
+    default: [],
+  })
+  public GemSlots!: string[];
+}
 
-@modelOptions({ schemaOptions: { collection: 'cosmetics' } })
+@modelOptions({ schemaOptions: { collection: "cosmetics" } })
 export class Cosmetics {
   @prop({ required: true, ref: () => PlayerTester })
   public account_id!: Ref<PlayerTester>;
 
-  @prop({ required: true, default: 'banner_default' })
-  public BannerSlug!: string;
-  
-  // This is profile icon
-  @prop({ required: true, default: 'profile_icon_default' })
-  public Slug!: string;
+  @prop({
+    type: () => TauntSlotsClass,
+    _id: false,
+    default: () => ({}),
+  })
+  public Taunts!: { [character: string]: TauntSlotsClass };
 
-  @prop({ required: true, default: 'ring_out_vfx_default' })
-  public RingoutVfxSlug!: string;
+  @prop({ required: true, default: "announcer_pack_default" })
+  public AnnouncerPack!: string;
 
-  @prop({ required: true, default: 'announcer_pack_default' })
-  public AnnouncerPackSlug!: string;
+  @prop({ required: true, default: "banner_default" })
+  public Banner!: string;
 
-  @prop({ type: () => [String], default: Array(3).fill('stat_tracking_bundle_default') })
-  public StatTrackers!: string[];
-}
+  @prop({
+    _id: false,
+    default: () => ({
+      StatTrackerSlots: [
+        "",
+        "",
+        "",
+      ],
+    }),
+  })
+  public StatTrackers!: StatTrackersClass;
 
-@modelOptions({ schemaOptions: { _id: false }, options: { allowMixed: Severity.ALLOW } })
-export class CosmeticPages {
-  @prop({ required: true, ref: () => PlayerTester })
-  public account_id!: Ref<PlayerTester>;
+  @prop({ required: true, default: "ring_out_vfx_default" })
+  public RingoutVfx!: string;
 
-  @prop({ type: () => Object, required: true })
-  public cosmetic_pages!: {
-    [cosmetic: string]: {
-      [cosmeticid: string]: Cosmetics;
-    };
-  };
+  @prop({
+    _id: false,
+    default: () => ({
+      GemSlots: [
+        "",
+        "",
+        "",
+      ],
+    }),
+  })
+  public Gems!: GemsClass;
 }
 
 export const CosmeticsModel = getModelForClass(Cosmetics);
