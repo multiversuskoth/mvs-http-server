@@ -2,6 +2,7 @@
 import express, { Request, Response } from "express";
 import { MVSQueries } from "./interfaces/queries_types";
 import * as h from "./handlers";
+//import * as ssc from "./ssc";
 import { batchMiddleware } from "./middleware/batchMiddleware";
 
 interface MVSParams {
@@ -9,6 +10,32 @@ interface MVSParams {
 }
 
 const router = express.Router();
+
+router.put("/ssc/invoke/set_profile_icon", (req: Request, res: Response) => {
+  // @ts-ignore TODO : implementation. Remove comment once implemented`
+  h.set_profile_icon(req,res)
+});
+
+router.put("/ssc/invoke/equip_stat_tracker", (req: Request, res: Response) => {
+  // @ts-ignore TODO : implementation. Remove comment once implemented`
+  h.equip_stat_tracker(req,res)
+});
+
+router.put("/ssc/invoke/equip_announcer_pack", (req: Request, res: Response) => {
+  // @ts-ignore TODO : implementation. Remove comment once implemented`
+  h.equip_announce_pack(req,res)
+});
+
+router.put("/ssc/invoke/equip_banner", (req: Request, res: Response) => {
+  // @ts-ignore TODO : implementation. Remove comment once implemented`
+  h.equip_banner(req,res)
+});
+
+router.put("/ssc/invoke/equip_ringout_vfx", (req: Request, res: Response) => {
+  // @ts-ignore TODO : implementation. Remove comment once implemented`
+  h.equip_ringout_vfx(req,res)
+});
+
 router.post("/access", async (req: Request<{}, {}, {}, {}>, res: Response) => {
   // @ts-ignore TODO : implementation. Remove comment once implemented`
   await h.handleAccess(req, res);
@@ -19,9 +46,9 @@ router.put("/accounts/wb_network/bulk", (req: Request<{}, {}, {}, MVSQueries.Acc
   h.handleAccounts_wb_network_bulk(req, res);
 });
 
-router.put("/batch", batchMiddleware, (req: Request<{}, {}, {}, {}>, res: Response) => {
+router.put("/batch", batchMiddleware, async (req: Request<{}, {}, {}, {}>, res: Response) => {
   // @ts-ignore TODO : implementation. Remove comment once implemented`
-  h.handleBatch(req, res);
+  await h.handleBatch(req, res);
 });
 
 router.get("/commerce/products", (req: Request<{}, {}, {}, MVSQueries.Commerce_products_QUERY>, res: Response) => {
@@ -44,7 +71,7 @@ router.post(
   (req: Request<{}, {}, {}, MVSQueries.Datarouter_api_v1_public_data_clients_QUERY>, res: Response) => {
     // @ts-ignore TODO : implementation. Remove comment once implemented`
     h.handleDatarouter_api_v1_public_data_clients(req, res);
-  },
+  }
 );
 
 router.put("/drives/multiversus/sync", (req: Request<{}, {}, {}, {}>, res: Response) => {
@@ -127,7 +154,7 @@ router.get(
   (req: Request<{}, {}, {}, MVSQueries.Global_configuration_types_calendarflags_global_configurations_QUERY>, res: Response) => {
     // @ts-ignore TODO : implementation. Remove comment once implemented`
     h.handleGlobal_configuration_types_calendarflags_global_configurations(req, res);
-  },
+  }
 );
 
 router.get(
@@ -135,7 +162,7 @@ router.get(
   (req: Request<{}, {}, {}, MVSQueries.Global_configuration_types_wwshopconfiguration_global_configurations_QUERY>, res: Response) => {
     // @ts-ignore TODO : implementation. Remove comment once implemented`
     h.handleGlobal_configuration_types_wwshopconfiguration_global_configurations(req, res);
-  },
+  }
 );
 
 router.get(
@@ -143,7 +170,7 @@ router.get(
   (req: Request<MVSParams, {}, {}, MVSQueries.Layout_dokken_layout_type_personalized_account_cosmetics_variant_id_QUERY>, res: Response) => {
     // @ts-ignore TODO : implementation. Remove comment once implemented`
     h.handleLayout_dokken_layout_type_personalized_account_cosmetics_variant_id(req, res);
-  },
+  }
 );
 
 router.get(
@@ -151,7 +178,7 @@ router.get(
   (req: Request<MVSParams, {}, {}, MVSQueries.Layout_dokken_layout_type_personalized_battlepass_variant_id_QUERY>, res: Response) => {
     // @ts-ignore TODO : implementation. Remove comment once implemented`
     h.handleLayout_dokken_layout_type_personalized_battlepass_variant_id(req, res);
-  },
+  }
 );
 
 router.get(
@@ -159,7 +186,7 @@ router.get(
   (req: Request<MVSParams, {}, {}, MVSQueries.Layout_dokken_layout_type_personalized_currency_variant_id_QUERY>, res: Response) => {
     // @ts-ignore TODO : implementation. Remove comment once implemented`
     h.handleLayout_dokken_layout_type_personalized_currency_variant_id(req, res);
-  },
+  }
 );
 
 router.get(
@@ -167,7 +194,7 @@ router.get(
   (req: Request<MVSParams, {}, {}, MVSQueries.Layout_dokken_layout_type_personalized_fighter_road_layout_id_QUERY>, res: Response) => {
     // @ts-ignore TODO : implementation. Remove comment once implemented`
     h.handleLayout_dokken_layout_type_personalized_fighter_road_layout_id(req, res);
-  },
+  }
 );
 
 router.get(
@@ -175,7 +202,7 @@ router.get(
   (req: Request<MVSParams, {}, {}, MVSQueries.Layout_dokken_layout_type_personalized_fighter_variant_id_QUERY>, res: Response) => {
     // @ts-ignore TODO : implementation. Remove comment once implemented`
     h.handleLayout_dokken_layout_type_personalized_fighter_variant_id(req, res);
-  },
+  }
 );
 
 router.get(
@@ -183,7 +210,7 @@ router.get(
   (req: Request<MVSParams, {}, {}, MVSQueries.Layout_dokken_layout_type_personalized_main_variant_id_QUERY>, res: Response) => {
     // @ts-ignore TODO : implementation. Remove comment once implemented`
     h.handleLayout_dokken_layout_type_personalized_main_variant_id(req, res);
-  },
+  }
 );
 
 router.get(
@@ -191,7 +218,7 @@ router.get(
   (req: Request<MVSParams, {}, {}, MVSQueries.Layout_dokken_layout_type_personalized_prestige_variant_id_QUERY>, res: Response) => {
     // @ts-ignore TODO : implementation. Remove comment once implemented`
     h.handleLayout_dokken_layout_type_personalized_prestige_variant_id(req, res);
-  },
+  }
 );
 
 router.get(
@@ -199,7 +226,7 @@ router.get(
   (req: Request<MVSParams, {}, {}, MVSQueries.Layout_dokken_layout_type_personalized_rift_variant_id_QUERY>, res: Response) => {
     // @ts-ignore TODO : implementation. Remove comment once implemented`
     h.handleLayout_dokken_layout_type_personalized_rift_variant_id(req, res);
-  },
+  }
 );
 
 router.get(
@@ -207,7 +234,7 @@ router.get(
   (req: Request<MVSParams, {}, {}, MVSQueries.Layout_dokken_layout_type_personalized_skin_variant_id_QUERY>, res: Response) => {
     // @ts-ignore TODO : implementation. Remove comment once implemented`
     h.handleLayout_dokken_layout_type_personalized_skin_variant_id(req, res);
-  },
+  }
 );
 
 router.put("/matches/:id", (req: Request<MVSParams, {}, {}, {}>, res: Response) => {
@@ -223,6 +250,15 @@ router.get("/matches/all/:id", (req: Request<MVSParams, {}, {}, MVSQueries.Match
 router.post("/matches/matchmaking/1v1-retail/request", (req: Request<{}, {}, {}, {}>, res: Response) => {
   // @ts-ignore TODO : implementation. Remove comment once implemented`
   h.handleMatches_matchmaking_1v1_retail_request(req, res);
+});
+
+router.post("/matches/matchmaking/2v2-retail/request", (req: Request<{}, {}, {}, {}>, res: Response) => {
+  // @ts-ignore TODO : implementation. Remove comment once implemented`
+  h.handleMatches_matchmaking_2v2_retail_request(req, res);
+});
+
+router.post("/matches/matchmaking/request/:id/cancel", async (req: Request<{ id: string }>, res: Response) => {
+  await h.handle_cancel_matchmaking(req, res);
 });
 
 router.get("/objects/preferences/unique/:id/:id1", (req: Request<MVSParams, {}, {}, {}>, res: Response) => {
@@ -258,11 +294,6 @@ router.post("/ssc/invoke/attempt_daily_refresh", (req: Request<{}, {}, {}, {}>, 
 router.post("/ssc/invoke/claim_mission_rewards", (req: Request<{}, {}, {}, {}>, res: Response) => {
   // @ts-ignore TODO : implementation. Remove comment once implemented`
   h.handleSsc_invoke_claim_mission_rewards(req, res);
-});
-
-router.put("/ssc/invoke/create_party_lobby", (req: Request<{}, {}, {}, {}>, res: Response) => {
-  // @ts-ignore TODO : implementation. Remove comment once implemented`
-  h.handleSsc_invoke_create_party_lobby(req, res);
 });
 
 router.put("/ssc/invoke/game_launch_event", (req: Request<{}, {}, {}, {}>, res: Response) => {
@@ -313,11 +344,6 @@ router.put("/ssc/invoke/hiss_amalgamation", (req: Request<{}, {}, {}, {}>, res: 
 router.get("/ssc/invoke/load_rifts", (req: Request<{}, {}, {}, {}>, res: Response) => {
   // @ts-ignore TODO : implementation. Remove comment once implemented`
   h.handleSsc_invoke_load_rifts(req, res);
-});
-
-router.get("/ssc/invoke/perks_get_all_pages", (req: Request<{}, {}, {}, {}>, res: Response) => {
-  // @ts-ignore TODO : implementation. Remove comment once implemented`
-  h.handleSsc_invoke_perks_get_all_pages(req, res);
 });
 
 router.put("/ssc/invoke/perks_lock", (req: Request<{}, {}, {}, {}>, res: Response) => {
