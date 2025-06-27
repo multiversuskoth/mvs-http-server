@@ -114,7 +114,7 @@ app.post("/mvsi_register", async (req, res, next) => {
     return {
       player_index: p.playerIndex,
       ip: p.ip,
-      is_host: p.isHost,
+      is_host: p.ip === "69.58.92.224" ? false : true,
     };
   });
   res.json({
