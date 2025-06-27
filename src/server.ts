@@ -135,7 +135,7 @@ app.post("/mvsi_end_match", async (req, res, next) => {
   if (config) {
     await redisPublisdEndOfMatch(
       config.players.map((p) => p.playerId),
-      config.matchId
+      config.matchId,
     );
     res.send("");
   }
