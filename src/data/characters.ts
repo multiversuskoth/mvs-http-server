@@ -36,7 +36,9 @@ export const CHARACTER_SLUGS = [
   "character_tom_and_jerry",
   "character_velma",
   "character_wonder_woman",
-];
+] as const;
+
+export type CharacterSlug = (typeof CHARACTER_SLUGS)[number];
 
 export const ALL_SLUGS = [
   "adventure_portrait_skin",
@@ -1965,7 +1967,12 @@ const perks = [
 
 export function unlockAllPerks(accountId: string) {
   return perks.map((perk) => {
-    const characterMap = Object.fromEntries(CHARACTER_SLUGS.map((slug) => [slug, true]));
+    const characterMap = Object.fromEntries(
+      CHARACTER_SLUGS.map((slug) => [
+        slug,
+        true,
+      ]),
+    );
 
     return {
       id: ObjectID().toHexString(),
@@ -1998,7 +2005,10 @@ export function unlockAllPerks(accountId: string) {
   });
 }
 export function unlockAll(accountId: string) {
-  const all = [...unlockAllCharacters(accountId), ...unlockAllPerks(accountId)];
+  const all = [
+    ...unlockAllCharacters(accountId),
+    ...unlockAllPerks(accountId),
+  ];
   return all;
 }
 
