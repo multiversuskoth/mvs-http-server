@@ -1872,7 +1872,7 @@ const perks = [
   "perk_C020_sticklermeeseeks",
   "perk_armor_crush",
   "perk_static_electricity",
-  "perk_platform_from_dodge",
+  //"perk_platform_from_dodge",
   "perk_psychic_damage",
   "perk_purest_of_motivations",
   "perk_run_shield",

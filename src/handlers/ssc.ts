@@ -57711,63 +57711,6 @@ export async function handleSsc_invoke_load_rifts(req: Request<{}, {}, {}, {}>, 
   });
 }
 
-export function handleSsc_invoke_perks_get_all_pages(req: Request<{}, {}, {}, {}>, res: Response) {
-  console.log("Getting all Perk pages");
-
-  const accountId = req.token.id; // or from req.params, if you pass as route param
-
-  PerkPagesModel.findOne({ player_id: new Types.ObjectId(accountId) })
-    .select("perk_pages -_id")
-    .lean()
-    .exec()
-    .then((doc) => {
-      console.log("perk pages send success");
-      res.send({
-        body: {
-          perk_pages: {
-            character_Jason: {
-              "0": {
-                DisplayName: "Custom Set 1",
-                Description: "",
-                Perks: ["perk_gen_boxer", "perk_gen_collateral_damage", "perk_snowball_effect", "perk_jason_monstrous_side_step"],
-              },
-              "1": {
-                DisplayName: "Custom Set 2",
-                Description: "",
-                Perks: ["perk_gen_boxer", "perk_platform_from_dodge", "perk_snowball_effect", "perk_jason_resurrectionist"],
-              },
-              "2": {
-                DisplayName: "Custom Set 3",
-                Description: "",
-                Perks: ["perk_gen_boxer", "perk_team_speed_force_assist", "perk_purest_of_motivations", "perk_gen_well_rounded"],
-              },
-            },
-            character_harleyquinn: {
-              "0": {
-                DisplayName: "Custom Set 1",
-                Description: "",
-                Perks: ["perk_gen_boxer", "perk_team_speed_force_assist", "perk_purest_of_motivations", "perk_C008_smoothmoves"],
-              },
-            },
-          },
-        },
-        metadata: null,
-        return_code: 0,
-      });
-    })
-    .catch((e) => {
-      console.log("----------EREREROERE");
-      console.log(e);
-      res.send({
-        body: {
-          perk_pages: {},
-        },
-        metadata: null,
-        return_code: 0,
-      });
-    });
-}
-
 export interface Ssc_invoke_perks_lock_REQUEST {
   ContainerMatchId: string;
   Perks: string[];

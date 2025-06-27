@@ -102,7 +102,7 @@ export async function equip_banner(req: Request, res: Response) {
 export async function set_profile_icon(req: Request, res: Response) {
   const account = req.token;
   const body = req.body as Profile_Icon_REQ;
-
+  console.log(body)
   // TODO: SAVE ON PLAYERTESTER MODEL INSTEAD
 
 }

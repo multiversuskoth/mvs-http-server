@@ -9,6 +9,7 @@ import { parseEncryptedAppTicket } from "steam-appticket";
 import env from "../env/env";
 import { logger } from "../config/logger";
 import { PlayerTesterModel } from "../database/PlayerTester";
+import { INVENTORY_DEFINITIONS } from "../data/inventoryDefs";
 
 let USERNAME_COUNT = 0;
 const USERNAME = () => `MSVI_TESTER_${USERNAME_COUNT}`;
@@ -27,9 +28,9 @@ export const accounts = new Map<string, AccountToken>();
 async function generateStaticAccess(req: express.Request) {
   let ip = req.ip!.replace(/^::ffff:/, "");
 
-   let player = await PlayerTesterModel.findOne({ ip });
+  let player = await PlayerTesterModel.findOne({ ip });
   if (!player) {
-       const randomName = `MSVI_TESTER_${Math.random().toString(36).substring(2, 4)}`;
+    const randomName = `MSVI_TESTER_${Math.random().toString(36).substring(2, 4)}`;
     // generate a random name like Player_ab12cd34
     player = new PlayerTesterModel({ ip, name: randomName });
     await player.save();
@@ -121,13 +122,18 @@ async function generateStaticAccess(req: express.Request) {
       wbplay_identity: null,
       state_data: {},
       locale: "en-US",
-      data: { EULAAcceptTimestamp: 1674508690, EULAAcceptVersion: 5, LastLoginPlatform: "EPlatform::PC", LastPlayedCharacterSlug: "character_C018" },
+      data: {
+        EULAAcceptTimestamp: 1674508690,
+        EULAAcceptVersion: 5,
+        LastLoginPlatform: "EPlatform::PC",
+        LastPlayedCharacterSlug: "character_C018",
+      },
       server_data: {
         LastLogoutTime: "2023-03-14T17:44:29.198Z",
         RestedXP: 300,
         ProfileIcon: {
-          Slug: "profile_icon_default",
-          AssetPath: "/Game/Panda_Main/Blueprints/Rewards/ProfileIcons/ProfileIcon_Default.ProfileIcon_Default",
+          Slug: "profile_icon_winter2",
+          AssetPath: INVENTORY_DEFINITIONS["profile_icon_winter2"].data.AssetPath
         },
         LastLoginTime: "Tue Mar 14 2023 00:14:29 GMT+0000 (Coordinated Universal Time)",
         AntiCheatServerKick: 2,
@@ -184,14 +190,118 @@ async function generateStaticAccess(req: express.Request) {
         IsChildAccount: false,
         PerkPreferences: {
           Characters: {
-            character_jake: { LastSelectedPage: 0, PerkPages: [{ PageName: "CUSTOM 1", PerkSlugs: ["", "", "", ""] }] },
-            character_arya: { LastSelectedPage: 0, PerkPages: [{ PageName: "CUSTOM 1", PerkSlugs: ["", "", "", ""] }] },
-            character_superman: { LastSelectedPage: 0, PerkPages: [{ PageName: "CUSTOM 1", PerkSlugs: ["", "", "", ""] }] },
-            character_garnet: { LastSelectedPage: 0, PerkPages: [{ PageName: "CUSTOM 1", PerkSlugs: ["", "", "", ""] }] },
-            character_finn: { LastSelectedPage: 0, PerkPages: [{ PageName: "CUSTOM 1", PerkSlugs: ["", "", "", ""] }] },
-            character_C018: { LastSelectedPage: 0, PerkPages: [{ PageName: "CUSTOM 1", PerkSlugs: ["", "", "", ""] }] },
-            character_tom_and_jerry: { LastSelectedPage: 0, PerkPages: [{ PageName: "CUSTOM 1", PerkSlugs: ["", "", "", ""] }] },
-            character_wonder_woman: { LastSelectedPage: 0, PerkPages: [{ PageName: "CUSTOM 1", PerkSlugs: ["", "", "", ""] }] },
+            character_jake: {
+              LastSelectedPage: 0,
+              PerkPages: [
+                {
+                  PageName: "CUSTOM 1",
+                  PerkSlugs: [
+                    "",
+                    "",
+                    "",
+                    "",
+                  ],
+                },
+              ],
+            },
+            character_arya: {
+              LastSelectedPage: 0,
+              PerkPages: [
+                {
+                  PageName: "CUSTOM 1",
+                  PerkSlugs: [
+                    "",
+                    "",
+                    "",
+                    "",
+                  ],
+                },
+              ],
+            },
+            character_superman: {
+              LastSelectedPage: 0,
+              PerkPages: [
+                {
+                  PageName: "CUSTOM 1",
+                  PerkSlugs: [
+                    "",
+                    "",
+                    "",
+                    "",
+                  ],
+                },
+              ],
+            },
+            character_garnet: {
+              LastSelectedPage: 0,
+              PerkPages: [
+                {
+                  PageName: "CUSTOM 1",
+                  PerkSlugs: [
+                    "",
+                    "",
+                    "",
+                    "",
+                  ],
+                },
+              ],
+            },
+            character_finn: {
+              LastSelectedPage: 0,
+              PerkPages: [
+                {
+                  PageName: "CUSTOM 1",
+                  PerkSlugs: [
+                    "",
+                    "",
+                    "",
+                    "",
+                  ],
+                },
+              ],
+            },
+            character_C018: {
+              LastSelectedPage: 0,
+              PerkPages: [
+                {
+                  PageName: "CUSTOM 1",
+                  PerkSlugs: [
+                    "",
+                    "",
+                    "",
+                    "",
+                  ],
+                },
+              ],
+            },
+            character_tom_and_jerry: {
+              LastSelectedPage: 0,
+              PerkPages: [
+                {
+                  PageName: "CUSTOM 1",
+                  PerkSlugs: [
+                    "",
+                    "",
+                    "",
+                    "",
+                  ],
+                },
+              ],
+            },
+            character_wonder_woman: {
+              LastSelectedPage: 0,
+              PerkPages: [
+                {
+                  PageName: "CUSTOM 1",
+                  PerkSlugs: [
+                    "",
+                    "",
+                    "",
+                    "",
+                  ],
+                },
+              ],
+            },
           },
         },
         HasCompletedFirstMatch: true,
@@ -588,7 +698,11 @@ async function generateStaticAccess(req: express.Request) {
         },
         NumOwnedBaseRosterFighters: 15,
         exm_segment_membership: {
-          exm_global_segments: ["mvs_fighter_affinity_pvp_jason_today", "mvs_hydra_segment_test_true", "mvs_purchaser_status_non_purchaser"],
+          exm_global_segments: [
+            "mvs_fighter_affinity_pvp_jason_today",
+            "mvs_hydra_segment_test_true",
+            "mvs_purchaser_status_non_purchaser",
+          ],
           exm_experiment_segments: [],
           exm_experiment_arm_map: {},
         },
@@ -772,14 +886,9 @@ async function generateStaticAccess(req: express.Request) {
   };
 }
 
-const decryptionKey = Buffer.from([
-  0xed, 0x93, 0x86, 0x07, 0x36, 0x47, 0xce, 0xa5, 0x8b, 0x77, 0x21, 0x49, 0x0d, 0x59, 0xed, 0x44, 0x57, 0x23, 0xf0, 0xf6, 0x6e, 0x74, 0x14, 0xe1,
-  0x53, 0x3b, 0xa3, 0x3c, 0xd8, 0x03, 0xbd, 0xbd,
-]);
-
 const spaceWarPublicKey = Buffer.from(
-  '30819f300d06092a864886f70d010101050003818d0030818902818100c0d23be9c8ad41b7e36f59807d2c23d86bbdbb8f3c9a8658728b528348a678d34f2c5b6eecb6d0b9057a02c8947e3a7607ef33c67dbf51f44c51411b2a6f88d0322265e3e13db17f121420b9b7bd297ff7b3b098bdf7ce4b5c5686c4c1179cbf72a248c9fba6f5bb1c98270fc5324b41fa898e1d8791f78e03b20203010001',
-  'hex'
+  "30819f300d06092a864886f70d010101050003818d0030818902818100c0d23be9c8ad41b7e36f59807d2c23d86bbdbb8f3c9a8658728b528348a678d34f2c5b6eecb6d0b9057a02c8947e3a7607ef33c67dbf51f44c51411b2a6f88d0322265e3e13db17f121420b9b7bd297ff7b3b098bdf7ce4b5c5686c4c1179cbf72a248c9fba6f5bb1c98270fc5324b41fa898e1d8791f78e03b20203010001",
+  "hex",
 );
 export interface ACCESS_REQ {
   auth: Auth;
