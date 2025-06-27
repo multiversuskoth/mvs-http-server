@@ -49,14 +49,31 @@ export async function updateCosmeticsRingoutVfx(accountId: string, newRingoutVfx
 }
 
 export async function updateCosmeticsStatTrackerSlot(accountId: string, index: number, value: string) {
-  const path = `StatTrackers.StatTrackerSlots.${index}`;
+  // Step 1: Fetch (or create) the document
+  let doc = await CosmeticsModel.findById(accountId).lean();
 
-  const updatedComsetics = (await CosmeticsModel.findOneAndUpdate(
+  // If not found, create a default StatTrackers array
+  let statTrackerSlots: string[] = [
+    "",
+    "",
+    "",
+  ];
+
+  if (doc && doc.StatTrackers && Array.isArray(doc.StatTrackers.StatTrackerSlots)) {
+    statTrackerSlots = [...doc.StatTrackers.StatTrackerSlots];
+  }
+
+  // Step 2: Update the array in JS
+  statTrackerSlots[index] = value;
+
+  // Step 3: Save the new array
+  const updatedCosmetics = (await CosmeticsModel.findOneAndUpdate(
     { _id: accountId },
-    { $set: { [path]: value } },
-    { new: true, upsert: true },
+    { $set: { "StatTrackers.StatTrackerSlots": statTrackerSlots } },
+    { new: true, upsert: true, setDefaultsOnInsert: true },
   ).lean()) as Cosmetics;
-  await redisSaveEquippedComsetics(accountId, mergeCosmetics(updatedComsetics));
+
+  await redisSaveEquippedComsetics(accountId, mergeCosmetics(updatedCosmetics));
 }
 
 export async function updateCosmeticsTauntSlot(accountId: string, character: string, index: number, value: string) {
