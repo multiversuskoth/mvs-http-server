@@ -1,28 +1,24 @@
-import { Request, Response } from "express";
-import { Cosmetics, CosmeticsModel, TauntSlotsClass } from "../database/Cosmetics";
-import { Types } from "mongoose";
-import { CHARACTER_SLUGS } from "../data/characters";
 import { redisGetEquippedComsetics, redisSaveEquippedComsetics } from "../config/redis";
+import { CHARACTER_SLUGS } from "../data/characters";
+import { TAUNTS_DATA } from "../data/taunts";
+import { Cosmetics, CosmeticsModel, TauntSlotsClass } from "../database/Cosmetics";
 
-interface Profile_Icon_REQ {
-  Slug: string;
-}
+function mergeCosmetics(cosmetics: Cosmetics): Cosmetics {
+  const mergedTaunts: Record<string, TauntSlotsClass> = {};
 
-interface Banner_REQ {
-  BannerSlug: string;
-}
+  for (const character of CHARACTER_SLUGS) {
+    if (cosmetics.Taunts && cosmetics.Taunts[character]) {
+      mergedTaunts[character] = cosmetics.Taunts[character];
+    } else {
+      mergedTaunts[character] = { TauntSlots: [TAUNTS_DATA[character].Slugs[0]] };
+    }
+  }
 
-interface Ringout_REQ {
-  RingoutVfxSlug: string;
-}
-
-interface AnnouncerPack_REQ {
-  AnnouncerPackSlug: string;
-}
-
-interface StatTracker_REQ {
-  StatTrackerSlotIndex: string;
-  StatTrackerSlug: string;
+  const mergedCosmetics = {
+    ...cosmetics,
+    Taunts: mergedTaunts,
+  };
+  return mergedCosmetics;
 }
 
 export async function updateCosmeticsBanner(accountId: string, newBanner: string) {
@@ -34,29 +30,11 @@ export async function updateCosmeticsBanner(accountId: string, newBanner: string
   await redisSaveEquippedComsetics(accountId, mergeCosmetics(updatedComsetics));
 }
 
-function mergeCosmetics(cosmetics: Cosmetics): Cosmetics {
-  const mergedTaunts: Record<string, TauntSlotsClass> = {};
-
-  for (const character of CHARACTER_SLUGS) {
-    if (cosmetics.Taunts && cosmetics.Taunts[character]) {
-      mergedTaunts[character] = cosmetics.Taunts[character];
-    } else {
-      mergedTaunts[character] = { TauntSlots: [] };
-    }
-  }
-
-  const mergedCosmetics = {
-    ...cosmetics,
-    Taunts: mergedTaunts,
-  };
-  return mergedCosmetics;
-}
-
 export async function updateCosmeticsAnnouncerPack(accountId: string, newAnnouncerPack: string) {
   const updatedComsetics = (await CosmeticsModel.findOneAndUpdate(
     { _id: accountId },
     { $set: { AnnouncerPack: newAnnouncerPack } },
-    { new: true },
+    { new: true, upsert: true },
   ).lean()) as Cosmetics;
   await redisSaveEquippedComsetics(accountId, mergeCosmetics(updatedComsetics));
 }
@@ -65,7 +43,7 @@ export async function updateCosmeticsRingoutVfx(accountId: string, newRingoutVfx
   const updatedComsetics = (await CosmeticsModel.findOneAndUpdate(
     { _id: accountId },
     { $set: { RingoutVfx: newRingoutVfx } },
-    { new: true },
+    { new: true, upsert: true },
   ).lean()) as Cosmetics;
   await redisSaveEquippedComsetics(accountId, mergeCosmetics(updatedComsetics));
 }
@@ -76,7 +54,7 @@ export async function updateCosmeticsStatTrackerSlot(accountId: string, index: n
   const updatedComsetics = (await CosmeticsModel.findOneAndUpdate(
     { _id: accountId },
     { $set: { [path]: value } },
-    { new: true },
+    { new: true, upsert: true },
   ).lean()) as Cosmetics;
   await redisSaveEquippedComsetics(accountId, mergeCosmetics(updatedComsetics));
 }
