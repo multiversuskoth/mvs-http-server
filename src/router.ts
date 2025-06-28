@@ -4,13 +4,17 @@ import { MVSQueries } from "./interfaces/queries_types";
 import * as h from "./handlers";
 //import * as ssc from "./ssc";
 import { batchMiddleware } from "./middleware/batchMiddleware";
-import { equip_announce_pack, equip_banner, equip_ringout_vfx, equip_stat_tracker, set_profile_icon } from "./handlers/cosmetics";
+import { equip_announce_pack, equip_banner, equip_ringout_vfx, equip_stat_tracker, set_profile_icon, equip_taunt } from "./handlers/cosmetics";
 
 interface MVSParams {
   id: string;
 }
 
 const router = express.Router();
+
+router.put("/ssc/invoke/equip_taunt", (req: Request, res: Response) => {
+  equip_taunt(req,res);
+});
 
 router.put("/ssc/invoke/set_profile_icon", (req: Request, res: Response) => {
   set_profile_icon(req, res);

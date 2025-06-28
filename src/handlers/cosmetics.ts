@@ -6,10 +6,18 @@ import {
   updateCosmeticsBanner,
   updateCosmeticsRingoutVfx,
   updateCosmeticsStatTrackerSlot,
+  updateCosmeticsTauntSlot,
+  updateProfileIcon
 } from "../services/cosmeticsService";
 
 interface Profile_Icon_REQ {
   Slug: string;
+}
+
+interface Taunts_REQ {
+  CharacterSlug: string;
+  TauntSlotIndex: number;
+  TauntSlug: string;
 }
 
 interface Banner_REQ {
@@ -27,6 +35,23 @@ interface AnnouncerPack_REQ {
 interface StatTracker_REQ {
   StatTrackerSlotIndex: number;
   StatTrackerSlug: string;
+}
+
+export async function equip_taunt(req: Request, res: Response) {
+  const account = req.token;
+  const body = req.body as Taunts_REQ;
+  try {
+    await updateCosmeticsTauntSlot(account.id, body.CharacterSlug, body.TauntSlotIndex, body.TauntSlug);
+    console.log(account.id, body.CharacterSlug, body.TauntSlotIndex, body.TauntSlug)
+    res.send({
+      body: req.body,
+      metadata: null,
+      return_code: 0,
+    });
+  } catch (err) {
+    console.log("error saving taunt", err);
+    res.send({})
+  }
 }
 
 export async function equip_stat_tracker(req: Request, res: Response) {
@@ -99,10 +124,24 @@ export async function equip_banner(req: Request, res: Response) {
   }
 }
 
+
 export async function set_profile_icon(req: Request, res: Response) {
   const account = req.token;
   const body = req.body as Profile_Icon_REQ;
-  console.log(body)
-  // TODO: SAVE ON PLAYERTESTER MODEL INSTEAD
+  //console.log(body.Slug)
 
+  // TODO: SAVE ON PLAYERTESTER MODEL INSTEAD
+  try {
+    await updateProfileIcon(account.id, body.Slug);
+    res.send({
+      body: {
+        EquippedProfileIcon: body.Slug,
+      },
+      metadata: null,
+      return_code: 0,
+    });
+  } catch (err) {
+    console.log("Error saving profile icon", err);
+    res.send({});
+  }
 }
