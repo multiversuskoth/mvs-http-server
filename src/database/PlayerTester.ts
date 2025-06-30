@@ -21,6 +21,12 @@ export class PlayerTester {
 
   @prop({ default: 'profile_icon_default'})
   public profile_icon!: string;
+
+  @prop({ default: 'character_shaggy'})
+  public character!: string;
+
+  @prop({ default: 'character_shaggy_default'})
+  public variant!: string;
 }
 
 
