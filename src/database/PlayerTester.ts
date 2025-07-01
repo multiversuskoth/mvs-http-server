@@ -16,8 +16,17 @@ export class PlayerTester {
   @prop({ default: () => new mongoose.Types.ObjectId(), unique: true })
   public profile_id!: mongoose.Types.ObjectId;
 
-   @prop({ default: () => randomUUID(), unique: true })
+  @prop({ default: () => randomUUID(), unique: true })
   public public_id!: string;
+
+  @prop({ default: 'profile_icon_default'})
+  public profile_icon!: string;
+
+  @prop({ default: 'character_shaggy'})
+  public character!: string;
+
+  @prop({ default: 'character_shaggy_default'})
+  public variant!: string;
 }
 
 

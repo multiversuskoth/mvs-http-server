@@ -2,6 +2,7 @@ import { redisGetEquippedComsetics, redisSaveEquippedComsetics } from "../config
 import { CHARACTER_SLUGS } from "../data/characters";
 import { TAUNTS_DATA } from "../data/taunts";
 import { Cosmetics, CosmeticsModel, TauntSlotsClass } from "../database/Cosmetics";
+import { PlayerTesterModel, PlayerTester } from "../database/PlayerTester";
 
 function mergeCosmetics(cosmetics: Cosmetics): Cosmetics {
   const mergedTaunts: Record<string, TauntSlotsClass> = {};
@@ -78,7 +79,6 @@ export async function updateCosmeticsStatTrackerSlot(accountId: string, index: n
 
 export async function updateCosmeticsTauntSlot(accountId: string, character: string, index: number, value: string) {
   const path = `Taunts.${character}.TauntSlots.${index}`;
-
   const updatedComsetics = (await CosmeticsModel.findOneAndUpdate(
     { _id: accountId },
     { $set: { [path]: value } },
@@ -99,4 +99,14 @@ export async function getEquippedCosmetics(accountId: string) {
   const mergedCosmetics = mergeCosmetics(cosmetics);
   await redisSaveEquippedComsetics(accountId, mergedCosmetics);
   return mergedCosmetics;
+}
+
+
+export async function updateProfileIcon(accountId: string, newProfileIcon: string) {
+  const updatedComsetics = (await PlayerTesterModel.findOneAndUpdate(
+    {_id: accountId},
+    {$set: { profile_icon: newProfileIcon } },
+    { new: true, upsert: true },
+  ).lean()) as PlayerTester;
+  //TODO: save to redis
 }

@@ -10,6 +10,8 @@ import env from "../env/env";
 import { logger } from "../config/logger";
 import { PlayerTesterModel } from "../database/PlayerTester";
 import { INVENTORY_DEFINITIONS } from "../data/inventoryDefs";
+import { Types } from "mongoose";
+import { profile } from "console";
 
 let USERNAME_COUNT = 0;
 const USERNAME = () => `MSVI_TESTER_${USERNAME_COUNT}`;
@@ -52,6 +54,18 @@ async function generateStaticAccess(req: express.Request) {
   };
   const token = jwt.sign(account, SECRET);
   logger.info(`Player ${account.id} - ${account.username} connected`);
+  let profileicon = "profile_icon_default" as any;
+  try {
+    const cosmeticdata = await PlayerTesterModel.findOne({ _id: new Types.ObjectId(account.id) });
+    //let profileicon = ""
+    let pfp = cosmeticdata?.profile_icon
+    profileicon = pfp
+    console.log(profileicon)
+    
+  } catch (err) {
+    console.log("error fetching profile icon" + err)
+  }
+  let testthing = "profile_icon_default"
   return {
     token: token,
     in_queue: false,
@@ -132,8 +146,8 @@ async function generateStaticAccess(req: express.Request) {
         LastLogoutTime: "2023-03-14T17:44:29.198Z",
         RestedXP: 300,
         ProfileIcon: {
-          Slug: "profile_icon_winter2",
-          AssetPath: INVENTORY_DEFINITIONS["profile_icon_winter2"].data.AssetPath
+          Slug: `${profileicon}`,
+          AssetPath: INVENTORY_DEFINITIONS[profileicon as keyof typeof INVENTORY_DEFINITIONS].data.AssetPath
         },
         LastLoginTime: "Tue Mar 14 2023 00:14:29 GMT+0000 (Coordinated Universal Time)",
         AntiCheatServerKick: 2,
