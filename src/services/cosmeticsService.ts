@@ -1,4 +1,4 @@
-import { redisGetEquippedComsetics, redisSaveEquippedComsetics } from "../config/redis";
+import { redisGetEquippedComsetics, redisSaveEquippedComsetics, redisUpdatePlayerKey } from "../config/redis";
 import { CHARACTER_SLUGS } from "../data/characters";
 import { TAUNTS_DATA } from "../data/taunts";
 import { Cosmetics, CosmeticsModel, TauntSlotsClass } from "../database/Cosmetics";
@@ -95,18 +95,14 @@ export async function getEquippedCosmetics(accountId: string) {
   let cosmetics = (await CosmeticsModel.findById(accountId).lean()) as Cosmetics;
   if (!cosmetics) {
     cosmetics = new CosmeticsModel().toObject();
+    (await CosmeticsModel.create({ ...cosmetics, _id: accountId })).save();
   }
   const mergedCosmetics = mergeCosmetics(cosmetics);
   await redisSaveEquippedComsetics(accountId, mergedCosmetics);
   return mergedCosmetics;
 }
 
-
 export async function updateProfileIcon(accountId: string, newProfileIcon: string) {
-  const updatedComsetics = (await PlayerTesterModel.findOneAndUpdate(
-    {_id: accountId},
-    {$set: { profile_icon: newProfileIcon } },
-    { new: true, upsert: true },
-  ).lean()) as PlayerTester;
-  //TODO: save to redis
+  await PlayerTesterModel.findOneAndUpdate({ _id: accountId }, { $set: { profile_icon: newProfileIcon } }, { new: true, upsert: true }).lean();
+  await redisUpdatePlayerKey(accountId, "profile_icon", newProfileIcon);
 }

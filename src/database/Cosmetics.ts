@@ -2,7 +2,15 @@ import { prop, modelOptions, getModelForClass, Ref, Severity } from "@typegoose/
 import { PlayerTester } from "./PlayerTester";
 
 export class TauntSlotsClass {
-  @prop({ type: () => [String], default: [] })
+  @prop({
+    type: () => [String],
+    default: [
+      "",
+      "",
+      "",
+      "",
+    ],
+  })
   public TauntSlots!: string[];
 }
 
