@@ -2,18 +2,9 @@ import { prop, modelOptions, getModelForClass, Ref, Severity } from "@typegoose/
 import { PlayerTester } from "./PlayerTester";
 
 export class TauntSlotsClass {
-  @prop({
-    type: () => [String],
-    default: [
-      "",
-      "",
-      "",
-      "",
-    ],
-  })
+  @prop({ type: [String], default: [] })
   public TauntSlots!: string[];
 }
-
 // Subfield for StatTrackers
 class StatTrackersClass {
   @prop({
@@ -38,11 +29,11 @@ export class Cosmetics {
   public account_id!: Ref<PlayerTester>;
 
   @prop({
-    type: () => TauntSlotsClass,
-    _id: false,
+    type: () => Object,
     default: () => ({}),
+    _id: false,
   })
-  public Taunts!: { [character: string]: TauntSlotsClass };
+  public Taunts!: Record<string, TauntSlotsClass>;
 
   @prop({ required: true, default: "announcer_pack_default" })
   public AnnouncerPack!: string;
