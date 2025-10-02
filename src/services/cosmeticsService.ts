@@ -7,13 +7,6 @@ import { getAllTauntsByChar, getAssetsByType } from "../loadAssets";
 function mergeCosmetics(cosmetics: Cosmetics): Cosmetics {
   const mergedTaunts: Record<string, TauntSlotsClass> = {};
 
-   for (const character of getAssetsByType("CharacterData")) {
-    if (cosmetics.Taunts && cosmetics.Taunts[character.slug]) {
-      mergedTaunts[character.slug] = cosmetics.Taunts[character.slug];
-    } else {
-      mergedTaunts[character.slug] = { TauntSlots: [getAllTauntsByChar()[character.slug].Slugs[0]] };
-    }
-  }
 
   for (const character of getAssetsByType("CharacterData")) {
     if (cosmetics.Taunts && cosmetics.Taunts[character.slug]) {
