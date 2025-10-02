@@ -41,6 +41,7 @@ syncRouter.post("/syncAsset", async (req, res) => {
     res.sendStatus(200);
   } catch (e) {
     res.status(404);
+    //@ts-ignore
     res.send(e.codeName);
   }
   return;
