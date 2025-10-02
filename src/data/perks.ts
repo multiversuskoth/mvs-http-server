@@ -1819,30 +1819,7 @@ export const PERKS_CONFIG = {
       TargetCharacter: "character_c019",
     },
   },
-  perk_bananaguard_irontemple: {
-    slug: "perk_bananaguard_irontemple",
-    data: {
-      AppliedBuffs: [
-        "/Game/Character/BananaGuard/Perks/Mvs_Buff_Perk_BananaGuard_IronTemple.Mvs_Buff_Perk_BananaGuard_IronTemple_C",
-      ],
-      AssetBundleData: {
-        Bundles: [],
-      },
-      bActive: true,
-      bIsEnabled: true,
-      Category: "Signature",
-      CharactersDisallowed: [],
-      CurrencyPrice: 1500,
-      GameModes: [
-        "1v1",
-        "2v2",
-        "FFA",
-      ],
-      Icon: "texture2d_t_ui_perks_theirontemple",
-      Slug: "perk_bananaguard_irontemple",
-      TargetCharacter: "character_BananaGuard",
-    },
-  },
+
   perk_bananaguard_icytears: {
     slug: "perk_bananaguard_icytears",
     data: {

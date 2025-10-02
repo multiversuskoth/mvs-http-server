@@ -1,17 +1,17 @@
 import { redisGetEquippedComsetics, redisSaveEquippedComsetics } from "../config/redis";
-import { CHARACTER_SLUGS } from "../data/characters";
-import { TAUNTS_DATA } from "../data/taunts";
+
 import { Cosmetics, CosmeticsModel, TauntSlotsClass } from "../database/Cosmetics";
 import { PlayerTesterModel, PlayerTester } from "../database/PlayerTester";
+import { getAllTauntsByChar, getAssetsByType } from "../loadAssets";
 
 function mergeCosmetics(cosmetics: Cosmetics): Cosmetics {
   const mergedTaunts: Record<string, TauntSlotsClass> = {};
 
-  for (const character of CHARACTER_SLUGS) {
-    if (cosmetics.Taunts && cosmetics.Taunts[character]) {
-      mergedTaunts[character] = cosmetics.Taunts[character];
+  for (const character of getAssetsByType("CharacterData")) {
+    if (cosmetics.Taunts && cosmetics.Taunts[character.slug]) {
+      mergedTaunts[character.slug] = cosmetics.Taunts[character.slug];
     } else {
-      mergedTaunts[character] = { TauntSlots: [TAUNTS_DATA[character].Slugs[0]] };
+      mergedTaunts[character.slug] = { TauntSlots: [getAllTauntsByChar()[character.slug].Slugs[0]] };
     }
   }
 

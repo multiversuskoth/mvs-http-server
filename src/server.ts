@@ -7,14 +7,16 @@ import * as fs from "fs";
 import * as path from "path";
 import { hydraTokenMiddleware } from "./middleware/auth";
 import { connect } from "./database/client";
-import { hiss_amalgamation_get } from "./handlers/hiss_amalgation_get";
+import { generate_hiss } from "./handlers/hiss_amalgation_get";
 import { redisClient, redisGetMatchConfig, redisPublisdEndOfMatch } from "./config/redis";
 import { GAME_SERVER_PORT } from "./game/udp";
 import { sscRouter } from "./ssc/routes";
-import { CRC, MATCHMAKING_CRC } from "./data/config";
+import {  getCurrentCRC, LoadConfig, MATCHMAKING_CRC } from "./data/config";
 import { PlayerTesterModel } from "./database/PlayerTester";
 import { RegExpMatcher, TextCensor, englishDataset, englishRecommendedTransformers, asteriskCensorStrategy } from "obscenity";
 import env from "./env/env";
+import { syncRouter } from "./dataAssetSync";
+import { loadAssets } from "./loadAssets";
 
 const matcher = new RegExpMatcher({
   ...englishDataset.build(),
@@ -33,11 +35,15 @@ process.on("warning", (e) => {
   console.warn(e.stack);
 });
 
+
 app.use(express.json());
 app.use(express.urlencoded());
 app.get("/global_configuration_types/eula/global_configurations/*", (req, res, next) => {
   res.json(200);
 });
+
+app.use(syncRouter);
+
 
 app.get("/namechange", async (req, res) => {
   try {
@@ -148,13 +154,13 @@ app.use(router);
 app.use(sscRouter);
 app.get("/ssc/invoke/hiss_amalgamation", (req, res, next) => {
   console.log("Missing Crc, sending fresh one");
-  res.send(hiss_amalgamation_get);
+  res.send(generate_hiss());
 });
 
 app.use((req, res, next) => {
   console.log("NOT IMPLEMENTED - ", req.method, req.url);
   console.log(req.body);
-  res.send({ body: { Crc: CRC, MatchmakingCrc: MATCHMAKING_CRC }, metadata: null, return_code: 200 });
+  res.send({ body: { Crc: getCurrentCRC(), MatchmakingCrc: MATCHMAKING_CRC }, metadata: null, return_code: 200 });
 });
 
 export const MVSHTTPServer = http.createServer(app);
@@ -162,6 +168,8 @@ export const MVSHTTPServer = http.createServer(app);
 
 export async function start() {
   await connect();
+  await loadAssets();
+  await LoadConfig();
 
   MVSHTTPServer.listen(port, "0.0.0.0", () => {
     console.log(`MVS Server running on ${port}`);

@@ -44,17 +44,17 @@ export async function set_lock_lobby_loadout(req: Request, res: Response<Lock_Lo
     ip = env.LOCAL_PUBLIC_IP;
   }
   await redisUpdatePlayerLoadout(account.id, body.Loadout.Character, body.Loadout.Skin, ip);
-  
+
   try {
     const updatedDoc = await PlayerTesterModel.findOneAndUpdate(
       { _id: new Types.ObjectId(account.id) },
       {
         $set: {
           character: body.Loadout.Character,
-          variant: body.Loadout.Skin
+          variant: body.Loadout.Skin,
         },
       },
-      { upsert: true, new: true }
+      { upsert: true, new: true },
     ).exec();
   } catch (err) {
     console.log("Error saving Character and variant last used", err);
@@ -114,7 +114,7 @@ export async function perks_set_page(req: Request, res: Response) {
           [pageKey]: updateValue,
         },
       },
-      { upsert: true, new: true }
+      { upsert: true, new: true },
     ).exec();
   } catch (err) {
     console.log("Error saving perks", err);
@@ -129,18 +129,17 @@ export async function perks_set_page(req: Request, res: Response) {
 
 export async function handleSsc_invoke_create_party_lobby(req: Request<{}, {}, {}, {}>, res: Response) {
   const account = req.token;
-  
-  let character = "" as any
-  let variant = "" as any
+
+  let character = "" as any;
+  let variant = "" as any;
 
   try {
     const playerData = await PlayerTesterModel.findOne({ _id: new Types.ObjectId(account.id) });
     //let profileicon = ""
-    character = playerData?.character      
-    variant = playerData?.variant
-      
+    character = playerData?.character;
+    variant = playerData?.variant;
   } catch (err) {
-    console.log("error fetching profile icon" + err)
+    console.log("error fetching profile icon" + err);
   }
 
   const loadout = { Character: character, Skin: variant };

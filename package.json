@@ -2,6 +2,7 @@
   "name": "mvs-http-server",
   "scripts": {
     "start": "node -r @swc-node/register ./src/index.ts",
+    "loader": "node -r @swc-node/register ./src/loader.ts",
     "websocket": "node -r @swc-node/register ./src/websocketStart.ts",
     "worker": "node -r @swc-node/register ./src/workerStart.ts",
     "test": "node -r @swc-node/register ./src/game/udpTest.ts",

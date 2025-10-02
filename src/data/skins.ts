@@ -450,6 +450,7 @@ export const ENABLED_SKINS = {
       "skin_c007_s07",
       "skin_c007_s33",
       "skin_c007_s12",
+      "skin_c007_s18",
     ],
   },
   character_Jason: {
@@ -470,7 +471,7 @@ export const ENABLED_SKINS = {
     ],
   },
   character_Meeseeks: {
-    Slugs: ["skin_meeseeks_default", "skin_meeseeks_s01", "skin_meeseeks_s02"],
+    Slugs: ["skin_meeseeks_default"],
   },
   character_BananaGuard: {
     Slugs: [

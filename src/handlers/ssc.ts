@@ -6,11 +6,11 @@ import {
   redisLockPerks,
   redisPublishAllPerksLocked
 } from "../config/redis";
-import { CRC, MATCHMAKING_CRC } from "../data/config";
+import {  getCurrentCRC, MATCHMAKING_CRC } from "../data/config";
 import { PerkPagesModel } from "../database/PerkPages";
 import { getEquippedCosmetics } from "../services/cosmeticsService";
 import { MVSTime } from "../utils/date";
-import { hiss_amalgamation_get } from "./hiss_amalgation_get";
+import { generate_hiss } from "./hiss_amalgation_get";
 
 export async function handleSsc_invoke_attempt_daily_refresh(req: Request<{}, {}, {}, {}>, res: Response) {
   res.send({
@@ -4729,11 +4729,11 @@ export async function handleSsc_invoke_get_or_create_mission_object(req: Request
 }
 
 export async function handleSsc_invoke_hiss_amalgamation(req: Request<{}, {}, { Crc: number }, {}>, res: Response) {
-  if (req.body.Crc !== CRC) {
+  if (req.body.Crc !== getCurrentCRC()) {
     console.log("Crc: out of date , sending new");
-    res.send(hiss_amalgamation_get);
+    res.send(generate_hiss());
   } else {
-    res.send({ body: { Crc: CRC, MatchmakingCrc: MATCHMAKING_CRC }, metadata: null, return_code: 304 });
+    res.send({ body: { Crc: getCurrentCRC(), MatchmakingCrc: MATCHMAKING_CRC }, metadata: null, return_code: 304 });
   }
 }
 

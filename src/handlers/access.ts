@@ -12,6 +12,7 @@ import { PlayerTesterModel } from "../database/PlayerTester";
 import { INVENTORY_DEFINITIONS } from "../data/inventoryDefs";
 import { Types } from "mongoose";
 import { profile } from "console";
+import { getAssetsByType } from "../loadAssets";
 
 let USERNAME_COUNT = 0;
 const USERNAME = () => `MSVI_TESTER_${USERNAME_COUNT}`;
@@ -58,14 +59,13 @@ async function generateStaticAccess(req: express.Request) {
   try {
     const cosmeticdata = await PlayerTesterModel.findOne({ _id: new Types.ObjectId(account.id) });
     //let profileicon = ""
-    let pfp = cosmeticdata?.profile_icon
-    profileicon = pfp
-    console.log(profileicon)
-    
+    let pfp = cosmeticdata?.profile_icon;
+    profileicon = pfp;
+    console.log(profileicon);
   } catch (err) {
-    console.log("error fetching profile icon" + err)
+    console.log("error fetching profile icon" + err);
   }
-  let testthing = "profile_icon_default"
+  let testthing = "profile_icon_default";
   return {
     token: token,
     in_queue: false,
@@ -147,7 +147,7 @@ async function generateStaticAccess(req: express.Request) {
         RestedXP: 300,
         ProfileIcon: {
           Slug: `${profileicon}`,
-          AssetPath: INVENTORY_DEFINITIONS[profileicon as keyof typeof INVENTORY_DEFINITIONS].data.AssetPath
+          AssetPath: getAssetsByType("ProfileIconData").find((p) => p.slug == profileicon)?.assetPath,
         },
         LastLoginTime: "Tue Mar 14 2023 00:14:29 GMT+0000 (Coordinated Universal Time)",
         AntiCheatServerKick: 2,
