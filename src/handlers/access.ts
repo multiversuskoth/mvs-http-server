@@ -133,8 +133,8 @@ async function generateStaticAccess(req: express.Request) {
         LastLogoutTime: "2023-03-14T17:44:29.198Z",
         RestedXP: 300,
         ProfileIcon: {
-          Slug: `${profileicon}`,
-          AssetPath: getAssetsByType("ProfileIconData").find((p) => p.slug == profileicon)?.assetPath,
+          Slug: `${player.profile_icon}`,
+          AssetPath: getAssetsByType("ProfileIconData").find((p) => p.slug == player.profile_icon)?.assetPath,
         },
         LastLoginTime: "Tue Mar 14 2023 00:14:29 GMT+0000 (Coordinated Universal Time)",
         AntiCheatServerKick: 2,
