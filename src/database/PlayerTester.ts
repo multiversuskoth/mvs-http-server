@@ -25,7 +25,7 @@ export class PlayerTester {
   @prop({ default: 'character_shaggy'})
   public character!: string;
 
-  @prop({ default: 'character_shaggy_default'})
+  @prop({ default: 'skin_shaggy_default'})
   public variant!: string;
 }
 

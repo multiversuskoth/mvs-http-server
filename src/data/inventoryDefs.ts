@@ -1,4 +1,37 @@
-export const INVENTORY_DEFINITIONS = {
+export interface InventoryDefData {
+  AssetPath: string;
+  EnabledForShipping: boolean;
+  AssociatedCharacter: string;
+  DisplayName: string;
+  DisplayNameLocalizationKey: string;
+  DisplayNameLocalizationNamespace: string;
+  Rarity: string;
+  RewardThumbnail: string;
+  RewardThumbnailMaterial: string;
+}
+
+export interface InventoryDefSeed {
+  override_none: boolean;
+  data: Record<string, any>;
+  server_data: Record<string, any>;
+  private_data: Record<string, any>;
+}
+
+export interface InventoryDefTimestamp {
+  _hydra_unix_date: number;
+}
+
+export interface InventoryDef {
+  data: InventoryDefData | {};
+[key: string]: any;
+  id: string;
+}
+
+export interface InvetoryKeysDefs {
+  [key: string]: InventoryDef;
+}
+
+export const INVENTORY_DEFINITIONS : InvetoryKeysDefs = {
   profile_icon_wb_lt_c015: {
     name: "profile_icon_wb_lt_c015",
     slug: "profile_icon_wb_lt_c015",

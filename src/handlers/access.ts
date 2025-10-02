@@ -9,9 +9,7 @@ import { parseEncryptedAppTicket } from "steam-appticket";
 import env from "../env/env";
 import { logger } from "../config/logger";
 import { PlayerTesterModel } from "../database/PlayerTester";
-import { INVENTORY_DEFINITIONS } from "../data/inventoryDefs";
-import { Types } from "mongoose";
-import { profile } from "console";
+
 import { getAssetsByType } from "../loadAssets";
 
 let USERNAME_COUNT = 0;
@@ -55,17 +53,6 @@ async function generateStaticAccess(req: express.Request) {
   };
   const token = jwt.sign(account, SECRET);
   logger.info(`Player ${account.id} - ${account.username} connected`);
-  let profileicon = "profile_icon_default" as any;
-  try {
-    const cosmeticdata = await PlayerTesterModel.findOne({ _id: new Types.ObjectId(account.id) });
-    //let profileicon = ""
-    let pfp = cosmeticdata?.profile_icon;
-    profileicon = pfp;
-    console.log(profileicon);
-  } catch (err) {
-    console.log("error fetching profile icon" + err);
-  }
-  let testthing = "profile_icon_default";
   return {
     token: token,
     in_queue: false,

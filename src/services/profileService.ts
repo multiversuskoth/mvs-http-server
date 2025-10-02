@@ -1,4 +1,5 @@
 import { logger } from "../config/logger";
+import { INVENTORY_DEFINITIONS, InventoryDefData } from "../data/inventoryDefs";
 import { PlayerTesterModel } from "../database/PlayerTester";
 
 interface ProfileMatch {
@@ -23,6 +24,8 @@ interface ProfileAccounntMatch {
   "identity.username": string;
   presence_state: number;
   presence: string;
+  "server_data.ProfileIcon.Slug": string;
+  "server_data.ProfileIcon.AssetPath": string;
 }
 
 export async function getProfileForMatch(accountId: string): Promise<ProfileMatch | undefined> {
@@ -47,6 +50,8 @@ export async function getProfileForMatch(accountId: string): Promise<ProfileMatc
         "identity.username": profile.name,
         presence_state: 1,
         presence: "online",
+        "server_data.ProfileIcon.Slug": profile.profile_icon,
+        "server_data.ProfileIcon.AssetPath": (INVENTORY_DEFINITIONS[profile.profile_icon].data as InventoryDefData).AssetPath,
       },
     };
   } else {

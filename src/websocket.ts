@@ -400,7 +400,7 @@ export class WebSocketService {
         bUseCharacterDisplayName: false,
         StartingDamage: 0,
         TeamIndex: player.teamIndex,
-        ProfileIcon: "",
+        ProfileIcon: playerLoadouts[i].profileIcon,
         WinStreak: null,
         RankedTier: null,
         Handicap: 0,

@@ -1,4 +1,4 @@
-import { redisGetEquippedComsetics, redisSaveEquippedComsetics } from "../config/redis";
+import { redisGetEquippedComsetics, redisSaveEquippedComsetics, redisUpdatePlayerKey } from "../config/redis";
 
 import { Cosmetics, CosmeticsModel, TauntSlotsClass } from "../database/Cosmetics";
 import { PlayerTesterModel, PlayerTester } from "../database/PlayerTester";
@@ -7,11 +7,26 @@ import { getAllTauntsByChar, getAssetsByType } from "../loadAssets";
 function mergeCosmetics(cosmetics: Cosmetics): Cosmetics {
   const mergedTaunts: Record<string, TauntSlotsClass> = {};
 
-  for (const character of getAssetsByType("CharacterData")) {
+   for (const character of getAssetsByType("CharacterData")) {
     if (cosmetics.Taunts && cosmetics.Taunts[character.slug]) {
       mergedTaunts[character.slug] = cosmetics.Taunts[character.slug];
     } else {
       mergedTaunts[character.slug] = { TauntSlots: [getAllTauntsByChar()[character.slug].Slugs[0]] };
+    }
+  }
+
+  for (const character of getAssetsByType("CharacterData")) {
+    if (cosmetics.Taunts && cosmetics.Taunts[character.slug]) {
+      mergedTaunts[character.slug] = cosmetics.Taunts[character.slug];
+    } else {
+      mergedTaunts[character.slug] = {
+        TauntSlots: [
+          getAllTauntsByChar()[character.slug]?.Slugs?.[0] || "",
+          "",
+          "",
+          "",
+        ],
+      };
     }
   }
 
@@ -78,13 +93,20 @@ export async function updateCosmeticsStatTrackerSlot(accountId: string, index: n
 }
 
 export async function updateCosmeticsTauntSlot(accountId: string, character: string, index: number, value: string) {
-  const path = `Taunts.${character}.TauntSlots.${index}`;
-  const updatedComsetics = (await CosmeticsModel.findOneAndUpdate(
-    { _id: accountId },
-    { $set: { [path]: value } },
-    { new: true, upsert: true },
-  ).lean()) as Cosmetics;
-  await redisSaveEquippedComsetics(accountId, mergeCosmetics(updatedComsetics));
+  let cachedCosmetics = await getEquippedCosmetics(accountId);
+  if (cachedCosmetics) {
+    cachedCosmetics.Taunts[character].TauntSlots[index] = value;
+
+    const path = `Taunts.${character}.TauntSlots`;
+    const updatedComsetics = (await CosmeticsModel.findOneAndUpdate(
+      { _id: accountId },
+      { $set: { [path]: cachedCosmetics.Taunts[character].TauntSlots } },
+      { new: true, upsert: true },
+    ).lean()) as Cosmetics;
+
+    // Push to Redis
+    await redisSaveEquippedComsetics(accountId, cachedCosmetics);
+  }
 }
 
 export async function getEquippedCosmetics(accountId: string) {
@@ -95,18 +117,14 @@ export async function getEquippedCosmetics(accountId: string) {
   let cosmetics = (await CosmeticsModel.findById(accountId).lean()) as Cosmetics;
   if (!cosmetics) {
     cosmetics = new CosmeticsModel().toObject();
+    (await CosmeticsModel.create({ ...cosmetics, _id: accountId, account_id: accountId })).save();
   }
   const mergedCosmetics = mergeCosmetics(cosmetics);
   await redisSaveEquippedComsetics(accountId, mergedCosmetics);
   return mergedCosmetics;
 }
 
-
 export async function updateProfileIcon(accountId: string, newProfileIcon: string) {
-  const updatedComsetics = (await PlayerTesterModel.findOneAndUpdate(
-    {_id: accountId},
-    {$set: { profile_icon: newProfileIcon } },
-    { new: true, upsert: true },
-  ).lean()) as PlayerTester;
-  //TODO: save to redis
+  await PlayerTesterModel.findOneAndUpdate({ _id: accountId }, { $set: { profile_icon: newProfileIcon } }, { new: true, upsert: true }).lean();
+  await redisUpdatePlayerKey(accountId, "profile_icon", newProfileIcon);
 }

@@ -1,5 +1,5 @@
 import express, { Request, Response } from "express";
-import { redisUpdatePlayerLoadout } from "../config/redis";
+import { RedisPlayer, redisUpdatePlayerLoadout } from "../config/redis";
 import env from "../env/env";
 import { PerkPagesModel } from "../database/PerkPages";
 import { Types } from "mongoose";
@@ -43,7 +43,7 @@ export async function set_lock_lobby_loadout(req: Request, res: Response<Lock_Lo
   if (ip === "127.0.0.1") {
     ip = env.LOCAL_PUBLIC_IP;
   }
-  await redisUpdatePlayerLoadout(account.id, body.Loadout.Character, body.Loadout.Skin, ip);
+  await redisUpdatePlayerLoadout(account.id, { character: body.Loadout.Character, skin: body.Loadout.Skin, ip: ip } as RedisPlayer);
 
   try {
     const updatedDoc = await PlayerTesterModel.findOneAndUpdate(
@@ -54,7 +54,6 @@ export async function set_lock_lobby_loadout(req: Request, res: Response<Lock_Lo
           variant: body.Loadout.Skin,
         },
       },
-      { upsert: true, new: true },
     ).exec();
   } catch (err) {
     console.log("Error saving Character and variant last used", err);
@@ -130,16 +129,16 @@ export async function perks_set_page(req: Request, res: Response) {
 export async function handleSsc_invoke_create_party_lobby(req: Request<{}, {}, {}, {}>, res: Response) {
   const account = req.token;
 
-  let character = "" as any;
-  let variant = "" as any;
+  let character = "";
+  let variant = "";
+  let profileIcon = "";
 
-  try {
-    const playerData = await PlayerTesterModel.findOne({ _id: new Types.ObjectId(account.id) });
-    //let profileicon = ""
-    character = playerData?.character;
+  const playerData = await PlayerTesterModel.findOne({ _id: new Types.ObjectId(account.id) });
+  //let profileicon = ""
+  if (playerData) {
+    character = playerData.character;
     variant = playerData?.variant;
-  } catch (err) {
-    console.log("error fetching profile icon" + err);
+    profileIcon = playerData?.profile_icon;
   }
 
   const loadout = { Character: character, Skin: variant };
@@ -151,7 +150,7 @@ export async function handleSsc_invoke_create_party_lobby(req: Request<{}, {}, {
   const lobbyMode = LOBBY_MODES.ONE_V_ONE; // Default mode, can be changed later;
   const newLobby = await createLobby(account.id, lobbyMode);
 
-  await redisUpdatePlayerLoadout(account.id, loadout.Character, loadout.Skin, ip);
+  await redisUpdatePlayerLoadout(account.id, { character: character, skin: variant, ip: ip, profileIcon: profileIcon } as RedisPlayer);
   res.send({
     body: {
       lobby: {

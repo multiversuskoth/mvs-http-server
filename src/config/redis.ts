@@ -150,11 +150,11 @@ export interface RedisMatchMakingCompleteNotification {
 
 export interface RedisPlayer {
   status: string;
+  profileIcon: string;
   character: string;
   skin: string;
   ip: string;
 }
-
 
 export interface RedisOnGameModeUpdatedNotification {
   lobbyId: string;
@@ -222,12 +222,26 @@ export async function redisPopMatchTicketsFromQueue(queueType: string, tickets: 
   await multi.exec();
 }
 
-export async function redisUpdatePlayerLoadout(playerId: string, character: string, skin: string, ip: string) {
-  await redisClient.hSet(`player:${playerId}`, { character, skin, ip });
+export async function redisUpdatePlayerLoadout(playerId: string, redisPlayer: RedisPlayer) {
+  // Convert all values to strings for Redis
+  const redisPlayerStringObj: Record<string, string> = {};
+  for (const [
+    key,
+    value,
+  ] of Object.entries(redisPlayer)) {
+    redisPlayerStringObj[key] = value;
+  }
+  await redisClient.hSet(`player:${playerId}`, redisPlayerStringObj);
 }
 
 export async function redisUpdatePlayerStatus(playerId: string, status: string) {
   await redisClient.hSet(`player:${playerId}`, { status: status });
+}
+
+export async function redisUpdatePlayerKey(playerId: string, key: string, value: string) {
+  const prop: Record<string, string> = {};
+  prop[key] = value;
+  await redisClient.hSet(`player:${playerId}`, prop);
 }
 
 export async function redisPushTicketToQueue(queueKey: string, data: RedisMatchTicket) {
