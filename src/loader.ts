@@ -1664,6 +1664,29 @@ export async function start() {
     }
   }
 
+    console.log("Loading Taunts");
+  for (const char of Object.keys(TAUNTS_DATA)) {
+    for (const taunt of TAUNTS_DATA[char as keyof typeof TAUNTS_DATA].Slugs) {
+      const t = INVENTORY_DEFINITIONS[taunt as keyof typeof INVENTORY_DEFINITIONS];
+
+      const def = t?.data as Data;
+      const doc = await DataAssetModel.findOneAndUpdate(
+        { assetPath: def ? def.AssetPath : "NONE" },
+        {
+          $set: {
+            slug: taunt,
+            assetType: "UTauntData",
+            character_slug: char,
+            enabled: true,
+            assetPath: def ? def.AssetPath : "",
+          },
+        },
+        { upsert: true, new: true },
+      ).exec();
+      if (!t) console.log(taunt);
+    }
+  }
+
   console.log("END");
 }
 start();

@@ -37,11 +37,11 @@ async function generateStaticAccess(req: express.Request) {
     await player.save();
   }
 
-  let ws = "ws://mvsi-test.com:3000";
+  let ws = `ws://mvsi-test.com:${env.WEBSOCKET_PORT}`;
   if (ip === "127.0.0.1") {
-    ws = "ws://mvsi-test.com:3000";
+    ws = `ws://mvsi-test.com:${env.WEBSOCKET_PORT}`;
   } else {
-    ws = `ws://${env.LOCAL_PUBLIC_IP}:3000`;
+    ws = `ws://${env.LOCAL_PUBLIC_IP}:${env.WEBSOCKET_PORT}`;
   }
   const account: AccountToken = {
     id: player.id,
