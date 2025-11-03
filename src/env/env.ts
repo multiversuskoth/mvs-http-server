@@ -18,6 +18,7 @@ const env = cleanEnv(process.env, {
   HTTP_PORT: num(),
   WEBSOCKET_PORT: num(),
   DATA_ASSET_TOKEN : str(),
+  UDP_PORT: num(),
 });
 
 export default env;

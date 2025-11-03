@@ -14,8 +14,9 @@ import { MessageType as ServerMessageType, parseUdpServerMessage, Header as Serv
 import { serializeServerMessage } from "./serializer";
 import { compressPacket, decompressPacket } from "./compression";
 import chalk from "chalk";
+import env from "../env/env";
 
-export const GAME_SERVER_PORT = 41234;
+export const GAME_SERVER_PORT = env.UDP_PORT;
 
 const regex = /(.{2})(?=.+)/g;
 
