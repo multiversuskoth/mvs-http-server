@@ -1472,6 +1472,7 @@ interface Data {
   AssetPath: string;
   CharacterSlug: string;
   MasteryRewardTrack: string;
+  AppliedBuffs: string[];
 }
 
 export async function start() {
@@ -1608,14 +1609,14 @@ export async function start() {
   for (const perk of perks) {
     const def = INVENTORY_DEFINITIONS[perk as keyof typeof INVENTORY_DEFINITIONS].data as Data;
     const doc = await DataAssetModel.findOneAndUpdate(
-      { assetPath: def.AssetPath },
+      { assetPath: def.AppliedBuffs[0] },
       {
         $set: {
           slug: perk,
           assetType: "MvsPerkHsda",
           character_slug: "",
           enabled: perk === "perk_platform_from_dodge" ? false : true,
-          assetPath: def.AssetPath,
+          assetPath: def.AppliedBuffs[0],
         },
       },
       { upsert: true, new: true },
