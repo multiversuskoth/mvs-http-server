@@ -1,0 +1,14 @@
+{
+  "name": "@mvsi/database",
+  "type": "module",
+  "dependencies": {
+    "@mvsi/env": "workspace:*",
+    "@mvsi/logger": "workspace:*",
+    "mongodb": "~6.18.0",
+    "papr": "^16.0.0"
+  },
+  "devDependencies": {
+    "@types/bun": "^1.3.4",
+    "@types/node": "^25.0.1"
+  }
+}

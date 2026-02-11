@@ -1,0 +1,18 @@
+{
+    "compilerOptions": {
+        // "module": "ESNext",
+        "module": "es2022",
+        "moduleResolution": "bundler",
+        // "target": "ES2022",
+        "target": "es2024",
+        // "jsx": "react",
+        "strictNullChecks": true,
+        "strictFunctionTypes": true,
+        "sourceMap": true,
+        "outDir": "./build",
+        "experimentalDecorators": true,
+        "emitDecoratorMetadata": true,
+        "esModuleInterop": true,
+        "forceConsistentCasingInFileNames": true,
+    }
+}

@@ -1,15 +1,18 @@
 
-node_modules
+node_modules/
 dist
 .env
-build
+build/
+.nitro/
+.tanstack/
+public/
 
 
-packets/
-game.log
-dokken-api.wbagora.com.pem
-dokken-api.wbagora.com-key.pem
+
 test.json
 udpTest.ts
 vcpkg_installed
 .DS_Store
+keys/
+*.pem
+/out

@@ -1,18 +1,33 @@
-# syntax=docker/dockerfile:1
-FROM arm64v8/node:24
+# --- Build Stage ---
+# Use the official Bun image to install dependencies and compile
+FROM oven/bun AS build
 
+# Set the working directory
 WORKDIR /app
 
-# Copy only production dependencies
-COPY package*.json ./
-RUN npm ci --omit=dev
+# Copy lock file and package.json first to leverage Docker's build cache
+COPY bun.lock .
+COPY package.json .
 
-# Copy built files and any other needed files
-COPY build ./build
+# Copy all source code
+COPY . .
 
-# Expose port (change if your app uses a different port)
-EXPOSE 3000 8000
+# Install production dependencies
+RUN bun install --frozen-lockfile --production
 
-# Set the entrypoint to node and command to build/src/index.js
-ENTRYPOINT ["node"]
-CMD ["build/src/index.js"]
+# Compile the application into a single binary named 'cli'
+# Replace './src/index.ts' with your application's entry point
+RUN bun run build
+
+# --- Production Stage ---
+# Use a minimal base image (e.g., Ubuntu or Alpine) for the final runtime
+FROM ubuntu:24.04
+
+# Set the working directory in the final image
+WORKDIR /app
+
+# Copy the compiled binary from the 'build' stage
+COPY --from=build /app/mvsi /app/mvsi
+
+# Execute the binary when the container starts
+CMD ["/app/mvsi"]

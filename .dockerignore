@@ -1,0 +1,16 @@
+**/node_modules
+
+dist
+.env
+.nitro/
+.tanstack/
+public/
+
+
+
+test.json
+udpTest.ts
+vcpkg_installed
+.DS_Store
+keys/
+*.pem

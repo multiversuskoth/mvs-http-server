@@ -1,0 +1,34 @@
+export type PlayerConfigStatTrackers = [string, number][];
+
+export type PlayerConfig = {
+  AccountId: string;
+  Username: string | {};
+  bUseCharacterDisplayName: boolean;
+  PlayerIndex: number;
+  TeamIndex: number;
+  Character: string;
+  Skin: string;
+  Taunts: string[];
+  Perks: string[];
+  Banner: string;
+  ProfileIcon: string;
+  RingoutVfx: string;
+  bIsBot: boolean;
+  BotBehaviorOverride: string;
+  BotDifficultyMin: number | null;
+  BotDifficultyMax: number | null;
+  Buffs: string[];
+  StatTrackers: PlayerConfigStatTrackers;
+  Gems: { Gem: string; ChargeLevel: number }[];
+  StartingDamage: number;
+  Handicap: number;
+  GameplayPreferences: number;
+  bAutoPartyPreference: boolean;
+  PartyMember: string | null;
+  PartyId: string | null;
+  RankedTier: string | null;
+  RankedDivision: number | null;
+  WinStreak: number | null;
+  IsHost: boolean;
+  Ip: string;
+};
