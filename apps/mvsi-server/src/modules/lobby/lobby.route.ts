@@ -2,8 +2,8 @@ import { env } from "@mvsi/env";
 import Elysia, { t } from "elysia";
 import { MAIN_APP, MVSI_HYDRA_WITH_JWT } from "../../middleware/middlewares";
 import { MATCH_TYPES } from "../matchmaking/matchmaking.types";
-import { updatePlayerLoadout } from "../playerPresence/playerPresence.service";
 import { createPartyLobby, setLobbyMode } from "./lobby.service";
+import { updatePlayerLoadout } from "../playerConfig/playerConfig.service";
 
 const router = new Elysia().use(MVSI_HYDRA_WITH_JWT);
 

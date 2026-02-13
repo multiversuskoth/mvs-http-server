@@ -9,7 +9,7 @@ import { logger } from "@mvsi/logger";
 import { redisClient } from "@mvsi/redis";
 import { ObjectId } from "mongodb";
 import { getAllTauntsByChar, getAssetsByType } from "../../loadAssets";
-import { getPlayerConfig, setPlayerConfig } from "../playerPresence/playerPresence.service";
+import { getPlayerConfig, setPlayerConfig } from "../playerConfig/playerConfig.service";
 
 function mergeCosmetics(cosmetics: Cosmetics): Cosmetics {
   const mergedTaunts: TauntSlotsClass = {};
