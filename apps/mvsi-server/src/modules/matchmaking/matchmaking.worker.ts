@@ -1,6 +1,6 @@
-import { randomBytes } from "node:crypto";
 import { logger } from "@mvsi/logger";
 import { ObjectId } from "mongodb";
+import { randomBytes } from "node:crypto";
 import { getRandomMapByType } from "../../data/maps";
 import {
   GAME_MODES,
@@ -8,7 +8,8 @@ import {
   type PlayersConfigObject,
   TeamStyle,
 } from "../gameModes/gameModes.config";
-import { getPlayersConfig, type PlayerConfig } from "../playerPresence/playerPresence.service";
+import { getPlayersConfig } from "../playerConfig/playerConfig.service";
+import type { PlayerConfig } from "../playerConfig/playerConfig.types";
 import {
   completeMatchmaking,
   getTicketsFromQueue,
@@ -18,10 +19,12 @@ import {
 } from "./matchmaking.service";
 import {
   MATCH_TYPES,
+  MATCHMAKING_CANCEL_CHANNEL,
+  MATCHMAKING_MATCH_TICK_CHANNEL,
   type MatchmakingActiveMatch,
-  type MatchmakingPlayer,
   type MatchmakingTicket,
 } from "./matchmaking.types";
+import { redisClient } from "@mvsi/redis";
 
 const CHECK_INTERVAL_MS = 2000;
 
@@ -63,6 +66,13 @@ async function process1v1Queue(): Promise<boolean> {
     // Get all tickets in the queue
     const tickets = await getTicketsFromQueue(MATCH_TYPES.ONE_V_ONE);
 
+    if (tickets.length > 0) {
+      await redisClient.publish(
+        MATCHMAKING_MATCH_TICK_CHANNEL,
+        JSON.stringify(tickets.map((ticket) => ticket.matchmakingRequestId)),
+      );
+    }
+
     if (tickets.length < MATCH_RULES["1v1"].teamsRequired) {
       return false; // Not enough tickets to make a match
     }
@@ -73,6 +83,14 @@ async function process1v1Queue(): Promise<boolean> {
     const matchedTickets: MatchmakingTicket[] = [];
     for (const ticket of tickets) {
       try {
+        if (Date.now() - new Date(ticket.created_at).getTime() > 100_000) {
+          await removeTicketsFromQueue(MATCH_TYPES.ONE_V_ONE, [ticket]);
+          await redisClient.publish(
+            MATCHMAKING_CANCEL_CHANNEL,
+            JSON.stringify([ticket.matchmakingRequestId]),
+          );
+          continue;
+        }
         if (ticket.party_size === 1) {
           // For 1v1, we only want solo players
           matchedTickets.push(ticket);

@@ -1,7 +1,7 @@
-import { MAIN_WEBSOCKET } from "../../websocket.elysia";
+import { logger } from "@mvsi/logger";
+import { encodeHydraWS, MAIN_WEBSOCKET } from "../../websocket.elysia";
 import type { MatchmakingTicket } from "../matchmaking/matchmaking.types";
-import { handleMatchTick } from "../matchmaking/matchmaking.ws";
-import { updatePlayerStatus } from "../playerPresence/playerPresence.service";
+import { getLobby } from "./lobby.service";
 import {
   LOBBY_CREATED_CHANNEL,
   LOBBY_MODE_UPDATED_CHANNEL,
@@ -24,13 +24,21 @@ subscriber.subscribe(LOBBY_MODE_UPDATED_CHANNEL, (message) => {
 
 subscriber.subscribe(LOBBY_QUEUED_CHANNEL, (message) => {
   const notification = JSON.parse(message) as MatchmakingTicket;
-  handlePartyQueued(notification);  
+  handlePartyQueued(notification);
 });
 
-function handleOnLobbyCreated(newLobby: Lobby) {
+async function handleOnLobbyCreated(newLobby: Lobby) {
   const client = clients.get(newLobby.LeaderID);
   if (client) {
+    if (client.data.lobbyId) {
+      const oldLobby = await getLobby(client.data.lobbyId);
+      if (oldLobby && oldLobby.LeaderID !== newLobby.LeaderID) {
+        client.unsubscribe(`lobby:${oldLobby.MatchID}`);
+      }
+    }
     client.data.lobbyId = newLobby.MatchID;
+    client.subscribe(`lobby:${newLobby.MatchID}`);
+    logger.verbose(`Player ${client.data.account?.id} joined lobby ${client.data.lobbyId}`);
   }
 }
 
@@ -59,23 +67,23 @@ async function handlePartyQueued(notification: MatchmakingTicket) {
   for (const playerId of notification.playerIds) {
     const client = clients.get(playerId);
     if (client) {
-      await updatePlayerStatus(playerId, "queued");
-      client.data.sendHydra(client, {
-        data: {
-          template_id: "OnMatchmakerStarted",
-          MatchmakingRequestId: notification.matchmakingRequestId,
-        },
-        payload: {
-          match: {
-            id: notification.partyId,
-          },
-          custom_notification: "realtime",
-        },
-        header: "",
-        cmd: "update",
-      });
       client.data.ticket = notification;
-      handleMatchTick(client, notification.matchmakingRequestId, notification.matchType);
+      client.subscribe(`matchmaking:${notification.matchmakingRequestId}`);
     }
+    const data = {
+      data: {
+        template_id: "OnMatchmakerStarted",
+        MatchmakingRequestId: notification.matchmakingRequestId,
+      },
+      payload: {
+        match: {
+          id: notification.partyId,
+        },
+        custom_notification: "realtime",
+      },
+      header: "",
+      cmd: "update",
+    };
+    MAIN_WEBSOCKET.server?.publish(`lobby:${notification.partyId}`, encodeHydraWS(data));
   }
 }

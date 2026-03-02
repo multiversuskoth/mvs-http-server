@@ -139,7 +139,8 @@ export async function lockLobby(lobbyId: string, leaderId: string) {
 
 export async function deleteLobby(lobbyId: string, leaderId: string) {
   const lobby = await getLobby(lobbyId);
-  if (lobby && lobby.LeaderID !== leaderId) {
+  if (lobby && lobby.LeaderID === leaderId) {
     await redisClient.del(`lobby:${lobby.MatchID}`);
+    logger.verbose(`Deleted lobby ${lobbyId} for player ${leaderId}`);
   }
 }

@@ -74,7 +74,7 @@ export async function searchProfiles(query: string) {
             },
           ],
 
-          presence: presenceState?.status ?? "offline",
+          presence: presenceState ? "online" : "offline",
           "server_data.ProfileIcon.Slug": profile.profile_icon,
           "server_data.ProfileIcon.AssetPath": profileIcon,
         },

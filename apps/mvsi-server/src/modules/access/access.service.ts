@@ -93,7 +93,6 @@ async function handleAccess(ip: string, steamTicket: string) {
   const cosmetics = await getCosmeticsConfigurationForPlayer(claims.id);
   const presence: PlayerPresence = {
     currentLobbyId: "",
-    status: "online",
     profileId: player.profile_id.toHexString(),
     ip: ip,
   };

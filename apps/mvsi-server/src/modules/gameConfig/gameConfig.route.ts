@@ -7,6 +7,7 @@ import { MVSTime } from "../../utils/date";
 import { GameConfigService } from "./gameConfig.service";
 
 const router = new Elysia().use(MVSI_HYDRA_WITH_JWT);
+const assetSyncRouter = new Elysia();
 
 router.put(
   "/ssc/invoke/hiss_amalgamation",
@@ -80,7 +81,7 @@ router.post("/ssc/invoke/attempt_daily_refresh", () => {
   };
 });
 
-router.post("/syncAsset", async ({ body, headers, status }) => {
+assetSyncRouter.post("/syncAsset", async ({ body, headers, status }) => {
   logger.info("Trying syncAsset");
   try {
     if (headers.authorization !== `Bearer ${env.DATA_ASSET_TOKEN}`) {
@@ -98,3 +99,4 @@ router.post("/syncAsset", async ({ body, headers, status }) => {
 });
 
 MAIN_APP.use(router);
+MAIN_APP.use(assetSyncRouter);

@@ -18,6 +18,7 @@
     "build-win": "bun build ./apps/mvsi-server/src/entry.ts --compile --production --target bun --outfile out/mvsi --minify-syntax",
     "watch": "bun --watch apps/mvsi-server/src/index.elysia.ts",
     "websocket": "bun apps/mvsi-server/src/websocketStart.ts",
+    "worker": "bun apps/mvsi-server/src/workerStart.ts",
     "web": "bun run --filter '@mvsi/web' dev",
     "web:build": "bun run --filter '@mvsi/web' build"
   },

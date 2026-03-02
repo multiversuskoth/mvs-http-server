@@ -7,7 +7,7 @@ export const dataAssetSchema = schema(
     assetPath: types.string({ required: true }),
     enabled: types.boolean({ required: true }),
     slug: types.string({ required: true }),
-    character_slug: types.string({ required: true }),
+    character_slug: types.string({ required: false }),
     MasteryRewardTrack: types.string(),
     Properties: types.unknown(),
   },

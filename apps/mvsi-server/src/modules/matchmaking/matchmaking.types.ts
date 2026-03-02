@@ -1,6 +1,7 @@
-import type { PlayerConfig } from "../playerPresence/playerPresence.service";
+import type { PlayerConfig } from "../playerConfig/playerConfig.types";
 
 export const MATCHMAKING_MATCH_FOUND_CHANNEL = "matchmaking:matchfound";
+export const MATCHMAKING_MATCH_TICK_CHANNEL = "matchmaking:tick";
 export const MATCHMAKING_GAME_SERVER_READY_CHANNEL = "matchmaking:serverready";
 export const MATCHMAKING_COMPLETE_CHANNEL = "matchmaking:complete";
 export const MATCHMAKING_CANCEL_CHANNEL = "matchmaking:cancel";
@@ -32,7 +33,7 @@ export type MatchmakingTicket = {
   party_size: number;
   region: string;
   skill: number;
-  playerIds : string[];
+  playerIds: string[];
   created_at: Date;
   partyId: string;
   matchmakingRequestId: string;
@@ -55,8 +56,7 @@ export type MatchmakingCompleteMessage = {
 
 export type MatchmakingCancelMessage = {
   playersIds: string[];
-  matchmakingId: string;
-  matchType: MATCH_TYPES;
+  matchmakingRequestId: string;
 };
 
 export type MatchEndMessage = {
@@ -74,14 +74,13 @@ export interface MatchmakingPlayerConfig {
 }
 
 export type MatchmakingPerksLockMessage = {
-  containerMatchId: string;
+  containerMatchIdKey: string;
   playerIds: string[];
 };
 
 export type MatchmakingActiveMatch = {
   matchKey: string;
   resultId: string;
-  //tickets: MatchmakingTicket[];
   matchConfig: MatchConfig;
   state: string;
 };
@@ -110,7 +109,7 @@ type MatchConfig = {
   EventQueueSlug: string;
   bModeGrantsProgress: boolean;
   TeamData: any[];
-  Spectators: object;
+  Spectators: any;
   bIsRanked: boolean;
   bIsCustomGame: boolean;
   Players: { [key: string]: PlayerConfig };

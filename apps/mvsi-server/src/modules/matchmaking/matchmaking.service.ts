@@ -3,7 +3,6 @@ import { env } from "@mvsi/env";
 import { logger } from "@mvsi/logger";
 import { redisClient } from "@mvsi/redis";
 import { ObjectId } from "mongodb";
-import type { MVSI_Websocket } from "../../websocket.elysia";
 import { getLobby, lockLobby } from "../lobby/lobby.service";
 import { LOBBY_QUEUED_CHANNEL } from "../lobby/lobby.types";
 import {
@@ -19,16 +18,13 @@ import {
   type MatchmakingActiveMatch,
   type MatchmakingCancelMessage,
   type MatchmakingCompleteMessage,
-  type MatchmakingPerksLockMessage,
   type MatchmakingTicket,
   type ServerInstanceReadyMessage,
 } from "./matchmaking.types";
 
 const MATCHMAKING_TICKET_KEY = (matchmakingRequestId: string) =>
   `matchmakingTicket:${matchmakingRequestId}`;
-const MATCH_KEY = (matchId: string) => `matchmaking:${matchId}`;
-const MATCH_PERKS_PLAYER_KEY = (matchId: string, playerId: string) =>
-  `${MATCH_KEY(matchId)}:perks:${playerId}`;
+const MATCH_KEY = (matchId: string) => `match:${matchId}`;
 
 export async function requestMatchmakingByLobby(
   lobbyId: string,
@@ -130,17 +126,8 @@ export async function requestMatchmakingByLobby(
 }
 
 export async function getActiveMatch(matchId: string) {
-  const matchStr = await redisClient.get(MATCH_KEY(matchId));
-  if (matchStr) {
-    const redisMatch = JSON.parse(matchStr) as MatchmakingActiveMatch;
-    return redisMatch;
-  }
-  return null;
-}
-
-export async function updateActiveMatch(matchId: string, match: MatchmakingActiveMatch) {
-  const data = JSON.stringify(match);
-  await redisClient.set(MATCH_KEY(matchId), data, { EX: 60 * 20 });
+  const match = (await redisClient.json.get(MATCH_KEY(matchId))) as MatchmakingActiveMatch | null;
+  return match;
 }
 
 export async function notifyActiveMatchCreated(
@@ -148,9 +135,9 @@ export async function notifyActiveMatchCreated(
   match: MatchmakingActiveMatch,
 ) {
   const EX = 60 * 20;
-  const data = JSON.stringify(match);
-  await redisClient.set(MATCH_KEY(containerMatchId), data, { EX });
-  await redisClient.publish(MATCHMAKING_MATCH_FOUND_CHANNEL, data);
+  await redisClient.json.set(MATCH_KEY(containerMatchId), "$", match);
+  await redisClient.expire(MATCH_KEY(containerMatchId), EX);
+  await redisClient.publish(MATCHMAKING_MATCH_FOUND_CHANNEL, JSON.stringify(match));
 }
 
 export async function queueMatchmaking(
@@ -191,12 +178,15 @@ export async function cancelMatchmaking(accountId: string, matchmakingId: string
   const matchMakingTicketStr = await redisClient.get(MATCHMAKING_TICKET_KEY(matchmakingId));
   if (matchMakingTicketStr) {
     const matchMakingTicket = JSON.parse(matchMakingTicketStr) as MatchmakingTicket;
+    if (matchMakingTicket.partyLeaderId !== accountId) {
+      return;
+    }
 
     const message: MatchmakingCancelMessage = {
-      playersIds: [accountId],
-      matchmakingId,
-      matchType: matchMakingTicket.matchType,
+      playersIds: matchMakingTicket.playerIds,
+      matchmakingRequestId: matchmakingId,
     };
+    await removeTicketsFromQueue(matchMakingTicket.matchType, [matchMakingTicket]);
     await redisClient.publish(MATCHMAKING_CANCEL_CHANNEL, JSON.stringify(message));
   }
 }
@@ -234,74 +224,33 @@ export async function completeMatchmaking(
 }
 
 export async function lockPerks(containerMatchId: string, accountId: string, perks: string[]) {
-  const EX = 60 * 20;
-  await redisClient.set(
-    MATCH_PERKS_PLAYER_KEY(containerMatchId, accountId),
-    JSON.stringify(perks),
-    { EX },
-  );
-  const match = await getActiveMatch(containerMatchId);
-  if (match && match.state !== "locked") {
-    const playerIds = Object.keys(match.matchConfig.Players);
-    const allPerksLocked = await getAllPlayersPerkLocked(containerMatchId, playerIds);
+  const script = `
+    redis.call('JSON.SET', KEYS[1], '$.matchConfig.Players["' .. ARGV[1] .. '"].Perks', ARGV[2])
+    local result = redis.call('JSON.GET', KEYS[1], '$.matchConfig.Players')
+    local decoded = cjson.decode(result)
+    local players = decoded[1]
+    
+    local ids = {}
+    local ready = true
+    for id, config in pairs(players) do
+        table.insert(ids, id)
+        if not config.Perks or #config.Perks == 0 then ready = false end
+    end
 
-    if (allPerksLocked.size === playerIds.length) {
-      Object.keys(match.matchConfig.Players).forEach((playerId) => {
-        const player = match.matchConfig.Players[playerId];
-        player.Perks = allPerksLocked.get(playerId) || [];
-      });
-      await updateActiveMatch(containerMatchId, match);
-      await notifyAllPerksLocked(containerMatchId, playerIds);
-    }
-    return true;
-  }
-  return false;
-}
+    if ready then
+        redis.call('JSON.SET', KEYS[1], '$.state', '"locked"')
+        local msg = { containerMatchIdKey = KEYS[1], playerIds = ids }
+        redis.call('PUBLISH', '${MATCHMAKING_PERKS_LOCKED_CHANNEL}', cjson.encode(msg))
+        return true
+    end
+    return false
+  `;
 
-async function notifyAllPerksLocked(containerMatchId: string, playerIds: string[]) {
-  const message: MatchmakingPerksLockMessage = { containerMatchId, playerIds };
-  await redisClient.publish(MATCHMAKING_PERKS_LOCKED_CHANNEL, JSON.stringify(message));
-  logger.info(`All perks locked ${containerMatchId}, players, (${playerIds.join(",")})`);
-}
-
-export async function verifyAllPlayersPerkLocked(containerMatchId: string, playerIds: string[]) {
-  let perksLocked = true;
-  for (const playerId of playerIds) {
-    const perks = await getPlayerPerksForMatch(containerMatchId, playerId);
-    if (!perks) {
-      perksLocked = false;
-    }
-  }
-  return perksLocked;
-}
-
-export async function getAllPlayersPerkLocked(containerMatchId: string, playerIds: string[]) {
-  const playerPerksMap = new Map<string, string[]>();
-  for (const playerId of playerIds) {
-    const perks = await getPlayerPerksForMatch(containerMatchId, playerId);
-    if (perks) {
-      playerPerksMap.set(playerId, perks);
-    }
-  }
-  return playerPerksMap;
-}
-
-export async function getPlayerPerksForMatch(containerMatchId: string, playerId: string) {
-  const playerPerkStr = (await redisClient.GET(
-    MATCH_PERKS_PLAYER_KEY(containerMatchId, playerId),
-  )) as string;
-  if (playerPerkStr) {
-    const playerPerk = JSON.parse(playerPerkStr) as string[];
-    return playerPerk;
-  }
-  return null;
-}
-
-export function stopMatchTick(ws: MVSI_Websocket) {
-  if (ws.data.matchTick) {
-    clearInterval(ws.data.matchTick);
-    ws.data.matchTick = undefined;
-  }
+  const result = await redisClient.eval(script, {
+    keys: [MATCH_KEY(containerMatchId)],
+    arguments: [accountId, JSON.stringify(perks)],
+  });
+  return Boolean(result);
 }
 
 export async function getTicketsFromQueue(queueKey: string) {
@@ -312,6 +261,7 @@ export async function getTicketsFromQueue(queueKey: string) {
 
 export async function removeTicketsFromQueue(queueType: MATCH_TYPES, tickets: MatchmakingTicket[]) {
   for (const ticket of tickets) {
+    await redisClient.del(MATCHMAKING_TICKET_KEY(ticket.matchmakingRequestId));
     const success = await redisClient.lRem(queueType, 0, JSON.stringify(ticket));
     if (success > 0) {
       logger.info(`Removed ticket ${ticket.partyId} from ${queueType} queue for match`);

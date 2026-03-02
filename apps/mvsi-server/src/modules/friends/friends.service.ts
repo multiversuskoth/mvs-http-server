@@ -154,11 +154,11 @@ export async function getUserFriendDetails(publicIds: readonly string[]) {
   const players = await PlayerModel.find({ public_id: { $in: publicIds.map((id) => id) } });
   const playersPresenceState = await getPlayersPresence(players.map((f) => f._id.toHexString()));
   return players.map((f) => {
-    const presenceState =
-      playersPresenceState.find((p) => p.profileId === f.profile_id.toHexString())?.status ===
-      "online"
-        ? "online"
-        : "offline";
+    const presenceState = playersPresenceState.find(
+      (p) => p.profileId === f.profile_id.toHexString(),
+    )
+      ? "online"
+      : "offline";
     return {
       id: f._id,
       "identity.default_username": true,

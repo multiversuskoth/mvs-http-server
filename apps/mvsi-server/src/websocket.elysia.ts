@@ -8,17 +8,18 @@ import type { ServerWebSocket } from "elysia/ws/bun";
 import * as jwt from "jsonwebtoken";
 import type { JWT_CLAIMS } from "./middleware/middlewares";
 import { deleteLobby } from "./modules/lobby/lobby.service";
-import { removeTicketsFromQueue, stopMatchTick } from "./modules/matchmaking/matchmaking.service";
+import { removeTicketsFromQueue } from "./modules/matchmaking/matchmaking.service";
 import { MATCH_TYPES, type MatchmakingTicket } from "./modules/matchmaking/matchmaking.types";
-import { clearPlayerKeys } from "./modules/playerPresence/playerPresence.service";
+import {
+  clearPlayerKeys,
+  refreshPlayersPresence,
+} from "./modules/playerPresence/playerPresence.service";
 
 const PING_BUFFER = Buffer.from([0x0c]);
 
 type WebSocketData = {
   account: JWT_CLAIMS | undefined;
   init: boolean;
-  deleted?: boolean;
-  matchTick: NodeJS.Timeout | undefined;
   ticket?: MatchmakingTicket;
   lobbyId?: string;
   ip: string;
@@ -35,14 +36,16 @@ export type MVSI_Websocket = ElysiaWS<WebSocketData & DecoreatedWebsocket>;
 const sendHydra = new Elysia({ name: "sendHydra" }).derive({ as: "global" }, () => {
   return {
     sendHydra: (ws: ServerWebSocket<WebSocketData>, data: Object) => {
-      if (!ws.data.deleted) {
-        const encoder = new HydraEncoder(true);
-        encoder.encodeValue(data);
-        ws.send(encoder.returnValue());
-      }
+      ws.send(encodeHydraWS(data));
     },
   };
 });
+
+export function encodeHydraWS(data: Object) {
+  const encoder = new HydraEncoder(true);
+  encoder.encodeValue(data);
+  return encoder.returnValue();
+}
 
 export const MAIN_WEBSOCKET = new Elysia()
   .get("/", () => "HTTP server is running\n")
@@ -51,8 +54,6 @@ export const MAIN_WEBSOCKET = new Elysia()
       const data: WebSocketData = {
         account: undefined,
         init: false,
-        deleted: false,
-        matchTick: undefined,
         ip: "",
       };
       return data;
@@ -68,12 +69,8 @@ export const MAIN_WEBSOCKET = new Elysia()
       const ip = ws.remoteAddress.replace(/^::ffff:/, "");
       ws.data.ip = ip;
     },
-    sendPings: true,
-
     close(ws) {
       if (ws.data.account) {
-        ws.data.deleted = true;
-        stopMatchTick(ws);
         attemptRemoveMatchTicket(ws);
         if (ws.data.lobbyId) {
           deleteLobby(ws.data.lobbyId, ws.data.account.id);
@@ -100,9 +97,14 @@ export const MAIN_WEBSOCKET = new Elysia()
 handleHeartBeats();
 
 function handleHeartBeats() {
+  const heartbeatInterval = 30000;
   setInterval(() => {
     MAIN_WEBSOCKET.server?.publish("heartbeat", PING_BUFFER);
-  }, 20000);
+    const playerIds = [...MAIN_WEBSOCKET.decorator.players.values()].map(
+      (ws) => ws.data.account!.id,
+    );
+    refreshPlayersPresence(playerIds);
+  }, heartbeatInterval);
 }
 
 function attemptRemoveMatchTicket(ws: MVSI_Websocket) {

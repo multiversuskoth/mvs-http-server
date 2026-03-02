@@ -1,16 +1,10 @@
 import { env } from "@mvsi/env";
 import { logger } from "@mvsi/logger";
-import { MAIN_WEBSOCKET, type MVSI_Websocket } from "../../websocket.elysia";
-import {
-  getActiveMatch,
-  getPlayerPerksForMatch,
-  removeTicketsFromQueue,
-  stopMatchTick,
-} from "./matchmaking.service";
+import { encodeHydraWS, MAIN_WEBSOCKET, type MVSI_Websocket } from "../../websocket.elysia";
+import { getActiveMatch } from "./matchmaking.service";
 import {
   ACTIVEMATCH_END_CHANNEL,
   type GameNotification,
-  type MATCH_TYPES,
   MATCHMAKING_CANCEL_CHANNEL,
   MATCHMAKING_COMPLETE_CHANNEL,
   MATCHMAKING_GAME_SERVER_READY_CHANNEL,
@@ -22,6 +16,7 @@ import {
   type MatchmakingCompleteMessage,
   type MatchmakingPerksLockMessage,
   type ServerInstanceReadyMessage,
+  MATCHMAKING_MATCH_TICK_CHANNEL,
 } from "./matchmaking.types";
 
 const subscriber = MAIN_WEBSOCKET.decorator.redisSub;
@@ -57,6 +52,11 @@ subscriber.subscribe(MATCHMAKING_PERKS_LOCKED_CHANNEL, (message) => {
   handleAllPerksLocked(notification);
 });
 
+subscriber.subscribe(MATCHMAKING_MATCH_TICK_CHANNEL, (message) => {
+  const notification = JSON.parse(message) as string[];
+  handleMatchTick(notification);
+});
+
 async function handleMatchFound(notification: MatchmakingActiveMatch) {
   const arr = [env.UDP_SERVER_IP];
   const randomIndex = Math.floor(Math.random() * arr.length);
@@ -64,47 +64,47 @@ async function handleMatchFound(notification: MatchmakingActiveMatch) {
   for (const [_id, player] of Object.entries(notification.matchConfig.Players)) {
     const client = clients.get(player.AccountId);
     if (client) {
-      stopMatchTick(client);
-      const message = {
-        data: {
-          MatchKey: notification.matchKey,
-          MatchID: matchId,
-          Port: env.UDP_PORT,
-          template_id: "GameServerReadyNotification",
-          IPAddress: client.data.ip === "127.0.0.1" ? "127.0.0.1" : arr[randomIndex],
-        },
-        payload: {
-          match: {
-            id: matchId,
-          },
-          custom_notification: "realtime",
-        },
-        header: "",
-        cmd: "update",
-      };
-
-      client.data.sendHydra(client, message);
-      logger.info(`Sent match to player ${player.AccountId} for match ${matchId}`);
-
-      // Create the message to send to the players
-      const gamePlayConfigMessage: GameNotification = {
-        data: {
-          MatchId: matchId,
-          GameplayConfig: notification.matchConfig,
-          template_id: "OnGameplayConfigNotified",
-        },
-        payload: {
-          match: {
-            id: matchId,
-          },
-          custom_notification: "realtime",
-        },
-        header: "",
-        cmd: "update",
-      };
-      client.data.sendHydra(client, gamePlayConfigMessage);
+      client.subscribe(`match:${matchId}`);
     }
   }
+  const message = {
+    data: {
+      MatchKey: notification.matchKey,
+      MatchID: matchId,
+      Port: env.UDP_PORT,
+      template_id: "GameServerReadyNotification",
+      IPAddress: arr[randomIndex],
+    },
+    payload: {
+      match: {
+        id: matchId,
+      },
+      custom_notification: "realtime",
+    },
+    header: "",
+    cmd: "update",
+  };
+
+  MAIN_WEBSOCKET.server?.publish(`match:${matchId}`, encodeHydraWS(message));
+  logger.info(`Sent match to all players for match ${matchId}`);
+
+  const gamePlayConfigMessage: GameNotification = {
+    data: {
+      MatchId: matchId,
+      GameplayConfig: notification.matchConfig,
+      template_id: "OnGameplayConfigNotified",
+    },
+    payload: {
+      match: {
+        id: matchId,
+      },
+      custom_notification: "realtime",
+    },
+    header: "",
+    cmd: "update",
+  };
+  MAIN_WEBSOCKET.server?.publish(`match:${matchId}`, encodeHydraWS(gamePlayConfigMessage));
+  logger.info(`Sent game play config to all players for match ${matchId}`);
 }
 
 async function handleOnMatchEnd(notification: MatchEndMessage) {
@@ -166,36 +166,38 @@ function sendRematchDecline(client: MVSI_Websocket, matchId: string) {
 }
 
 async function handleMatchMakingComplete(notification: MatchmakingCompleteMessage) {
+  const message = {
+    data: {},
+    payload: {
+      result: {
+        id: notification.resultId,
+      },
+      match: {
+        id: notification.containerMatchId,
+      },
+      id: notification.matchmakingRequestId,
+      state: 2,
+    },
+    header: "Matchmaking request completed!",
+    cmd: "matchmaking-complete",
+  };
+  MAIN_WEBSOCKET.server?.publish(
+    `matchmaking:${notification.matchmakingRequestId}`,
+    encodeHydraWS(message),
+  );
   for (const playerId of notification.playerIds) {
     const client = clients.get(playerId);
     if (client) {
-      const message = {
-        data: {},
-        payload: {
-          result: {
-            id: notification.resultId,
-          },
-          match: {
-            id: notification.containerMatchId,
-          },
-          id: notification.matchmakingRequestId,
-          state: 2,
-        },
-        header: "Matchmaking request completed!",
-        cmd: "matchmaking-complete",
-      };
-      client.data.sendHydra(client, message);
+      client.unsubscribe(`matchmaking:${notification.matchmakingRequestId}`);
+      client.subscribe(`match:${notification.containerMatchId}`);
     }
   }
 }
 
-export function handleMatchTick(
-  client: MVSI_Websocket,
-  matchmakingRequestId: string,
-  matchType: MATCH_TYPES,
-) {
-  client.data.matchTick = setInterval(() => {
-    client.send({
+export function handleMatchTick(matchmakingRequestIds: string[]) {
+  console.log("handleMatchTick", matchmakingRequestIds);
+  for (const matchmakingRequestId of matchmakingRequestIds) {
+    const data = {
       data: {},
       payload: {
         id: matchmakingRequestId,
@@ -203,47 +205,30 @@ export function handleMatchTick(
       },
       header: "matchmaking-tick",
       cmd: "matchmaking-tick",
-    });
-  }, 1000);
-
-  setTimeout(() => {
-    sendCancelMatchMaking(client, matchmakingRequestId, matchType);
-  }, 100_000);
+    };
+    MAIN_WEBSOCKET.server?.publish(`matchmaking:${matchmakingRequestId}`, encodeHydraWS(data));
+  }
 }
 
 function handleCancelMatchMakingMessage(notification: MatchmakingCancelMessage) {
+  const message = {
+    data: {},
+    payload: {
+      id: notification.matchmakingRequestId,
+      state: 3,
+    },
+    header: "Matchmaking request cancelled.",
+    cmd: "matchmaking-cancel",
+  };
+  MAIN_WEBSOCKET.server?.publish(
+    `matchmaking:${notification.matchmakingRequestId}`,
+    encodeHydraWS(message),
+  );
   for (const playerId of notification.playersIds) {
     const client = clients.get(playerId);
     if (client) {
-      sendCancelMatchMaking(client, notification.matchmakingId, notification.matchType);
+      client.unsubscribe(`matchmaking:${notification.matchmakingRequestId}`);
     }
-  }
-}
-
-function sendCancelMatchMaking(
-  client: MVSI_Websocket,
-  matchmakingRequestId: string,
-  matchType: MATCH_TYPES,
-) {
-  if (client.data.matchTick) {
-    const message = {
-      data: {},
-      payload: {
-        id: matchmakingRequestId,
-        state: 3,
-      },
-      header: "Matchmaking request cancelled.",
-      cmd: "matchmaking-cancel",
-    };
-    attemptRemoveMatchTicket(client, matchType);
-    stopMatchTick(client);
-    client.data.sendHydra(client, message);
-  }
-}
-
-function attemptRemoveMatchTicket(playerWS: MVSI_Websocket, matchType: MATCH_TYPES) {
-  if (playerWS.data.ticket) {
-    removeTicketsFromQueue(matchType, [playerWS.data.ticket]);
   }
 }
 
@@ -280,33 +265,32 @@ async function handleAllPerksLocked(notification: MatchmakingPerksLockMessage) {
   if (!connectedClients) {
     return;
   }
-  const matchId = notification.containerMatchId;
+  const matchId = notification.containerMatchIdKey.split(":")[1];
   const activeMatch = await getActiveMatch(matchId);
   if (!activeMatch) {
     logger.error("Match not found");
     return;
   }
+  const message = {
+    data: {
+      GameplayConfig: activeMatch.matchConfig,
+      template_id: "PerksLockedNotification",
+    },
+    payload: {
+      match: {
+        id: activeMatch.matchConfig.MatchId,
+      },
+      custom_notification: "realtime",
+    },
+    header: "",
+    cmd: "update",
+  };
+  MAIN_WEBSOCKET.server?.publish(`match:${matchId}`, encodeHydraWS(message));
+  logger.info(`Sent perks lock for match ${matchId} to all players`);
   for (const client of connectedClients) {
     if (client) {
-      if (activeMatch) {
-        const message = {
-          data: {
-            GameplayConfig: activeMatch.matchConfig,
-            template_id: "PerksLockedNotification",
-          },
-          payload: {
-            match: {
-              id: activeMatch.matchConfig.MatchId,
-            },
-            custom_notification: "realtime",
-          },
-          header: "",
-          cmd: "update",
-        };
-        client.data.sendHydra(client, message);
-      }
+      client.unsubscribe(`match:${matchId}`);
     }
-    logger.info(`Sent perks lock to player ${client.data.account?.id} for match ${matchId}`);
   }
 }
 

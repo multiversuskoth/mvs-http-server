@@ -5,7 +5,6 @@ import {
   getActiveMatch,
   lockPerks,
   requestMatchmakingByLobby,
-  verifyAllPlayersPerkLocked,
 } from "./matchmaking.service";
 import { MATCH_TYPES } from "./matchmaking.types";
 
@@ -120,13 +119,15 @@ router.put(
   "/ssc/invoke/perks_absent",
   async ({ body }) => {
     const activeMatch = await getActiveMatch(body.ContainerMatchId);
-    if (activeMatch) {
-      return await verifyAllPlayersPerkLocked(
-        body.ContainerMatchId,
-        Object.keys(activeMatch.matchConfig.Players).map(
-          (p) => activeMatch.matchConfig.Players[p].AccountId,
-        ),
-      );
+    if (activeMatch?.state === "locked") {
+      return {
+        body: {
+          message: "Perks were locked",
+          GameplayConfig: activeMatch.matchConfig,
+        },
+        metadata: null,
+        return_code: 0,
+      };
     }
 
     return {
