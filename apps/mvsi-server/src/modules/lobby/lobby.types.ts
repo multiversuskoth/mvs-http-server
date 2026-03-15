@@ -10,6 +10,11 @@ export type LobbyPlayerStatus = {
   ready: boolean;
 };
 
+export type LobbyCreatedMessage = {
+  lobbyId: string;
+  accountId: string;
+};
+
 export type LobbyPlayer = {
   Account: { id: string };
   JoinedAt: Date;

@@ -11,6 +11,7 @@ import {
   type CustomLobbyMatchConfig,
   type CustomLobbySettings,
   LOBBY_CREATED_CHANNEL,
+  LobbyCreatedMessage,
   type LobbyTeam,
   type PartyLobby,
 } from "./lobby.types";
@@ -369,7 +370,11 @@ export async function publishLobbyCreated(lobby: BaseLobby) {
     .json.set(key, "$", lobby as Parameters<typeof redisClient.json.set>[2])
     .expire(key, LOBBY_EX)
     .exec();
-  await redisClient.publish(LOBBY_CREATED_CHANNEL, JSON.stringify(lobby));
+  const lobbyCreatedMessage: LobbyCreatedMessage = {
+    lobbyId: lobby.MatchID,
+    accountId: lobby.LeaderID,
+  };
+  await redisClient.publish(LOBBY_CREATED_CHANNEL, JSON.stringify(lobbyCreatedMessage));
 }
 
 export async function setLobbyMode(leaderId: string, lobbyId: string, newMode: MATCH_TYPES) {
@@ -484,17 +489,22 @@ export async function updateGameModeForCustomLobby(
     return null;
   }
   const lobby = JSON.parse(result as string) as CustomLobby;
+  await customLobbyBroadcastMapUpdate(lobbyId, lobby.Maps);
+  return lobby;
+}
+
+export async function customLobbyBroadcastMapUpdate(lobbyId: string, maps: CustomLobby["Maps"]) {
   const notification: RealtimeNotificationMessage = {
-    topic: lobby.MatchID,
+    topic: lobbyId,
     notification: {
       data: {
-        Maps: lobby.Maps,
-        MatchID: lobby.MatchID,
+        Maps: maps,
+        MatchID: lobbyId,
         template_id: "MapsSetForCustomGame",
       },
       payload: {
         match: {
-          id: lobby.MatchID,
+          id: lobbyId,
         },
         custom_notification: "realtime",
       },
@@ -502,8 +512,8 @@ export async function updateGameModeForCustomLobby(
       cmd: "update",
     },
   };
+  console.log("Broadcasting custom lobby map update", JSON.stringify(notification, null, 2));
   await redisClient.publish(REALTIME_NOTIFICATION_CHANNEL, JSON.stringify(notification));
-  return lobby;
 }
 
 export async function updateIntSettingForCustomLobby(
@@ -530,6 +540,7 @@ export async function updateEnabledMapsForCustomLobby(
     [lobbyKey(lobbyId)],
     [leaderId, ...mapsSlugs],
   );
+  await customLobbyBroadcastMapUpdate(lobbyId, JSON.parse(result as string) as CustomLobby["Maps"]);
   return result ? (JSON.parse(result as string) as CustomLobby["Maps"]) : null;
 }
 
@@ -595,6 +606,11 @@ export async function joinCustomLobby(lobbyId: string, accountId: string, isSpec
   if (raw === "false") return null;
 
   const lobby = JSON.parse(raw) as CustomLobby;
+  const lobbyCreatedMessage: LobbyCreatedMessage = {
+    lobbyId: lobby.MatchID,
+    accountId,
+  };
+  await redisClient.publish(LOBBY_CREATED_CHANNEL, JSON.stringify(lobbyCreatedMessage));
   await setPlayerCurrentLobbyId(accountId, lobby.MatchID);
   return lobby;
 }

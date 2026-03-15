@@ -1,18 +1,17 @@
 import { logger } from "@mvsi/logger";
 import { encodeHydraWS, MAIN_WEBSOCKET } from "../../websocket.elysia";
 import type { MatchmakingTicket } from "../matchmaking/matchmaking.types";
-import { getLobby } from "./lobby.service";
 import {
   LOBBY_CREATED_CHANNEL,
   LOBBY_QUEUED_CHANNEL,
-  type PartyLobby,
+  type LobbyCreatedMessage,
 } from "./lobby.types";
 
 const subscriber = MAIN_WEBSOCKET.decorator.redisSub;
 const clients = MAIN_WEBSOCKET.decorator.players;
 
 subscriber.subscribe(LOBBY_CREATED_CHANNEL, (message) => {
-  const notification = JSON.parse(message) as PartyLobby;
+  const notification = JSON.parse(message) as LobbyCreatedMessage;
   handleOnLobbyCreated(notification);
 });
 
@@ -21,17 +20,14 @@ subscriber.subscribe(LOBBY_QUEUED_CHANNEL, (message) => {
   handlePartyQueued(notification);
 });
 
-async function handleOnLobbyCreated(newLobby: PartyLobby) {
-  const client = clients.get(newLobby.LeaderID);
+async function handleOnLobbyCreated(message: LobbyCreatedMessage) {
+  const client = clients.get(message.accountId);
   if (client) {
     if (client.data.lobbyId) {
-      const oldLobby = await getLobby(client.data.lobbyId);
-      if (oldLobby && oldLobby.LeaderID !== newLobby.LeaderID) {
-        client.unsubscribe(oldLobby.MatchID);
-      }
+      client.unsubscribe(client.data.lobbyId);
     }
-    client.data.lobbyId = newLobby.MatchID;
-    client.subscribe(newLobby.MatchID);
+    client.data.lobbyId = message.lobbyId;
+    client.subscribe(message.lobbyId);
     logger.verbose(`Player ${client.data.account?.id} joined lobby ${client.data.lobbyId}`);
   }
 }
