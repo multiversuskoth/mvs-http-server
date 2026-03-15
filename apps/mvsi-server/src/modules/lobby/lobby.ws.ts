@@ -4,7 +4,6 @@ import type { MatchmakingTicket } from "../matchmaking/matchmaking.types";
 import { getLobby } from "./lobby.service";
 import {
   LOBBY_CREATED_CHANNEL,
-  LOBBY_MODE_UPDATED_CHANNEL,
   LOBBY_QUEUED_CHANNEL,
   type PartyLobby,
 } from "./lobby.types";
@@ -15,11 +14,6 @@ const clients = MAIN_WEBSOCKET.decorator.players;
 subscriber.subscribe(LOBBY_CREATED_CHANNEL, (message) => {
   const notification = JSON.parse(message) as PartyLobby;
   handleOnLobbyCreated(notification);
-});
-
-subscriber.subscribe(LOBBY_MODE_UPDATED_CHANNEL, (message) => {
-  const notification = JSON.parse(message) as PartyLobby;
-  handleOnLobbyModeChanged(notification);
 });
 
 subscriber.subscribe(LOBBY_QUEUED_CHANNEL, (message) => {
@@ -39,27 +33,6 @@ async function handleOnLobbyCreated(newLobby: PartyLobby) {
     client.data.lobbyId = newLobby.MatchID;
     client.subscribe(newLobby.MatchID);
     logger.verbose(`Player ${client.data.account?.id} joined lobby ${client.data.lobbyId}`);
-  }
-}
-
-function handleOnLobbyModeChanged(lobby: PartyLobby) {
-  for (const playerId of Object.keys(lobby.Teams[0].Players)) {
-    const client = clients.get(playerId);
-    if (client) {
-      const message = {
-        data: {
-          template_id: "OnLobbyModeUpdated",
-          LobbyId: lobby.MatchID,
-          ModeString: lobby.ModeString,
-        },
-        payload: {
-          custom_notification: "realtime",
-        },
-        header: "",
-        cmd: "update",
-      };
-      client.data.sendHydra(client, message);
-    }
   }
 }
 

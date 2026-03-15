@@ -207,8 +207,6 @@ router.put(
   },
 );
 
-// CUSTOM LOBBIES
-
 router.put(
   "/ssc/invoke/set_mode_for_lobby",
   async ({ claims, body }) => {
@@ -223,6 +221,7 @@ router.put(
   },
 );
 
+// CUSTOM LOBBIES
 router.put(
   "/ssc/invoke/join_custom_game_lobby",
   async ({ claims, body }) => {

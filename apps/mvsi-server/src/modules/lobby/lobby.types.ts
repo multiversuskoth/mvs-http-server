@@ -3,7 +3,6 @@ import { TeamStyle } from "../gameModes/gameModes.config";
 import type { MATCH_TYPES } from "../matchmaking/matchmaking.types";
 
 export const LOBBY_CREATED_CHANNEL = "lobby:created";
-export const LOBBY_MODE_UPDATED_CHANNEL = "lobby:mode";
 export const LOBBY_QUEUED_CHANNEL = "lobby:queued";
 
 export type LobbyPlayerStatus = {
