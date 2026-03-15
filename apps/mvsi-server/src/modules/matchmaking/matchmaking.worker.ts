@@ -12,14 +12,14 @@ import { getPlayersConfig } from "../playerConfig/playerConfig.service";
 import type { PlayerConfig } from "../playerConfig/playerConfig.types";
 import {
   completeMatchmaking,
-  getTicketsFromQueue,
+  getMatchmakingQueue,
+  getQueueTickets,
   notifyActiveMatchCreated,
-  notifyGameServerReady,
   removeTicketsFromQueue,
 } from "./matchmaking.service";
+import { findMatchedGroups } from "./matchmaking.matching";
 import {
   MATCH_TYPES,
-  MATCHMAKING_CANCEL_CHANNEL,
   MATCHMAKING_MATCH_TICK_CHANNEL,
   type MatchmakingActiveMatch,
   type MatchmakingTicket,
@@ -52,133 +52,98 @@ class MatchCreationError extends Error {
 
 export function startMatchMakingWorker(): void {
   logger.info("Starting matchmaking worker...");
-  // Run the first check immediately
   checkQueues();
-  // Then set up interval to check regularly
-  setInterval(checkQueues, CHECK_INTERVAL_MS);
-
   logger.info(`Matchmaking worker started, checking queue every ${CHECK_INTERVAL_MS}ms`);
 }
 
 // Process 1v1 matchmaking queue
 async function process1v1Queue(): Promise<boolean> {
   try {
-    // Get all tickets in the queue
-    const tickets = await getTicketsFromQueue(MATCH_TYPES.ONE_V_ONE);
+    // Get queue ids
+    const queueIds = await getMatchmakingQueue(MATCH_TYPES.ONE_V_ONE);
 
-    if (tickets.length > 0) {
-      await redisClient.publish(
-        MATCHMAKING_MATCH_TICK_CHANNEL,
-        JSON.stringify(tickets.map((ticket) => ticket.matchmakingRequestId)),
-      );
+    if (queueIds.length > 0) {
+      await redisClient.publish(MATCHMAKING_MATCH_TICK_CHANNEL, JSON.stringify(queueIds));
+    } else {
+      return false;
     }
 
-    if (tickets.length < MATCH_RULES["1v1"].teamsRequired) {
+    if (queueIds.length < MATCH_RULES["1v1"].teamsRequired) {
       return false; // Not enough tickets to make a match
     }
 
-    logger.info(`Found ${tickets.length} tickets in 1v1 queue, attempting to create a match`);
+    const tickets = await getQueueTickets(queueIds);
 
-    // Parse ticket data from queue
-    const matchedTickets: MatchmakingTicket[] = [];
-    for (const ticket of tickets) {
+    logger.info(`Found ${tickets.length} tickets in 1v1 queue, matching players`);
+
+    // Find groups of 2 solo-player tickets that are compatible on skill & region
+    const soloTickets = tickets.filter((t) => t.partySize === 1);
+    const matchedGroups = findMatchedGroups(soloTickets, MATCH_RULES["1v1"].teamsRequired);
+
+    if (matchedGroups.length === 0) {
+      logger.info("No compatible 1v1 matches found this cycle");
+      return false;
+    }
+
+    let createdAny = false;
+    for (const group of matchedGroups) {
       try {
-        if (Date.now() - new Date(ticket.created_at).getTime() > 100_000) {
-          await removeTicketsFromQueue(MATCH_TYPES.ONE_V_ONE, [ticket]);
-          await redisClient.publish(
-            MATCHMAKING_CANCEL_CHANNEL,
-            JSON.stringify([ticket.matchmakingRequestId]),
-          );
-          continue;
-        }
-        if (ticket.party_size === 1) {
-          // For 1v1, we only want solo players
-          matchedTickets.push(ticket);
-
-          // If we have enough tickets, stop looking
-          if (matchedTickets.length === MATCH_RULES["1v1"].teamsRequired) {
-            break;
-          }
-        }
+        await removeTicketsFromQueue(MATCH_TYPES.ONE_V_ONE, group);
+        await createMatch(group, MATCH_TYPES.ONE_V_ONE);
+        createdAny = true;
       } catch (error) {
-        logger.error(`Error parsing ticket in 1v1 queue: ${error}`);
-        // Continue to next ticket
+        logger.error(`Error creating 1v1 match from matched group: ${error}`);
       }
     }
 
-    // Check if we have enough tickets for a match
-    if (matchedTickets.length === MATCH_RULES["1v1"].teamsRequired) {
-      // Remove matched tickets from queue
-      try {
-        await removeTicketsFromQueue(MATCH_TYPES.ONE_V_ONE, matchedTickets);
-
-        // Create a match with these tickets
-        await createMatch(matchedTickets, MATCH_TYPES.ONE_V_ONE);
-        return true;
-      } catch (error) {
-        logger.error(`Error removing matched tickets from queue: ${error}`);
-        return false; // If we can't remove them, we can't proceed
-      }
-    }
-
-    logger.info(
-      `Not enough valid tickets for a 1v1 match (need ${MATCH_RULES["1v1"].teamsRequired}, found ${matchedTickets.length})`,
-    );
-    return false;
+    return createdAny;
   } catch (error) {
     logger.error(`Error processing 1v1 queue: ${error}`);
     return false;
   }
 }
 
-// Process 1v1 matchmaking queue
+// Process 2v2 matchmaking queue
 async function process2v2Queue(): Promise<boolean> {
   try {
-    // Get all tickets in the queue
-    const tickets = await getTicketsFromQueue(MATCH_TYPES.TWO_V_TWO);
+    // Get queue ids
+    const queueIds = await getMatchmakingQueue(MATCH_TYPES.TWO_V_TWO);
 
-    if (tickets.length < MATCH_RULES["2v2"].totalPlayersRequired) {
+    if (queueIds.length > 0) {
+      await redisClient.publish(MATCHMAKING_MATCH_TICK_CHANNEL, JSON.stringify(queueIds));
+    } else {
+      return false;
+    }
+
+    if (queueIds.length < MATCH_RULES["2v2"].totalPlayersRequired) {
       return false; // Not enough tickets to make a match
     }
 
-    logger.info(`Found ${tickets.length} tickets in 2v2 queue, attempting to create a match`);
+    const tickets = await getQueueTickets(queueIds);
 
-    // Parse ticket data from queue
-    const matchedTickets: MatchmakingTicket[] = [];
-    for (const ticket of tickets) {
+    logger.info(`Found ${tickets.length} tickets in 2v2 queue, matching players`);
+
+    // For 2v2, we need groups of tickets whose total player count = 4
+    // and all tickets must be mutually compatible on skill & region
+    const matchedGroups = findMatchedGroups(tickets, MATCH_RULES["2v2"].totalPlayersRequired);
+
+    if (matchedGroups.length === 0) {
+      logger.info("No compatible 2v2 matches found this cycle");
+      return false;
+    }
+
+    let createdAny = false;
+    for (const group of matchedGroups) {
       try {
-        // Only solo tickets
-        matchedTickets.push(ticket);
-
-        // If we have enough tickets, stop looking
-        if (matchedTickets.length === MATCH_RULES["2v2"].totalPlayersRequired) {
-          break;
-        }
+        await removeTicketsFromQueue(MATCH_TYPES.TWO_V_TWO, group);
+        await createMatch(group, MATCH_TYPES.TWO_V_TWO);
+        createdAny = true;
       } catch (error) {
-        logger.error(`Error parsing ticket in 2v2 queue: ${error}`);
-        // Continue to next ticket
+        logger.error(`Error creating 2v2 match from matched group: ${error}`);
       }
     }
 
-    // Check if we have enough tickets for a match
-    if (matchedTickets.length === MATCH_RULES["2v2"].totalPlayersRequired) {
-      // Remove matched tickets from queue
-      try {
-        await removeTicketsFromQueue(MATCH_TYPES.TWO_V_TWO, matchedTickets);
-
-        // Create a match with these tickets
-        await createMatch(matchedTickets, MATCH_TYPES.TWO_V_TWO);
-        return true;
-      } catch (error) {
-        logger.error(`Error removing matched tickets from queue: ${error}`);
-        return false; // If we can't remove them, we can't proceed
-      }
-    }
-
-    logger.info(
-      `Not enough valid tickets for a 2v2 match (need ${MATCH_RULES["2v2"].totalPlayersRequired}, found ${matchedTickets.length})`,
-    );
-    return false;
+    return createdAny;
   } catch (error) {
     logger.error(`Error processing 2v2 queue: ${error}`);
     return false;
@@ -237,7 +202,7 @@ async function configurePlayersForMatch(
     // Assign tickets to teams
     shuffledTickets.forEach((ticket) => {
       const availableTeams = teamAssignments.filter(
-        (team) => team.players.length + ticket.party_size <= maxPlayersPerTeam,
+        (team) => team.players.length + ticket.partySize <= maxPlayersPerTeam,
       );
 
       const selectedTeam = availableTeams[Math.floor(Math.random() * availableTeams.length)];
@@ -252,7 +217,7 @@ async function configurePlayersForMatch(
       team.players.forEach((playerData, playerIdx) => {
         // Find teammate from same party (only if party size > 1)
         const teammate =
-          playerData.ticket.party_size > 1
+          playerData.ticket.partySize > 1
             ? playerData.ticket.playerIds.find((p) => p !== playerData.player)
             : null;
 
@@ -346,8 +311,6 @@ async function createMatch(tickets: MatchmakingTicket[], matchType: MATCH_TYPES)
 
     await notifyActiveMatchCreated(match.matchConfig.MatchId, match);
 
-    const playerIds = players.map((p) => p.playerId);
-
     for (const ticket of tickets) {
       await completeMatchmaking(
         matchId,
@@ -355,7 +318,6 @@ async function createMatch(tickets: MatchmakingTicket[], matchType: MATCH_TYPES)
         ticket.playerIds.map((p) => p),
       );
     }
-    await notifyGameServerReady(matchId, playerIds);
 
     logger.info(
       `Created ${matchType} match ${match.resultId} with ${totalPlayers} players across ${tickets.length} tickets`,
@@ -384,4 +346,5 @@ async function checkQueues(): Promise<void> {
   } catch (error) {
     logger.error(`Error checking queue: ${error}`);
   }
+  setTimeout(checkQueues, CHECK_INTERVAL_MS);
 }

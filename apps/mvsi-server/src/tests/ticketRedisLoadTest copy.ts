@@ -76,7 +76,7 @@ function generateTicket(_index: number): MatchmakingTicket {
   }; */
 
   return {
-    party_size: 1,
+    partySize: 1,
     region: region,
     skill: skill,
     playerIds: [new ObjectId().toHexString()],
@@ -152,7 +152,7 @@ async function addTicketsToQueue(
       matchmakingRequestId: ticket.matchmakingRequestId,
       partyId: ticket.partyId,
       partyLeaderId: ticket.partyLeaderId,
-      party_size: ticket.party_size.toString(),
+      party_size: ticket.partySize.toString(),
       region: validRegion,
       skill: ticket.skill?.toString() ?? "0",
       matchType: ticket.matchType,
@@ -368,7 +368,7 @@ async function loadTicketData(ticketId: string): Promise<{
     matchmakingRequestId: ticketData.matchmakingRequestId,
     partyId: ticketData.partyId,
     partyLeaderId: ticketData.partyLeaderId,
-    party_size: parseInt(ticketData.party_size, 10),
+    partySize: parseInt(ticketData.party_size, 10),
     region: ticketRegion,
     skill: parseInt(ticketData.skill, 10),
     matchType: ticketData.matchType as MATCH_TYPES,

@@ -1,3 +1,5 @@
+import { GAME_MODES_CONFIG } from "../../data/gameModes";
+import { TeamStyle } from "../gameModes/gameModes.config";
 import type { MATCH_TYPES } from "../matchmaking/matchmaking.types";
 
 export const LOBBY_CREATED_CHANNEL = "lobby:created";
@@ -6,13 +8,11 @@ export const LOBBY_QUEUED_CHANNEL = "lobby:queued";
 
 export type LobbyPlayerStatus = {
   id: string;
-  profileId: string;
   ready: boolean;
 };
 
 export type LobbyPlayer = {
   Account: { id: string };
-  ProfileId: string;
   JoinedAt: Date;
   BotSettingSlug: string;
   LobbyPlayerIndex: number;
@@ -54,7 +54,7 @@ export type BaseLobby = {
 };
 
 // Regular Lobby requires ModeString
-export type Lobby = BaseLobby & {
+export type PartyLobby = BaseLobby & {
   ModeString: MATCH_TYPES;
 };
 
@@ -64,4 +64,31 @@ export type RiftLobby = BaseLobby & {
   ModeString?: never;
   // Additional rift-specific fields should be added via intersection
   // Example: RiftLobby & ExtraLobbyRiftData
+};
+
+export type CustomLobby = BaseLobby &
+  CustomLobbySettings & {
+    ModeString?: never;
+  };
+
+export type CustomLobbySettings = {
+  GameModeSlug: keyof typeof GAME_MODES_CONFIG;
+  Handicaps: Record<string, number>;
+  Maps: { Map: string; IsSelected: boolean }[];
+  match_config: CustomLobbyMatchConfig;
+};
+
+export type CustomLobbyMatchConfig = {
+  TeamStyle: TeamStyle;
+  QueueType: "Unselected" | "Ranked" | "Casual" | string;
+  Context: "Custom" | "Standard" | string;
+  ModeDifficulty: "Unselected" | "Easy" | "Normal" | "Hard" | string;
+  GameModeAlias: "Versus" | "Coop" | string;
+  NumRingoutsForWin: number;
+  MatchDuration: number;
+  AllowHazards: boolean;
+  AllowDuplicateCharacters: boolean;
+  AreRewardsSkipped: boolean;
+  num_set_wins_required: number;
+  EnableShields: number;
 };

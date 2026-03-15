@@ -11,9 +11,9 @@ export const MAIN_APP = new Elysia().onRequest(({ request }) => {
 });
 const JWT_CLAIMS_SCHEMA = t.Object({
   id: t.String(),
-  public_id: t.String(),
-  wb_network_id: t.String(),
-  profile_id: t.String(),
+  //public_id: t.String(),
+  //wb_network_id: t.String(),
+  //profile_id: t.String(),
   username: t.String(),
   hydraUsername: t.String(),
   steamId: t.String(),

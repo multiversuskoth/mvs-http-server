@@ -84,6 +84,9 @@ export const MAIN_WEBSOCKET = new Elysia()
       const data = ws.data;
       if (!data.init) {
         await handleHandshake(ws, Buffer.from(message));
+        if (data.account) {
+          ws.subscribe(data.account.id);
+        }
         ws.subscribe("heartbeat");
         // Need to send ping to client or client will disconnect
         ws.sendBinary(PING_BUFFER);

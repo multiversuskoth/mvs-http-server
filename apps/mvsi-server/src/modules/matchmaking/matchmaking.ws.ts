@@ -7,7 +7,6 @@ import {
   type GameNotification,
   MATCHMAKING_CANCEL_CHANNEL,
   MATCHMAKING_COMPLETE_CHANNEL,
-  MATCHMAKING_GAME_SERVER_READY_CHANNEL,
   MATCHMAKING_MATCH_FOUND_CHANNEL,
   MATCHMAKING_PERKS_LOCKED_CHANNEL,
   type MatchEndMessage,
@@ -15,17 +14,12 @@ import {
   type MatchmakingCancelMessage,
   type MatchmakingCompleteMessage,
   type MatchmakingPerksLockMessage,
-  type ServerInstanceReadyMessage,
   MATCHMAKING_MATCH_TICK_CHANNEL,
 } from "./matchmaking.types";
+import { ObjectId } from "mongodb";
 
 const subscriber = MAIN_WEBSOCKET.decorator.redisSub;
 const clients = MAIN_WEBSOCKET.decorator.players;
-
-subscriber.subscribe(MATCHMAKING_GAME_SERVER_READY_CHANNEL, (message) => {
-  const notification = JSON.parse(message) as ServerInstanceReadyMessage;
-  handleServerInstanceReady(notification);
-});
 
 subscriber.subscribe(MATCHMAKING_COMPLETE_CHANNEL, (message) => {
   const notification = JSON.parse(message) as MatchmakingCompleteMessage;
@@ -64,7 +58,7 @@ async function handleMatchFound(notification: MatchmakingActiveMatch) {
   for (const [_id, player] of Object.entries(notification.matchConfig.Players)) {
     const client = clients.get(player.AccountId);
     if (client) {
-      client.subscribe(`match:${matchId}`);
+      client.subscribe(matchId);
     }
   }
   const message = {
@@ -85,7 +79,7 @@ async function handleMatchFound(notification: MatchmakingActiveMatch) {
     cmd: "update",
   };
 
-  MAIN_WEBSOCKET.server?.publish(`match:${matchId}`, encodeHydraWS(message));
+  MAIN_WEBSOCKET.server?.publish(matchId, encodeHydraWS(message));
   logger.info(`Sent match to all players for match ${matchId}`);
 
   const gamePlayConfigMessage: GameNotification = {
@@ -103,8 +97,26 @@ async function handleMatchFound(notification: MatchmakingActiveMatch) {
     header: "",
     cmd: "update",
   };
-  MAIN_WEBSOCKET.server?.publish(`match:${matchId}`, encodeHydraWS(gamePlayConfigMessage));
+  MAIN_WEBSOCKET.server?.publish(matchId, encodeHydraWS(gamePlayConfigMessage));
   logger.info(`Sent game play config to all players for match ${matchId}`);
+
+  const gameServerReadyMessage = {
+    data: {},
+    payload: {
+      game_server_instance: {
+        game_server_type_slug: "multiplay",
+        port: env.UDP_PORT,
+        owner_id: matchId,
+        host: env.UDP_SERVER_IP,
+        id: new ObjectId().toHexString(),
+      },
+      proxied_data: null,
+    },
+    header: "Your game server is ready to join.",
+    cmd: "game-server-instance-ready",
+  };
+  MAIN_WEBSOCKET.server?.publish(matchId, encodeHydraWS(gameServerReadyMessage));
+  logger.info(`Sent game server ready to all players for match ${matchId}`);
 }
 
 async function handleOnMatchEnd(notification: MatchEndMessage) {
@@ -181,21 +193,17 @@ async function handleMatchMakingComplete(notification: MatchmakingCompleteMessag
     header: "Matchmaking request completed!",
     cmd: "matchmaking-complete",
   };
-  MAIN_WEBSOCKET.server?.publish(
-    `matchmaking:${notification.matchmakingRequestId}`,
-    encodeHydraWS(message),
-  );
+  MAIN_WEBSOCKET.server?.publish(notification.matchmakingRequestId, encodeHydraWS(message));
   for (const playerId of notification.playerIds) {
     const client = clients.get(playerId);
     if (client) {
-      client.unsubscribe(`matchmaking:${notification.matchmakingRequestId}`);
-      client.subscribe(`match:${notification.containerMatchId}`);
+      client.unsubscribe(notification.matchmakingRequestId);
+      client.subscribe(notification.containerMatchId);
     }
   }
 }
 
 export function handleMatchTick(matchmakingRequestIds: string[]) {
-  console.log("handleMatchTick", matchmakingRequestIds);
   for (const matchmakingRequestId of matchmakingRequestIds) {
     const data = {
       data: {},
@@ -206,7 +214,7 @@ export function handleMatchTick(matchmakingRequestIds: string[]) {
       header: "matchmaking-tick",
       cmd: "matchmaking-tick",
     };
-    MAIN_WEBSOCKET.server?.publish(`matchmaking:${matchmakingRequestId}`, encodeHydraWS(data));
+    MAIN_WEBSOCKET.server?.publish(matchmakingRequestId, encodeHydraWS(data));
   }
 }
 
@@ -220,42 +228,11 @@ function handleCancelMatchMakingMessage(notification: MatchmakingCancelMessage) 
     header: "Matchmaking request cancelled.",
     cmd: "matchmaking-cancel",
   };
-  MAIN_WEBSOCKET.server?.publish(
-    `matchmaking:${notification.matchmakingRequestId}`,
-    encodeHydraWS(message),
-  );
+  MAIN_WEBSOCKET.server?.publish(notification.matchmakingRequestId, encodeHydraWS(message));
   for (const playerId of notification.playersIds) {
     const client = clients.get(playerId);
     if (client) {
-      client.unsubscribe(`matchmaking:${notification.matchmakingRequestId}`);
-    }
-  }
-}
-
-async function handleServerInstanceReady(notification: ServerInstanceReadyMessage) {
-  for (const playerId of notification.playerIds) {
-    const client = clients.get(playerId);
-    if (client) {
-      const message = {
-        data: {},
-        payload: {
-          game_server_instance: {
-            game_server_type_slug: "multiplay",
-            port: env.UDP_PORT,
-            owner_id: notification.containerMatchId,
-            host: env.UDP_SERVER_IP,
-            id: notification.resultId,
-          },
-          proxied_data: null,
-        },
-        header: "Your game server is ready to join.",
-        cmd: "game-server-instance-ready",
-      };
-      client.data.sendHydra(client, message);
-    } else {
-      logger.error(
-        `Error could not find player ${playerId} to send game server instance ready message for match ${notification.containerMatchId}`,
-      );
+      client.unsubscribe(notification.matchmakingRequestId);
     }
   }
 }
@@ -285,11 +262,11 @@ async function handleAllPerksLocked(notification: MatchmakingPerksLockMessage) {
     header: "",
     cmd: "update",
   };
-  MAIN_WEBSOCKET.server?.publish(`match:${matchId}`, encodeHydraWS(message));
+  MAIN_WEBSOCKET.server?.publish(matchId, encodeHydraWS(message));
   logger.info(`Sent perks lock for match ${matchId} to all players`);
   for (const client of connectedClients) {
     if (client) {
-      client.unsubscribe(`match:${matchId}`);
+      client.unsubscribe(matchId);
     }
   }
 }

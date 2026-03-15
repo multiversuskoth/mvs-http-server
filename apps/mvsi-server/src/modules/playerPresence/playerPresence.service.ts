@@ -1,5 +1,5 @@
-import { redisClient } from "@mvsi/redis";
 import type { PlayerPresence } from "./playerPresence.types";
+import { redisClient } from "@mvsi/redis";
 import { logger } from "@mvsi/logger";
 
 const PLAYER_PRESENCE_ONLINE_TTL = 60;
@@ -23,13 +23,28 @@ export async function refreshPlayersPresence(playerIds: string[]) {
 }
 
 export async function getPlayersPresence(playerIds: string[]) {
-  const multi = redisClient.multi();
+  console.log("Getting player presence for playerIds", playerIds);
+  const multi = await redisClient.multi();
   for (const playerId of playerIds) {
     multi.hGetAll(`player:${playerId}`);
   }
-  const players = (await multi.exec()) as unknown as PlayerPresence[];
+  const results = (await multi.exec()) as unknown as PlayerPresence[];
+  console.log("Fetched player presence for playerIds", playerIds, ":", results);
+  const playersWithIds = playerIds
+    .map((playerId, index) => {
+      const data = results[index];
 
-  return players;
+      // If the key didn't exist, Redis returns an empty object {} for hGetAll
+      // We check if it's empty to avoid returning "ghost" players
+      if (Object.keys(data).length === 0) return null;
+
+      return {
+        id: playerId, // Adding the key back here
+        ...data,
+      };
+    })
+    .filter((p) => p !== null); // Remove nulls if any IDs weren't found
+  return playersWithIds;
 }
 
 export async function updatePlayerStatus(playerId: string, status: string) {

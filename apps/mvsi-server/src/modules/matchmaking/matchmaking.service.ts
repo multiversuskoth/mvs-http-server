@@ -11,7 +11,6 @@ import {
   type MATCH_TYPES,
   MATCHMAKING_CANCEL_CHANNEL,
   MATCHMAKING_COMPLETE_CHANNEL,
-  MATCHMAKING_GAME_SERVER_READY_CHANNEL,
   MATCHMAKING_MATCH_FOUND_CHANNEL,
   MATCHMAKING_PERKS_LOCKED_CHANNEL,
   type MatchEndMessage,
@@ -19,7 +18,6 @@ import {
   type MatchmakingCancelMessage,
   type MatchmakingCompleteMessage,
   type MatchmakingTicket,
-  type ServerInstanceReadyMessage,
 } from "./matchmaking.types";
 
 const MATCHMAKING_TICKET_KEY = (matchmakingRequestId: string) =>
@@ -78,7 +76,7 @@ export async function requestMatchmakingByLobby(
       Object.entries(lobby.Teams[0].Players).map(([accountId, player]) => [
         accountId,
         {
-          id: player.ProfileId,
+          id: accountId,
           updated_at: null,
           account_id: accountId,
           created_at: null,
@@ -156,7 +154,7 @@ export async function queueMatchmaking(
       partyLeaderId,
       matchmakingRequestId,
       partyId,
-      party_size: playerIds.length,
+      partySize: playerIds.length,
       playerIds,
     };
     await lockLobby(matchmakingRequestId, partyLeaderId);
@@ -198,15 +196,6 @@ export async function notifyActiveMatchEnded(playerIds: string[], matchId: strin
   };
 
   await redisClient.publish(ACTIVEMATCH_END_CHANNEL, JSON.stringify(notification));
-}
-
-export async function notifyGameServerReady(containerMatchId: string, playerIds: string[]) {
-  const message: ServerInstanceReadyMessage = {
-    containerMatchId,
-    playerIds,
-    resultId: new ObjectId().toHexString(),
-  };
-  await redisClient.publish(MATCHMAKING_GAME_SERVER_READY_CHANNEL, JSON.stringify(message));
 }
 
 export async function completeMatchmaking(
@@ -253,16 +242,20 @@ export async function lockPerks(containerMatchId: string, accountId: string, per
   return Boolean(result);
 }
 
-export async function getTicketsFromQueue(queueKey: string) {
-  const ticketsStr = await redisClient.lRange(queueKey, 0, -1);
-  const tickets = ticketsStr.map((t) => JSON.parse(t) as MatchmakingTicket);
-  return tickets;
+export async function getMatchmakingQueue(queueKey: string) {
+  const ids = await redisClient.zRange(queueKey, 0, -1);
+  return ids;
+}
+
+export async function getQueueTickets(ids: string[]) {
+  const tickets = await redisClient.mGet(ids.map((id) => MATCHMAKING_TICKET_KEY(id)));
+  return tickets.map((ticket) => JSON.parse(ticket as string) as MatchmakingTicket);
 }
 
 export async function removeTicketsFromQueue(queueType: MATCH_TYPES, tickets: MatchmakingTicket[]) {
   for (const ticket of tickets) {
     await redisClient.del(MATCHMAKING_TICKET_KEY(ticket.matchmakingRequestId));
-    const success = await redisClient.lRem(queueType, 0, JSON.stringify(ticket));
+    const success = await redisClient.zRem(queueType, ticket.matchmakingRequestId);
     if (success > 0) {
       logger.info(`Removed ticket ${ticket.partyId} from ${queueType} queue for match`);
     }
@@ -270,9 +263,14 @@ export async function removeTicketsFromQueue(queueType: MATCH_TYPES, tickets: Ma
 }
 
 export async function addTicketToQueue(queueKey: string, data: MatchmakingTicket) {
+  const pipeline = redisClient.multi();
+  pipeline.zAdd(queueKey, {
+    score: data.created_at.getTime(),
+    value: data.matchmakingRequestId,
+  });
   const datStr = JSON.stringify(data);
-  await redisClient.lPush(queueKey, datStr);
-  await redisClient.set(MATCHMAKING_TICKET_KEY(data.matchmakingRequestId), datStr);
+  pipeline.set(MATCHMAKING_TICKET_KEY(data.matchmakingRequestId), datStr);
+  await pipeline.execAsPipeline();
 }
 
 async function notifyLobbyPartyQueuedStarted(ticket: MatchmakingTicket) {

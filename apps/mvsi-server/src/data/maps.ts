@@ -33,7 +33,7 @@ export function getRandomMap2v2(): string {
   return maps2v2[randomIndex];
 }
 
-export const MAP_ROATATIONS = {
+export const MAP_ROTATIONS = {
   UnrankedDuos: {
     slug: "UnrankedDuos",
     data: {
