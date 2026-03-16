@@ -84,7 +84,6 @@ router.put(
   "/ssc/invoke/set_ready_for_lobby",
   async ({ body, claims }) => {
     const result = await setPlayerReady(body.MatchID, claims.id, body.Ready);
-    console.log("Set player ready result:", result);
     return {
       body: result,
       metadata: null,
@@ -161,7 +160,7 @@ router.put(
 router.put(
   "/ssc/invoke/create_custom_game_lobby",
   async ({ claims }) => {
-    const lobby = await createCustomLobby(claims.id);
+    const lobby = await createCustomLobby(claims.id);    
     return {
       body: {
         lobby,
@@ -251,8 +250,7 @@ router.put(
       },
       metadata: null,
       return_code: 0,
-    };
-    console.log("Join custom lobby response:", JSON.stringify(response, null, 2));
+    };    
     return response;
   },
   {
@@ -434,8 +432,8 @@ router.put(
 router.put(
   "/ssc/invoke/reset_custom_lobby_to_defaults",
   async ({ claims, body }) => {
-    const lobby = await resetCustomLobbySettings(body.MatchID, claims.id);
-    if (!lobby) {
+    const result = await resetCustomLobbySettings(body.MatchID, claims.id);
+    if (!result) {
       return {
         body: { error: "Lobby not found or user is not the leader" },
         metadata: null,
@@ -443,15 +441,10 @@ router.put(
       };
     }
     const response = {
-      body: {
-        MatchID: body.MatchID,
-        GameModeSlug: lobby.GameModeSlug,
-        MatchConfig: lobby.match_config,
-        Maps: lobby.Maps,
-      },
+      body: result,
       metadata: null,
       return_code: 0,
-    };
+    };    
     return response;
   },
   {

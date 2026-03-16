@@ -842,13 +842,17 @@ export async function setWorldBuffsForCustomLobby(
   const requiredBuffs = getWorldBuffs(gameModeSlug);
   const merged = [...new Set([...requiredBuffs, ...worldBuffSlugs])];
 
-  const result = await evalLua(LUA_SET_WORLD_BUFFS, [lobbyKey(lobbyId)], [
-    leaderId,
-    JSON.stringify(merged),
-  ]);
+  const result = await evalLua(
+    LUA_SET_WORLD_BUFFS,
+    [lobbyKey(lobbyId)],
+    [leaderId, JSON.stringify(merged)],
+  );
   if (!result) return null;
 
-  await broadcastCustomLobby(lobbyId, { template_id: "WorldBuffsSetForCustomGame", WorldBuffs: merged });
+  await broadcastCustomLobby(lobbyId, {
+    template_id: "WorldBuffsSetForCustomGame",
+    WorldBuffs: merged,
+  });
   return merged;
 }
 
@@ -924,7 +928,18 @@ export async function resetCustomLobbySettings(lobbyId: string, leaderId: string
   const lobby = await applyGameSettings(lobbyId, leaderId, gameModeSlug);
   if (!lobby) return null;
 
-  return lobby;
+  const data = {
+    MatchID: lobbyId,
+    GameModeSlug: lobby.GameModeSlug,
+    MatchConfig: lobby.match_config,
+    Maps: lobby.Maps,
+  };
+  await broadcastCustomLobby(lobbyId, {
+    template_id: "CustomGameResetToDefaults",
+    ...data,
+  });
+
+  return data;
 }
 
 export async function joinCustomLobby(lobbyId: string, accountId: string, isSpectator: boolean) {
