@@ -578,11 +578,35 @@ export function getGameModeMaps(gameModeSlug: keyof typeof GAME_MODES_CONFIG) {
   return mapRotation;
 }
 
+export function getWorldBuffs(gameModeSlug: keyof typeof GAME_MODES_CONFIG) {
+  const worldBuffs = GAME_MODES_CONFIG[gameModeSlug].data.GameModeData.RequiredWorldBuffs ?? [];
+  return worldBuffs;
+}
+
+export function getRequiredPlayerBuffs(
+  gameModeSlug: keyof typeof GAME_MODES_CONFIG,
+  lobbyTeams: ReadonlyArray<LobbyTeam>,
+) {
+  const gmTeams = GAME_MODES_CONFIG[gameModeSlug].data.GameModeData.GameModeTeams;
+  const playerBuffs: Record<string, string[]> = {};
+  for (const lobbyTeam of lobbyTeams) {
+    const reqTeamBuffs = gmTeams[lobbyTeam.TeamIndex].RequiredTeamPlayerBuffs;
+    Object.keys(lobbyTeam.Players).forEach((playerID, playerIdx) => {
+      const reqPlayerBuffs = gmTeams[lobbyTeam.TeamIndex].Players[playerIdx].RequiredPlayerBuffs;
+      if (reqPlayerBuffs.length > 0 || reqTeamBuffs.length > 0) {
+        playerBuffs[playerID] = [...reqPlayerBuffs, ...reqTeamBuffs];
+      }
+    });
+  }
+  return playerBuffs;
+}
+
 export function getCustomLobbyDefaultSettings(
   gameModeSlug: keyof typeof GAME_MODES_CONFIG,
+  lobbyTeams: ReadonlyArray<LobbyTeam>,
 ): CustomLobbySettings {
   const defaultMapConfig = GAME_MODES_CONFIG[gameModeSlug].data;
-  const mapRotation = getGameModeMaps(gameModeSlug);
+
   const customLobbySettings: CustomLobbySettings = {
     GameModeSlug: gameModeSlug,
     match_config: {
@@ -599,7 +623,9 @@ export function getCustomLobbyDefaultSettings(
       num_set_wins_required: 1,
       EnableShields: 1,
     },
-    Maps: mapRotation,
+    Maps: getGameModeMaps(gameModeSlug),
+    WorldBuffs: getWorldBuffs(gameModeSlug),
+    PlayerBuffs: getRequiredPlayerBuffs(gameModeSlug, lobbyTeams),
     Handicaps: {},
   };
   return customLobbySettings;
@@ -612,7 +638,7 @@ export async function createCustomLobby(accountId: string) {
     ReadyPlayers: {
       [accountId]: true,
     },
-    ...getCustomLobbyDefaultSettings("gm_classic_2v2"),
+    ...getCustomLobbyDefaultSettings("gm_classic_2v2", baseLobby.Teams),
   };
 
   await setPlayerCurrentLobbyId(accountId, customLobby.MatchID);
@@ -640,6 +666,10 @@ export async function updateGameModeForCustomLobby(
   gameModeSlug: keyof typeof GAME_MODES_CONFIG,
 ) {
   const maps = getGameModeMaps(gameModeSlug);
+  const lobby = await getLobby(lobbyId);
+  if (lobby) {
+    const defaultGameModeSettings = getCustomLobbyDefaultSettings(gameModeSlug, lobby.Teams);
+  }
   const result = await evalLua(
     LUA_UPDATE_GAME_MODE,
     [lobbyKey(lobbyId)],
@@ -648,16 +678,13 @@ export async function updateGameModeForCustomLobby(
   if (!result) {
     return null;
   }
+
+  const customLobby = JSON.parse(result as string) as CustomLobby;
   await broadcastCustomLobby(lobbyId, {
-    template_id: "GameModeSetForCustomGame",
-    GameModeSlug: gameModeSlug,
+    template_id: "GameModeUpdatedForCustomGame",
+    lobby: customLobby,
   });
-  const lobby = JSON.parse(result as string) as CustomLobby;
-  await broadcastCustomLobby(lobbyId, {
-    template_id: "MapsSetForCustomGame",
-    Maps: lobby.Maps,
-  });
-  return lobby;
+  return customLobby;
 }
 
 export async function updateIntSettingForCustomLobby(
@@ -767,7 +794,7 @@ export async function resetCustomLobbySettings(lobbyId: string, leaderId: string
 
   const resetLobby: CustomLobby = {
     ...lobby,
-    ...getCustomLobbyDefaultSettings(lobby.GameModeSlug),
+    ...getCustomLobbyDefaultSettings(lobby.GameModeSlug, lobby.Teams),
   };
   await jsonSet(lobbyKey(lobbyId), "$", resetLobby);
   return resetLobby;

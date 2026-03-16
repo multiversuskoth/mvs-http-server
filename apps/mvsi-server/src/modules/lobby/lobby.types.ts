@@ -78,6 +78,8 @@ export type CustomLobby = BaseLobby &
 export type CustomLobbySettings = {
   GameModeSlug: keyof typeof GAME_MODES_CONFIG;
   Handicaps: Record<string, number>;
+  WorldBuffs: string[];
+  PlayerBuffs: Record<string, string[]>;
   Maps: { Map: string; IsSelected: boolean }[];
   match_config: CustomLobbyMatchConfig;
 };

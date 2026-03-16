@@ -504,4 +504,26 @@ router.put(
   },
 );
 
+router.put(
+  "/ssc/invoke/set_world_buffs_for_custom_game",
+  async ({ claims, body }) => {
+    console.log("Received request to set world buffs for custom game with body:", JSON.stringify(body, null, 2));
+    return {
+      body: {
+        MatchID: body.MatchID,
+     
+      },
+      metadata: null,
+      return_code: 0
+    };
+  },
+  {
+    body: t.Object({
+      MatchID: t.String(),
+      WorldBuffSlugs: t.Array(t.String()),
+    }),
+  },
+);
+
+
 MAIN_APP.use(router);
