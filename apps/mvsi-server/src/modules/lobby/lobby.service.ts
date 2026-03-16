@@ -15,7 +15,7 @@ import {
   type LobbyTeam,
   type PartyLobby,
 } from "./lobby.types";
-import type { TeamStyle } from "../gameModes/gameModes.config";
+import { TeamStyle } from "../gameModes/gameModes.config";
 import { GAME_MODES_CONFIG } from "../../data/gameModes";
 import { MAP_ROTATIONS } from "../../data/maps";
 import {
@@ -72,22 +72,37 @@ redis.call('DEL', KEYS[1])
 return 1
 `;
 
-const LUA_UPDATE_TEAM_STYLE = `
-local s = redis.call('JSON.GET', KEYS[1])
-if not s then return nil end
-local l = cjson.decode(s)
-if l.LeaderID ~= ARGV[1] then return nil end
-redis.call('JSON.SET', KEYS[1], '$.match_config.TeamStyle', '"' .. ARGV[2] .. '"')
-return redis.call('JSON.GET', KEYS[1])
-`;
-
-const LUA_UPDATE_GAME_MODE = `
+// ARGV[1]=leaderId, ARGV[2]=gameModeSlug, ARGV[3]=match_config JSON,
+// ARGV[4]=maps JSON, ARGV[5]=worldBuffs JSON, ARGV[6]=buffMatrix JSON
+// Atomically applies game settings and refreshes PlayerBuffs from current teams.
+const LUA_APPLY_GAME_SETTINGS = `
 local s = redis.call('JSON.GET', KEYS[1])
 if not s then return nil end
 local l = cjson.decode(s)
 if l.LeaderID ~= ARGV[1] then return nil end
 redis.call('JSON.SET', KEYS[1], '$.GameModeSlug', '"' .. ARGV[2] .. '"')
-redis.call('JSON.SET', KEYS[1], '$.Maps', ARGV[3])
+redis.call('JSON.SET', KEYS[1], '$.match_config', ARGV[3])
+redis.call('JSON.SET', KEYS[1], '$.Maps',         ARGV[4])
+redis.call('JSON.SET', KEYS[1], '$.WorldBuffs',   ARGV[5])
+local matrix = cjson.decode(ARGV[6])
+local newBuffs = {}
+for _, team in ipairs(l.Teams) do
+  local teamKey = tostring(team.TeamIndex)
+  local teamData = matrix[teamKey]
+  if teamData then
+    local teamBuffs = teamData.teamBuffs or {}
+    local playerBuffsMap = teamData.players or {}
+    for pid, player in pairs(team.Players) do
+      local pidxKey = tostring(player.LobbyPlayerIndex)
+      local playerSpecificBuffs = playerBuffsMap[pidxKey] or {}
+      local combined = {}
+      for _, b in ipairs(playerSpecificBuffs) do table.insert(combined, b) end
+      for _, b in ipairs(teamBuffs) do table.insert(combined, b) end
+      if #combined > 0 then newBuffs[pid] = combined end
+    end
+  end
+end
+redis.call('JSON.SET', KEYS[1], '$.PlayerBuffs', cjson.encode(newBuffs))
 return redis.call('JSON.GET', KEYS[1])
 `;
 
@@ -113,6 +128,16 @@ for i, m in ipairs(l.Maps) do
 end
 redis.call('JSON.SET', KEYS[1], '$.Maps', cjson.encode(l.Maps))
 return cjson.encode(l.Maps)
+`;
+
+// ARGV[1]=leaderId, ARGV[2]=merged worldBuffs JSON (required + user slugs already merged)
+const LUA_SET_WORLD_BUFFS = `
+local s = redis.call('JSON.GET', KEYS[1])
+if not s then return nil end
+local l = cjson.decode(s)
+if l.LeaderID ~= ARGV[1] then return nil end
+redis.call('JSON.SET', KEYS[1], '$.WorldBuffs', ARGV[2])
+return 1
 `;
 
 // ARGV[1]=leaderId, ARGV[2]=playerId, ARGV[3]=JSON-encoded handicap number
@@ -149,13 +174,13 @@ local targetExists = false
 for i, team in ipairs(l.Teams) do
   if team.TeamIndex == targetIdx then targetExists = true; break end
 end
-if not targetExists then return cjson.encode(pdata) end
+if not targetExists then return cjson.encode({ playerData = pdata, gameModeSlug = l.GameModeSlug }) end
 
 redis.call('JSON.DEL',      KEYS[1], '$.Teams[' .. fromJsonIdx .. '].Players.' .. pid)
 redis.call('JSON.NUMINCRBY', KEYS[1], '$.Teams[' .. fromJsonIdx .. '].Length', -1)
 redis.call('JSON.SET',      KEYS[1], '$.Teams[' .. targetIdx .. '].Players.' .. pid, cjson.encode(pdata))
 redis.call('JSON.NUMINCRBY', KEYS[1], '$.Teams[' .. targetIdx .. '].Length', 1)
-return cjson.encode(pdata)
+return cjson.encode({ playerData = pdata, gameModeSlug = l.GameModeSlug })
 `;
 
 // ARGV[1]=accountId, ARGV[2]='true'/'false' isSpectator, ARGV[3]=joinedAt ISO,
@@ -261,7 +286,7 @@ redis.call('JSON.DEL', KEYS[1], '$.PlayerAutoPartyPreferences.' .. pid)
 redis.call('JSON.DEL', KEYS[1], '$.PlayerGameplayPreferences.' .. pid)
 redis.call('JSON.DEL', KEYS[1], '$.Platforms.' .. pid)
 redis.call('JSON.DEL', KEYS[1], '$.LockedLoadouts.' .. pid)
-return cjson.encode(pdata)
+return cjson.encode({ playerData = pdata, gameModeSlug = l.GameModeSlug })
 `;
 
 // ARGV[1]=promoteTargetId
@@ -325,7 +350,36 @@ if l.LeaderID == pid then
 end
 
 local leaderID = newLeader or l.LeaderID
-return cjson.encode({ playerData = pdata, readyPlayers = l.ReadyPlayers, leaderID = leaderID })
+return cjson.encode({ playerData = pdata, readyPlayers = l.ReadyPlayers, leaderID = leaderID, gameModeSlug = l.GameModeSlug })
+`;
+
+// ARGV[1]=matrix JSON: { [teamIdx]: { teamBuffs: string[], players: { [playerIdx]: string[] } } }
+const LUA_REFRESH_PLAYER_BUFFS = `
+local s = redis.call('JSON.GET', KEYS[1])
+if not s then return nil end
+local l = cjson.decode(s)
+local matrix = cjson.decode(ARGV[1])
+local newBuffs = {}
+for _, team in ipairs(l.Teams) do
+  local teamKey = tostring(team.TeamIndex)
+  local teamData = matrix[teamKey]
+  if teamData then
+    local teamBuffs = teamData.teamBuffs or {}
+    local playerBuffsMap = teamData.players or {}
+    for pid, player in pairs(team.Players) do
+      local pidxKey = tostring(player.LobbyPlayerIndex)
+      local playerSpecificBuffs = playerBuffsMap[pidxKey] or {}
+      local combined = {}
+      for _, b in ipairs(playerSpecificBuffs) do table.insert(combined, b) end
+      for _, b in ipairs(teamBuffs) do table.insert(combined, b) end
+      if #combined > 0 then
+        newBuffs[pid] = combined
+      end
+    end
+  end
+end
+redis.call('JSON.SET', KEYS[1], '$.PlayerBuffs', cjson.encode(newBuffs))
+return 1
 `;
 
 // ─── Helpers ──────────────────────────────────────────────────────────────────
@@ -347,8 +401,59 @@ function broadcastCustomLobby(
       cmd: "update",
     },
   };
-  console.log("Broadcasting custom lobby update:", JSON.stringify(notification, null, 2));
+  console.log(JSON.stringify(notification, null, 2));
   return redisClient.publish(REALTIME_NOTIFICATION_CHANNEL, JSON.stringify(notification));
+}
+
+const TEAM_STYLE_TO_GAME_MODE: Partial<Record<TeamStyle, keyof typeof GAME_MODES_CONFIG>> = {
+  [TeamStyle.Duos]: "gm_classic_2v2",
+  [TeamStyle.Solos]: "gm_classic_1v1",
+  [TeamStyle.FFA]: "gm_classic_ffa",
+};
+
+async function applyGameSettings(
+  lobbyId: string,
+  leaderId: string,
+  gameModeSlug: keyof typeof GAME_MODES_CONFIG,
+) {
+  const settings = getCustomLobbyDefaultSettings(gameModeSlug);
+  const matrix = computeBuffMatrix(gameModeSlug);
+  const result = await evalLua(
+    LUA_APPLY_GAME_SETTINGS,
+    [lobbyKey(lobbyId)],
+    [
+      leaderId,
+      gameModeSlug,
+      JSON.stringify(settings.match_config),
+      JSON.stringify(settings.Maps),
+      JSON.stringify(settings.WorldBuffs),
+      JSON.stringify(matrix),
+    ],
+  );
+  return result ? (JSON.parse(result as string) as CustomLobby) : null;
+}
+
+function computeBuffMatrix(gameModeSlug: keyof typeof GAME_MODES_CONFIG) {
+  const gmTeams = GAME_MODES_CONFIG[gameModeSlug].data.GameModeData.GameModeTeams;
+  const matrix: Record<string, { teamBuffs: string[]; players: Record<string, string[]> }> = {};
+  gmTeams.forEach((gmTeam, teamIdx) => {
+    const players: Record<string, string[]> = {};
+    (gmTeam.Players ?? []).forEach((p, playerIdx) => {
+      if (p.RequiredPlayerBuffs?.length > 0) {
+        players[playerIdx.toString()] = p.RequiredPlayerBuffs;
+      }
+    });
+    matrix[teamIdx.toString()] = {
+      teamBuffs: gmTeam.RequiredTeamPlayerBuffs ?? [],
+      players,
+    };
+  });
+  return matrix;
+}
+
+async function refreshPlayerBuffs(lobbyId: string, gameModeSlug: keyof typeof GAME_MODES_CONFIG) {
+  const matrix = computeBuffMatrix(gameModeSlug);
+  await evalLua(LUA_REFRESH_PLAYER_BUFFS, [lobbyKey(lobbyId)], [JSON.stringify(matrix)]);
 }
 
 // ─── Public API ───────────────────────────────────────────────────────────────
@@ -547,14 +652,16 @@ export async function leaveLobby(lobbyId: string, accountId: string) {
   const result = await evalLua(LUA_LEAVE_CUSTOM_LOBBY, [lobbyKey(lobbyId)], [accountId]);
   if (!result) return null;
 
-  const { playerData, readyPlayers, leaderID } = JSON.parse(result as string) as {
+  const { playerData, readyPlayers, leaderID, gameModeSlug } = JSON.parse(result as string) as {
     playerData: LobbyTeam["Players"][string];
     readyPlayers: Record<string, boolean>;
     leaderID: string;
+    gameModeSlug: keyof typeof GAME_MODES_CONFIG | undefined;
   };
 
   await Promise.all([
     redisClient.del(`player:${accountId}:lobby`),
+    gameModeSlug ? refreshPlayerBuffs(lobbyId, gameModeSlug) : Promise.resolve(),
     broadcastCustomLobby(lobbyId, {
       template_id: "PlayerLeftLobby",
       Player: playerData,
@@ -603,7 +710,6 @@ export function getRequiredPlayerBuffs(
 
 export function getCustomLobbyDefaultSettings(
   gameModeSlug: keyof typeof GAME_MODES_CONFIG,
-  lobbyTeams: ReadonlyArray<LobbyTeam>,
 ): CustomLobbySettings {
   const defaultMapConfig = GAME_MODES_CONFIG[gameModeSlug].data;
 
@@ -625,7 +731,7 @@ export function getCustomLobbyDefaultSettings(
     },
     Maps: getGameModeMaps(gameModeSlug),
     WorldBuffs: getWorldBuffs(gameModeSlug),
-    PlayerBuffs: getRequiredPlayerBuffs(gameModeSlug, lobbyTeams),
+    PlayerBuffs: {},
     Handicaps: {},
   };
   return customLobbySettings;
@@ -638,7 +744,7 @@ export async function createCustomLobby(accountId: string) {
     ReadyPlayers: {
       [accountId]: true,
     },
-    ...getCustomLobbyDefaultSettings("gm_classic_2v2", baseLobby.Teams),
+    ...getCustomLobbyDefaultSettings("gm_classic_2v2"),
   };
 
   await setPlayerCurrentLobbyId(accountId, customLobby.MatchID);
@@ -653,9 +759,9 @@ export async function updateTeamStyleForCustomLobby(
   leaderId: string,
   newStyle: TeamStyle,
 ) {
-  const result = await evalLua(LUA_UPDATE_TEAM_STYLE, [lobbyKey(lobbyId)], [leaderId, newStyle]);
-  if (!result) return null;
-  const lobby = JSON.parse(result as string) as CustomLobby;
+  const gameModeSlug = TEAM_STYLE_TO_GAME_MODE[newStyle] ?? "gm_classic_2v2";
+  const lobby = await applyGameSettings(lobbyId, leaderId, gameModeSlug);
+  if (!lobby) return null;
   await broadcastCustomLobby(lobbyId, { template_id: "TeamStyleChangedForCustomGame", lobby });
   return lobby;
 }
@@ -665,26 +771,10 @@ export async function updateGameModeForCustomLobby(
   leaderId: string,
   gameModeSlug: keyof typeof GAME_MODES_CONFIG,
 ) {
-  const maps = getGameModeMaps(gameModeSlug);
-  const lobby = await getLobby(lobbyId);
-  if (lobby) {
-    const defaultGameModeSettings = getCustomLobbyDefaultSettings(gameModeSlug, lobby.Teams);
-  }
-  const result = await evalLua(
-    LUA_UPDATE_GAME_MODE,
-    [lobbyKey(lobbyId)],
-    [leaderId, gameModeSlug, JSON.stringify(maps)],
-  );
-  if (!result) {
-    return null;
-  }
-
-  const customLobby = JSON.parse(result as string) as CustomLobby;
-  await broadcastCustomLobby(lobbyId, {
-    template_id: "GameModeUpdatedForCustomGame",
-    lobby: customLobby,
-  });
-  return customLobby;
+  const lobby = await applyGameSettings(lobbyId, leaderId, gameModeSlug);
+  if (!lobby) return null;
+  await broadcastCustomLobby(lobbyId, { template_id: "GameModeUpdatedForCustomGame", lobby });
+  return lobby;
 }
 
 export async function updateIntSettingForCustomLobby(
@@ -738,6 +828,30 @@ export async function updateHandicapsForCustomLobby(
   return result ? (JSON.parse(result as string) as CustomLobby["Handicaps"]) : null;
 }
 
+export async function setWorldBuffsForCustomLobby(
+  lobbyId: string,
+  leaderId: string,
+  worldBuffSlugs: string[],
+) {
+  const slugResult = (await redisClient.json.get(lobbyKey(lobbyId), {
+    path: "$.GameModeSlug",
+  })) as string[] | null;
+  const gameModeSlug = slugResult?.[0] as keyof typeof GAME_MODES_CONFIG | undefined;
+  if (!gameModeSlug) return null;
+
+  const requiredBuffs = getWorldBuffs(gameModeSlug);
+  const merged = [...new Set([...requiredBuffs, ...worldBuffSlugs])];
+
+  const result = await evalLua(LUA_SET_WORLD_BUFFS, [lobbyKey(lobbyId)], [
+    leaderId,
+    JSON.stringify(merged),
+  ]);
+  if (!result) return null;
+
+  await broadcastCustomLobby(lobbyId, { template_id: "WorldBuffsSetForCustomGame", WorldBuffs: merged });
+  return merged;
+}
+
 export async function switchTeamForCustomLobby(
   lobbyId: string,
   playerId: string,
@@ -749,12 +863,18 @@ export async function switchTeamForCustomLobby(
     [playerId, teamIndex.toString()],
   );
   if (!result) return null;
-  const playerData = JSON.parse(result as string) as LobbyTeam["Players"][string];
-  await broadcastCustomLobby(lobbyId, {
-    template_id: "PlayerSwitchedCustomLobbyTeams",
-    Player: playerData,
-    TeamIndex: teamIndex,
-  });
+  const { playerData, gameModeSlug } = JSON.parse(result as string) as {
+    playerData: LobbyTeam["Players"][string];
+    gameModeSlug: keyof typeof GAME_MODES_CONFIG;
+  };
+  await Promise.all([
+    refreshPlayerBuffs(lobbyId, gameModeSlug),
+    broadcastCustomLobby(lobbyId, {
+      template_id: "PlayerSwitchedCustomLobbyTeams",
+      Player: playerData,
+      TeamIndex: teamIndex,
+    }),
+  ]);
   return playerData;
 }
 
@@ -774,30 +894,37 @@ export async function addCustomGameBot(
     [playerId, teamIndex.toString()],
   );
   if (!result) return null;
-  const playerData = JSON.parse(result as string) as LobbyTeam["Players"][string];
-  await broadcastCustomLobby(lobbyId, {
-    template_id: "BotAddedToCustomGame",
-    TeamIndex: teamIndex,
-    Bot: {
-      ...botConfig,
-      Account: { id: playerId },
-      AccountID: playerId,
-      LobbyPlayerIndex: playerData.LobbyPlayerIndex,
-    },
-  });
+  const { playerData, gameModeSlug: botGameModeSlug } = JSON.parse(result as string) as {
+    playerData: LobbyTeam["Players"][string];
+    gameModeSlug: keyof typeof GAME_MODES_CONFIG;
+  };
+  await Promise.all([
+    refreshPlayerBuffs(lobbyId, botGameModeSlug),
+    broadcastCustomLobby(lobbyId, {
+      template_id: "BotAddedToCustomGame",
+      TeamIndex: teamIndex,
+      Bot: {
+        ...botConfig,
+        Account: { id: playerId },
+        AccountID: playerId,
+        LobbyPlayerIndex: playerData.LobbyPlayerIndex,
+      },
+    }),
+  ]);
   return playerData;
 }
 
 export async function resetCustomLobbySettings(lobbyId: string, leaderId: string) {
-  const lobby = (await getLobby(lobbyId)) as CustomLobby | null;
-  if (!lobby?.LeaderID || lobby.LeaderID !== leaderId) return null;
+  const slugResult = (await redisClient.json.get(lobbyKey(lobbyId), {
+    path: "$.GameModeSlug",
+  })) as string[] | null;
+  const gameModeSlug = slugResult?.[0] as keyof typeof GAME_MODES_CONFIG | undefined;
+  if (!gameModeSlug) return null;
 
-  const resetLobby: CustomLobby = {
-    ...lobby,
-    ...getCustomLobbyDefaultSettings(lobby.GameModeSlug, lobby.Teams),
-  };
-  await jsonSet(lobbyKey(lobbyId), "$", resetLobby);
-  return resetLobby;
+  const lobby = await applyGameSettings(lobbyId, leaderId, gameModeSlug);
+  if (!lobby) return null;
+
+  return lobby;
 }
 
 export async function joinCustomLobby(lobbyId: string, accountId: string, isSpectator: boolean) {
@@ -818,16 +945,21 @@ export async function joinCustomLobby(lobbyId: string, accountId: string, isSpec
   if (raw === "false") return null;
 
   const lobby = JSON.parse(raw) as CustomLobby;
+
+  await refreshPlayerBuffs(lobbyId, lobby.GameModeSlug);
+  const updatedLobby = await getLobby(lobbyId);
+
   const playerTeam = lobby.Teams.find((t) => t.Players[accountId]);
   const cluster = lobby.AllMultiplayParams["1"]?.MultiplayClusterSlug ?? "";
 
   await Promise.all([
     setPlayerCurrentLobbyId(accountId, lobby.MatchID),
+
     redisClient.publish(
       LOBBY_CREATED_CHANNEL,
       JSON.stringify({ lobbyId: lobby.MatchID, accountId } satisfies LobbyCreatedMessage),
     ),
-    broadcastCustomLobby(lobby.MatchID, {
+    broadcastCustomLobby(lobbyId, {
       template_id: "PlayerJoinedLobby",
       Player: playerTeam?.Players[accountId],
       TeamIndex: playerTeam?.TeamIndex,
@@ -836,7 +968,7 @@ export async function joinCustomLobby(lobbyId: string, accountId: string, isSpec
       ModeString: null,
     }),
   ]);
-  return lobby;
+  return updatedLobby;
 }
 
 export async function setPlayerReady(lobbyId: string, PlayerID: string, Ready: boolean) {
@@ -864,9 +996,13 @@ export async function setPlayerReady(lobbyId: string, PlayerID: string, Ready: b
 export async function kickFromLobby(lobbyId: string, leaderId: string, kickeeId: string) {
   const result = await evalLua(LUA_KICK_FROM_LOBBY, [lobbyKey(lobbyId)], [leaderId, kickeeId]);
   if (!result) return null;
-  const player = JSON.parse(result as string) as LobbyTeam["Players"][string];
+  const { playerData: player, gameModeSlug: kickGameModeSlug } = JSON.parse(result as string) as {
+    playerData: LobbyTeam["Players"][string];
+    gameModeSlug: keyof typeof GAME_MODES_CONFIG;
+  };
   await Promise.all([
     redisClient.del(`player:${kickeeId}:lobby`),
+    refreshPlayerBuffs(lobbyId, kickGameModeSlug),
     broadcastCustomLobby(lobbyId, {
       template_id: "PlayerKickedFromLobby",
       Player: player,

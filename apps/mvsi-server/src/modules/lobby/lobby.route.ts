@@ -19,6 +19,7 @@ import {
   updateHandicapsForCustomLobby,
   updateIntSettingForCustomLobby,
   updateTeamStyleForCustomLobby,
+  setWorldBuffsForCustomLobby,
 } from "./lobby.service";
 import { updatePlayerLoadout } from "../playerConfig/playerConfig.service";
 import { TeamStyle } from "../gameModes/gameModes.config";
@@ -507,14 +508,11 @@ router.put(
 router.put(
   "/ssc/invoke/set_world_buffs_for_custom_game",
   async ({ claims, body }) => {
-    console.log("Received request to set world buffs for custom game with body:", JSON.stringify(body, null, 2));
+    const WorldBuffs = await setWorldBuffsForCustomLobby(body.MatchID, claims.id, body.WorldBuffSlugs);
     return {
-      body: {
-        MatchID: body.MatchID,
-     
-      },
+      body: { MatchID: body.MatchID, WorldBuffs },
       metadata: null,
-      return_code: 0
+      return_code: WorldBuffs ? 0 : 1,
     };
   },
   {
