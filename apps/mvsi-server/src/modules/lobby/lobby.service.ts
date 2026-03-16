@@ -201,7 +201,6 @@ local pdata = cjson.encode({
 
 redis.call('JSON.SET',       KEYS[1], '$.Teams[' .. teamJsonIdx .. '].Players.' .. accountId, pdata)
 redis.call('JSON.NUMINCRBY', KEYS[1], '$.Teams[' .. teamJsonIdx .. '].Length', 1)
-redis.call('JSON.SET',       KEYS[1], '$.ReadyPlayers.' .. accountId, 'false')
 redis.call('JSON.SET',       KEYS[1], '$.PlayerAutoPartyPreferences.' .. accountId, 'false')
 redis.call('JSON.SET',       KEYS[1], '$.PlayerGameplayPreferences.' .. accountId, '964')
 redis.call('JSON.SET',       KEYS[1], '$.Platforms.' .. accountId, '"PC"')
@@ -211,10 +210,145 @@ end
 return redis.call('JSON.GET', KEYS[1])
 `;
 
+// ARGV[1]=accountId
+// ARGV[1]=accountId, ARGV[2]='true'/'false'
+const LUA_SET_PLAYER_READY = `
+local s = redis.call('JSON.GET', KEYS[1])
+if not s then return nil end
+local l = cjson.decode(s)
+local pid = ARGV[1]
+local ready = ARGV[2] == 'true'
+if ready then
+  redis.call('JSON.SET', KEYS[1], '$.ReadyPlayers.' .. pid, 'true')
+  l.ReadyPlayers[pid] = true
+else
+  redis.call('JSON.DEL', KEYS[1], '$.ReadyPlayers.' .. pid)
+  l.ReadyPlayers[pid] = nil
+end
+local readyCount = 0
+for _ in pairs(l.ReadyPlayers) do readyCount = readyCount + 1 end
+local totalPlayers = 0
+for _, team in ipairs(l.Teams) do
+  if team.TeamIndex ~= 4 then totalPlayers = totalPlayers + team.Length end
+end
+return (readyCount >= totalPlayers and totalPlayers > 0) and 1 or 0
+`;
+
+// ARGV[1]=leaderId, ARGV[2]=kickeeId
+const LUA_KICK_FROM_LOBBY = `
+local s = redis.call('JSON.GET', KEYS[1])
+if not s then return nil end
+local l = cjson.decode(s)
+if l.LeaderID ~= ARGV[1] then return redis.error_reply('Not the leader') end
+local pid = ARGV[2]
+if pid == ARGV[1] then return redis.error_reply('Cannot kick yourself') end
+
+local fromJsonIdx = nil
+local pdata = nil
+for i, team in ipairs(l.Teams) do
+  if team.Players[pid] then
+    fromJsonIdx = i - 1
+    pdata = team.Players[pid]
+    break
+  end
+end
+if fromJsonIdx == nil then return nil end
+
+redis.call('JSON.DEL',       KEYS[1], '$.Teams[' .. fromJsonIdx .. '].Players.' .. pid)
+redis.call('JSON.NUMINCRBY', KEYS[1], '$.Teams[' .. fromJsonIdx .. '].Length', -1)
+redis.call('JSON.DEL', KEYS[1], '$.ReadyPlayers.' .. pid)
+redis.call('JSON.DEL', KEYS[1], '$.PlayerAutoPartyPreferences.' .. pid)
+redis.call('JSON.DEL', KEYS[1], '$.PlayerGameplayPreferences.' .. pid)
+redis.call('JSON.DEL', KEYS[1], '$.Platforms.' .. pid)
+redis.call('JSON.DEL', KEYS[1], '$.LockedLoadouts.' .. pid)
+return cjson.encode(pdata)
+`;
+
+// ARGV[1]=promoteTargetId
+const LUA_PROMOTE_LEADER = `
+local s = redis.call('JSON.GET', KEYS[1])
+if not s then return nil end
+local l = cjson.decode(s)
+local target = ARGV[1]
+local found = false
+for _, team in ipairs(l.Teams) do
+  if team.Players[target] then found = true; break end
+end
+if not found then return nil end
+redis.call('JSON.SET', KEYS[1], '$.LeaderID', '"' .. target .. '"')
+return cjson.encode(l.ReadyPlayers)
+`;
+
+// ARGV[1]=accountId
+const LUA_LEAVE_CUSTOM_LOBBY = `
+local s = redis.call('JSON.GET', KEYS[1])
+if not s then return nil end
+local l = cjson.decode(s)
+local pid = ARGV[1]
+
+local fromJsonIdx = nil
+local pdata = nil
+for i, team in ipairs(l.Teams) do
+  if team.Players[pid] then
+    fromJsonIdx = i - 1
+    pdata = team.Players[pid]
+    break
+  end
+end
+if fromJsonIdx == nil then return nil end
+
+redis.call('JSON.DEL',       KEYS[1], '$.Teams[' .. fromJsonIdx .. '].Players.' .. pid)
+redis.call('JSON.NUMINCRBY', KEYS[1], '$.Teams[' .. fromJsonIdx .. '].Length', -1)
+redis.call('JSON.DEL', KEYS[1], '$.ReadyPlayers.' .. pid)
+redis.call('JSON.DEL', KEYS[1], '$.PlayerAutoPartyPreferences.' .. pid)
+redis.call('JSON.DEL', KEYS[1], '$.PlayerGameplayPreferences.' .. pid)
+redis.call('JSON.DEL', KEYS[1], '$.Platforms.' .. pid)
+redis.call('JSON.DEL', KEYS[1], '$.LockedLoadouts.' .. pid)
+
+l.ReadyPlayers[pid] = nil
+
+local newLeader = nil
+if l.LeaderID == pid then
+  for i, team in ipairs(l.Teams) do
+    for otherId, _ in pairs(team.Players) do
+      if otherId ~= pid then newLeader = otherId; break end
+    end
+    if newLeader then break end
+  end
+  if newLeader then
+    redis.call('JSON.SET', KEYS[1], '$.LeaderID', '"' .. newLeader .. '"')
+    redis.call('JSON.SET', KEYS[1], '$.ReadyPlayers.' .. newLeader, 'true')
+    l.ReadyPlayers[newLeader] = true
+  else
+    redis.call('DEL', KEYS[1])
+  end
+end
+
+local leaderID = newLeader or l.LeaderID
+return cjson.encode({ playerData = pdata, readyPlayers = l.ReadyPlayers, leaderID = leaderID })
+`;
+
 // ─── Helpers ──────────────────────────────────────────────────────────────────
 
 function evalLua(script: string, keys: string[], args: string[]) {
   return redisClient.eval(script, { keys, arguments: args });
+}
+
+function broadcastCustomLobby(
+  lobbyId: string,
+  data: { template_id: string } & Record<string, unknown>,
+) {
+  const notification: RealtimeNotificationMessage = {
+    topic: lobbyId,
+    notification: {
+      data: { MatchID: lobbyId, ...data },
+      payload: { match: { id: lobbyId }, custom_notification: "realtime" },
+      header: "",
+      cmd: "update",
+    },
+  };
+  console.log("Broadcasting custom lobby update:", JSON.stringify(notification, null, 2));
+  return redisClient.publish(REALTIME_NOTIFICATION_CHANNEL, JSON.stringify(notification));
 }
 
 // ─── Public API ───────────────────────────────────────────────────────────────
@@ -409,6 +543,29 @@ export async function deleteLobby(lobbyId: string, leaderId: string) {
   }
 }
 
+export async function leaveLobby(lobbyId: string, accountId: string) {
+  const result = await evalLua(LUA_LEAVE_CUSTOM_LOBBY, [lobbyKey(lobbyId)], [accountId]);
+  if (!result) return null;
+
+  const { playerData, readyPlayers, leaderID } = JSON.parse(result as string) as {
+    playerData: LobbyTeam["Players"][string];
+    readyPlayers: Record<string, boolean>;
+    leaderID: string;
+  };
+
+  await Promise.all([
+    redisClient.del(`player:${accountId}:lobby`),
+    broadcastCustomLobby(lobbyId, {
+      template_id: "PlayerLeftLobby",
+      Player: playerData,
+      ReadyPlayers: readyPlayers,
+      NewLeader: leaderID,
+    }),
+  ]);
+  const partyLobby = await createPartyLobby(accountId);
+  return partyLobby;
+}
+
 // CUSTOM LOBBIES
 
 export function getGameModeMaps(gameModeSlug: keyof typeof GAME_MODES_CONFIG) {
@@ -471,7 +628,10 @@ export async function updateTeamStyleForCustomLobby(
   newStyle: TeamStyle,
 ) {
   const result = await evalLua(LUA_UPDATE_TEAM_STYLE, [lobbyKey(lobbyId)], [leaderId, newStyle]);
-  return result ? (JSON.parse(result as string) as CustomLobby) : null;
+  if (!result) return null;
+  const lobby = JSON.parse(result as string) as CustomLobby;
+  await broadcastCustomLobby(lobbyId, { template_id: "TeamStyleChangedForCustomGame", lobby });
+  return lobby;
 }
 
 export async function updateGameModeForCustomLobby(
@@ -488,32 +648,16 @@ export async function updateGameModeForCustomLobby(
   if (!result) {
     return null;
   }
+  await broadcastCustomLobby(lobbyId, {
+    template_id: "GameModeSetForCustomGame",
+    GameModeSlug: gameModeSlug,
+  });
   const lobby = JSON.parse(result as string) as CustomLobby;
-  await customLobbyBroadcastMapUpdate(lobbyId, lobby.Maps);
+  await broadcastCustomLobby(lobbyId, {
+    template_id: "MapsSetForCustomGame",
+    Maps: lobby.Maps,
+  });
   return lobby;
-}
-
-export async function customLobbyBroadcastMapUpdate(lobbyId: string, maps: CustomLobby["Maps"]) {
-  const notification: RealtimeNotificationMessage = {
-    topic: lobbyId,
-    notification: {
-      data: {
-        Maps: maps,
-        MatchID: lobbyId,
-        template_id: "MapsSetForCustomGame",
-      },
-      payload: {
-        match: {
-          id: lobbyId,
-        },
-        custom_notification: "realtime",
-      },
-      header: "",
-      cmd: "update",
-    },
-  };
-  console.log("Broadcasting custom lobby map update", JSON.stringify(notification, null, 2));
-  await redisClient.publish(REALTIME_NOTIFICATION_CHANNEL, JSON.stringify(notification));
 }
 
 export async function updateIntSettingForCustomLobby(
@@ -527,7 +671,13 @@ export async function updateIntSettingForCustomLobby(
     [lobbyKey(lobbyId)],
     [leaderId, settingKey, JSON.stringify(settingValue)],
   );
-  return result ? (JSON.parse(result as string) as CustomLobby) : null;
+  if (!result) return null;
+  await broadcastCustomLobby(lobbyId, {
+    template_id: "IntSettingUpdatedForCustomGame",
+    SettingKey: settingKey,
+    SettingValue: settingValue,
+  });
+  return JSON.parse(result as string) as CustomLobby;
 }
 
 export async function updateEnabledMapsForCustomLobby(
@@ -540,7 +690,10 @@ export async function updateEnabledMapsForCustomLobby(
     [lobbyKey(lobbyId)],
     [leaderId, ...mapsSlugs],
   );
-  await customLobbyBroadcastMapUpdate(lobbyId, JSON.parse(result as string) as CustomLobby["Maps"]);
+  await broadcastCustomLobby(lobbyId, {
+    template_id: "MapsSetForCustomGame",
+    Maps: JSON.parse(result as string) as CustomLobby["Maps"],
+  });
   return result ? (JSON.parse(result as string) as CustomLobby["Maps"]) : null;
 }
 
@@ -569,11 +722,43 @@ export async function switchTeamForCustomLobby(
     [playerId, teamIndex.toString()],
   );
   if (!result) return null;
-  return JSON.parse(result as string) as LobbyTeam["Players"][string];
+  const playerData = JSON.parse(result as string) as LobbyTeam["Players"][string];
+  await broadcastCustomLobby(lobbyId, {
+    template_id: "PlayerSwitchedCustomLobbyTeams",
+    Player: playerData,
+    TeamIndex: teamIndex,
+  });
+  return playerData;
 }
 
-export async function addCustomGameBot(lobbyId: string, playerId: string, teamIndex: number) {
-  return switchTeamForCustomLobby(lobbyId, playerId, teamIndex);
+export async function addCustomGameBot(
+  lobbyId: string,
+  playerId: string,
+  teamIndex: number,
+  botConfig?: {
+    Fighter: { AssetPath: string; Slug: string };
+    Skin: { AssetPath: string; Slug: string };
+    BotSettingSlug: string;
+  },
+) {
+  const result = await evalLua(
+    LUA_SWITCH_TEAM,
+    [lobbyKey(lobbyId)],
+    [playerId, teamIndex.toString()],
+  );
+  if (!result) return null;
+  const playerData = JSON.parse(result as string) as LobbyTeam["Players"][string];
+  await broadcastCustomLobby(lobbyId, {
+    template_id: "BotAddedToCustomGame",
+    TeamIndex: teamIndex,
+    Bot: {
+      ...botConfig,
+      Account: { id: playerId },
+      AccountID: playerId,
+      LobbyPlayerIndex: playerData.LobbyPlayerIndex,
+    },
+  });
+  return playerData;
 }
 
 export async function resetCustomLobbySettings(lobbyId: string, leaderId: string) {
@@ -606,11 +791,72 @@ export async function joinCustomLobby(lobbyId: string, accountId: string, isSpec
   if (raw === "false") return null;
 
   const lobby = JSON.parse(raw) as CustomLobby;
-  const lobbyCreatedMessage: LobbyCreatedMessage = {
-    lobbyId: lobby.MatchID,
-    accountId,
-  };
-  await redisClient.publish(LOBBY_CREATED_CHANNEL, JSON.stringify(lobbyCreatedMessage));
-  await setPlayerCurrentLobbyId(accountId, lobby.MatchID);
+  const playerTeam = lobby.Teams.find((t) => t.Players[accountId]);
+  const cluster = lobby.AllMultiplayParams["1"]?.MultiplayClusterSlug ?? "";
+
+  await Promise.all([
+    setPlayerCurrentLobbyId(accountId, lobby.MatchID),
+    redisClient.publish(
+      LOBBY_CREATED_CHANNEL,
+      JSON.stringify({ lobbyId: lobby.MatchID, accountId } satisfies LobbyCreatedMessage),
+    ),
+    broadcastCustomLobby(lobby.MatchID, {
+      template_id: "PlayerJoinedLobby",
+      Player: playerTeam?.Players[accountId],
+      TeamIndex: playerTeam?.TeamIndex,
+      Cluster: cluster,
+      LockedLoadouts: lobby.LockedLoadouts,
+      ModeString: null,
+    }),
+  ]);
   return lobby;
+}
+
+export async function setPlayerReady(lobbyId: string, PlayerID: string, Ready: boolean) {
+  const result = await evalLua(
+    LUA_SET_PLAYER_READY,
+    [lobbyKey(lobbyId)],
+    [PlayerID, Ready ? "true" : "false"],
+  );
+  const lobby = (await getLobby(lobbyId)) as CustomLobby | null;
+  const data = {
+    MatchID: lobbyId,
+    PlayerID,
+    Ready,
+    bAllPlayersReady: result === 1,
+  };
+  if (lobby) {
+    await broadcastCustomLobby(lobbyId, {
+      template_id: "PlayerReadyForLobby",
+      ...data,
+    });
+  }
+  return data;
+}
+
+export async function kickFromLobby(lobbyId: string, leaderId: string, kickeeId: string) {
+  const result = await evalLua(LUA_KICK_FROM_LOBBY, [lobbyKey(lobbyId)], [leaderId, kickeeId]);
+  if (!result) return null;
+  const player = JSON.parse(result as string) as LobbyTeam["Players"][string];
+  await Promise.all([
+    redisClient.del(`player:${kickeeId}:lobby`),
+    broadcastCustomLobby(lobbyId, {
+      template_id: "PlayerKickedFromLobby",
+      Player: player,
+      KickeeAccountID: kickeeId,
+    }),
+  ]);
+  return player;
+}
+
+export async function promoteToLobbyLeader(lobbyId: string, promoteTarget: string) {
+  const result = await evalLua(LUA_PROMOTE_LEADER, [lobbyKey(lobbyId)], [promoteTarget]);
+  if (!result) return null;
+  const ReadyPlayers = JSON.parse(result as string) as Record<string, boolean>;
+  await broadcastCustomLobby(lobbyId, {
+    template_id: "LobbyLeaderChanged",
+    LeaderID: promoteTarget,
+    ReadyPlayers,
+  });
+  return { MatchID: lobbyId, LeaderID: promoteTarget, ReadyPlayers };
 }

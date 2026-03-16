@@ -6,9 +6,13 @@ import {
   createPartyLobby,
   invitePlayerToLobby,
   joinCustomLobby,
+  kickFromLobby,
+  leaveLobby,
+  promoteToLobbyLeader,
   resetCustomLobbySettings,
   setLobbyJoinable,
   setLobbyMode,
+  setPlayerReady,
   switchTeamForCustomLobby,
   updateEnabledMapsForCustomLobby,
   updateGameModeForCustomLobby,
@@ -78,15 +82,26 @@ router.put(
 router.put(
   "/ssc/invoke/set_ready_for_lobby",
   async ({ body, claims }) => {
+    const result = await setPlayerReady(body.MatchID, claims.id, body.Ready);
+    console.log("Set player ready result:", result);
     return {
-      body: { MatchID: body.MatchID, PlayerID: claims.id, Ready: true, bAllPlayersReady: true },
+      body: result,
       metadata: null,
       return_code: 0,
     };
   },
   {
     body: t.Object({
+      AutoPartyPreference: t.Boolean(),
+      CrossplayPreference: t.Number(),
+      GameplayPreferences: t.Number(),
+      HissCrc: t.Number(),
+      LobbyId: t.String(),
+      LobbyTemplate: t.String(),
       MatchID: t.String(),
+      Platform: t.String(),
+      Ready: t.Boolean(),
+      Version: t.String(),
     }),
   },
 );
@@ -94,7 +109,7 @@ router.put(
 router.put(
   "/ssc/invoke/leave_player_lobby",
   async ({ body, claims }) => {
-    const lobby = await createPartyLobby(claims.id);
+    const lobby = await leaveLobby(body.LobbyId, claims.id);
     return {
       body: { lobby },
       metadata: null,
@@ -442,6 +457,49 @@ router.put(
     body: t.Object({
       MatchID: t.String(),
       TeamStyle: t.Enum(TeamStyle),
+    }),
+  },
+);
+
+router.put(
+  "/ssc/invoke/promote_to_lobby_leader",
+  async ({ body }) => {
+    const result = await promoteToLobbyLeader(body.MatchID, body.PromoteTarget);
+    return { body: result, metadata: null, return_code: result ? 0 : 1 };
+  },
+  {
+    body: t.Object({
+      MatchID: t.String(),
+      PromoteTarget: t.String(),
+    }),
+  },
+);
+
+router.put(
+  "/ssc/invoke/kick_from_lobby",
+  async ({ claims, body }) => {
+    const result = await kickFromLobby(body.MatchID, claims.id, body.KickeeAccountID);
+    return {
+      body: {
+        MatchID: body.MatchID,
+        Player: result,
+      },
+      metadata: null,
+      return_code: result ? 0 : 1,
+    };
+  },
+  {
+    body: t.Object({
+      AutoPartyPreference: t.Boolean(),
+      CrossplayPreference: t.Number(),
+      GameplayPreferences: t.Number(),
+      HissCrc: t.Number(),
+      KickeeAccountID: t.String(),
+      LobbyId: t.String(),
+      LobbyTemplate: t.String(),
+      MatchID: t.String(),
+      Platform: t.String(),
+      Version: t.String(),
     }),
   },
 );
