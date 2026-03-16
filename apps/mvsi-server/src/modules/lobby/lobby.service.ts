@@ -259,6 +259,56 @@ end
 return (readyCount >= totalPlayers and totalPlayers > 0) and 1 or 0
 `;
 
+// ARGV[1]=leaderId, ARGV[2]=botAccountId, ARGV[3]=teamIndex (0-based), ARGV[4]=bot pdata JSON (no LobbyPlayerIndex)
+const LUA_ADD_CUSTOM_GAME_BOT = `
+local s = redis.call('JSON.GET', KEYS[1])
+if not s then return nil end
+local l = cjson.decode(s)
+if l.LeaderID ~= ARGV[1] then return nil end
+local botId     = ARGV[2]
+local targetIdx = tonumber(ARGV[3])
+local teamJsonIdx   = nil
+local globalPlayerCount = 0
+for i, team in ipairs(l.Teams) do
+  globalPlayerCount = globalPlayerCount + team.Length
+  if team.TeamIndex == targetIdx then
+    teamJsonIdx = i - 1
+  end
+end
+if teamJsonIdx == nil then return nil end
+local pdata = cjson.decode(ARGV[4])
+pdata.LobbyPlayerIndex = globalPlayerCount
+redis.call('JSON.SET',       KEYS[1], '$.Teams[' .. teamJsonIdx .. '].Players.' .. botId, cjson.encode(pdata))
+redis.call('JSON.NUMINCRBY', KEYS[1], '$.Teams[' .. teamJsonIdx .. '].Length', 1)
+return cjson.encode({ playerData = pdata, gameModeSlug = l.GameModeSlug })
+`;
+
+// ARGV[1]=leaderId, ARGV[2]=botAccountId, ARGV[3]=fighter JSON, ARGV[4]=skin JSON, ARGV[5]=botSettingSlug
+const LUA_UPDATE_BOT_FIGHTER = `
+local s = redis.call('JSON.GET', KEYS[1])
+if not s then return nil end
+local l = cjson.decode(s)
+if l.LeaderID ~= ARGV[1] then return nil end
+local botId = ARGV[2]
+local teamJsonIdx = nil
+for i, team in ipairs(l.Teams) do
+  if team.Players[botId] then
+    teamJsonIdx = i - 1
+    break
+  end
+end
+if teamJsonIdx == nil then return nil end
+local prefix = '$.Teams[' .. teamJsonIdx .. '].Players.' .. botId .. '.'
+redis.call('JSON.SET', KEYS[1], prefix .. 'Fighter',       ARGV[3])
+redis.call('JSON.SET', KEYS[1], prefix .. 'Skin',          ARGV[4])
+redis.call('JSON.SET', KEYS[1], prefix .. 'BotSettingSlug', '"' .. ARGV[5] .. '"')
+local updated = l.Teams[teamJsonIdx + 1].Players[botId]
+updated.Fighter       = cjson.decode(ARGV[3])
+updated.Skin          = cjson.decode(ARGV[4])
+updated.BotSettingSlug = ARGV[5]
+return cjson.encode(updated)
+`;
+
 // ARGV[1]=leaderId, ARGV[2]=kickeeId
 const LUA_KICK_FROM_LOBBY = `
 local s = redis.call('JSON.GET', KEYS[1])
@@ -884,38 +934,77 @@ export async function switchTeamForCustomLobby(
 
 export async function addCustomGameBot(
   lobbyId: string,
-  playerId: string,
+  leaderId: string,
   teamIndex: number,
-  botConfig?: {
+  botConfig: {
+    BotAccountID: string;
+    BotSettingSlug: string;
     Fighter: { AssetPath: string; Slug: string };
     Skin: { AssetPath: string; Slug: string };
-    BotSettingSlug: string;
   },
 ) {
-  const result = await evalLua(
-    LUA_SWITCH_TEAM,
-    [lobbyKey(lobbyId)],
-    [playerId, teamIndex.toString()],
-  );
+  const pdata = {
+    Account: { id: botConfig.BotAccountID },
+    AccountID: botConfig.BotAccountID,
+    BotSettingSlug: botConfig.BotSettingSlug,
+    Fighter: botConfig.Fighter,
+    Skin: botConfig.Skin,
+    JoinedAt: new Date(),
+    CrossplayPreference: 0,
+  };
+
+  const result = await evalLua(LUA_ADD_CUSTOM_GAME_BOT, [lobbyKey(lobbyId)], [
+    leaderId,
+    botConfig.BotAccountID,
+    teamIndex.toString(),
+    JSON.stringify(pdata),
+  ]);
   if (!result) return null;
-  const { playerData, gameModeSlug: botGameModeSlug } = JSON.parse(result as string) as {
-    playerData: LobbyTeam["Players"][string];
+
+  const { playerData, gameModeSlug } = JSON.parse(result as string) as {
+    playerData: typeof pdata & { LobbyPlayerIndex: number };
     gameModeSlug: keyof typeof GAME_MODES_CONFIG;
   };
+
   await Promise.all([
-    refreshPlayerBuffs(lobbyId, botGameModeSlug),
+    refreshPlayerBuffs(lobbyId, gameModeSlug),
     broadcastCustomLobby(lobbyId, {
       template_id: "BotAddedToCustomGame",
       TeamIndex: teamIndex,
-      Bot: {
-        ...botConfig,
-        Account: { id: playerId },
-        AccountID: playerId,
-        LobbyPlayerIndex: playerData.LobbyPlayerIndex,
-      },
+      Bot: playerData,
     }),
   ]);
   return playerData;
+}
+
+export async function updateCustomGameBotFighter(
+  lobbyId: string,
+  leaderId: string,
+  botAccountId: string,
+  fighter: { AssetPath: string; Slug: string },
+  skin: { AssetPath: string; Slug: string },
+  botSettingSlug: string,
+) {
+  const result = await evalLua(LUA_UPDATE_BOT_FIGHTER, [lobbyKey(lobbyId)], [
+    leaderId,
+    botAccountId,
+    JSON.stringify(fighter),
+    JSON.stringify(skin),
+    botSettingSlug,
+  ]);
+  if (!result) return null;
+
+  const bot = JSON.parse(result as string) as {
+    Account: { id: string };
+    AccountID: string;
+    BotSettingSlug: string;
+    Fighter: { AssetPath: string; Slug: string };
+    Skin: { AssetPath: string; Slug: string };
+    LobbyPlayerIndex: number;
+  };
+
+  await broadcastCustomLobby(lobbyId, { template_id: "BotSettingsUpdatedForCustomGame", Bot: bot });
+  return bot;
 }
 
 export async function resetCustomLobbySettings(lobbyId: string, leaderId: string) {

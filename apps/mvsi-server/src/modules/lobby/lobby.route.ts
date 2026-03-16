@@ -2,6 +2,8 @@ import Elysia, { t } from "elysia";
 import { MAIN_APP, MVSI_HYDRA_WITH_JWT } from "../../middleware/middlewares";
 import { MATCH_TYPES } from "../matchmaking/matchmaking.types";
 import {
+  addCustomGameBot,
+  updateCustomGameBotFighter,
   createCustomLobby,
   createPartyLobby,
   invitePlayerToLobby,
@@ -13,13 +15,13 @@ import {
   setLobbyJoinable,
   setLobbyMode,
   setPlayerReady,
+  setWorldBuffsForCustomLobby,
   switchTeamForCustomLobby,
   updateEnabledMapsForCustomLobby,
   updateGameModeForCustomLobby,
   updateHandicapsForCustomLobby,
   updateIntSettingForCustomLobby,
   updateTeamStyleForCustomLobby,
-  setWorldBuffsForCustomLobby,
 } from "./lobby.service";
 import { updatePlayerLoadout } from "../playerConfig/playerConfig.service";
 import { TeamStyle } from "../gameModes/gameModes.config";
@@ -403,17 +405,17 @@ router.put(
 router.put(
   "/ssc/invoke/add_custom_game_bot",
   async ({ claims, body }) => {
-    const Player = await switchTeamForCustomLobby(body.MatchID, claims.id, body.TeamIndex);
-    const response = {
-      body: {
-        MatchID: body.MatchID,
-        Player,
-        TeamIndex: body.TeamIndex,
-      },
+    const Bot = await addCustomGameBot(body.MatchID, claims.id, body.TeamIndex, {
+      BotAccountID: body.BotAccountID,
+      BotSettingSlug: body.BotSettingSlug,
+      Fighter: { AssetPath: body.CharacterAssetPath, Slug: body.CharacterSlug },
+      Skin: { AssetPath: body.SkinAssetPath, Slug: body.SkinSlug },
+    });
+    return {
+      body: { MatchID: body.MatchID, Bot, TeamIndex: body.TeamIndex },
       metadata: null,
-      return_code: 0,
+      return_code: Bot ? 0 : 1,
     };
-    return response;
   },
   {
     body: t.Object({
@@ -512,6 +514,36 @@ router.put(
     body: t.Object({
       MatchID: t.String(),
       WorldBuffSlugs: t.Array(t.String()),
+    }),
+  },
+);
+
+router.put(
+  "/ssc/invoke/update_custom_game_bot_fighter",
+  async ({ claims, body }) => {
+    const Bot = await updateCustomGameBotFighter(
+      body.MatchID,
+      claims.id,
+      body.BotAccountID,
+      { AssetPath: body.CharacterAssetPath, Slug: body.CharacterSlug },
+      { AssetPath: body.SkinAssetPath, Slug: body.SkinSlug },
+      body.BotSettingSlug,
+    );
+    return {
+      body: { MatchID: body.MatchID, Bot },
+      metadata: null,
+      return_code: Bot ? 0 : 1,
+    };
+  },
+  {
+    body: t.Object({
+      BotAccountID: t.String(),
+      BotSettingSlug: t.String(),
+      CharacterAssetPath: t.String(),
+      CharacterSlug: t.String(),
+      MatchID: t.String(),
+      SkinAssetPath: t.String(),
+      SkinSlug: t.String(),
     }),
   },
 );
