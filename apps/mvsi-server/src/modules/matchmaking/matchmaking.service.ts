@@ -223,7 +223,7 @@ export async function lockPerks(containerMatchId: string, accountId: string, per
     local ready = true
     for id, config in pairs(players) do
         table.insert(ids, id)
-        if not config.Perks or #config.Perks == 0 then ready = false end
+        if not config.bIsBot and (not config.Perks or #config.Perks == 0) then ready = false end
     end
 
     if ready then

@@ -66,7 +66,14 @@ export async function updatePlayerLoadout(
       playerConfig.Taunts = cosmetics?.Taunts?.[character]?.TauntSlots ?? [];
       playerConfig.Character = character;
       playerConfig.Skin = skin;
-      await setPlayerConfig(playerId, playerConfig);
+      await Promise.all([
+        setPlayerConfig(playerId, playerConfig),
+        redisClient.json.set(
+          `lobby:${lobbyId}`,
+          `$.LockedLoadouts.${playerId}`,
+          { Character: character, Skin: skin } as Parameters<typeof redisClient.json.set>[2],
+        ),
+      ]);
       
       await broadcastNotificationToUsers({
         exclude: [playerId],

@@ -1438,6 +1438,7 @@ interface Data {
   CharacterSlug: string;
   MasteryRewardTrack: string;
   AppliedBuffs: string[];
+  TargetCharacter: string;
 }
 
 export async function start() {
@@ -1593,7 +1594,7 @@ export async function start() {
         $set: {
           slug: perk,
           assetType: "MvsPerkHsda",
-          character_slug: "",
+          character_slug: def.TargetCharacter,
           enabled: perk === "perk_platform_from_dodge" ? false : true,
           assetPath: def.AppliedBuffs[0],
         },

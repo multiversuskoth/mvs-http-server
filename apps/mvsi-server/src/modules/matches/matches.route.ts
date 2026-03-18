@@ -253,15 +253,15 @@ mvsi_match_routes.post(
     const playerKeys = Object.keys(match.matchConfig.Players);
     const players = playerKeys.map((playerKey) => {
       const player = match.matchConfig.Players[playerKey];
-      const result = {
+      return {
         player_index: player.PlayerIndex,
         ip: player.Ip,
         is_host: player.IsHost,
       };
-      return result;
     });
+    const humanCount = playerKeys.filter((k) => !match.matchConfig.Players[k].bIsBot).length;
     const result = {
-      max_players: playerKeys.length,
+      max_players: humanCount,
       match_duration: 36000,
       players,
     };
