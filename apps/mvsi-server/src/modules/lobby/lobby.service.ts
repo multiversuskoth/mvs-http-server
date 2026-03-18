@@ -69,16 +69,76 @@ return 1
 
 // ARGV[1]=leaderId, ARGV[2]=gameModeSlug, ARGV[3]=match_config JSON,
 // ARGV[4]=maps JSON, ARGV[5]=worldBuffs JSON, ARGV[6]=buffMatrix JSON
-// Atomically applies game settings and refreshes PlayerBuffs from current teams.
+// Atomically applies game settings, rearranges teams when TeamStyle changes,
+// and refreshes PlayerBuffs. Returns current lobby unchanged on invalid transitions.
 const LUA_APPLY_GAME_SETTINGS = `
 local s = redis.call('JSON.GET', KEYS[1])
 if not s then return nil end
 local l = cjson.decode(s)
 if l.LeaderID ~= ARGV[1] then return nil end
+
+local newConfig = cjson.decode(ARGV[3])
+local newStyle  = newConfig.TeamStyle
+local oldStyle  = l.match_config.TeamStyle
+
+if oldStyle ~= newStyle then
+  -- Collect non-spectator players in team order
+  local players = {}
+  for _, team in ipairs(l.Teams) do
+    if team.TeamIndex ~= 4 then
+      for pid, pdata in pairs(team.Players) do
+        table.insert(players, { pid = pid, pdata = pdata })
+      end
+    end
+  end
+  local total = #players
+
+  -- Validate transition rules
+  if newStyle == 'Solos' and total > 2 then
+    return redis.call('JSON.GET', KEYS[1])
+  end
+
+  -- Build TeamIndex -> Teams array index lookup
+  local teamByIdx = {}
+  for i, team in ipairs(l.Teams) do
+    teamByIdx[team.TeamIndex] = i
+  end
+
+  -- Clear all non-spectator teams
+  for _, team in ipairs(l.Teams) do
+    if team.TeamIndex ~= 4 then
+      team.Players = {}
+      team.Length  = 0
+    end
+  end
+
+  -- Redistribute players according to new style
+  for i, player in ipairs(players) do
+    local targetTeamIdx
+    if newStyle == 'FFA' then
+      targetTeamIdx = i - 1        -- each player gets own team: 0,1,2,3
+    elseif newStyle == 'Duos' then
+      targetTeamIdx = math.floor((i - 1) / 2)  -- pairs: 0,0,1,1
+    elseif newStyle == 'Solos' then
+      targetTeamIdx = i - 1        -- one per team: 0,1
+    else
+      targetTeamIdx = 0
+    end
+    local arrIdx = teamByIdx[targetTeamIdx]
+    if arrIdx then
+      l.Teams[arrIdx].Players[player.pid] = player.pdata
+      l.Teams[arrIdx].Length = l.Teams[arrIdx].Length + 1
+    end
+  end
+
+  redis.call('JSON.SET', KEYS[1], '$.Teams', cjson.encode(l.Teams))
+end
+
 redis.call('JSON.SET', KEYS[1], '$.GameModeSlug', '"' .. ARGV[2] .. '"')
 redis.call('JSON.SET', KEYS[1], '$.match_config', ARGV[3])
 redis.call('JSON.SET', KEYS[1], '$.Maps',         ARGV[4])
 redis.call('JSON.SET', KEYS[1], '$.WorldBuffs',   ARGV[5])
+
 local matrix = cjson.decode(ARGV[6])
 local newBuffs = {}
 for _, team in ipairs(l.Teams) do
@@ -146,35 +206,76 @@ redis.call('JSON.SET', KEYS[1], '$.Handicaps.' .. ARGV[1], ARGV[2])
 return redis.call('JSON.GET', KEYS[1])
 `;
 
-// ARGV[1]=playerId, ARGV[2]=targetTeamIndex (0-based)
+// ARGV[1]=playerId, ARGV[2]=targetTeamIndex (0-based).
+// Duos: only teams 0/1, max 2 per team. Any mode: team 4 (spectators) max 4.
 const LUA_SWITCH_TEAM = `
 local s = redis.call('JSON.GET', KEYS[1])
-if not s then return redis.error_reply('Lobby not found') end
+if not s then return nil end
 local l = cjson.decode(s)
+
 local pid = ARGV[1]
 local targetIdx = tonumber(ARGV[2])
+local style = l.match_config.TeamStyle
 
+-- Find player's current team
 local fromJsonIdx = nil
+local fromTeamIdx = nil
 local pdata = nil
 for i, team in ipairs(l.Teams) do
   if team.Players[pid] then
     fromJsonIdx = i - 1
+    fromTeamIdx = team.TeamIndex
     pdata = team.Players[pid]
     break
   end
 end
-if fromJsonIdx == nil then return redis.error_reply('Player not found') end
+if fromJsonIdx == nil then return nil end
 
-local targetExists = false
+-- Find target team by TeamIndex
+local targetJsonIdx = nil
+local targetLen = nil
 for i, team in ipairs(l.Teams) do
-  if team.TeamIndex == targetIdx then targetExists = true; break end
+  if team.TeamIndex == targetIdx then
+    targetJsonIdx = i - 1
+    targetLen = team.Length
+    break
+  end
 end
-if not targetExists then return cjson.encode({ playerData = pdata, gameModeSlug = l.GameModeSlug }) end
+if targetJsonIdx == nil then return nil end
 
-redis.call('JSON.DEL',      KEYS[1], '$.Teams[' .. fromJsonIdx .. '].Players.' .. pid)
-redis.call('JSON.NUMINCRBY', KEYS[1], '$.Teams[' .. fromJsonIdx .. '].Length', -1)
-redis.call('JSON.SET',      KEYS[1], '$.Teams[' .. targetIdx .. '].Players.' .. pid, cjson.encode(pdata))
-redis.call('JSON.NUMINCRBY', KEYS[1], '$.Teams[' .. targetIdx .. '].Length', 1)
+-- No-op if already on that team
+if fromJsonIdx == targetJsonIdx then
+  return cjson.encode({ playerData = pdata, gameModeSlug = l.GameModeSlug })
+end
+
+-- Capacity rules per direction:
+if targetIdx == 4 then
+  -- → Spectator: any mode, max 4
+  if targetLen >= 4 then return nil end
+elseif fromTeamIdx == 4 then
+  -- Spectator → player: capacity depends on game mode
+  if style == 'Duos' then
+    if targetIdx ~= 0 and targetIdx ~= 1 then return nil end
+    if targetLen >= 2 then return nil end
+  elseif style == 'FFA' then
+    if targetIdx < 0 or targetIdx > 3 then return nil end
+    if targetLen >= 1 then return nil end
+  else
+    -- Solos / Other
+    if targetIdx ~= 0 and targetIdx ~= 1 then return nil end
+    if targetLen >= 1 then return nil end
+  end
+else
+  -- Player → player: Duos only, teams 0/1, max 2
+  if style ~= 'Duos' then return nil end
+  if targetIdx ~= 0 and targetIdx ~= 1 then return nil end
+  if targetLen >= 2 then return nil end
+end
+
+redis.call('JSON.DEL',       KEYS[1], '$.Teams[' .. fromJsonIdx   .. '].Players.' .. pid)
+redis.call('JSON.NUMINCRBY', KEYS[1], '$.Teams[' .. fromJsonIdx   .. '].Length', -1)
+redis.call('JSON.SET',       KEYS[1], '$.Teams[' .. targetJsonIdx .. '].Players.' .. pid, cjson.encode(pdata))
+redis.call('JSON.NUMINCRBY', KEYS[1], '$.Teams[' .. targetJsonIdx .. '].Length', 1)
 return cjson.encode({ playerData = pdata, gameModeSlug = l.GameModeSlug })
 `;
 
@@ -192,20 +293,26 @@ local ts          = ARGV[3]
 local loadout     = ARGV[4]
 local style       = l.match_config.TeamStyle
 
+-- compute global player count for LobbyPlayerIndex
+local totalPlayers = 0
+for _, team in ipairs(l.Teams) do
+  totalPlayers = totalPlayers + team.Length
+end
+
 local teamJsonIdx = nil
-local teamLen     = nil
 for i, team in ipairs(l.Teams) do
   local ok = false
-  if style == 'FFA' or style == 'Other' or style == 'Solos' then
-    ok = team.Length < 1
-  elseif style == 'Duos' then
-    ok = team.Length < 2
-  elseif isSpectator then
+  if isSpectator then
     ok = team.TeamIndex == 4 and team.Length < 4
+  elseif style == 'FFA' then
+    ok = team.TeamIndex ~= 4 and team.Length < 1
+  elseif style == 'Solos' or style == 'Other' then
+    ok = (team.TeamIndex == 0 or team.TeamIndex == 1) and team.Length < 1
+  elseif style == 'Duos' then
+    ok = (team.TeamIndex == 0 or team.TeamIndex == 1) and team.Length < 2
   end
   if ok then
     teamJsonIdx = i - 1
-    teamLen     = team.Length
     break
   end
 end
@@ -215,7 +322,7 @@ local pdata = cjson.encode({
   Account           = { id = accountId },
   JoinedAt          = ts,
   BotSettingSlug    = '',
-  LobbyPlayerIndex  = teamLen,
+  LobbyPlayerIndex  = totalPlayers,
   CrossplayPreference = 1
 })
 
@@ -346,7 +453,8 @@ for _, team in ipairs(l.Teams) do
 end
 if not found then return nil end
 redis.call('JSON.SET', KEYS[1], '$.LeaderID', '"' .. target .. '"')
-return cjson.encode(l.ReadyPlayers)
+redis.call('JSON.SET', KEYS[1], '$.ReadyPlayers.' .. target, 'true')
+return redis.call('JSON.GET', KEYS[1])
 `;
 
 // ARGV[1]=accountId
@@ -448,7 +556,6 @@ function broadcastCustomLobby(
       cmd: "update",
     },
   };
-  console.log(JSON.stringify(notification, null, 2));
   return redisClient.publish(REALTIME_NOTIFICATION_CHANNEL, JSON.stringify(notification));
 }
 
@@ -796,7 +903,18 @@ export async function updateTeamStyleForCustomLobby(
   const gameModeSlug = TEAM_STYLE_TO_GAME_MODE[newStyle] ?? "gm_classic_2v2";
   const lobby = await applyGameSettings(lobbyId, leaderId, gameModeSlug);
   if (!lobby) return null;
-  await broadcastCustomLobby(lobbyId, { template_id: "TeamStyleChangedForCustomGame", lobby });
+  for (const team of lobby.Teams) {
+    for (const playerId of Object.keys(team.Players)) {
+      if (playerId !== lobby.LeaderID) {
+        await broadcastCustomLobby(playerId, {
+          template_id: "TeamStyleChangedForCustomGame",
+          MatchID: lobbyId,
+          lobby,
+        });
+      }
+    }
+  }
+
   return lobby;
 }
 
@@ -1144,16 +1262,27 @@ export async function kickFromLobby(lobbyId: string, leaderId: string, kickeeId:
   return player;
 }
 
-export async function promoteToLobbyLeader(lobbyId: string, promoteTarget: string) {
+export async function promoteToLobbyLeader(
+  lobbyId: string,
+  leaderID: string,
+  promoteTarget: string,
+) {
   const result = await evalLua(LUA_PROMOTE_LEADER, [lobbyKey(lobbyId)], [promoteTarget]);
   if (!result) return null;
-  const ReadyPlayers = JSON.parse(result as string) as Record<string, boolean>;
-  await broadcastCustomLobby(lobbyId, {
-    template_id: "LobbyLeaderChanged",
-    LeaderID: promoteTarget,
-    ReadyPlayers,
-  });
-  return { MatchID: lobbyId, LeaderID: promoteTarget, ReadyPlayers };
+  const lobby = JSON.parse(result as string) as CustomLobby;  
+  for (const team of lobby.Teams) {
+    for (const playerId of Object.keys(team.Players)) {
+      if (playerId !== leaderID) {
+        await broadcastCustomLobby(playerId, {
+          template_id: "LobbyLeaderChanged",
+          LeaderID: promoteTarget,
+          MatchID: lobbyId,
+          ReadyPlayers: lobby.ReadyPlayers,
+        });
+      }
+    }
+  }
+  return { MatchID: lobbyId, LeaderID: promoteTarget, ReadyPlayers: lobby.ReadyPlayers };
 }
 
 export async function generateLobbyCode(lobbyId: string, leaderId: string) {

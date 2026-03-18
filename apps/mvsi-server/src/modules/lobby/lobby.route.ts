@@ -384,6 +384,9 @@ router.put(
   "/ssc/invoke/switch_custom_game_lobby_team",
   async ({ claims, body }) => {
     const Player = await switchTeamForCustomLobby(body.MatchID, claims.id, body.TeamIndex);
+    if (!Player) {
+      return {};
+    }
     const response = {
       body: {
         MatchID: body.MatchID,
@@ -460,8 +463,8 @@ router.put(
 
 router.put(
   "/ssc/invoke/promote_to_lobby_leader",
-  async ({ body }) => {
-    const result = await promoteToLobbyLeader(body.MatchID, body.PromoteTarget);
+  async ({ claims, body }) => {
+    const result = await promoteToLobbyLeader(body.MatchID, claims.id, body.PromoteTarget);
     return { body: result, metadata: null, return_code: result ? 0 : 1 };
   },
   {
