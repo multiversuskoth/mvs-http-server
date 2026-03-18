@@ -4,6 +4,8 @@ import { redisClient } from "@mvsi/redis";
 import { ObjectId } from "mongodb";
 import { getCosmeticsConfigurationForPlayer } from "../cosmetics/cosmetics.service";
 import type { PlayerConfig } from "./playerConfig.types";
+import { getLobby } from "../lobby/lobby.service";
+import { broadcastNotificationToUsers } from "../notifications/notifications.utils";
 
 export async function setPlayerConfig(
   playerId: string,
@@ -34,7 +36,17 @@ export async function getPlayersConfig(playerIds: string[]) {
   );
 }
 
-export async function updatePlayerLoadout(playerId: string, character: string, skin: string) {
+export async function updatePlayerLoadout(
+  playerId: string,
+  lobbyId: string,
+  character: string,
+  skin: string,
+) {
+  const lobby = await getLobby(lobbyId);
+  if (!lobby) {
+    logger.error(`Lobby not found for id ${lobbyId}`);
+    return;
+  }
   try {
     const [cosmetics, playerConfig] = await Promise.all([
       getCosmeticsConfigurationForPlayer(playerId),
@@ -55,6 +67,31 @@ export async function updatePlayerLoadout(playerId: string, character: string, s
       playerConfig.Character = character;
       playerConfig.Skin = skin;
       await setPlayerConfig(playerId, playerConfig);
+      
+      await broadcastNotificationToUsers({
+        exclude: [playerId],
+        users: Object.keys(lobby.PlayerGameplayPreferences),
+        notification: {
+          data: {
+            Loadout: {
+              Character: character,
+              Skin: skin,
+            },
+            AccountId: playerId,
+            LobbyId: lobbyId,
+            template_id: "OnPlayerLoadoutLocked",
+            bAreAllLoadoutsLocked: true,
+          },
+          payload: {
+            match: {
+              id: lobbyId,
+            },
+            custom_notification: "realtime",
+          },
+          header: "",
+          cmd: "update",
+        },
+      });
     }
   } catch (err) {
     logger.error(err);

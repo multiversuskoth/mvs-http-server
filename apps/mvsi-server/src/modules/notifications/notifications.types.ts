@@ -1,15 +1,22 @@
-export const REALTIME_NOTIFICATION_CHANNEL = "realtime_notification";
+export const REALTIME_NOTIFICATION_TOPIC_CHANNEL = "realtime_notification";
+export const REALTIME_NOTIFICATION_ARRAY_CHANNEL = "realtime_notificationArray";
 
-export type RealtimeNotificationMessage = {
+export type RealtimeNotificationTopicMessage = {
   topic: string;
-  notification : NotificationTemplate;
+  notification: NotificationTemplate;
+};
+
+export type RealtimeNotificationArrayMessage = {
+  exclude: string[];
+  users: string[];
+  notification: NotificationTemplate;
 };
 
 export type NotificationTemplate = {
   data: {
     template_id: string;
   } & Record<string, any>;
-  payload:  {
+  payload: {
     template?: string;
   } & Record<string, any>;
   header: "";

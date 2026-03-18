@@ -23,6 +23,7 @@ import {
   updateIntSettingForCustomLobby,
   updateTeamStyleForCustomLobby,
   generateLobbyCode,
+  startCustomMatch,
 } from "./lobby.service";
 import { updatePlayerLoadout } from "../playerConfig/playerConfig.service";
 import { TeamStyle } from "../gameModes/gameModes.config";
@@ -136,7 +137,7 @@ router.put(
 router.put(
   "/ssc/invoke/lock_lobby_loadout",
   async ({ claims, body }) => {
-    await updatePlayerLoadout(claims.id, body.Loadout.Character, body.Loadout.Skin);
+    await updatePlayerLoadout(claims.id, body.LobbyId, body.Loadout.Character, body.Loadout.Skin);
     return {
       body: {
         AccountId: claims.id,
@@ -152,10 +153,18 @@ router.put(
   },
   {
     body: t.Object({
+      AutoPartyPreference: t.Boolean(),
+      CrossplayPreference: t.Number(),
+      GameplayPreferences: t.Number(),
+      HissCrc: t.Number(),
       Loadout: t.Object({
         Character: t.String(),
         Skin: t.String(),
       }),
+      LobbyId: t.String(),
+      LobbyTemplate: t.String(),
+      Platform: t.String(),
+      Version: t.String(),
     }),
   },
 );
@@ -574,6 +583,36 @@ router.put(
       HissCrc: t.Number(),
       LobbyId: t.String(),
       LobbyTemplate: t.String(),
+      Platform: t.String(),
+      Version: t.String(),
+    }),
+  },
+);
+
+router.put(
+  "/ssc/invoke/start_custom_match",
+  async ({ claims, body }) => {
+    await startCustomMatch(body.LobbyId, claims.id);
+    return {
+      body: {},
+      metadata: null,
+      return_code: 0,
+    };
+  },
+  {
+    body: t.Object({
+      AutoPartyPreference: t.Boolean(),
+      BotData: t.Record(t.String(), t.Any()),
+      ClusterID: t.String(),
+      CrossplayPreference: t.Number(),
+      GameplayPreferences: t.Number(),
+      HissCrc: t.Number(),
+      LobbyId: t.String(),
+      LobbyTemplate: t.String(),
+      MatchID: t.String(),
+      MultiplayProfileID: t.String(),
+      MultiplayRegionID: t.String(),
+      MultiplayRegionSearchID: t.Number(),
       Platform: t.String(),
       Version: t.String(),
     }),

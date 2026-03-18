@@ -3,8 +3,9 @@ import { logger } from "@mvsi/logger";
 import { redisClient } from "@mvsi/redis";
 import { ObjectId } from "mongodb";
 import { getCurrentCRC } from "../../data/config";
-import { MATCH_TYPES } from "../matchmaking/matchmaking.types";
-import { getPlayerConfig } from "../playerConfig/playerConfig.service";
+import { MATCH_TYPES, MatchmakingActiveMatch } from "../matchmaking/matchmaking.types";
+import { getPlayerConfig, getPlayersConfig } from "../playerConfig/playerConfig.service";
+import type { PlayerConfig } from "../playerConfig/playerConfig.types";
 import {
   type BaseLobby,
   type CustomLobby,
@@ -19,9 +20,11 @@ import { TeamStyle } from "../gameModes/gameModes.config";
 import { GAME_MODES_CONFIG } from "../../data/gameModes";
 import { MAP_ROTATIONS } from "../../data/maps";
 import {
-  REALTIME_NOTIFICATION_CHANNEL,
-  type RealtimeNotificationMessage,
+  REALTIME_NOTIFICATION_TOPIC_CHANNEL,
+  type RealtimeNotificationTopicMessage,
 } from "../notifications/notifications.types";
+import { randomBytes } from "node:crypto";
+import { notifyActiveMatchCreated } from "../matchmaking/matchmaking.service";
 
 const LOBBY_EX = 2 * 24 * 60 * 60; // 2 days
 const ALPHABET = "ABCDEFGHJKLMNPQRSTUVWXYZ23456789";
@@ -547,7 +550,7 @@ function broadcastCustomLobby(
   lobbyId: string,
   data: { template_id: string } & Record<string, unknown>,
 ) {
-  const notification: RealtimeNotificationMessage = {
+  const notification: RealtimeNotificationTopicMessage = {
     topic: lobbyId,
     notification: {
       data: { MatchID: lobbyId, ...data },
@@ -556,7 +559,7 @@ function broadcastCustomLobby(
       cmd: "update",
     },
   };
-  return redisClient.publish(REALTIME_NOTIFICATION_CHANNEL, JSON.stringify(notification));
+  return redisClient.publish(REALTIME_NOTIFICATION_TOPIC_CHANNEL, JSON.stringify(notification));
 }
 
 const TEAM_STYLE_TO_GAME_MODE: Partial<Record<TeamStyle, keyof typeof GAME_MODES_CONFIG>> = {
@@ -633,7 +636,7 @@ export async function invitePlayerToLobby(
 ) {
   const lobby = await getLobby(MatchID);
   if (lobby) {
-    const notification: RealtimeNotificationMessage = {
+    const notification: RealtimeNotificationTopicMessage = {
       topic: InviteeAccountId,
       notification: {
         data: {
@@ -659,7 +662,7 @@ export async function invitePlayerToLobby(
         cmd: "profile-notification",
       },
     };
-    await redisClient.publish(REALTIME_NOTIFICATION_CHANNEL, JSON.stringify(notification));
+    await redisClient.publish(REALTIME_NOTIFICATION_TOPIC_CHANNEL, JSON.stringify(notification));
   }
 }
 
@@ -756,7 +759,7 @@ export async function notifyLobbyJoined(lobby: BaseLobby) {
 
 export async function setLobbyMode(leaderId: string, lobbyId: string, newMode: MATCH_TYPES) {
   await evalLua(LUA_SET_LOBBY_MODE, [lobbyKey(lobbyId)], [leaderId, newMode]);
-  const notification: RealtimeNotificationMessage = {
+  const notification: RealtimeNotificationTopicMessage = {
     topic: lobbyId,
     notification: {
       data: {
@@ -771,7 +774,7 @@ export async function setLobbyMode(leaderId: string, lobbyId: string, newMode: M
       cmd: "update",
     },
   };
-  await redisClient.publish(REALTIME_NOTIFICATION_CHANNEL, JSON.stringify(notification));
+  await redisClient.publish(REALTIME_NOTIFICATION_TOPIC_CHANNEL, JSON.stringify(notification));
   logger.info(`Changing party lobby for ${lobbyId} - to ${newMode}`);
 }
 
@@ -1142,7 +1145,7 @@ export async function updateCustomGameBotFighter(
     Skin: { AssetPath: string; Slug: string };
     LobbyPlayerIndex: number;
   };
-
+  console.log(JSON.stringify(bot, null, 2));
   await broadcastCustomLobby(lobbyId, { template_id: "BotSettingsUpdatedForCustomGame", Bot: bot });
   return bot;
 }
@@ -1269,7 +1272,7 @@ export async function promoteToLobbyLeader(
 ) {
   const result = await evalLua(LUA_PROMOTE_LEADER, [lobbyKey(lobbyId)], [promoteTarget]);
   if (!result) return null;
-  const lobby = JSON.parse(result as string) as CustomLobby;  
+  const lobby = JSON.parse(result as string) as CustomLobby;
   for (const team of lobby.Teams) {
     for (const playerId of Object.keys(team.Players)) {
       if (playerId !== leaderID) {
@@ -1306,4 +1309,152 @@ export async function generateLobbyCode(lobbyId: string, leaderId: string) {
 export async function getLobbyIdFromCode(code: string) {
   const lobbyId = await redisClient.get(`lobby_code:${code}`);
   return lobbyId;
+}
+
+export async function startCustomMatch(lobbyId: string, leaderId: string) {
+  const lobby = (await getLobby(lobbyId)) as CustomLobby | null;
+  if (!lobby || lobby.LeaderID !== leaderId) {
+    return null;
+  }
+  const matchId = new ObjectId().toHexString();
+  const resultId = new ObjectId().toHexString();
+  const selectedMaps = lobby.Maps.filter((m) => m.IsSelected);
+  const randomMap = selectedMaps[Math.floor(Math.random() * selectedMaps.length)] ?? lobby.Maps[0];
+
+  const playerConfigs = await getPlayersConfig(Object.keys(lobby.PlayerGameplayPreferences));
+
+  const BOT_DIFFICULTY: Record<string, { min: number; max: number }> = {
+    VeryEasy: { min: 0, max: 0 },
+    Easy: { min: 1, max: 1 },
+    Medium: { min: 2, max: 2 },
+    Hard: { min: 3, max: 3 },
+  };
+
+  const Players: Record<string, PlayerConfig> = {};
+  const Spectators: Record<string, PlayerConfig> = {};
+
+  for (const team of lobby.Teams) {
+    const isSpectatorTeam = team.TeamIndex === 4;
+    for (const [playerId, lobbyPlayer] of Object.entries(team.Players)) {
+      const isBot = lobbyPlayer.BotSettingSlug !== "";
+      const buffs = lobby.PlayerBuffs?.[playerId] ?? [];
+      const handicap = lobby.Handicaps?.[playerId] ?? 0;
+
+      let playerConfig: PlayerConfig;
+
+      if (isBot) {
+        const botPlayer = lobbyPlayer as LobbyTeam["Players"][string] & {
+          Fighter?: { AssetPath: string; Slug: string };
+          Skin?: { AssetPath: string; Slug: string };
+        };
+        const diff = BOT_DIFFICULTY[lobbyPlayer.BotSettingSlug] ?? BOT_DIFFICULTY.Medium;
+        playerConfig = {
+          AccountId: playerId,
+          Username: playerId,
+          bUseCharacterDisplayName: false,
+          PlayerIndex: lobbyPlayer.LobbyPlayerIndex,
+          TeamIndex: team.TeamIndex,
+          Character: botPlayer.Fighter?.Slug ?? "",
+          Skin: botPlayer.Skin?.Slug ?? "",
+          Taunts: [],
+          Perks: [],
+          Banner: "",
+          ProfileIcon: "",
+          RingoutVfx: "",
+          bIsBot: true,
+          BotBehaviorOverride: "",
+          BotDifficultyMin: diff.min,
+          BotDifficultyMax: diff.max,
+          Buffs: buffs,
+          StatTrackers: [],
+          Gems: [],
+          StartingDamage: 0,
+          Handicap: handicap,
+          GameplayPreferences: 0,
+          bAutoPartyPreference: false,
+          PartyMember: null,
+          PartyId: null,
+          RankedTier: null,
+          RankedDivision: null,
+          WinStreak: null,
+          IsHost: false,
+          Ip: "",
+        };
+      } else {
+        const config = playerConfigs.get(playerId);
+        if (!config) continue;
+        const loadout = lobby.LockedLoadouts[playerId];
+        playerConfig = {
+          ...config,
+          PlayerIndex: lobbyPlayer.LobbyPlayerIndex,
+          TeamIndex: team.TeamIndex,
+          Character: loadout?.Character ?? config.Character,
+          Skin: loadout?.Skin ?? config.Skin,
+          Buffs: buffs,
+          Handicap: handicap,
+          GameplayPreferences: Number(
+            lobby.PlayerGameplayPreferences?.[playerId] ?? config.GameplayPreferences,
+          ),
+          PartyId: null,
+          PartyMember: null,
+          IsHost: playerId === lobby.LeaderID,
+        };
+      }
+
+      if (isSpectatorTeam) {
+        Spectators[playerId] = playerConfig;
+      } else {
+        Players[playerId] = playerConfig;
+      }
+    }
+  }
+
+  const match: MatchmakingActiveMatch = {
+    matchConfig: {
+      Spectators,
+      TeamData: [],
+      bIsTutorial: false,
+      bIsOnlineMatch: true,
+      bIsRift: false,
+      bIsPvP: true,
+      bIsCustomGame: true,
+      bIsRanked: false,
+      bIsCasualSpecial: false,
+      Cluster: "",
+      bAllowMapHazards: lobby.match_config.AllowHazards,
+      WorldBuffs: lobby.WorldBuffs,
+      RiftNodeAttunement: "Attunements:None",
+      CountdownDisplay: "CountdownTypes:XvY",
+      HudSettings: {
+        bDisplayPortraits: true,
+        bDisplayTimer: true,
+        bDisplayStocks: true,
+      },
+      MatchDurationSeconds: lobby.match_config.MatchDuration,
+      ScoreEvaluationRule: "TargetScoreIsWin",
+      ScoreAttributionRule: "AttributeToAttacker",
+      CustomGameSettings: {
+        NumRingouts: lobby.match_config.NumRingoutsForWin,
+        MatchTime: lobby.match_config.MatchDuration,
+        bHazardsEnabled: lobby.match_config.AllowHazards,
+        bShieldsEnabled: Boolean(lobby.match_config.EnableShields),
+      },
+      ArenaModeInfo: null,
+      RiftNodeId: "",
+      bModeGrantsProgress: true,
+      EventQueueSlug: "",
+      MatchId: matchId,
+      Created: new Date(),
+      Map: randomMap.Map,
+      ModeString: lobby.ModeString ?? "",
+      Players,
+    },
+    state: "pending",
+    matchKey: randomBytes(32).toString("base64"),
+    resultId,
+  };
+
+  await notifyActiveMatchCreated(match.matchConfig.MatchId, match);
+
+  return match;
 }
