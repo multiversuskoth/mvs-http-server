@@ -3,10 +3,9 @@ import { redisClient } from "@mvsi/redis";
 import { ObjectId } from "mongodb";
 import { RIFTS_CONFIG } from "../../data/rifts";
 import {
-  deleteLobby,
   getLobby,
-  getPlayerCurrentLobbyId,
-  publishLobbyCreated,
+
+  notifyLobbyJoined,
 } from "../lobby/lobby.service";
 import type { RiftLobby } from "../lobby/lobby.types";
 import type { ExtraLobbyRiftData, RiftsData } from "./rfits.types";
@@ -17,18 +16,10 @@ export async function createRiftLobby(
   ChapterGuid: string,
   ChapterDifficulty: number,
 ) {
-  const lobbyId = await getPlayerCurrentLobbyId(accountId);
-  if (!lobbyId) {
-    throw new Error("Player Lobby ID not found");
-  }
-  const lobby = await getLobby(lobbyId);
-  if (!lobby) {
-    throw new Error("Lobby not found");
-  }
 
   const riftsData: RiftsData = {
     leaderID: accountId,
-    lobbyId: lobby.MatchID,
+    lobbyId: new ObjectId().toHexString(),
     chapter: RiftConfigSlug,
     key: "",
     hostCharacter: "",
@@ -55,17 +46,15 @@ export async function createRiftLobby(
     },
     RiftState: {},
   };
-  lobby.MatchID = new ObjectId().toHexString();
-  const { ModeString, ...lobbyWithoutModeString } = lobby;
+
 
   const riftLobby: RiftLobby & ExtraLobbyRiftData = {
-    ...lobbyWithoutModeString,
+    //...lobbyWithoutModeString,
     ...extraLobbyRiftData,
   };
 
   await setRiftLobbyForPlayer(accountId, riftsData);
-  await deleteLobby(lobbyId, accountId);
-  await publishLobbyCreated(riftLobby);
+  await notifyLobbyJoined(riftLobby);
   logger.info(`RIFT lobby created for ${accountId} - matchLobbyId:${riftLobby.MatchID}`);
   return riftLobby;
 }

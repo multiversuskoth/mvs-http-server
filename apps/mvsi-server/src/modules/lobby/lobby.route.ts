@@ -22,6 +22,7 @@ import {
   updateHandicapsForCustomLobby,
   updateIntSettingForCustomLobby,
   updateTeamStyleForCustomLobby,
+  generateLobbyCode,
 } from "./lobby.service";
 import { updatePlayerLoadout } from "../playerConfig/playerConfig.service";
 import { TeamStyle } from "../gameModes/gameModes.config";
@@ -162,7 +163,7 @@ router.put(
 router.put(
   "/ssc/invoke/create_custom_game_lobby",
   async ({ claims }) => {
-    const lobby = await createCustomLobby(claims.id);    
+    const lobby = await createCustomLobby(claims.id);
     return {
       body: {
         lobby,
@@ -252,7 +253,7 @@ router.put(
       },
       metadata: null,
       return_code: 0,
-    };    
+    };
     return response;
   },
   {
@@ -446,7 +447,7 @@ router.put(
       body: result,
       metadata: null,
       return_code: 0,
-    };    
+    };
     return response;
   },
   {
@@ -503,7 +504,11 @@ router.put(
 router.put(
   "/ssc/invoke/set_world_buffs_for_custom_game",
   async ({ claims, body }) => {
-    const WorldBuffs = await setWorldBuffsForCustomLobby(body.MatchID, claims.id, body.WorldBuffSlugs);
+    const WorldBuffs = await setWorldBuffsForCustomLobby(
+      body.MatchID,
+      claims.id,
+      body.WorldBuffSlugs,
+    );
     return {
       body: { MatchID: body.MatchID, WorldBuffs },
       metadata: null,
@@ -548,5 +553,28 @@ router.put(
   },
 );
 
+router.put(
+  "/ssc/invoke/lobby_code",
+  async ({ claims, body }) => {
+    const LobbyCode = await generateLobbyCode(body.LobbyId, claims.id);
+    return {
+      body: { LobbyCode },
+      metadata: null,
+      return_code: 0,
+    };
+  },
+  {
+    body: t.Object({
+      AutoPartyPreference: t.Boolean(),
+      CrossplayPreference: t.Number(),
+      GameplayPreferences: t.Number(),
+      HissCrc: t.Number(),
+      LobbyId: t.String(),
+      LobbyTemplate: t.String(),
+      Platform: t.String(),
+      Version: t.String(),
+    }),
+  },
+);
 
 MAIN_APP.use(router);

@@ -2,17 +2,18 @@ import { logger } from "@mvsi/logger";
 import { encodeHydraWS, MAIN_WEBSOCKET } from "../../websocket.elysia";
 import type { MatchmakingTicket } from "../matchmaking/matchmaking.types";
 import {
-  LOBBY_CREATED_CHANNEL,
+  LOBBY_JOINED_CHANNEL,
   LOBBY_QUEUED_CHANNEL,
   type LobbyCreatedMessage,
 } from "./lobby.types";
+import { leaveLobby } from "./lobby.service";
 
 const subscriber = MAIN_WEBSOCKET.decorator.redisSub;
 const clients = MAIN_WEBSOCKET.decorator.players;
 
-subscriber.subscribe(LOBBY_CREATED_CHANNEL, (message) => {
+subscriber.subscribe(LOBBY_JOINED_CHANNEL, (message) => {
   const notification = JSON.parse(message) as LobbyCreatedMessage;
-  handleOnLobbyCreated(notification);
+  handleOnLobbyJoined(notification);
 });
 
 subscriber.subscribe(LOBBY_QUEUED_CHANNEL, (message) => {
@@ -20,11 +21,12 @@ subscriber.subscribe(LOBBY_QUEUED_CHANNEL, (message) => {
   handlePartyQueued(notification);
 });
 
-async function handleOnLobbyCreated(message: LobbyCreatedMessage) {
+async function handleOnLobbyJoined(message: LobbyCreatedMessage) {
   const client = clients.get(message.accountId);
   if (client) {
     if (client.data.lobbyId) {
       client.unsubscribe(client.data.lobbyId);
+      await leaveLobby(client.data.lobbyId, message.accountId, false);
     }
     client.data.lobbyId = message.lobbyId;
     client.subscribe(message.lobbyId);

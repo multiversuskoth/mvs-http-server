@@ -2,7 +2,7 @@ import { GAME_MODES_CONFIG } from "../../data/gameModes";
 import { TeamStyle } from "../gameModes/gameModes.config";
 import type { MATCH_TYPES } from "../matchmaking/matchmaking.types";
 
-export const LOBBY_CREATED_CHANNEL = "lobby:created";
+export const LOBBY_JOINED_CHANNEL = "lobby:joined";
 export const LOBBY_QUEUED_CHANNEL = "lobby:queued";
 
 export type LobbyPlayerStatus = {
@@ -82,6 +82,7 @@ export type CustomLobbySettings = {
   PlayerBuffs: Record<string, string[]>;
   Maps: { Map: string; IsSelected: boolean }[];
   match_config: CustomLobbyMatchConfig;
+  LobbyCode?: string;
 };
 
 export type CustomLobbyMatchConfig = {

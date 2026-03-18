@@ -7,13 +7,13 @@ import type { ElysiaWS } from "elysia/ws";
 import type { ServerWebSocket } from "elysia/ws/bun";
 import * as jwt from "jsonwebtoken";
 import type { JWT_CLAIMS } from "./middleware/middlewares";
-import { deleteLobby } from "./modules/lobby/lobby.service";
 import { removeTicketsFromQueue } from "./modules/matchmaking/matchmaking.service";
 import { MATCH_TYPES, type MatchmakingTicket } from "./modules/matchmaking/matchmaking.types";
 import {
   clearPlayerKeys,
   refreshPlayersPresence,
 } from "./modules/playerPresence/playerPresence.service";
+import { leaveLobby } from "./modules/lobby/lobby.service";
 
 const PING_BUFFER = Buffer.from([0x0c]);
 
@@ -73,7 +73,7 @@ export const MAIN_WEBSOCKET = new Elysia()
       if (ws.data.account) {
         attemptRemoveMatchTicket(ws);
         if (ws.data.lobbyId) {
-          deleteLobby(ws.data.lobbyId, ws.data.account.id);
+          leaveLobby(ws.data.lobbyId, ws.data.account.id, false);
         }
         clearPlayerKeys(ws.data.account.id);
         ws.data.players.delete(ws.data.account.id);

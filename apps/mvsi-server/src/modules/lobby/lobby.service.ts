@@ -10,8 +10,8 @@ import {
   type CustomLobby,
   type CustomLobbyMatchConfig,
   type CustomLobbySettings,
-  LOBBY_CREATED_CHANNEL,
-  LobbyCreatedMessage,
+  LOBBY_JOINED_CHANNEL,
+  type LobbyCreatedMessage,
   type LobbyTeam,
   type PartyLobby,
 } from "./lobby.types";
@@ -24,15 +24,19 @@ import {
 } from "../notifications/notifications.types";
 
 const LOBBY_EX = 2 * 24 * 60 * 60; // 2 days
+const ALPHABET = "ABCDEFGHJKLMNPQRSTUVWXYZ23456789";
 
 function lobbyKey(lobbyId: string) {
   return `lobby:${lobbyId}`;
 }
 
-// json.set expects RedisJSON but our lobby objects are always valid JSON — centralise the cast
-const jsonSet = (key: string, path: string, value: unknown) =>
-  redisClient.json.set(key, path, value as Parameters<typeof redisClient.json.set>[2]);
-
+function generateCode(len = 5): string {
+  let out = "";
+  for (let i = 0; i < len; i++) {
+    out += ALPHABET[(Math.random() * ALPHABET.length) | 0];
+  }
+  return out;
+}
 // ─── Lua scripts ──────────────────────────────────────────────────────────────
 
 const LUA_SET_LOBBY_JOINABLE = `
@@ -63,15 +67,6 @@ redis.call('JSON.SET', KEYS[1], '$.IsLobbyJoinable', 'false')
 return 1
 `;
 
-const LUA_DELETE_LOBBY = `
-local s = redis.call('JSON.GET', KEYS[1])
-if not s then return nil end
-local l = cjson.decode(s)
-if l.LeaderID ~= ARGV[1] then return nil end
-redis.call('DEL', KEYS[1])
-return 1
-`;
-
 // ARGV[1]=leaderId, ARGV[2]=gameModeSlug, ARGV[3]=match_config JSON,
 // ARGV[4]=maps JSON, ARGV[5]=worldBuffs JSON, ARGV[6]=buffMatrix JSON
 // Atomically applies game settings and refreshes PlayerBuffs from current teams.
@@ -92,13 +87,14 @@ for _, team in ipairs(l.Teams) do
   if teamData then
     local teamBuffs = teamData.teamBuffs or {}
     local playerBuffsMap = teamData.players or {}
-    for pid, player in pairs(team.Players) do
-      local pidxKey = tostring(player.LobbyPlayerIndex)
-      local playerSpecificBuffs = playerBuffsMap[pidxKey] or {}
+    local slotIdx = 0
+    for pid, _ in pairs(team.Players) do
+      local playerSpecificBuffs = playerBuffsMap[tostring(slotIdx)] or {}
       local combined = {}
       for _, b in ipairs(playerSpecificBuffs) do table.insert(combined, b) end
       for _, b in ipairs(teamBuffs) do table.insert(combined, b) end
       if #combined > 0 then newBuffs[pid] = combined end
+      slotIdx = slotIdx + 1
     end
   end
 end
@@ -145,10 +141,9 @@ const LUA_UPDATE_HANDICAP = `
 local s = redis.call('JSON.GET', KEYS[1])
 if not s then return nil end
 local l = cjson.decode(s)
-if l.LeaderID ~= ARGV[1] then return nil end
-l.Handicaps[ARGV[2]] = tonumber(ARGV[3])
-redis.call('JSON.SET', KEYS[1], '$.Handicaps.' .. ARGV[2], ARGV[3])
-return cjson.encode(l.Handicaps)
+l.Handicaps[ARGV[1]] = tonumber(ARGV[2])
+redis.call('JSON.SET', KEYS[1], '$.Handicaps.' .. ARGV[1], ARGV[2])
+return redis.call('JSON.GET', KEYS[1])
 `;
 
 // ARGV[1]=playerId, ARGV[2]=targetTeamIndex (0-based)
@@ -395,6 +390,9 @@ if l.LeaderID == pid then
     redis.call('JSON.SET', KEYS[1], '$.ReadyPlayers.' .. newLeader, 'true')
     l.ReadyPlayers[newLeader] = true
   else
+    if l.LobbyCode and l.LobbyCode ~= '' then
+      redis.call('DEL', 'lobby_code:' .. l.LobbyCode)
+    end
     redis.call('DEL', KEYS[1])
   end
 end
@@ -416,15 +414,14 @@ for _, team in ipairs(l.Teams) do
   if teamData then
     local teamBuffs = teamData.teamBuffs or {}
     local playerBuffsMap = teamData.players or {}
-    for pid, player in pairs(team.Players) do
-      local pidxKey = tostring(player.LobbyPlayerIndex)
-      local playerSpecificBuffs = playerBuffsMap[pidxKey] or {}
+    local slotIdx = 0
+    for pid, _ in pairs(team.Players) do
+      local playerSpecificBuffs = playerBuffsMap[tostring(slotIdx)] or {}
       local combined = {}
       for _, b in ipairs(playerSpecificBuffs) do table.insert(combined, b) end
       for _, b in ipairs(teamBuffs) do table.insert(combined, b) end
-      if #combined > 0 then
-        newBuffs[pid] = combined
-      end
+      if #combined > 0 then newBuffs[pid] = combined end
+      slotIdx = slotIdx + 1
     end
   end
 end
@@ -560,17 +557,10 @@ export async function invitePlayerToLobby(
 }
 
 export async function createBaseLobby(accountId: string) {
-  const [playerConfig, playerCurrentLobbyId] = await Promise.all([
-    getPlayerConfig(accountId),
-    getPlayerCurrentLobbyId(accountId),
-  ]);
+  const playerConfig = await getPlayerConfig(accountId);
 
   if (!playerConfig) {
     throw new Error("PlayerConfig not found");
-  }
-
-  if (playerCurrentLobbyId) {
-    await deleteLobby(playerCurrentLobbyId, accountId);
   }
 
   const baseLobby: BaseLobby = {
@@ -636,23 +626,14 @@ export async function createPartyLobby(
     ModeString: lobbyMode,
   };
 
-  await setPlayerCurrentLobbyId(accountId, partyLobby.MatchID);
-  await publishLobbyCreated(partyLobby);
+  await notifyLobbyJoined(partyLobby);
 
   logger.info(`Creating party lobby for ${accountId} - matchLobbyId:${partyLobby.MatchID}`);
 
   return partyLobby;
 }
 
-export async function setPlayerCurrentLobbyId(playerId: string, lobbyId: string) {
-  await redisClient.set(`player:${playerId}:lobby`, lobbyId);
-}
-
-export async function getPlayerCurrentLobbyId(playerId: string) {
-  return redisClient.get(`player:${playerId}:lobby`);
-}
-
-export async function publishLobbyCreated(lobby: BaseLobby) {
+export async function notifyLobbyJoined(lobby: BaseLobby) {
   const key = lobbyKey(lobby.MatchID);
   await redisClient
     .multi()
@@ -663,7 +644,7 @@ export async function publishLobbyCreated(lobby: BaseLobby) {
     lobbyId: lobby.MatchID,
     accountId: lobby.LeaderID,
   };
-  await redisClient.publish(LOBBY_CREATED_CHANNEL, JSON.stringify(lobbyCreatedMessage));
+  await redisClient.publish(LOBBY_JOINED_CHANNEL, JSON.stringify(lobbyCreatedMessage));
 }
 
 export async function setLobbyMode(leaderId: string, lobbyId: string, newMode: MATCH_TYPES) {
@@ -691,36 +672,40 @@ export async function lockLobby(lobbyId: string, leaderId: string) {
   await evalLua(LUA_LOCK_LOBBY, [lobbyKey(lobbyId)], [leaderId]);
 }
 
-export async function deleteLobby(lobbyId: string, leaderId: string) {
-  const deleted = await evalLua(LUA_DELETE_LOBBY, [lobbyKey(lobbyId)], [leaderId]);
-  if (deleted) {
-    logger.verbose(`Deleted lobby ${lobbyId} for player ${leaderId}`);
+export async function leaveLobby(lobbyId: string, accountId: string, createParty = true) {
+  const lobby = await getLobby(lobbyId);
+  let newLobby: BaseLobby | null = null;
+  if (lobby) {
+    if (createParty) {
+      newLobby = await createPartyLobby(accountId);
+    }
+    if ((lobby as CustomLobby).match_config) {
+      const result = await evalLua(LUA_LEAVE_CUSTOM_LOBBY, [lobbyKey(lobbyId)], [accountId]);
+      if (result) {
+        const { playerData, readyPlayers, leaderID, gameModeSlug } = JSON.parse(
+          result as string,
+        ) as {
+          playerData: LobbyTeam["Players"][string];
+          readyPlayers: Record<string, boolean>;
+          leaderID: string;
+          gameModeSlug: keyof typeof GAME_MODES_CONFIG | undefined;
+        };
+
+        await Promise.all([
+          gameModeSlug ? refreshPlayerBuffs(lobbyId, gameModeSlug) : Promise.resolve(),
+          broadcastCustomLobby(lobbyId, {
+            template_id: "PlayerLeftLobby",
+            Player: playerData,
+            ReadyPlayers: readyPlayers,
+            NewLeader: leaderID,
+          }),
+        ]);
+      }
+    } else {
+      await redisClient.del(lobbyKey(lobbyId));
+    }
   }
-}
-
-export async function leaveLobby(lobbyId: string, accountId: string) {
-  const result = await evalLua(LUA_LEAVE_CUSTOM_LOBBY, [lobbyKey(lobbyId)], [accountId]);
-  if (!result) return null;
-
-  const { playerData, readyPlayers, leaderID, gameModeSlug } = JSON.parse(result as string) as {
-    playerData: LobbyTeam["Players"][string];
-    readyPlayers: Record<string, boolean>;
-    leaderID: string;
-    gameModeSlug: keyof typeof GAME_MODES_CONFIG | undefined;
-  };
-
-  await Promise.all([
-    redisClient.del(`player:${accountId}:lobby`),
-    gameModeSlug ? refreshPlayerBuffs(lobbyId, gameModeSlug) : Promise.resolve(),
-    broadcastCustomLobby(lobbyId, {
-      template_id: "PlayerLeftLobby",
-      Player: playerData,
-      ReadyPlayers: readyPlayers,
-      NewLeader: leaderID,
-    }),
-  ]);
-  const partyLobby = await createPartyLobby(accountId);
-  return partyLobby;
+  return newLobby;
 }
 
 // CUSTOM LOBBIES
@@ -797,8 +782,7 @@ export async function createCustomLobby(accountId: string) {
     ...getCustomLobbyDefaultSettings("gm_classic_2v2"),
   };
 
-  await setPlayerCurrentLobbyId(accountId, customLobby.MatchID);
-  await publishLobbyCreated(customLobby);
+  await notifyLobbyJoined(customLobby);
 
   logger.info(`Creating custom lobby for ${accountId} - matchLobbyId:${customLobby.MatchID}`);
   return customLobby;
@@ -823,7 +807,20 @@ export async function updateGameModeForCustomLobby(
 ) {
   const lobby = await applyGameSettings(lobbyId, leaderId, gameModeSlug);
   if (!lobby) return null;
-  await broadcastCustomLobby(lobbyId, { template_id: "GameModeUpdatedForCustomGame", lobby });
+
+  if (lobby) {
+    for (const team of lobby.Teams) {
+      for (const playerId of Object.keys(team.Players)) {
+        if (playerId !== lobby.LeaderID) {
+          await broadcastCustomLobby(playerId, {
+            template_id: "GameModeUpdatedForCustomGame",
+            MatchID: lobbyId,
+            lobby,
+          });
+        }
+      }
+    }
+  }
   return lobby;
 }
 
@@ -839,12 +836,22 @@ export async function updateIntSettingForCustomLobby(
     [leaderId, settingKey, JSON.stringify(settingValue)],
   );
   if (!result) return null;
-  await broadcastCustomLobby(lobbyId, {
-    template_id: "IntSettingUpdatedForCustomGame",
-    SettingKey: settingKey,
-    SettingValue: settingValue,
-  });
-  return JSON.parse(result as string) as CustomLobby;
+  const lobby = JSON.parse(result as string) as CustomLobby;
+
+  for (const team of lobby.Teams) {
+    for (const teamPlayerId of Object.keys(team.Players)) {
+      if (teamPlayerId !== leaderId) {
+        await broadcastCustomLobby(teamPlayerId, {
+          template_id: "IntSettingUpdatedForCustomGame",
+          MatchID: lobbyId,
+          SettingKey: settingKey,
+          SettingValue: settingValue,
+        });
+      }
+    }
+  }
+
+  return lobby;
 }
 
 export async function updateEnabledMapsForCustomLobby(
@@ -866,16 +873,36 @@ export async function updateEnabledMapsForCustomLobby(
 
 export async function updateHandicapsForCustomLobby(
   lobbyId: string,
-  leaderId: string,
+  ownerId: string,
   playerHandicap: number,
   playerId: string,
 ) {
+  if (ownerId !== playerId) {
+    return null;
+  }
   const result = await evalLua(
     LUA_UPDATE_HANDICAP,
     [lobbyKey(lobbyId)],
-    [leaderId, playerId, JSON.stringify(playerHandicap)],
+    [playerId, JSON.stringify(playerHandicap)],
   );
-  return result ? (JSON.parse(result as string) as CustomLobby["Handicaps"]) : null;
+  if (!result) {
+    return null;
+  }
+  const lobby = JSON.parse(result as string) as CustomLobby;
+  const Handicaps = lobby.Handicaps;
+  for (const team of lobby.Teams) {
+    for (const teamPlayerId of Object.keys(team.Players)) {
+      if (teamPlayerId !== playerId) {
+        await broadcastCustomLobby(teamPlayerId, {
+          template_id: "PlayerHandicapSetForCustomGame",
+          MatchID: lobbyId,
+          Handicaps,
+        });
+      }
+    }
+  }
+
+  return Handicaps;
 }
 
 export async function setWorldBuffsForCustomLobby(
@@ -921,14 +948,12 @@ export async function switchTeamForCustomLobby(
     playerData: LobbyTeam["Players"][string];
     gameModeSlug: keyof typeof GAME_MODES_CONFIG;
   };
-  await Promise.all([
-    refreshPlayerBuffs(lobbyId, gameModeSlug),
-    broadcastCustomLobby(lobbyId, {
-      template_id: "PlayerSwitchedCustomLobbyTeams",
-      Player: playerData,
-      TeamIndex: teamIndex,
-    }),
-  ]);
+  await refreshPlayerBuffs(lobbyId, gameModeSlug);
+  await broadcastCustomLobby(lobbyId, {
+    template_id: "PlayerSwitchedCustomLobbyTeams",
+    Player: playerData,
+    TeamIndex: teamIndex,
+  });
   return playerData;
 }
 
@@ -953,12 +978,11 @@ export async function addCustomGameBot(
     CrossplayPreference: 0,
   };
 
-  const result = await evalLua(LUA_ADD_CUSTOM_GAME_BOT, [lobbyKey(lobbyId)], [
-    leaderId,
-    botConfig.BotAccountID,
-    teamIndex.toString(),
-    JSON.stringify(pdata),
-  ]);
+  const result = await evalLua(
+    LUA_ADD_CUSTOM_GAME_BOT,
+    [lobbyKey(lobbyId)],
+    [leaderId, botConfig.BotAccountID, teamIndex.toString(), JSON.stringify(pdata)],
+  );
   if (!result) return null;
 
   const { playerData, gameModeSlug } = JSON.parse(result as string) as {
@@ -985,13 +1009,11 @@ export async function updateCustomGameBotFighter(
   skin: { AssetPath: string; Slug: string },
   botSettingSlug: string,
 ) {
-  const result = await evalLua(LUA_UPDATE_BOT_FIGHTER, [lobbyKey(lobbyId)], [
-    leaderId,
-    botAccountId,
-    JSON.stringify(fighter),
-    JSON.stringify(skin),
-    botSettingSlug,
-  ]);
+  const result = await evalLua(
+    LUA_UPDATE_BOT_FIGHTER,
+    [lobbyKey(lobbyId)],
+    [leaderId, botAccountId, JSON.stringify(fighter), JSON.stringify(skin), botSettingSlug],
+  );
   if (!result) return null;
 
   const bot = JSON.parse(result as string) as {
@@ -1056,22 +1078,29 @@ export async function joinCustomLobby(lobbyId: string, accountId: string, isSpec
   const playerTeam = lobby.Teams.find((t) => t.Players[accountId]);
   const cluster = lobby.AllMultiplayParams["1"]?.MultiplayClusterSlug ?? "";
 
-  await Promise.all([
-    setPlayerCurrentLobbyId(accountId, lobby.MatchID),
+  await redisClient.publish(
+    LOBBY_JOINED_CHANNEL,
+    JSON.stringify({ lobbyId: lobby.MatchID, accountId } satisfies LobbyCreatedMessage),
+  );
 
-    redisClient.publish(
-      LOBBY_CREATED_CHANNEL,
-      JSON.stringify({ lobbyId: lobby.MatchID, accountId } satisfies LobbyCreatedMessage),
-    ),
-    broadcastCustomLobby(lobbyId, {
-      template_id: "PlayerJoinedLobby",
-      Player: playerTeam?.Players[accountId],
-      TeamIndex: playerTeam?.TeamIndex,
-      Cluster: cluster,
-      LockedLoadouts: lobby.LockedLoadouts,
-      ModeString: null,
-    }),
-  ]);
+  if (updatedLobby) {
+    for (const team of lobby.Teams) {
+      for (const playerId of Object.keys(team.Players)) {
+        if (playerId !== accountId) {
+          await broadcastCustomLobby(playerId, {
+            MatchID: lobbyId,
+            template_id: "PlayerJoinedLobby",
+            Player: playerTeam?.Players[accountId],
+            TeamIndex: playerTeam?.TeamIndex,
+            Cluster: cluster,
+            LockedLoadouts: lobby.LockedLoadouts,
+            ModeString: null,
+          });
+        }
+      }
+    }
+  }
+
   return updatedLobby;
 }
 
@@ -1105,7 +1134,6 @@ export async function kickFromLobby(lobbyId: string, leaderId: string, kickeeId:
     gameModeSlug: keyof typeof GAME_MODES_CONFIG;
   };
   await Promise.all([
-    redisClient.del(`player:${kickeeId}:lobby`),
     refreshPlayerBuffs(lobbyId, kickGameModeSlug),
     broadcastCustomLobby(lobbyId, {
       template_id: "PlayerKickedFromLobby",
@@ -1126,4 +1154,27 @@ export async function promoteToLobbyLeader(lobbyId: string, promoteTarget: strin
     ReadyPlayers,
   });
   return { MatchID: lobbyId, LeaderID: promoteTarget, ReadyPlayers };
+}
+
+export async function generateLobbyCode(lobbyId: string, leaderId: string) {
+  const lobby = await getLobby(lobbyId);
+  if (!lobby || lobby.LeaderID !== leaderId) {
+    return null;
+  }
+  let code = "";
+  let result = null;
+  if (!result) {
+    code = generateCode(5);
+    result = await redisClient.set(`lobby_code:${code}`, lobbyId, {
+      NX: true,
+      EX: LOBBY_EX,
+    });
+  }
+  await redisClient.json.set(lobbyKey(lobbyId), "$.LobbyCode", code);
+  return code;
+}
+
+export async function getLobbyIdFromCode(code: string) {
+  const lobbyId = await redisClient.get(`lobby_code:${code}`);
+  return lobbyId;
 }

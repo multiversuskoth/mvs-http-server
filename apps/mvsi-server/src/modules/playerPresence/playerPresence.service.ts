@@ -57,7 +57,6 @@ export async function clearPlayerKeys(playerId: string): Promise<void> {
     `player:${playerId}:rifts`,
     `player:${playerId}:config`,
     `player:${playerId}:cosmetics`,
-    `player:${playerId}:lobby`,
   ];
 
   await redisClient.del(keysToDelete);
