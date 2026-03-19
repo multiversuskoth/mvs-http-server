@@ -2,29 +2,34 @@ import { env } from "@mvsi/env";
 import { logger } from "@mvsi/logger";
 import { redisClient } from "@mvsi/redis";
 import { ObjectId } from "mongodb";
+import { randomBytes } from "node:crypto";
 import { getCurrentCRC } from "../../data/config";
-import { MATCH_TYPES, MatchmakingActiveMatch } from "../matchmaking/matchmaking.types";
+import { GAME_MODES_CONFIG } from "../../data/gameModes";
+import { MAP_ROTATIONS } from "../../data/maps";
+import { sleep } from "../../utils/sleep";
+import { TeamStyle } from "../gameModes/gameModes.config";
+import { notifyActiveMatchCreated } from "../matchmaking/matchmaking.service";
+import { MATCH_TYPES, type MatchmakingActiveMatch } from "../matchmaking/matchmaking.types";
+import type {
+  RealtimeNotificationTopicMessage,
+  RealtimeNotificationUsersMessage,
+} from "../notifications/notifications.types";
+import {
+  broadcastNotificationToTopic,
+  broadcastNotificationToUsers,
+} from "../notifications/notifications.utils";
 import { getPlayerConfig, getPlayersConfig } from "../playerConfig/playerConfig.service";
 import type { PlayerConfig } from "../playerConfig/playerConfig.types";
 import {
+  LOBBY_JOINED_CHANNEL,
   type BaseLobby,
   type CustomLobby,
   type CustomLobbyMatchConfig,
   type CustomLobbySettings,
-  LOBBY_JOINED_CHANNEL,
   type LobbyCreatedMessage,
   type LobbyTeam,
   type PartyLobby,
 } from "./lobby.types";
-import { TeamStyle } from "../gameModes/gameModes.config";
-import { GAME_MODES_CONFIG } from "../../data/gameModes";
-import { MAP_ROTATIONS } from "../../data/maps";
-import {
-  REALTIME_NOTIFICATION_TOPIC_CHANNEL,
-  type RealtimeNotificationTopicMessage,
-} from "../notifications/notifications.types";
-import { randomBytes } from "node:crypto";
-import { notifyActiveMatchCreated } from "../matchmaking/matchmaking.service";
 
 const LOBBY_EX = 2 * 24 * 60 * 60; // 2 days
 const ALPHABET = "ABCDEFGHJKLMNPQRSTUVWXYZ23456789";
@@ -546,22 +551,6 @@ function evalLua(script: string, keys: string[], args: string[]) {
   return redisClient.eval(script, { keys, arguments: args });
 }
 
-function broadcastCustomLobby(
-  lobbyId: string,
-  data: { template_id: string } & Record<string, unknown>,
-) {
-  const notification: RealtimeNotificationTopicMessage = {
-    topic: lobbyId,
-    notification: {
-      data: { MatchID: lobbyId, ...data },
-      payload: { match: { id: lobbyId }, custom_notification: "realtime" },
-      header: "",
-      cmd: "update",
-    },
-  };
-  return redisClient.publish(REALTIME_NOTIFICATION_TOPIC_CHANNEL, JSON.stringify(notification));
-}
-
 const TEAM_STYLE_TO_GAME_MODE: Partial<Record<TeamStyle, keyof typeof GAME_MODES_CONFIG>> = {
   [TeamStyle.Duos]: "gm_classic_2v2",
   [TeamStyle.Solos]: "gm_classic_1v1",
@@ -636,9 +625,9 @@ export async function invitePlayerToLobby(
 ) {
   const lobby = await getLobby(MatchID);
   if (lobby) {
-    const notification: RealtimeNotificationTopicMessage = {
+    const message: RealtimeNotificationTopicMessage = {
       topic: InviteeAccountId,
-      notification: {
+      data: {
         data: {
           LobbyType: 0,
           MatchID,
@@ -662,7 +651,7 @@ export async function invitePlayerToLobby(
         cmd: "profile-notification",
       },
     };
-    await redisClient.publish(REALTIME_NOTIFICATION_TOPIC_CHANNEL, JSON.stringify(notification));
+    await broadcastNotificationToTopic(message);
   }
 }
 
@@ -759,9 +748,9 @@ export async function notifyLobbyJoined(lobby: BaseLobby) {
 
 export async function setLobbyMode(leaderId: string, lobbyId: string, newMode: MATCH_TYPES) {
   await evalLua(LUA_SET_LOBBY_MODE, [lobbyKey(lobbyId)], [leaderId, newMode]);
-  const notification: RealtimeNotificationTopicMessage = {
+  const message: RealtimeNotificationTopicMessage = {
     topic: lobbyId,
-    notification: {
+    data: {
       data: {
         template_id: "OnLobbyModeUpdated",
         LobbyId: lobbyId,
@@ -774,8 +763,7 @@ export async function setLobbyMode(leaderId: string, lobbyId: string, newMode: M
       cmd: "update",
     },
   };
-  await redisClient.publish(REALTIME_NOTIFICATION_TOPIC_CHANNEL, JSON.stringify(notification));
-  logger.info(`Changing party lobby for ${lobbyId} - to ${newMode}`);
+  await broadcastNotificationToTopic(message);
 }
 
 export async function lockLobby(lobbyId: string, leaderId: string) {
@@ -801,14 +789,30 @@ export async function leaveLobby(lobbyId: string, accountId: string, createParty
           gameModeSlug: keyof typeof GAME_MODES_CONFIG | undefined;
         };
 
+        const message: RealtimeNotificationTopicMessage = {
+          topic: lobbyId,
+          data: {
+            data: {
+              MatchID: lobbyId,
+              template_id: "PlayerLeftLobby",
+              Player: playerData,
+              ReadyPlayers: readyPlayers,
+              NewLeader: leaderID,
+            },
+            payload: {
+              custom_notification: "realtime",
+              match: {
+                id: lobbyId,
+              },
+            },
+            cmd: "update",
+            header: "",
+          },
+        };
+
         await Promise.all([
           gameModeSlug ? refreshPlayerBuffs(lobbyId, gameModeSlug) : Promise.resolve(),
-          broadcastCustomLobby(lobbyId, {
-            template_id: "PlayerLeftLobby",
-            Player: playerData,
-            ReadyPlayers: readyPlayers,
-            NewLeader: leaderID,
-          }),
+          broadcastNotificationToTopic(message),
         ]);
       }
     } else {
@@ -906,18 +910,26 @@ export async function updateTeamStyleForCustomLobby(
   const gameModeSlug = TEAM_STYLE_TO_GAME_MODE[newStyle] ?? "gm_classic_2v2";
   const lobby = await applyGameSettings(lobbyId, leaderId, gameModeSlug);
   if (!lobby) return null;
-  for (const team of lobby.Teams) {
-    for (const playerId of Object.keys(team.Players)) {
-      if (playerId !== lobby.LeaderID) {
-        await broadcastCustomLobby(playerId, {
-          template_id: "TeamStyleChangedForCustomGame",
-          MatchID: lobbyId,
-          lobby,
-        });
-      }
-    }
-  }
 
+  await broadcastNotificationToUsers({
+    exclude: [leaderId],
+    users: Object.keys(lobby.PlayerGameplayPreferences),
+    data: {
+      data: {
+        template_id: "TeamStyleChangedForCustomGame",
+        MatchID: lobbyId,
+        lobby,
+      },
+      payload: {
+        custom_notification: "realtime",
+        match: {
+          id: lobbyId,
+        },
+      },
+      cmd: "update",
+      header: "",
+    },
+  });
   return lobby;
 }
 
@@ -926,22 +938,31 @@ export async function updateGameModeForCustomLobby(
   leaderId: string,
   gameModeSlug: keyof typeof GAME_MODES_CONFIG,
 ) {
+  // We have to sleep here because mvs custom lobby is silly and cant handle too many rapid changes...
+  await sleep(1500);
   const lobby = await applyGameSettings(lobbyId, leaderId, gameModeSlug);
   if (!lobby) return null;
 
-  if (lobby) {
-    for (const team of lobby.Teams) {
-      for (const playerId of Object.keys(team.Players)) {
-        if (playerId !== lobby.LeaderID) {
-          await broadcastCustomLobby(playerId, {
-            template_id: "GameModeUpdatedForCustomGame",
-            MatchID: lobbyId,
-            lobby,
-          });
-        }
-      }
-    }
-  }
+  await broadcastNotificationToUsers({
+    exclude: [leaderId],
+    users: Object.keys(lobby.PlayerGameplayPreferences),
+    data: {
+      data: {
+        template_id: "GameModeUpdatedForCustomGame",
+        MatchID: lobbyId,
+        lobby,
+      },
+      payload: {
+        custom_notification: "realtime",
+        match: {
+          id: lobbyId,
+        },
+      },
+      cmd: "update",
+      header: "",
+    },
+  });
+
   return lobby;
 }
 
@@ -959,18 +980,26 @@ export async function updateIntSettingForCustomLobby(
   if (!result) return null;
   const lobby = JSON.parse(result as string) as CustomLobby;
 
-  for (const team of lobby.Teams) {
-    for (const teamPlayerId of Object.keys(team.Players)) {
-      if (teamPlayerId !== leaderId) {
-        await broadcastCustomLobby(teamPlayerId, {
-          template_id: "IntSettingUpdatedForCustomGame",
-          MatchID: lobbyId,
-          SettingKey: settingKey,
-          SettingValue: settingValue,
-        });
-      }
-    }
-  }
+  await broadcastNotificationToUsers({
+    exclude: [leaderId],
+    users: Object.keys(lobby.PlayerGameplayPreferences),
+    data: {
+      data: {
+        template_id: "IntSettingUpdatedForCustomGame",
+        MatchID: lobbyId,
+        SettingKey: settingKey,
+        SettingValue: settingValue,
+      },
+      payload: {
+        custom_notification: "realtime",
+        match: {
+          id: lobbyId,
+        },
+      },
+      cmd: "update",
+      header: "",
+    },
+  });
 
   return lobby;
 }
@@ -985,11 +1014,32 @@ export async function updateEnabledMapsForCustomLobby(
     [lobbyKey(lobbyId)],
     [leaderId, ...mapsSlugs],
   );
-  await broadcastCustomLobby(lobbyId, {
-    template_id: "MapsSetForCustomGame",
-    Maps: JSON.parse(result as string) as CustomLobby["Maps"],
-  });
-  return result ? (JSON.parse(result as string) as CustomLobby["Maps"]) : null;
+
+  if (!result) return null;
+
+  const Maps = JSON.parse(result as string) as CustomLobby["Maps"];
+
+  const message: RealtimeNotificationTopicMessage = {
+    topic: lobbyId,
+    data: {
+      data: {
+        template_id: "MapsSetForCustomGame",
+        MatchID: lobbyId,
+        Maps,
+      },
+      payload: {
+        custom_notification: "realtime",
+        match: {
+          id: lobbyId,
+        },
+      },
+      cmd: "update",
+      header: "",
+    },
+  };
+
+  await broadcastNotificationToTopic(message);
+  return Maps;
 }
 
 export async function updateHandicapsForCustomLobby(
@@ -1009,20 +1059,30 @@ export async function updateHandicapsForCustomLobby(
   if (!result) {
     return null;
   }
+
   const lobby = JSON.parse(result as string) as CustomLobby;
   const Handicaps = lobby.Handicaps;
-  for (const team of lobby.Teams) {
-    for (const teamPlayerId of Object.keys(team.Players)) {
-      if (teamPlayerId !== playerId) {
-        await broadcastCustomLobby(teamPlayerId, {
-          template_id: "PlayerHandicapSetForCustomGame",
-          MatchID: lobbyId,
-          Handicaps,
-        });
-      }
-    }
-  }
 
+  const message: RealtimeNotificationUsersMessage = {
+    exclude: [playerId],
+    users: Object.keys(lobby.PlayerGameplayPreferences),
+    data: {
+      data: {
+        MatchID: lobbyId,
+        template_id: "PlayerHandicapSetForCustomGame",
+        Handicaps,
+      },
+      payload: {
+        custom_notification: "realtime",
+        match: {
+          id: lobbyId,
+        },
+      },
+      cmd: "update",
+      header: "",
+    },
+  };
+  await broadcastNotificationToUsers(message);
   return Handicaps;
 }
 
@@ -1047,10 +1107,27 @@ export async function setWorldBuffsForCustomLobby(
   );
   if (!result) return null;
 
-  await broadcastCustomLobby(lobbyId, {
-    template_id: "WorldBuffsSetForCustomGame",
-    WorldBuffs: merged,
-  });
+  const message: RealtimeNotificationTopicMessage = {
+    topic: lobbyId,
+    data: {
+      data: {
+        template_id: "WorldBuffsSetForCustomGame",
+        MatchID: lobbyId,
+        WorldBuffs: merged,
+      },
+      payload: {
+        custom_notification: "realtime",
+        match: {
+          id: lobbyId,
+        },
+      },
+      cmd: "update",
+      header: "",
+    },
+  };
+
+  await broadcastNotificationToTopic(message);
+
   return merged;
 }
 
@@ -1070,11 +1147,28 @@ export async function switchTeamForCustomLobby(
     gameModeSlug: keyof typeof GAME_MODES_CONFIG;
   };
   await refreshPlayerBuffs(lobbyId, gameModeSlug);
-  await broadcastCustomLobby(lobbyId, {
-    template_id: "PlayerSwitchedCustomLobbyTeams",
-    Player: playerData,
-    TeamIndex: teamIndex,
-  });
+
+  const message: RealtimeNotificationTopicMessage = {
+    topic: lobbyId,
+    data: {
+      data: {
+        template_id: "PlayerSwitchedCustomLobbyTeams",
+        MatchID: lobbyId,
+        Player: playerData,
+        TeamIndex: teamIndex,
+      },
+      payload: {
+        custom_notification: "realtime",
+        match: {
+          id: lobbyId,
+        },
+      },
+      cmd: "update",
+      header: "",
+    },
+  };
+
+  await broadcastNotificationToTopic(message);
   return playerData;
 }
 
@@ -1111,13 +1205,31 @@ export async function addCustomGameBot(
     gameModeSlug: keyof typeof GAME_MODES_CONFIG;
   };
 
+  const message: RealtimeNotificationTopicMessage = {
+    topic: lobbyId,
+    data: {
+      data: {
+        MatchID: lobbyId,
+        template_id: "BotAddedToCustomGame",
+        TeamIndex: teamIndex,
+        Bot: playerData,
+      },
+      payload: {
+        custom_notification: "realtime",
+        match: {
+          id: lobbyId,
+        },
+      },
+      cmd: "update",
+      header: "",
+    },
+  };
+
+  await broadcastNotificationToTopic(message);
+
   await Promise.all([
     refreshPlayerBuffs(lobbyId, gameModeSlug),
-    broadcastCustomLobby(lobbyId, {
-      template_id: "BotAddedToCustomGame",
-      TeamIndex: teamIndex,
-      Bot: playerData,
-    }),
+    broadcastNotificationToTopic(message),
   ]);
   return playerData;
 }
@@ -1145,8 +1257,26 @@ export async function updateCustomGameBotFighter(
     Skin: { AssetPath: string; Slug: string };
     LobbyPlayerIndex: number;
   };
-  console.log(JSON.stringify(bot, null, 2));
-  await broadcastCustomLobby(lobbyId, { template_id: "BotSettingsUpdatedForCustomGame", Bot: bot });
+  const message: RealtimeNotificationTopicMessage = {
+    topic: lobbyId,
+    data: {
+      data: {
+        MatchID: lobbyId,
+        template_id: "BotSettingsUpdatedForCustomGame",
+        Bot: bot,
+      },
+      payload: {
+        custom_notification: "realtime",
+        match: {
+          id: lobbyId,
+        },
+      },
+      cmd: "update",
+      header: "",
+    },
+  };
+
+  await broadcastNotificationToTopic(message);
   return bot;
 }
 
@@ -1166,10 +1296,26 @@ export async function resetCustomLobbySettings(lobbyId: string, leaderId: string
     MatchConfig: lobby.match_config,
     Maps: lobby.Maps,
   };
-  await broadcastCustomLobby(lobbyId, {
-    template_id: "CustomGameResetToDefaults",
-    ...data,
-  });
+
+  const message: RealtimeNotificationTopicMessage = {
+    topic: lobbyId,
+    data: {
+      data: {
+        template_id: "CustomGameResetToDefaults",
+        ...data,
+      },
+      payload: {
+        custom_notification: "realtime",
+        match: {
+          id: lobbyId,
+        },
+      },
+      cmd: "update",
+      header: "",
+    },
+  };
+
+  await broadcastNotificationToTopic(message);
 
   return data;
 }
@@ -1204,23 +1350,32 @@ export async function joinCustomLobby(lobbyId: string, accountId: string, isSpec
     JSON.stringify({ lobbyId: lobby.MatchID, accountId } satisfies LobbyCreatedMessage),
   );
 
-  if (updatedLobby) {
-    for (const team of lobby.Teams) {
-      for (const playerId of Object.keys(team.Players)) {
-        if (playerId !== accountId) {
-          await broadcastCustomLobby(playerId, {
-            MatchID: lobbyId,
-            template_id: "PlayerJoinedLobby",
-            Player: playerTeam?.Players[accountId],
-            TeamIndex: playerTeam?.TeamIndex,
-            Cluster: cluster,
-            LockedLoadouts: lobby.LockedLoadouts,
-            ModeString: null,
-          });
-        }
-      }
-    }
-  }
+  if (!updatedLobby) return null;
+
+  const message: RealtimeNotificationUsersMessage = {
+    exclude: [accountId],
+    users: Object.keys(lobby.PlayerGameplayPreferences),
+    data: {
+      data: {
+        MatchID: lobbyId,
+        template_id: "PlayerJoinedLobby",
+        Player: playerTeam?.Players[accountId],
+        TeamIndex: playerTeam?.TeamIndex,
+        Cluster: cluster,
+        LockedLoadouts: lobby.LockedLoadouts,
+        ModeString: null,
+      },
+      payload: {
+        custom_notification: "realtime",
+        match: {
+          id: lobbyId,
+        },
+      },
+      cmd: "update",
+      header: "",
+    },
+  };
+  await broadcastNotificationToUsers(message);
 
   return updatedLobby;
 }
@@ -1238,12 +1393,29 @@ export async function setPlayerReady(lobbyId: string, PlayerID: string, Ready: b
     Ready,
     bAllPlayersReady: result === 1,
   };
-  if (lobby) {
-    await broadcastCustomLobby(lobbyId, {
-      template_id: "PlayerReadyForLobby",
-      ...data,
-    });
-  }
+
+  if (!lobby) return null;
+
+  const message: RealtimeNotificationTopicMessage = {
+    topic: lobbyId,
+    data: {
+      data: {
+        template_id: "PlayerReadyForLobby",
+        ...data,
+      },
+      payload: {
+        custom_notification: "realtime",
+        match: {
+          id: lobbyId,
+        },
+      },
+      cmd: "update",
+      header: "",
+    },
+  };
+
+  await broadcastNotificationToTopic(message);
+
   return data;
 }
 
@@ -1254,13 +1426,30 @@ export async function kickFromLobby(lobbyId: string, leaderId: string, kickeeId:
     playerData: LobbyTeam["Players"][string];
     gameModeSlug: keyof typeof GAME_MODES_CONFIG;
   };
+
+  const message: RealtimeNotificationTopicMessage = {
+    topic: lobbyId,
+    data: {
+      data: {
+        MatchID: lobbyId,
+        template_id: "PlayerKickedFromLobby",
+        Player: player,
+        KickeeAccountID: kickeeId,
+      },
+      payload: {
+        custom_notification: "realtime",
+        match: {
+          id: lobbyId,
+        },
+      },
+      cmd: "update",
+      header: "",
+    },
+  };
+
   await Promise.all([
     refreshPlayerBuffs(lobbyId, kickGameModeSlug),
-    broadcastCustomLobby(lobbyId, {
-      template_id: "PlayerKickedFromLobby",
-      Player: player,
-      KickeeAccountID: kickeeId,
-    }),
+    broadcastNotificationToTopic(message),
   ]);
   return player;
 }
@@ -1273,18 +1462,30 @@ export async function promoteToLobbyLeader(
   const result = await evalLua(LUA_PROMOTE_LEADER, [lobbyKey(lobbyId)], [promoteTarget]);
   if (!result) return null;
   const lobby = JSON.parse(result as string) as CustomLobby;
-  for (const team of lobby.Teams) {
-    for (const playerId of Object.keys(team.Players)) {
-      if (playerId !== leaderID) {
-        await broadcastCustomLobby(playerId, {
-          template_id: "LobbyLeaderChanged",
-          LeaderID: promoteTarget,
-          MatchID: lobbyId,
-          ReadyPlayers: lobby.ReadyPlayers,
-        });
-      }
-    }
-  }
+
+  const message: RealtimeNotificationUsersMessage = {
+    exclude: [leaderID],
+    users: Object.keys(lobby.PlayerGameplayPreferences),
+    data: {
+      data: {
+        MatchID: lobbyId,
+        template_id: "LobbyLeaderChanged",
+        LeaderID: promoteTarget,
+
+        ReadyPlayers: lobby.ReadyPlayers,
+      },
+      payload: {
+        custom_notification: "realtime",
+        match: {
+          id: lobbyId,
+        },
+      },
+      cmd: "update",
+      header: "",
+    },
+  };
+  await broadcastNotificationToUsers(message);
+
   return { MatchID: lobbyId, LeaderID: promoteTarget, ReadyPlayers: lobby.ReadyPlayers };
 }
 

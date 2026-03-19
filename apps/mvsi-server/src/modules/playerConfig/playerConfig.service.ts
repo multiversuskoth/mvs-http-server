@@ -78,7 +78,7 @@ export async function updatePlayerLoadout(
       await broadcastNotificationToUsers({
         exclude: [playerId],
         users: Object.keys(lobby.PlayerGameplayPreferences),
-        notification: {
+        data: {
           data: {
             Loadout: {
               Character: character,

@@ -2,7 +2,7 @@ import { redisClient } from "@mvsi/redis";
 import {
   REALTIME_NOTIFICATION_ARRAY_CHANNEL,
   REALTIME_NOTIFICATION_TOPIC_CHANNEL,
-  type RealtimeNotificationArrayMessage,
+  type RealtimeNotificationUsersMessage,
   type RealtimeNotificationTopicMessage,
 } from "./notifications.types";
 
@@ -10,6 +10,6 @@ export async function broadcastNotificationToTopic(message: RealtimeNotification
   await redisClient.publish(REALTIME_NOTIFICATION_TOPIC_CHANNEL, JSON.stringify(message));
 }
 
-export async function broadcastNotificationToUsers(message: RealtimeNotificationArrayMessage) {
+export async function broadcastNotificationToUsers(message: RealtimeNotificationUsersMessage) {
   await redisClient.publish(REALTIME_NOTIFICATION_ARRAY_CHANNEL, JSON.stringify(message));
 }
