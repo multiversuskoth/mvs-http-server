@@ -1,0 +1,31 @@
+export const GleamiumData = {
+  item_slug: "gleamium",
+  count: 9001,
+  result_type: "simple",
+  currency_sources: [
+    {
+      source_slug: "earned",
+      total_spent: 0,
+      total_earned: 200,
+      total_refunded: 0,
+      should_expire: false,
+      expires_at: null,
+      purchase_id: null,
+      source_platform: "psn",
+    },
+    {
+      source_slug: "earned",
+      total_spent: 1200,
+      total_earned: 1580,
+      total_refunded: 0,
+      should_expire: false,
+      expires_at: null,
+      purchase_id: null,
+      source_platform: "steam",
+    },
+  ],
+  data: {},
+  server_data: {},
+  updated_at: { _hydra_unix_date: 1741927542 },
+  created_at: { _hydra_unix_date: 1721975525 },
+};

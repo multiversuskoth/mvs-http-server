@@ -1,0 +1,9 @@
+@font-face {
+  font-family: "AnnouncementTitle"; /* A localized name */
+  src: url("/fonts/TT_Bluescreens_ExtraBold_Italic.ttf"),;
+}
+
+@font-face {
+  font-family: "AnnouncementDescription"; /* A localized name */
+  src: url("/fonts/TT_Norms_Std_Condensed_Medium.ttf"),;
+}

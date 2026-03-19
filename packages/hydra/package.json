@@ -1,0 +1,10 @@
+{
+    "name": "@mvsi/hydra",
+    "type": "module",
+    "devDependencies": {
+        "@types/node": "^25.0.1"
+    },
+    "dependencies": {
+        "mongodb": "~6.18.0"
+    }
+}

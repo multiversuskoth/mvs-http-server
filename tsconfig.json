@@ -1,26 +1,19 @@
 {
-  "compilerOptions": {
-    // "module": "ESNext",
-    "module": "CommonJS",
-    // "moduleResolution": "Bundler",
-    // "target": "ES2022",
-    "target": "es2016",
-    // "jsx": "react",
-    "strictNullChecks": true,
-    "strictFunctionTypes": true,
-    "sourceMap": true,
-    "rootDir": "./src",
-    "outDir": "./build",
-    "experimentalDecorators": true,
-    "emitDecoratorMetadata": true,
-    "esModuleInterop": true,
-    "forceConsistentCasingInFileNames": true,
-    "strict": true
-  },
-  "exclude": ["node_modules", "**/node_modules/*"],
-  "ts-node": {
     "compilerOptions": {
-      "module": "commonjs"
+        // "module": "ESNext",
+        "module": "es2022",
+        "moduleResolution": "bundler",
+        // "target": "ES2022",
+        "target": "es2024",
+        "allowImportingTsExtensions": true,
+        "verbatimModuleSyntax": false,
+        "noEmit": true,
+        /* Linting */
+        "skipLibCheck": true,
+        "strict": true,
+        "noUnusedLocals": true,
+        "noUnusedParameters": true,
+        "noFallthroughCasesInSwitch": true,
+        "noUncheckedSideEffectImports": true,
     }
-  }
 }

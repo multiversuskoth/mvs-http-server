@@ -1,0 +1,9 @@
+{
+    "name": "@mvsi/env",
+    "main": "./src/env.ts",
+    "dependencies": {
+        "@t3-oss/env-core": "^0.13.8",
+        "@types/node": "^25.0.1",
+        "zod": "^4.1.13"
+    }
+}
