@@ -12,27 +12,33 @@ import { setPlayerConfig } from "../playerConfig/playerConfig.service";
 import { setPlayerPresence } from "../playerPresence/playerPresence.service";
 import type { PlayerPresence } from "../playerPresence/playerPresence.types";
 
-async function handleAccess(ip: string, steamTicket: string) {
+export async function handleAccess(ip: string, auth: { steam: string; steamID?: string }) {
   const blockedIP = await IPBlockModel.findOne({ ip });
   if (blockedIP) {
     return null;
   }
 
-  const ticket = Buffer.from(steamTicket, "hex");
-  let parsedTicket: DecodedEncryptedAppTicket | null = null;
-  try {
-    parsedTicket = parseEncryptedAppTicket(ticket, STEAM_PRIVATE_KEY);
-  } catch (_) {
-    return null;
-  }
+  let steam_id: string | null = null;
 
-  if (!parsedTicket) {
-    return null;
-  }
+  if (auth.steamID && auth.steamID !== "0") {
+    steam_id = auth.steamID;
+  } else {
+    const ticket = Buffer.from(auth.steam, "hex");
+    let parsedTicket: DecodedEncryptedAppTicket | null = null;
+    try {
+      parsedTicket = parseEncryptedAppTicket(ticket, STEAM_PRIVATE_KEY);
+    } catch (_) {
+      return null;
+    }
 
-  const steam_id = parsedTicket?.steamID.getSteamID64();
-  if (!steam_id) {
-    return null;
+    if (!parsedTicket) {
+      return null;
+    }
+
+    steam_id = parsedTicket?.steamID.getSteamID64();
+    if (!steam_id) {
+      return null;
+    }
   }
 
   const now = new Date();
@@ -131,5 +137,3 @@ async function handleAccess(ip: string, steamTicket: string) {
     wsEndpoint,
   };
 }
-
-export const AccessService = { handleAccess };

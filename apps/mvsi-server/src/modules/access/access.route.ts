@@ -1,7 +1,7 @@
 import Elysia, { t } from "elysia";
 import { MAIN_APP, MVSI_HYDRA } from "../../middleware/middlewares";
 import { access_static_data } from "./access.data";
-import { AccessService } from "./access.service";
+import { handleAccess } from "./access.service";
 
 const router = new Elysia().use(MVSI_HYDRA);
 
@@ -12,7 +12,7 @@ router.post(
     if (!ip) {
       return;
     }
-    const result = await AccessService.handleAccess(ip.replace(/^::ffff:/, ""), body.auth.steam);
+    const result = await handleAccess(ip.replace(/^::ffff:/, ""), body.auth);
     if (!result) {
       return;
     }
@@ -30,11 +30,11 @@ router.post(
     body: t.Object({
       auth: t.Object({
         steam: t.String(),
+        steamID: t.Optional(t.String()),
       }),
     }),
   },
 );
-
 
 router.delete("/access", () => "");
 
