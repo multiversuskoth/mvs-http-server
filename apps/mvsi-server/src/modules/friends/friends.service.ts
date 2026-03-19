@@ -3,7 +3,7 @@ import { InvitationModel } from "@mvsi/database/models/Invitations";
 import { PlayerModel } from "@mvsi/database/models/Player";
 import { logger } from "@mvsi/logger";
 import { redisClient } from "@mvsi/redis";
-import { ObjectId } from "mongodb";
+import { ObjectId, } from "mongodb";
 import { getAssetsByType } from "../../loadAssets";
 import { getPlayersPresence } from "../playerPresence/playerPresence.service";
 import { FRIEND_REQUEST_RECEIVED_CHANNEL, type FriendRequestNotification } from "./friends.types";
@@ -11,7 +11,7 @@ import { FRIEND_REQUEST_RECEIVED_CHANNEL, type FriendRequestNotification } from 
 export async function generateWBPNInvitation(senderId: string, receiverPublicId: string) {
   const senderObjectId = new ObjectId(senderId);
 
-  const receiverPlayer = await PlayerModel.findOne({ public_id: receiverPublicId });
+  const receiverPlayer = await PlayerModel.findOne({ _id: new ObjectId(receiverPublicId) });
   if (!receiverPlayer) {
     throw new Error("Receiver player not found");
   }
@@ -28,7 +28,7 @@ export async function generateWBPNInvitation(senderId: string, receiverPublicId:
     sent_to: receiverPlayer._id,
     state: "open",
     account: {
-      public_id: receiverPlayer.public_id,
+      public_id: receiverPlayer._id.toHexString(),
       username: receiverPlayer.name,
     },
   };
@@ -80,7 +80,7 @@ export async function getOutgoingInvitations(accountId: string) {
         sent_to: 1,
         state: 1,
         account: {
-          public_id: "$player.public_id",
+          public_id: "$player._id",
           username: "$player.name",
           avatar: {
             name: "Nope",
@@ -126,7 +126,7 @@ export async function getIncomingInvitations(accountId: string) {
         sent_to: 1,
         state: 1,
         account: {
-          public_id: "$player.public_id",
+          public_id: "$player._id",
           username: "$player.name",
         },
       },
@@ -150,20 +150,17 @@ export async function getUserFriendsList(userId: string) {
 }
 
 export async function getUserFriendDetails(publicIds: readonly string[]) {
-  console.log("yrdtttt", publicIds);
-  const players = await PlayerModel.find({ public_id: { $in: publicIds.map((id) => id) } });
+  const players = await PlayerModel.find({ _id: { $in: publicIds.map((id) => new ObjectId(id)) } });
   const playersPresenceState = await getPlayersPresence(players.map((f) => f._id.toHexString()));
   return players.map((f) => {
-    const presenceState = playersPresenceState.find(
-      (p) => p.profileId === f.profile_id.toHexString(),
-    )
+    const presenceState = playersPresenceState.find((p) => p.id === f._id.toHexString())
       ? "online"
       : "offline";
     return {
       id: f._id,
       "identity.default_username": true,
       presence: presenceState,
-      "identity.alternate.wb_network": [{ id: f.public_id, username: f.name, avatar: null }],
+      "identity.alternate.wb_network": [{ id: f._id, username: f.name, avatar: null }],
       "server_data.ProfileIcon.AssetPath": getAssetsByType("ProfileIconData").find(
         (p) => p.slug === f.profile_icon,
       )?.assetPath,

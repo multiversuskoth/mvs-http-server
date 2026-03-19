@@ -1,25 +1,19 @@
 import { logger } from "@mvsi/logger";
 import { encodeHydraWS, MAIN_WEBSOCKET } from "../../websocket.elysia";
 import type { MatchmakingTicket } from "../matchmaking/matchmaking.types";
-import { getLobby } from "./lobby.service";
 import {
-  LOBBY_CREATED_CHANNEL,
-  LOBBY_MODE_UPDATED_CHANNEL,
+  LOBBY_JOINED_CHANNEL,
   LOBBY_QUEUED_CHANNEL,
-  type Lobby,
+  type LobbyCreatedMessage,
 } from "./lobby.types";
+import { leaveLobby } from "./lobby.service";
 
 const subscriber = MAIN_WEBSOCKET.decorator.redisSub;
 const clients = MAIN_WEBSOCKET.decorator.players;
 
-subscriber.subscribe(LOBBY_CREATED_CHANNEL, (message) => {
-  const notification = JSON.parse(message) as Lobby;
-  handleOnLobbyCreated(notification);
-});
-
-subscriber.subscribe(LOBBY_MODE_UPDATED_CHANNEL, (message) => {
-  const notification = JSON.parse(message) as Lobby;
-  handleOnLobbyModeChanged(notification);
+subscriber.subscribe(LOBBY_JOINED_CHANNEL, (message) => {
+  const notification = JSON.parse(message) as LobbyCreatedMessage;
+  handleOnLobbyJoined(notification);
 });
 
 subscriber.subscribe(LOBBY_QUEUED_CHANNEL, (message) => {
@@ -27,39 +21,16 @@ subscriber.subscribe(LOBBY_QUEUED_CHANNEL, (message) => {
   handlePartyQueued(notification);
 });
 
-async function handleOnLobbyCreated(newLobby: Lobby) {
-  const client = clients.get(newLobby.LeaderID);
+async function handleOnLobbyJoined(message: LobbyCreatedMessage) {
+  const client = clients.get(message.accountId);
   if (client) {
     if (client.data.lobbyId) {
-      const oldLobby = await getLobby(client.data.lobbyId);
-      if (oldLobby && oldLobby.LeaderID !== newLobby.LeaderID) {
-        client.unsubscribe(`lobby:${oldLobby.MatchID}`);
-      }
+      client.unsubscribe(client.data.lobbyId);
+      await leaveLobby(client.data.lobbyId, message.accountId, false);
     }
-    client.data.lobbyId = newLobby.MatchID;
-    client.subscribe(`lobby:${newLobby.MatchID}`);
+    client.data.lobbyId = message.lobbyId;
+    client.subscribe(message.lobbyId);
     logger.verbose(`Player ${client.data.account?.id} joined lobby ${client.data.lobbyId}`);
-  }
-}
-
-function handleOnLobbyModeChanged(lobby: Lobby) {
-  for (const playerId of Object.keys(lobby.Teams[0].Players)) {
-    const client = clients.get(playerId);
-    if (client) {
-      const message = {
-        data: {
-          template_id: "OnLobbyModeUpdated",
-          LobbyId: lobby.MatchID,
-          ModeString: lobby.ModeString,
-        },
-        payload: {
-          custom_notification: "realtime",
-        },
-        header: "",
-        cmd: "update",
-      };
-      client.data.sendHydra(client, message);
-    }
   }
 }
 
@@ -68,7 +39,7 @@ async function handlePartyQueued(notification: MatchmakingTicket) {
     const client = clients.get(playerId);
     if (client) {
       client.data.ticket = notification;
-      client.subscribe(`matchmaking:${notification.matchmakingRequestId}`);
+      client.subscribe(notification.matchmakingRequestId);
     }
     const data = {
       data: {
@@ -84,6 +55,6 @@ async function handlePartyQueued(notification: MatchmakingTicket) {
       header: "",
       cmd: "update",
     };
-    MAIN_WEBSOCKET.server?.publish(`lobby:${notification.partyId}`, encodeHydraWS(data));
+    MAIN_WEBSOCKET.server?.publish(notification.partyId, encodeHydraWS(data));
   }
 }

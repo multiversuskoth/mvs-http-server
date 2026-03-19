@@ -23,7 +23,7 @@ router.post(
       },
       account: {
         updated_at: "2025-03-18T02:34:01+00:00",
-        public_id: claims.public_id,
+        public_id: claims.id,
         email_verified: false,
         password_set: false,
         mfa_active: false,

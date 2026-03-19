@@ -64,6 +64,7 @@ router.post(
 router.put(
   "/ssc/invoke/send_profile_notification",
   async ({ body }) => {
+    console.log("Received request to send profile notification with body:", JSON.stringify(body, null, 2));
     try {
       await sendProfileInvitation(body.AccountId, body.SenderWBPNAccountID, body.WBPNInvitationID);
     } catch (error) {
@@ -71,14 +72,14 @@ router.put(
       return "";
     }
   },
-  {
+/*   {
     body: t.Object({
       AccountId: t.String(),
       SenderWBPNAccountID: t.String(),
       WBPNInvitationID: t.String(),
       template_id: t.String(),
     }),
-  },
+  }, */
 );
 
 router.put(

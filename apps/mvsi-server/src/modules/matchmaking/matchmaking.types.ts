@@ -2,7 +2,6 @@ import type { PlayerConfig } from "../playerConfig/playerConfig.types";
 
 export const MATCHMAKING_MATCH_FOUND_CHANNEL = "matchmaking:matchfound";
 export const MATCHMAKING_MATCH_TICK_CHANNEL = "matchmaking:tick";
-export const MATCHMAKING_GAME_SERVER_READY_CHANNEL = "matchmaking:serverready";
 export const MATCHMAKING_COMPLETE_CHANNEL = "matchmaking:complete";
 export const MATCHMAKING_CANCEL_CHANNEL = "matchmaking:cancel";
 export const MATCHMAKING_PERKS_LOCKED_CHANNEL = "matchmaking:perkslocked";
@@ -30,7 +29,7 @@ export type MatchmakingPlayer = {
 };
 
 export type MatchmakingTicket = {
-  party_size: number;
+  partySize: number;
   region: string;
   skill: number;
   playerIds: string[];
@@ -39,12 +38,6 @@ export type MatchmakingTicket = {
   matchmakingRequestId: string;
   matchType: MATCH_TYPES;
   partyLeaderId: string;
-};
-
-export type ServerInstanceReadyMessage = {
-  containerMatchId: string;
-  resultId: string;
-  playerIds: string[];
 };
 
 export type MatchmakingCompleteMessage = {

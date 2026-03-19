@@ -7,13 +7,13 @@ import { getCurrentVersion } from "../data/config";
 import { HYDRA_ACCESS_TOKEN, HYDRA_CONTENT_TYPE } from "../index.elysia";
 
 export const MAIN_APP = new Elysia().onRequest(({ request }) => {
-  console.log("request.url", request.url);
+  console.log(`request.url{${request.method}}`, request.url);
 });
 const JWT_CLAIMS_SCHEMA = t.Object({
   id: t.String(),
-  public_id: t.String(),
-  wb_network_id: t.String(),
-  profile_id: t.String(),
+  //public_id: t.String(),
+  //wb_network_id: t.String(),
+  //profile_id: t.String(),
   username: t.String(),
   hydraUsername: t.String(),
   steamId: t.String(),

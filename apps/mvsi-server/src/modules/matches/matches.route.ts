@@ -4,6 +4,7 @@ import { getCurrentCRC } from "../../data/config";
 import { MAIN_APP, MVSI_HYDRA_WITH_JWT } from "../../middleware/middlewares";
 import { HydraQueryPaginated } from "../../types";
 import { getActiveMatch, notifyActiveMatchEnded } from "../matchmaking/matchmaking.service";
+import { getLobby, getLobbyIdFromCode } from "../lobby/lobby.service";
 
 const router = new Elysia().use(MVSI_HYDRA_WITH_JWT);
 
@@ -112,7 +113,7 @@ router.put("/matches/:lobbyId", async ({ claims, params }) => {
             alternate: {
               wb_network: [
                 {
-                  id: claims.wb_network_id,
+                  id: claims.id,
                   username: claims.username,
                   avatar: null,
                   email: null,
@@ -165,6 +166,76 @@ router.put("/matches/:lobbyId", async ({ claims, params }) => {
   };
 });
 
+router.get(
+  "/matches/:lobbyId",
+  async ({ claims, params }) => {
+    const lobbyId = await getLobbyIdFromCode(params.lobbyId);
+    if (!lobbyId) {
+      return {
+        code: 404,
+        msg: `No match was found with shortcode ${params.lobbyId}.`,
+        hydra_error: 0,
+        relying_party_error: 0,
+        body: {},
+      };
+    }
+    const lobby = await getLobby(lobbyId);
+    if (!lobby) {
+      return {
+        code: 404,
+        msg: `No match was found with shortcode ${params.lobbyId}.`,
+        hydra_error: 0,
+        relying_party_error: 0,
+        body: {},
+      };
+    }
+    return {
+      updated_at: new Date(),
+      created_at: new Date(),
+      account_id: null,
+      completion_time: null,
+      name: "white-green-wind-breeze-OS5dF",
+      state: "open",
+      access_level: "public",
+      origin: "client",
+      rand: 0.6975513760957894,
+      winning_team: [],
+      win: [],
+      loss: [],
+      draw: null,
+      arbitration: null,
+      data: {},
+      server_data: lobby,
+      players: {},
+      matchmaking: null,
+      cluster: "ec2-us-east-1-dokken",
+      last_warning_time: null,
+      template: {
+        type: "async",
+        name: "custom_game_lobby",
+        slug: "custom_game_lobby",
+        min_players: 1,
+        max_players: 8,
+        game_server_integration_enabled: false,
+        game_server_config: null,
+        created_at: new Date(),
+        updated_at: new Date(),
+        data: {},
+        id: "",
+      },
+      criteria: { slug: null },
+      shortcode: null,
+      id: lobbyId,
+      access: "public",
+    };
+  },
+  {
+    params: t.Object({
+      lobbyId: t.String(),
+    }),
+  },
+);
+
 router.put("/ssc/invoke/submit_end_of_match_stats", async () => {
   // TODO : Implement
   return { body: {}, metadata: null, return_code: 0 };
@@ -182,15 +253,15 @@ mvsi_match_routes.post(
     const playerKeys = Object.keys(match.matchConfig.Players);
     const players = playerKeys.map((playerKey) => {
       const player = match.matchConfig.Players[playerKey];
-      const result = {
+      return {
         player_index: player.PlayerIndex,
         ip: player.Ip,
         is_host: player.IsHost,
       };
-      return result;
     });
+    const humanCount = playerKeys.filter((k) => !match.matchConfig.Players[k].bIsBot).length;
     const result = {
-      max_players: playerKeys.length,
+      max_players: humanCount,
       match_duration: 36000,
       players,
     };

@@ -1,6 +1,6 @@
 import { maps1v1, maps2v2 } from "../../data/maps";
 import { MATCH_TYPES } from "../matchmaking/matchmaking.types";
-import type { PlayerConfig } from "../playerPresence/playerPresence.service";
+import { type PlayerConfig } from "../playerConfig/playerConfig.types";
 
 export type PlayersConfigObject = {
   [playerId: string]: PlayerConfig;
@@ -16,10 +16,10 @@ type GameModeTeamConfig = {
 };
 
 export enum TeamStyle {
-  Solos,
-  Duos,
-  FFA,
-  Other,
+  Solos = "Solos",
+  Duos = "Duos",
+  FFA = "FFA",
+  Other = "Other",
 }
 
 export type GameModeConfig = {

@@ -35,7 +35,7 @@ export const access_static_data = (
     deleted: false,
     orphaned: false,
     orphaned_reason: null,
-    public_id: account.public_id,
+    public_id: account.id,
     identity: {
       avatar: "https://s3.amazonaws.com/wb-agora-hydra-ugc-dokken/identicons/identicon.584.png",
       default_username: true,
@@ -43,7 +43,7 @@ export const access_static_data = (
       alternate: {
         wb_network: [
           {
-            id: account.wb_network_id,
+            id: account.id,
             username: account.username,
             avatar: null,
             email: null,
@@ -73,7 +73,7 @@ export const access_static_data = (
     auth: {
       wb_network: [
         {
-          id: account.wb_network_id,
+          id: account.id,
           created_at: { _hydra_unix_date: 1674508668 },
         },
       ],
@@ -933,7 +933,7 @@ export const access_static_data = (
       "bp_s4_conditions",
     ],
     random_distribution: 0.25115115419482414,
-    id: account.profile_id,
+    id: account.id,
   },
   notifications: [],
   maintenance: null,

@@ -78,11 +78,9 @@ async function handleAccess(ip: string, steamTicket: string) {
   if (ip === "127.0.0.1" || ip === "::1") {
     wsEndpoint = `ws://127.0.0.1:${env.WEBSOCKET_PORT}`;
   }
+  const id = player._id.toHexString();
   const claims: JWT_CLAIMS = {
-    id: player._id.toHexString(),
-    profile_id: player.profile_id.toHexString(),
-    public_id: player.public_id,
-    wb_network_id: player.public_id,
+    id: id,
     hydraUsername: player.name,
     username: player.name,
     steamId: steam_id,
@@ -93,7 +91,6 @@ async function handleAccess(ip: string, steamTicket: string) {
   const cosmetics = await getCosmeticsConfigurationForPlayer(claims.id);
   const presence: PlayerPresence = {
     currentLobbyId: "",
-    profileId: player.profile_id.toHexString(),
     ip: ip,
   };
 
