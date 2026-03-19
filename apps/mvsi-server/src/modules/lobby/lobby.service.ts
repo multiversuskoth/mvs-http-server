@@ -1446,7 +1446,7 @@ export async function startCustomMatch(lobbyId: string, leaderId: string) {
       },
       ArenaModeInfo: null,
       RiftNodeId: "",
-      bModeGrantsProgress: true,
+      bModeGrantsProgress: false,
       EventQueueSlug: "",
       MatchId: matchId,
       Created: new Date(),
@@ -1458,6 +1458,8 @@ export async function startCustomMatch(lobbyId: string, leaderId: string) {
     matchKey: randomBytes(32).toString("base64"),
     resultId,
   };
+
+  console.log(`Match Created: ${JSON.stringify(match, null, 2)}`);
 
   await notifyActiveMatchCreated(match.matchConfig.MatchId, match);
 

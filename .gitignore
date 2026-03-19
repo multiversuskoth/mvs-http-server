@@ -16,3 +16,4 @@ vcpkg_installed
 keys/
 *.pem
 /out
+.claude
