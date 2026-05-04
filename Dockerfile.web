@@ -1,0 +1,28 @@
+# --- Build Stage ---
+FROM oven/bun:1 AS build
+
+WORKDIR /app
+
+COPY . .
+
+RUN bun install --frozen-lockfile
+
+WORKDIR /app/apps/web
+
+RUN bun run build
+RUN test -f .output/server/index.mjs
+
+# --- Production Stage ---
+FROM oven/bun:1 AS production
+
+WORKDIR /app
+
+ENV NODE_ENV=production
+ENV HOST=0.0.0.0
+ENV PORT=3000
+
+COPY --from=build /app/apps/web/.output ./.output
+
+EXPOSE 3000
+
+CMD ["bun", ".output/server/index.mjs"]

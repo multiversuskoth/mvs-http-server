@@ -5,6 +5,8 @@ dist
 .nitro/
 .tanstack/
 public/
+!apps/web/public/
+!apps/web/public/**
 
 
 
